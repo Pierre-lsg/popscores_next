@@ -1,5 +1,5 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
+	import { base } from '$app/paths';
 	import '../app.css';
 	import { isMobile } from '$lib/stores/viewportStore';
 	import { pwaInfo } from 'virtual:pwa-info';
@@ -11,7 +11,7 @@
 
 <svelte:head>
 	{@html webManifestLink}
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href="{base}/favicon.ico" />
 </svelte:head>
 
 {@render children()}
