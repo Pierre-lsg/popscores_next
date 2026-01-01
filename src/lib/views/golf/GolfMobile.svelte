@@ -1,36 +1,31 @@
 <script lang="ts">
-	import type { Player } from '$lib/types/types';
-
 	import Stepper from '$lib/ui/Stepper.svelte';
 
 	import { playersStore } from '$lib/stores/playersStore';
 	import { holesStore } from '$lib/stores/holesStore';
-	import { slide } from 'svelte/transition';
 	import { gameStatus, currentHoleIndex } from '$lib/stores/gameStatusStore';
 	import { onMount } from 'svelte';
 	import { shareService } from '$lib/utils/shareService';
 	import { showToast } from '$lib/stores/toastStore';
+	import { archiveGame } from '$lib/stores/historyStore';
 
 	import Toast from '$lib/ui/Toast.svelte';
 	import RankingPodium from '$lib/components/RankingPodium.svelte';
-	import { archiveGame } from '$lib/stores/historyStore';
 	import GolfMSession from '$lib/components/GolfMSession.svelte';
 	import GolfMPlayer from '$lib/components/GolfMPlayer.svelte';
+	import GolfMHoles from '$lib/components/GolfMHoles.svelte';
+	import GolfMScoring from '$lib/components/GolfMScoring.svelte';
 
-	let currentStep: 'session' | 'players' | 'holes' | 'scoring' | 'ranking' = 'session';
+	const Step = { session: 1, players: 2, holes: 3, scoring: 4, ranking: 5 };
+
+	let currentStep = Step.session;
 	let activeHoleIndex = $currentHoleIndex || 0;
-	let step = 1;
 
 	let locationName = '';
 	let weatherCondition = 'Soleil';
 
 	const weatherOptions = ['Soleil', 'Nuageux', 'Pluie', 'Venté', 'Froid'];
 
-	$: currentHole = $holesStore[activeHoleIndex];
-	$: isFirstHole = activeHoleIndex === 0;
-	$: isLastHole = activeHoleIndex === $holesStore.length - 1;
-
-	$: players = $playersStore;
 	$: holes = $holesStore;
 	$: holeCount = holes.length;
 	$: currentHoleIndex.set(activeHoleIndex);
@@ -41,55 +36,30 @@
 			if (confirm('Une partie a été trouvée via ce lien. Voulez-vous charger les scores ?')) {
 				playersStore.set(importedData.players);
 				holesStore.set(importedData.holes);
-				// Nettoyer l'URL pour éviter de re-proposer l'import au prochain refresh
 				window.history.replaceState({}, '', window.location.pathname);
 			}
 		}
 
-		if ($gameStatus === 'setup') nextCard('players');
-		else if ($gameStatus === 'in_progress') nextCard('scoring');
-		else if ($gameStatus === 'finished') nextCard('ranking');
+		if ($gameStatus === 'setup') nextCard(Step.players);
+		else if ($gameStatus === 'in_progress') nextCard(Step.scoring);
+		else if ($gameStatus === 'finished') nextCard(Step.ranking);
 	});
 
-	function nextCard(nextStep: 'session' | 'players' | 'holes' | 'scoring' | 'ranking') {
+	function nextCard(nextStep: number) {
 		currentStep = nextStep;
-		if (nextStep === 'session') {
-			step = 1;
-			gameStatus.set('setup');
-		} else if (nextStep === 'players') {
-			step = 2;
-			gameStatus.set('setup');
-		} else if (nextStep === 'holes') {
-			step = 3;
-			gameStatus.set('setup');
-		} else if (nextStep === 'scoring') {
-			step = 4;
-			gameStatus.set('in_progress');
-		} else if (nextStep === 'ranking') {
-			step = 5;
-			gameStatus.set('finished');
-		}
-	}
-
-	function addHole() {
-		holesStore.add();
-		// à améliorer
-		playersStore.syncAddHole(4);
-	}
-
-	function confirmDeleteHole(index: number) {
-		if (confirm(`Supprimer le trou n°${index + 1} ?`)) {
-			// On appelle les deux stores pour rester synchronisé
-			holesStore.remove(index);
-			playersStore.syncRemoveHole(index);
-		}
+		if (nextStep === Step.session) gameStatus.set('setup');
+		else if (nextStep === Step.players) gameStatus.set('setup');
+		else if (nextStep === Step.holes) gameStatus.set('setup');
+		else if (nextStep === Step.scoring) gameStatus.set('in_progress');
+		else if (nextStep === Step.ranking) gameStatus.set('finished');
 	}
 
 	function resetGame() {
 		if (confirm('Voulez-vous vraiment recommencer à zéro ?')) {
 			playersStore.reset();
 			holesStore.reset();
-			nextCard('session');
+			activeHoleIndex = 0;
+			nextCard(Step.session);
 		}
 	}
 
@@ -99,9 +69,8 @@
 			date: new Date().toISOString(),
 			location: locationName,
 			weather: weatherCondition,
-			players: $playersStore, // On fige l'état des joueurs et scores
-			holes: $holesStore,
-			totalPar: $holesStore.reduce((sum, h) => sum + h.par, 0)
+			players: $playersStore,
+			holes: $holesStore
 		};
 
 		archiveGame(newArchive);
@@ -122,97 +91,51 @@
 
 <div class="mobile-wizard">
 	<div class="progress-bar">
-		<div class="fill" style="width: {step * 20}%"></div>
+		<div class="fill" style="width: {currentStep * 20}%"></div>
 	</div>
 
 	<!-- Saisie des inforamtions de la partie -->
-	{#if currentStep === 'session'}
+	{#if currentStep === Step.session}
 		<GolfMSession />
-		<button on:click={() => nextCard('players')} class="btn btn-next">Suivant : Les joueurs</button>
+		<button on:click={() => nextCard(Step.players)} class="btn btn-next"
+			>Suivant : Les joueurs</button
+		>
 
 		<!-- Saisie des joueurs de la partie -->
-	{:else if currentStep === 'players'}
+	{:else if currentStep === Step.players}
 		<GolfMPlayer {holeCount} />
-		<button on:click={() => nextCard('session')} class="btn btn-prev">Retour : La session</button>
-		<button on:click={() => nextCard('holes')} class="btn btn-next">Suivant : Le parcours</button>
+		<button on:click={() => nextCard(Step.session)} class="btn btn-prev">Retour : La session</button
+		>
+		<button on:click={() => nextCard(Step.holes)} class="btn btn-next">Suivant : Le parcours</button
+		>
 
 		<!-- Saisie du parcours : trous, par, ... -->
-	{:else if currentStep === 'holes'}
-		<div class="step-content" in:slide>
-			<h2>⛳ Réglage des PARs</h2>
-			<button on:click={addHole} class="btn btn-primary">Ajouter un Trou</button>
-			<table>
-				<thead>
-					<tr class="par-row">
-						<th class="sticky-col"><strong>Joueurs</strong></th>
-						<th class="action-header">Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#each $holesStore as hole, i}
-						<tr class="scroll-area">
-							<td>
-								<Stepper label="Trou {i + 1}" bind:value={hole.par} min={3} />
-							</td>
-							<td>
-								<button class="btn-delete" on:click={() => confirmDeleteHole(i)}> &times; </button>
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-
-			<div class="actions">
-				<button on:click={() => nextCard('players')} class="btn btn-prev"
-					>Retour : Les joueurs</button
-				>
-				<button on:click={() => nextCard('scoring')} class="btn btn-next"
-					>Commencer la partie</button
-				>
-			</div>
-		</div>
+	{:else if currentStep === Step.holes}
+		<GolfMHoles />
+		<button on:click={() => nextCard(Step.players)} class="btn btn-prev"
+			>Retour : Les joueurs</button
+		>
+		<button on:click={() => nextCard(Step.scoring)} class="btn btn-next">Commencer la partie</button
+		>
 
 		<!-- Saisie du score lors du parcours -->
-	{:else if currentStep === 'scoring'}
-		<div class="step-content" in:slide>
-			<header class="hole-header">
-				<button on:click={() => activeHoleIndex--} disabled={isFirstHole}>◀</button>
-				<div class="hole-info">
-					<h3>Trou {activeHoleIndex + 1}</h3>
-					<span class="par-badge">PAR {currentHole.par}</span>
-				</div>
-				<button on:click={() => activeHoleIndex++} disabled={isLastHole}>▶</button>
-			</header>
-
-			<div class="scores-grid">
-				{#each $playersStore as player}
-					<div class="score-row">
-						<span class="player-name">{player.name}</span>
-						<Stepper bind:value={player.scores[activeHoleIndex]} min={1} />
-					</div>
-				{/each}
-			</div>
-
-			<div class="footer-actions">
-				<button on:click={() => nextCard('holes')} class="btn btn-prev">Retour : Les trous</button>
-				<button on:click={() => nextCard('ranking')} class="btn btn-next">Classement final</button>
-			</div>
-		</div>
+	{:else if currentStep === Step.scoring}
+		<GolfMScoring />
+		<button on:click={() => nextCard(Step.holes)} class="btn btn-prev">Retour : Les trous</button>
+		<button on:click={() => nextCard(Step.ranking)} class="btn btn-next">Classement final</button>
 
 		<!-- Résultat de la Partie : classement final -->
-	{:else if currentStep === 'ranking'}
-		<div class="step-content" in:slide>
-			<h2>🏆 Classement Final</h2>
+	{:else if currentStep === Step.ranking}
+		<h2>🏆 Classement Final</h2>
 
-			<RankingPodium />
+		<RankingPodium />
 
-			<button class="btn btn-prev" on:click={() => nextCard('scoring')}>Retour aux scores</button>
-			<button on:click={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button>
-			<button class="btn btn-primary" on:click={() => resetGame()}>Nouvelle partie</button>
-			<button class="btn btn-primary" on:click={() => saveGameToHistory()}
-				>Sauvegarder la partie</button
-			>
-		</div>
+		<button class="btn btn-prev" on:click={() => nextCard(Step.scoring)}>Retour aux scores</button>
+		<button on:click={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button>
+		<button class="btn btn-primary" on:click={() => resetGame()}>Nouvelle partie</button>
+		<button class="btn btn-primary" on:click={() => saveGameToHistory()}
+			>Sauvegarder la partie</button
+		>
 
 		<Toast />
 	{/if}

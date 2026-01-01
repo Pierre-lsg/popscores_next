@@ -58,4 +58,15 @@
 </div>
 
 <style>
+	.step-content {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.btn {
+		width: 100%;
+		-webkit-tap-highlight-color: transparent;
+		user-select: none;
+	}
 </style>

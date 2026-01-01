@@ -3,7 +3,7 @@
 </script>
 
 <div class="hub-container">
-	<h1>Cadence man ?</h1>
+	<h1>Au travail ...</h1>
 
 	<div class="grid">
 		<button class="card" on:click={() => currentPage.set('golf-score')}>
