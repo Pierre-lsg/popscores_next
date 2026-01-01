@@ -96,6 +96,8 @@
 
 	<!-- Saisie des inforamtions de la partie -->
 	{#if currentStep === Step.session}
+		<h2>Caractéristiques de la session</h2>
+
 		<GolfMSession />
 		<button on:click={() => nextCard(Step.players)} class="btn btn-next"
 			>Suivant : Les joueurs</button
@@ -103,34 +105,44 @@
 
 		<!-- Saisie des joueurs de la partie -->
 	{:else if currentStep === Step.players}
+		<div class="header-section">
+			<h2>Saisie des joueurs</h2>
+			<button on:click={() => nextCard(Step.session)} class="btn btn-icon">&lt;&lt;</button>
+		</div>
 		<GolfMPlayer {holeCount} />
-		<button on:click={() => nextCard(Step.session)} class="btn btn-prev">Retour : La session</button
-		>
 		<button on:click={() => nextCard(Step.holes)} class="btn btn-next">Suivant : Le parcours</button
 		>
 
 		<!-- Saisie du parcours : trous, par, ... -->
 	{:else if currentStep === Step.holes}
+		<div class="header-section">
+			<h2>Saisie du parcours</h2>
+			<button on:click={() => nextCard(Step.players)} class="btn btn-icon">&lt;&lt;</button>
+		</div>
+
 		<GolfMHoles />
-		<button on:click={() => nextCard(Step.players)} class="btn btn-prev"
-			>Retour : Les joueurs</button
-		>
 		<button on:click={() => nextCard(Step.scoring)} class="btn btn-next">Commencer la partie</button
 		>
 
 		<!-- Saisie du score lors du parcours -->
 	{:else if currentStep === Step.scoring}
+		<div class="header-section">
+			<h2>Saisie des scores</h2>
+			<button on:click={() => nextCard(Step.holes)} class="btn btn-icon">&lt;&lt;</button>
+		</div>
+
 		<GolfMScoring />
-		<button on:click={() => nextCard(Step.holes)} class="btn btn-prev">Retour : Les trous</button>
 		<button on:click={() => nextCard(Step.ranking)} class="btn btn-next">Classement final</button>
 
 		<!-- Résultat de la Partie : classement final -->
 	{:else if currentStep === Step.ranking}
-		<h2>🏆 Classement Final</h2>
+		<div class="header-section">
+			<h2>🏆 Classement Final</h2>
+			<button on:click={() => nextCard(Step.scoring)} class="btn btn-icon">&lt;&lt;</button>
+		</div>
 
 		<RankingPodium />
 
-		<button class="btn btn-prev" on:click={() => nextCard(Step.scoring)}>Retour aux scores</button>
 		<button on:click={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button>
 		<button class="btn btn-primary" on:click={() => resetGame()}>Nouvelle partie</button>
 		<button class="btn btn-primary" on:click={() => saveGameToHistory()}
@@ -160,46 +172,6 @@
 		transition: width 0.3s;
 	}
 
-	.step-content {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.hole-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		background: var(--bg-card);
-		padding: 1rem;
-		border-radius: 12px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	}
-
-	.par-badge {
-		background: var(--primary-light);
-		color: var(--primary);
-		padding: 2px 8px;
-		border-radius: 4px;
-		font-weight: bold;
-	}
-
-	.score-row {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		background: var(--bg-card);
-		padding: 0.8rem;
-		border-radius: 8px;
-		margin-bottom: 0.5rem;
-		border: 1px solid var(--border-color);
-	}
-
-	.player-name {
-		font-weight: 600;
-		font-size: 1.1rem;
-	}
-
 	.btn-next {
 		background-color: blue;
 		color: #eee;
@@ -208,7 +180,7 @@
 		margin: 0.5rem 0;
 		border-radius: 12px;
 		font-weight: bold;
-		font-size: 1.1rem;
+		font-size: 1.2rem;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	}
 
@@ -216,20 +188,29 @@
 		transform: scale(0.98);
 	}
 
-	.btn-prev {
-		background-color: gray;
-	}
-
-	/* Scroll fluide pour la liste des trous si le parcours est long */
-	.scroll-area {
-		max-height: 60vh;
-		overflow-y: auto;
-		padding-right: 5px;
-	}
-
 	.btn {
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;
+	}
+
+	.header-section {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		padding: 0.5rem 0;
+		border-bottom: 1px solid #ccc;
+		margin-bottom: 1rem;
+	}
+
+	.btn-icon {
+		background: none;
+		border: 1px solid var(--primary); /* Ton vert golf */
+		color: var(--primary);
+		border-radius: 4px;
+		padding: 4px 8px;
+		width: 20%;
+		cursor: pointer;
 	}
 </style>

@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { base } from '$app/paths';
 	import '../app.css';
-	import { isMobile } from '$lib/stores/viewportStore';
+	import { base } from '$app/paths';
 	import { pwaInfo } from 'virtual:pwa-info';
 
 	let { children } = $props();

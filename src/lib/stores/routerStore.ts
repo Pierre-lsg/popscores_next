@@ -1,6 +1,6 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
 // On définit les pages disponibles
-export type Page = "hub" | "golf-score" | "other-service";
+export type Page = 'hub' | 'golf-score' | 'params' | 'other-service';
 
-export const currentPage = writable<Page>("hub");
+export const currentPage = writable<Page>('hub');

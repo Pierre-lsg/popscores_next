@@ -68,5 +68,7 @@
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;
+		font-weight: bold;
+		font-size: 1.2rem;
 	}
 </style>

@@ -67,5 +67,14 @@
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;
+		font-weight: bold;
+		font-size: 1.2rem;
+	}
+
+	select {
+		padding: 0.8rem;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		font-size: 1rem;
 	}
 </style>

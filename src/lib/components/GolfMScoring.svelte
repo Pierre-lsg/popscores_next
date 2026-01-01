@@ -5,13 +5,14 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import { currentHoleIndex } from '$lib/stores/gameStatusStore';
 
-	let activeHoleIndex = $currentHoleIndex || 0;
-	let maxTrys = 10;
-
 	$: currentHole = $holesStore[activeHoleIndex];
 	$: isFirstHole = activeHoleIndex === 0;
 	$: isLastHole = activeHoleIndex === $holesStore.length - 1;
 	$: currentHoleIndex.set(activeHoleIndex);
+
+	let activeHoleIndex = $currentHoleIndex || 0;
+	let minTrys = currentHole.rule === 'Bonus' ? -3 : 0;
+	let maxTrys = currentHole.par + 4;
 </script>
 
 <div class="step-content" in:slide>
@@ -28,7 +29,7 @@
 		{#each $playersStore as player}
 			<div class="score-row">
 				<span class="player-name">{player.name}</span>
-				<Stepper bind:value={player.scores[activeHoleIndex]} min={1} max={maxTrys} />
+				<Stepper bind:value={player.scores[activeHoleIndex]} min={minTrys} max={maxTrys} />
 				<button
 					class="btn-delete"
 					on:click={() => (player.scores[activeHoleIndex] = maxTrys)}
