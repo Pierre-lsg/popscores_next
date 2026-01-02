@@ -38,7 +38,12 @@
 			{#each $holesStore as hole, i}
 				<tr class="scroll-area">
 					<td>
-						<Stepper label="Trou {i + 1}" bind:value={hole.par} min={3} />
+						<Stepper
+							label="Trou {i + 1}"
+							bind:value={hole.par}
+							min={0}
+							disabled={hole.rule === 'Bonus'}
+						/>
 					</td>
 					<td>
 						<select id="rule{hole.id}" bind:value={hole.rule}>

@@ -1,24 +1,27 @@
 import { writable } from 'svelte/store';
+import { browser } from '$app/environment';
 
-export type GameStatus = 'setup' | 'in_progress' | 'finished';
+// 1. Définir les valeurs par défaut
+const defaultSettings = {
+	locationName: 'La Doua',
+	weatherCondition: 'Soleil',
+	hasCrossAFixedPenalty: false,
+	malusOverPar: 4,
+	malusValue: 10,
+	teamGame: false
+};
 
-const STORAGE_KEY = 'golf-session-status';
+// 2. Récupérer les données du LocalStorage s'il y en a (uniquement côté client)
+const initialSettings =
+	browser && localStorage.getItem('golf-session_settings')
+		? JSON.parse(localStorage.getItem('golf-session_settings') || '{}')
+		: defaultSettings;
 
-function createGameStatusStore() {
-	const saved = localStorage.getItem(STORAGE_KEY) as GameStatus;
-	const { subscribe, set } = writable<GameStatus>(saved || 'setup');
+export const sessionSettings = writable(initialSettings);
 
-	return {
-		subscribe,
-		set: (status: GameStatus) => {
-			localStorage.setItem(STORAGE_KEY, status);
-			set(status);
-		},
-		reset: () => {
-			localStorage.removeItem(STORAGE_KEY);
-			set('setup');
-		}
-	};
+// 3. Sauvegarder automatiquement dès que le store change
+if (browser) {
+	sessionSettings.subscribe((value) => {
+		localStorage.setItem('golf-session_settings', JSON.stringify(value));
+	});
 }
-
-export const gameStatus = createGameStatusStore();

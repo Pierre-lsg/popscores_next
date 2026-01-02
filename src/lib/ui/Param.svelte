@@ -1,0 +1,52 @@
+<script>
+	export let label = ''; // Le titre du champ
+	export let value = ''; // La valeur liée (bind)
+	export let type = 'text'; // text, number, etc.
+	export let placeholder = ''; // Texte d'aide
+	export let inputmode = null; // Pour forcer le pavé numérique (ex: "numeric")
+</script>
+
+<div class="field-container">
+	{#if label}
+		<label for="input-field">{label}</label>
+	{/if}
+
+	<input id="input-field" {type} {placeholder} {inputmode} bind:value on:input on:keydown />
+</div>
+
+<style>
+	.field-container {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 1.2rem;
+		width: 100%;
+	}
+
+	label {
+		font-weight: 600;
+		font-size: 1rem;
+		color: var(--color-text-soft, #555);
+		text-align: left;
+	}
+
+	input {
+		padding: 12px;
+		border: 2px solid #e0e0e0;
+		border-radius: 8px;
+		font-size: 1rem;
+		transition: border-color 0.2s;
+		outline: none;
+	}
+
+	input:focus {
+		border-color: #2e7d32; /* Ton vert golf */
+	}
+
+	/* Style spécifique pour le mode sombre si tu l'utilises */
+	:global(.dark-mode) input {
+		background: #222;
+		color: white;
+		border-color: #444;
+	}
+</style>

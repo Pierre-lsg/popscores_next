@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Stepper from '$lib/ui/Stepper.svelte';
-
 	import { playersStore } from '$lib/stores/playersStore';
 	import { holesStore } from '$lib/stores/holesStore';
 	import { gameStatus, currentHoleIndex } from '$lib/stores/gameStatusStore';
@@ -18,13 +16,11 @@
 
 	const Step = { session: 1, players: 2, holes: 3, scoring: 4, ranking: 5 };
 
-	let currentStep = Step.session;
+	let currentStep: number = 1;
 	let activeHoleIndex = $currentHoleIndex || 0;
 
 	let locationName = '';
 	let weatherCondition = 'Soleil';
-
-	const weatherOptions = ['Soleil', 'Nuageux', 'Pluie', 'Venté', 'Froid'];
 
 	$: holes = $holesStore;
 	$: holeCount = holes.length;
@@ -40,7 +36,7 @@
 			}
 		}
 
-		if ($gameStatus === 'setup') nextCard(Step.players);
+		if ($gameStatus === 'setup') nextCard(Step.session);
 		else if ($gameStatus === 'in_progress') nextCard(Step.scoring);
 		else if ($gameStatus === 'finished') nextCard(Step.ranking);
 	});

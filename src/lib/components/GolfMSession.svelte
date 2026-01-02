@@ -1,60 +1,35 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { settings } from '$lib/stores/settingsStore';
-
-	let locationName = '';
-	let weatherCondition = 'Soleil';
-
-	let hasCrossAFixedPenalty = $settings.hasCrossAFixedPenalty;
-	let malusOverPar = $settings.malusOverPar;
-	let fixedMalus = $settings.fixedMalus;
-	let teamGame = false;
+	import { sessionSettings } from '$lib/stores/gameSessionStore';
+	import Toggle from '$lib/ui/Toggle.svelte';
+	import Param from '$lib/ui/Param.svelte';
 
 	const weatherOptions = ['Soleil', 'Nuageux', 'Pluie', 'Venté', 'Froid'];
 </script>
 
 <div class="step-content" in:slide>
-	<h2>👥 Lieu - règle - date - météo ?</h2>
+	<h2>⚙️ Lieu - règle - date - météo ?</h2>
 	<div class="setup-fields">
-		<div class="field">
-			<label for="golf">⛳ Nom du Golf</label>
-			<input id="golf" type="text" bind:value={locationName} placeholder="ex: Golf de Toulouse" />
-		</div>
+		<Param label="⛳ Nom du Golf" type="text" bind:value={$sessionSettings.locationName} />
 
 		<div class="field">
 			<label for="weather">☁️ Météo</label>
-			<select id="weather" bind:value={weatherCondition}>
+			<select id="weather" bind:value={$sessionSettings.weatherCondition}>
 				{#each weatherOptions as option}
 					<option value={option}>{option}</option>
 				{/each}
 			</select>
 		</div>
 
-		<div class="setting-row">
-			<span>Malus fixe en cas de X</span>
-			<label class="switch">
-				<input type="checkbox" bind:checked={hasCrossAFixedPenalty} />
-				<span class="slider"></span>
-			</label>
-		</div>
+		<Toggle label="Malus fixe en cas de X" bind:checked={$sessionSettings.hasCrossAFixedPenalty} />
 
-		<label>
-			Malus ajouté au par :
-			<input type="number" bind:value={malusOverPar} />
-		</label>
+		{#if $sessionSettings.hasCrossAFixedPenalty}
+			<Param label="Malus fixe" type="number" bind:value={$sessionSettings.fixedMalus} />
+		{:else}
+			<Param label="Malus ajouté au par" type="number" bind:value={$sessionSettings.malusOverPar} />
+		{/if}
 
-		<label>
-			Malus fixe :
-			<input type="number" bind:value={fixedMalus} />
-		</label>
-
-		<div class="setting-row">
-			<span>Partie en équipe</span>
-			<label class="switch">
-				<input type="checkbox" bind:checked={teamGame} />
-				<span class="slider"></span>
-			</label>
-		</div>
+		<Toggle label="Partie en équipe" bind:checked={$sessionSettings.teamGame} />
 	</div>
 </div>
 
@@ -67,7 +42,6 @@
 		padding: 1rem;
 		border-radius: 8px;
 	}
-	input,
 	select {
 		padding: 0.8rem;
 		border: 1px solid #ccc;

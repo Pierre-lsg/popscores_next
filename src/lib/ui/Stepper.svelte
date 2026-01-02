@@ -3,16 +3,18 @@
 	export let min: number = 0;
 	export let max: number | undefined = undefined;
 	export let label: string = '';
+	export let disabled: boolean = false;
 </script>
 
 <div class="stepper-container">
 	{#if label}<span class="label">{label}</span>{/if}
 	<div class="controls">
-		<button on:click={() => value > min && value--} class="btn-step">-</button>
+		<button on:click={() => value > min && value--} class="btn-step" {disabled}>-</button>
 		<div class="value-display">{value}</div>
 		<button
 			on:click={() => value < (max === undefined ? Infinity : max) && value++}
-			class="btn-step">+</button
+			class="btn-step"
+			{disabled}>+</button
 		>
 	</div>
 </div>
@@ -40,6 +42,7 @@
 		background: white;
 		font-size: 1.5rem;
 		color: var(--primary);
+		touch-action: manipulation;
 	}
 	.value-display {
 		font-size: 1.2rem;
