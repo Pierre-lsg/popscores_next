@@ -3,7 +3,7 @@
 	export let value = ''; // La valeur liée (bind)
 	export let type = 'text'; // text, number, etc.
 	export let placeholder = ''; // Texte d'aide
-	export let inputmode = null; // Pour forcer le pavé numérique (ex: "numeric")
+	export let inputmode = 'text'; // Pour forcer le pavé numérique (ex: "numeric")
 </script>
 
 <div class="field-container">

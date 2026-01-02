@@ -30,3 +30,10 @@ export interface GameSession {
 	holes: Hole[]; // La configuration des trous (PARs) de cette partie
 	isFinished: boolean; // Pour distinguer une partie en cours d'une archive
 }
+
+// Exemple de structure dans ton store
+export interface Team {
+	id: string;
+	name: string;
+	membersId: string[];
+}

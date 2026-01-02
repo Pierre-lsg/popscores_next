@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { sessionSettings } from '$lib/stores/gameSessionStore';
+
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
+	import Stepper from '$lib/ui/Stepper.svelte';
 
 	const weatherOptions = ['Soleil', 'Nuageux', 'Pluie', 'Venté', 'Froid'];
 </script>
@@ -24,12 +26,20 @@
 		<Toggle label="Malus fixe en cas de X" bind:checked={$sessionSettings.hasCrossAFixedPenalty} />
 
 		{#if $sessionSettings.hasCrossAFixedPenalty}
-			<Param label="Malus fixe" type="number" bind:value={$sessionSettings.fixedMalus} />
+			<Stepper label="Malus fixe" bind:value={$sessionSettings.fixedMalus} min={7} />
 		{:else}
-			<Param label="Malus ajouté au par" type="number" bind:value={$sessionSettings.malusOverPar} />
+			<Stepper label="Malus ajouté au Par" bind:value={$sessionSettings.malusOverPar} min={3} />
 		{/if}
 
 		<Toggle label="Partie en équipe" bind:checked={$sessionSettings.teamGame} />
+		{#if $sessionSettings.teamGame}
+			<Param
+				label="Nombre de joueurs par équipe"
+				type="number"
+				bind:value={$sessionSettings.playersPerTeam}
+				inputmode="numeric"
+			/>
+		{/if}
 	</div>
 </div>
 

@@ -8,7 +8,8 @@ const defaultSettings = {
 	hasCrossAFixedPenalty: false,
 	malusOverPar: 4,
 	malusValue: 10,
-	teamGame: false
+	teamGame: false,
+	playersPerTeam: 2
 };
 
 // 2. Récupérer les données du LocalStorage s'il y en a (uniquement côté client)
