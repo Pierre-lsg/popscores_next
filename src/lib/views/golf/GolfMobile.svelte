@@ -211,6 +211,8 @@
 		border-radius: 4px;
 		padding: 4px 8px;
 		width: 20%;
+		font-weight: lighter;
+		font-size: 1.5rem;
 		cursor: pointer;
 	}
 </style>

@@ -6,7 +6,10 @@ const defaultSettings = {
 	clubName: 'Mon Club',
 	useStableford: true,
 	hcp: 54,
-	darkMode: false
+	darkMode: false,
+	hasCrossAFixedPenalty: false,
+	malusValue: 10,
+	malusOverPar: 4
 };
 
 // 2. Récupérer les données du LocalStorage s'il y en a (uniquement côté client)

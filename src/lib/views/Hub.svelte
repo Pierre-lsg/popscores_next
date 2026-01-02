@@ -6,7 +6,7 @@
 <h1>Bienvenue au {$settings.clubName}</h1>
 
 <div class="hub-container">
-	<h1>Au travail ...</h1>
+	<h1>Round 2/1 ...</h1>
 
 	<div class="grid-container">
 		<button class="card" on:click={() => currentPage.set('golf-score')}>
