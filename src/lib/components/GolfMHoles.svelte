@@ -5,8 +5,8 @@
 	import { slide } from 'svelte/transition';
 	import { holesStore } from '$lib/stores/holesStore';
 	import { playersStore } from '$lib/stores/playersStore';
+	import { currentHoleIndex } from '$lib/stores/gameStatusStore';
 
-	let rule = 'Individuel';
 	const ruleOptions = ['Individuel', 'Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus'];
 	let isAdding = false;
 	let newHoleName = 'Trou';
@@ -14,11 +14,13 @@
 	let openedHoleIndex: number | null = null;
 
 	function toggleHoleDetails(index: number) {
-		if (openedHoleIndex === index) {
-			openedHoleIndex = null; // On referme si on clique sur le même
-		} else {
-			openedHoleIndex = index; // On ouvre le nouveau
-		}
+		if (openedHoleIndex === index) openedHoleIndex = null;
+		else openedHoleIndex = index;
+	}
+
+	function addHole() {
+		isAdding = true;
+		openedHoleIndex = null;
 	}
 
 	function confirmAdd() {
@@ -32,20 +34,21 @@
 		isAdding = false;
 		newHoleName = 'Trou';
 		newHoleRule = 'individuel';
+
+		// Et l'index du trou en cours de saisie si nécessaire
+		currentHoleIndex.set(0);
 	}
 
 	function confirmDeleteHole(index: number) {
-		// if (confirm(`Supprimer le trou n°${index + 1} ?`)) {
-		// On appelle les deux stores pour rester synchronisé
 		holesStore.remove(index);
 		playersStore.syncRemoveHole(index);
-		// }
+		currentHoleIndex.set(0);
 	}
 </script>
 
 <div class="step-content" in:slide>
 	{#if !isAdding}
-		<button on:click={() => (isAdding = true)} class="btn btn-primary">Ajouter un Trou ≡</button>
+		<button on:click={() => addHole()} class="btn btn-primary">Ajouter un Trou ≡</button>
 	{:else}
 		<div class="hole-config-box">
 			<Param label="Nom du Trou" type="text" bind:value={newHoleName} />
@@ -99,10 +102,12 @@
 				{#if openedHoleIndex === i}
 					<tr>
 						<td colspan="3">
-							<Param label="Nom" type="text" bind:value={hole.name} />
-							<button class="btn btn-suppress" on:click={() => confirmDeleteHole(i)}>
-								Supprimer
-							</button>
+							<div class="field-container">
+								<Param label="Nom" type="text" bind:value={hole.name} />
+								<button class="btn btn-suppress" on:click={() => confirmDeleteHole(i)}>
+									Supprimer
+								</button>
+							</div>
 						</td>
 					</tr>
 				{/if}
@@ -134,8 +139,8 @@
 	}
 
 	.btn-suppress {
-		background-color: lightcoral;
-		width: 100%;
+		background-color: rgb(255, 120, 120);
+		width: 50%;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;
 		font-weight: bold;
@@ -143,7 +148,7 @@
 	}
 
 	.btn-cancel {
-		background-color: lightcoral;
+		background-color: #ffaf87;
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;
@@ -153,7 +158,7 @@
 	}
 
 	.btn-confirm {
-		background-color: lightgreen;
+		background-color: rgb(120, 255, 120);
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;

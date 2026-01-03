@@ -5,17 +5,15 @@
 	import { sessionSettings } from '$lib/stores/gameSessionStore';
 
 	import type { Player } from '$lib/types/types';
-	import { onMount } from 'svelte';
 
 	$: players = $playersStore;
 
-	let isHidden: string;
+	let isHidden: string = $sessionSettings.teamGame ? '' : 'hidden';
 
 	export let holeCount: number;
 
 	function addPlayer() {
-		playersStore.add('Joueur #' + (players.length + 1), holeCount);
-		updateIsHidden();
+		playersStore.add('Joueur #' + (players.length + 1), '', holeCount);
 	}
 
 	function createTeam() {
@@ -24,9 +22,11 @@
 		const playersSorted = shuffle(players);
 
 		let membersId: string[] = [];
+		let player: Player | undefined;
 
 		teamsStore.reset();
 
+		// Répartition des joueurs dans les équipes
 		for (let i = 0; i < nbTeams; i++) {
 			const teamName = 'Team #' + (i + 1);
 			membersId = [];
@@ -38,22 +38,20 @@
 				}
 			}
 			teamsStore.add(teamName, membersId);
+
+			// Mise à jour des joueurs
+			membersId.forEach((playerId) => {
+				players.find((p) => p.id === playerId)!.team = teamName;
+			});
+			players.sort((a, b) => {
+				return a.team.localeCompare(b.team);
+			});
+			playersStore.set(players);
 		}
 	}
 
 	function confirmDeletePlayer(player: Player) {
-		// if (confirm(`Supprimer ${player.name} ?`)) {
 		playersStore.remove(player.id);
-		// }
-		updateIsHidden();
-	}
-
-	function updateIsHidden() {
-		if ($sessionSettings.teamGame && players.length > 3) {
-			isHidden = '';
-		} else {
-			isHidden = 'hidden';
-		}
 	}
 
 	function shuffle<T>(array: T[]): T[] {
@@ -66,10 +64,6 @@
 
 		return newArray;
 	}
-
-	onMount(() => {
-		updateIsHidden();
-	});
 </script>
 
 <div class="step-content" in:slide>
@@ -88,7 +82,14 @@
 			<tbody>
 				{#each $playersStore as player, i}
 					<tr>
-						<td class="sticky-col {isHidden}"> </td>
+						<td class="sticky-col {isHidden}">
+							<input
+								type="text"
+								bind:value={player.team}
+								class="player-name-input"
+								title="Cliquez pour renommer"
+							/>
+						</td>
 						<td>
 							<input
 								type="text"

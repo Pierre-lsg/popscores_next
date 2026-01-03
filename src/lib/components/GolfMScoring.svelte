@@ -83,17 +83,32 @@
 	</header>
 
 	<div class="scores-grid">
-		{#each $playersStore as player}
-			<div class="score-row">
-				<span class="player-name">{player.name}</span>
-				<Stepper bind:value={player.scores[activeHoleIndex]} min={minTrys} max={maxTrys} />
-				<button
-					class="btn-delete"
-					on:click={() => (player.scores[activeHoleIndex] = maxTrys)}
-					title="Echec">X</button
-				>
-			</div>
-		{/each}
+		<table>
+			<tbody>
+				{#each $playersStore as player}
+					<tr>
+						<td>
+							<span class="player-name">{player.name}</span>
+						</td>
+						<td>
+							<Stepper bind:value={player.scores[activeHoleIndex]} min={minTrys} max={maxTrys} />
+						</td>
+						<td class="btn-actions">
+							<button
+								class="btn-par"
+								on:click={() => (player.scores[activeHoleIndex] = currentHole.par)}
+								title="Par">=</button
+							>
+							<button
+								class="btn-delete"
+								on:click={() => (player.scores[activeHoleIndex] = maxTrys)}
+								title="Echec">X</button
+							>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
 	</div>
 </div>
 
@@ -135,19 +150,31 @@
 		font-weight: bold;
 	}
 
-	.score-row {
+	.btn-actions {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		background: var(--bg-card);
-		padding: 0.8rem;
-		border-radius: 8px;
-		margin-bottom: 0.5rem;
-		border: 1px solid var(--border-color);
 	}
 
 	.player-name {
 		font-weight: 600;
 		font-size: 1.1rem;
+	}
+
+	.btn-par {
+		background: #cdcdff;
+		color: #2855c6;
+		border: none;
+		border-radius: 50%;
+		width: 30px;
+		height: 30px;
+		font-weight: bold;
+		font-size: 1.2rem;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background 0.2s;
 	}
 </style>

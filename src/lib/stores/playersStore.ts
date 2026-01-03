@@ -17,11 +17,11 @@ function createPlayersStore() {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 		},
 
-		add: (name: string, holeCount: number) =>
+		add: (name: string, team: '', holeCount: number) =>
 			update((players) => {
 				const newList = [
 					...players,
-					{ id: crypto.randomUUID(), name, scores: Array(holeCount).fill(0) }
+					{ id: crypto.randomUUID(), name, team: name, scores: Array(holeCount).fill(0) }
 				];
 				localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
 				return newList;
