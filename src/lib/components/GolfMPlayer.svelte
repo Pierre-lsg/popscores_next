@@ -42,9 +42,9 @@
 	}
 
 	function confirmDeletePlayer(player: Player) {
-		if (confirm(`Supprimer ${player.name} ?`)) {
-			playersStore.remove(player.id);
-		}
+		// if (confirm(`Supprimer ${player.name} ?`)) {
+		playersStore.remove(player.id);
+		// }
 		updateIsHidden();
 	}
 

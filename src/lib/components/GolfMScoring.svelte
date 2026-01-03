@@ -69,7 +69,7 @@
 			>◀</button
 		>
 		<div class="hole-info">
-			<h3>Trou {activeHoleIndex + 1}</h3>
+			<h3>{currentHole.name} (# {activeHoleIndex + 1})</h3>
 			<div class="hole-details">
 				<span class="par-badge">{currentHole.rule}</span>
 				{#if currentHole.rule !== 'Bonus'}

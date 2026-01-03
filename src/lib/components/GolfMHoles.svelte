@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import Param from '$lib/ui/Param.svelte';
 
 	import { slide } from 'svelte/transition';
 	import { holesStore } from '$lib/stores/holesStore';
@@ -7,42 +8,77 @@
 
 	let rule = 'Individuel';
 	const ruleOptions = ['Individuel', 'Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus'];
+	let isAdding = false;
+	let newHoleName = 'Trou';
+	let newHoleRule = ruleOptions[0]; // Règle par défaut
+	let openedHoleIndex: number | null = null;
 
-	function addHole() {
-		holesStore.add();
+	function toggleHoleDetails(index: number) {
+		if (openedHoleIndex === index) {
+			openedHoleIndex = null; // On referme si on clique sur le même
+		} else {
+			openedHoleIndex = index; // On ouvre le nouveau
+		}
+	}
+
+	function confirmAdd() {
+		// On ajoute le trou au store avec les paramètres saisis
+		holesStore.add(newHoleRule === 'bonus' ? 0 : 4, newHoleName, newHoleRule);
+
 		// à améliorer
 		playersStore.syncAddHole(4);
+
+		// On réinitialise pour le prochain ajout
+		isAdding = false;
+		newHoleName = 'Trou';
+		newHoleRule = 'individuel';
 	}
 
 	function confirmDeleteHole(index: number) {
-		if (confirm(`Supprimer le trou n°${index + 1} ?`)) {
-			// On appelle les deux stores pour rester synchronisé
-			holesStore.remove(index);
-			playersStore.syncRemoveHole(index);
-		}
+		// if (confirm(`Supprimer le trou n°${index + 1} ?`)) {
+		// On appelle les deux stores pour rester synchronisé
+		holesStore.remove(index);
+		playersStore.syncRemoveHole(index);
+		// }
 	}
 </script>
 
 <div class="step-content" in:slide>
-	<button on:click={addHole} class="btn btn-primary">Ajouter un Trou</button>
+	{#if !isAdding}
+		<button on:click={() => (isAdding = true)} class="btn btn-primary">Ajouter un Trou ≡</button>
+	{:else}
+		<div class="hole-config-box">
+			<Param label="Nom du Trou" type="text" bind:value={newHoleName} />
+
+			<div class="field-container">
+				Règle
+				<select bind:value={newHoleRule}>
+					{#each ruleOptions as option}
+						<option value={option}>{option}</option>
+					{/each}
+				</select>
+			</div>
+
+			<div class="actions">
+				<button class="btn btn-cancel" on:click={() => (isAdding = false)}>Annuler</button>
+				<button class="btn btn-confirm" on:click={confirmAdd}>Confirmer</button>
+			</div>
+		</div>
+	{/if}
+
 	<table>
 		<thead>
 			<tr class="par-row">
 				<th class="sticky-col"><strong>Par</strong></th>
 				<th class="sticky-col"><strong>Règle</strong></th>
-				<th class="action-header">Action</th>
+				<th class="action-header"></th>
 			</tr>
 		</thead>
 		<tbody>
 			{#each $holesStore as hole, i}
 				<tr class="scroll-area">
 					<td>
-						<Stepper
-							label=" {i + 1} "
-							bind:value={hole.par}
-							min={0}
-							disabled={hole.rule === 'Bonus'}
-						/>
+						<Stepper label="" bind:value={hole.par} min={0} disabled={hole.rule === 'Bonus'} />
 					</td>
 					<td>
 						<select id="rule{hole.id}" bind:value={hole.rule}>
@@ -52,9 +88,24 @@
 						</select>
 					</td>
 					<td>
-						<button class="btn-delete" on:click={() => confirmDeleteHole(i)}> &times; </button>
+						<button
+							aria-label="Ouvrir le menu"
+							class="btn-icon"
+							on:click={() => toggleHoleDetails(i)}
+							>{openedHoleIndex === i ? 'x' : '☰'}
+						</button>
 					</td>
 				</tr>
+				{#if openedHoleIndex === i}
+					<tr>
+						<td colspan="3">
+							<Param label="Nom" type="text" bind:value={hole.name} />
+							<button class="btn btn-suppress" on:click={() => confirmDeleteHole(i)}>
+								Supprimer
+							</button>
+						</td>
+					</tr>
+				{/if}
 			{/each}
 		</tbody>
 	</table>
@@ -74,11 +125,75 @@
 		font-weight: bold;
 		font-size: 1.2rem;
 	}
+	.btn-icon {
+		background: none;
+		color: var(--primary);
+		border: none;
+		font-size: 1.2rem;
+		cursor: pointer;
+	}
+
+	.btn-suppress {
+		background-color: lightcoral;
+		width: 100%;
+		-webkit-tap-highlight-color: transparent;
+		user-select: none;
+		font-weight: bold;
+		font-size: 1rem;
+	}
+
+	.btn-cancel {
+		background-color: lightcoral;
+		width: 100%;
+		-webkit-tap-highlight-color: transparent;
+		user-select: none;
+		margin-left: 20px;
+		font-weight: bold;
+		font-size: 1rem;
+	}
+
+	.btn-confirm {
+		background-color: lightgreen;
+		width: 100%;
+		-webkit-tap-highlight-color: transparent;
+		user-select: none;
+		font-weight: bold;
+		font-size: 1rem;
+	}
 
 	select {
 		padding: 0.8rem;
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		font-size: 1rem;
+	}
+
+	.hole-config-box {
+		background: var(--bg-card);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		padding: 0.5rem 0;
+		border-radius: 10px;
+		margin-bottom: 1rem;
+	}
+
+	.actions {
+		background: var(--bg-card);
+		display: flex;
+		width: 80%;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.field-container {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 1.2rem;
+		width: 100%;
 	}
 </style>

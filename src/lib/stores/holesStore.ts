@@ -17,9 +17,9 @@ function createHolesStore() {
 			set(value);
 		},
 
-		add: () =>
+		add: (par: number, name: string, rule: string) =>
 			update((holes) => {
-				const newList = [...holes, { id: crypto.randomUUID(), par: 4 }];
+				const newList = [...holes, { id: crypto.randomUUID(), par, name, rule }];
 				localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
 				return newList;
 			}),

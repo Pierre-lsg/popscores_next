@@ -12,6 +12,7 @@
 	{/if}
 
 	<input id="input-field" {type} {placeholder} {inputmode} bind:value on:input on:keydown />
+	<slot />
 </div>
 
 <style>
