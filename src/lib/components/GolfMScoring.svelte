@@ -22,12 +22,52 @@
 
 	let activeHoleIndex = $currentHoleIndex || 0;
 	let hasCrossAFixedPenalty = $sessionSettings.hasCrossAFixedPenalty;
+
+	let prevHoleBtn: HTMLButtonElement;
+	let nextHoleBtn: HTMLButtonElement;
+
+	function prevHoleClick() {
+		prevHoleBtn?.click();
+	}
+
+	function nextHoleClick() {
+		nextHoleBtn?.click();
+	}
+
+	// --
+	// Code pour gestion du Swipe
+	// Todo: à refactoriser car utilisé ailleurs
+	let touchStartX = 0;
+	let touchEndX = 0;
+
+	// Seuil minimal pour éviter de changer d'écran par erreur (en pixels)
+	const SWIPE_THRESHOLD = 50;
+
+	function handleTouchStart(e: TouchEvent) {
+		touchStartX = e.changedTouches[0].screenX;
+	}
+
+	function handleTouchEnd(e: TouchEvent) {
+		touchEndX = e.changedTouches[0].screenX;
+		checkSwipe();
+	}
+
+	function checkSwipe() {
+		const distance = touchEndX - touchStartX;
+
+		if (Math.abs(distance) > SWIPE_THRESHOLD) {
+			if (distance > 0) nextHoleClick();
+			else prevHoleClick();
+		}
+	}
+	// --
 </script>
 
 <div class="step-content" in:slide>
-	<h2>📝 Saisie des scores</h2>
-	<header class="hole-header">
-		<button on:click={() => activeHoleIndex--} disabled={isFirstHole}>◀</button>
+	<header class="hole-header" on:touchstart={handleTouchStart} on:touchend={handleTouchEnd}>
+		<button bind:this={prevHoleBtn} on:click={() => activeHoleIndex--} disabled={isFirstHole}
+			>◀</button
+		>
 		<div class="hole-info">
 			<h3>Trou {activeHoleIndex + 1}</h3>
 			<div class="hole-details">
@@ -37,7 +77,9 @@
 				{/if}
 			</div>
 		</div>
-		<button on:click={() => activeHoleIndex++} disabled={isLastHole}>▶</button>
+		<button bind:this={nextHoleBtn} on:click={() => activeHoleIndex++} disabled={isLastHole}
+			>▶</button
+		>
 	</header>
 
 	<div class="scores-grid">

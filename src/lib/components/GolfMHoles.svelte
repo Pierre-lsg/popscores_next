@@ -24,12 +24,11 @@
 </script>
 
 <div class="step-content" in:slide>
-	<h2>⛳ Réglage des PARs</h2>
 	<button on:click={addHole} class="btn btn-primary">Ajouter un Trou</button>
 	<table>
 		<thead>
 			<tr class="par-row">
-				<th class="sticky-col"><strong>Joueurs</strong></th>
+				<th class="sticky-col"><strong>Par</strong></th>
 				<th class="sticky-col"><strong>Règle</strong></th>
 				<th class="action-header">Action</th>
 			</tr>
@@ -39,7 +38,7 @@
 				<tr class="scroll-area">
 					<td>
 						<Stepper
-							label="Trou {i + 1}"
+							label=" {i + 1} "
 							bind:value={hole.par}
 							min={0}
 							disabled={hole.rule === 'Bonus'}

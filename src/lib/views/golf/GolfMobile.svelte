@@ -8,6 +8,8 @@
 	import { archiveGame } from '$lib/stores/historyStore';
 
 	import Toast from '$lib/ui/Toast.svelte';
+	import GolfHeader from '$lib/ui/GolfHeader.svelte';
+
 	import RankingPodium from '$lib/components/RankingPodium.svelte';
 	import GolfMSession from '$lib/components/GolfMSession.svelte';
 	import GolfMPlayer from '$lib/components/GolfMPlayer.svelte';
@@ -92,51 +94,47 @@
 
 	<!-- Saisie des inforamtions de la partie -->
 	{#if currentStep === Step.session}
-		<h2>Caractéristiques de la session</h2>
-
+		<GolfHeader
+			title="⚙️ Params de la session"
+			onNext={() => nextCard(Step.players)}
+			onPrev={() => undefined}
+		/>
 		<GolfMSession />
-		<button on:click={() => nextCard(Step.players)} class="btn btn-next"
-			>Suivant : Les joueurs</button
-		>
 
 		<!-- Saisie des joueurs de la partie -->
 	{:else if currentStep === Step.players}
-		<div class="header-section">
-			<h2>Saisie des joueurs</h2>
-			<button on:click={() => nextCard(Step.session)} class="btn btn-icon">&lt;&lt;</button>
-		</div>
+		<GolfHeader
+			title="👥 Saisie des joueurs"
+			onNext={() => nextCard(Step.holes)}
+			onPrev={() => nextCard(Step.session)}
+		/>
 		<GolfMPlayer {holeCount} />
-		<button on:click={() => nextCard(Step.holes)} class="btn btn-next">Suivant : Le parcours</button
-		>
 
 		<!-- Saisie du parcours : trous, par, ... -->
 	{:else if currentStep === Step.holes}
-		<div class="header-section">
-			<h2>Saisie du parcours</h2>
-			<button on:click={() => nextCard(Step.players)} class="btn btn-icon">&lt;&lt;</button>
-		</div>
-
+		<GolfHeader
+			title="⛳ Saisie du parcours"
+			onNext={() => nextCard(Step.scoring)}
+			onPrev={() => nextCard(Step.players)}
+		/>
 		<GolfMHoles />
-		<button on:click={() => nextCard(Step.scoring)} class="btn btn-next">Commencer la partie</button
-		>
 
 		<!-- Saisie du score lors du parcours -->
 	{:else if currentStep === Step.scoring}
-		<div class="header-section">
-			<h2>Saisie des scores</h2>
-			<button on:click={() => nextCard(Step.holes)} class="btn btn-icon">&lt;&lt;</button>
-		</div>
-
+		<GolfHeader
+			title="📝 Saisie des scores"
+			onNext={() => nextCard(Step.ranking)}
+			onPrev={() => nextCard(Step.holes)}
+		/>
 		<GolfMScoring />
-		<button on:click={() => nextCard(Step.ranking)} class="btn btn-next">Classement final</button>
 
 		<!-- Résultat de la Partie : classement final -->
 	{:else if currentStep === Step.ranking}
-		<div class="header-section">
-			<h2>🏆 Classement Final</h2>
-			<button on:click={() => nextCard(Step.scoring)} class="btn btn-icon">&lt;&lt;</button>
-		</div>
-
+		<GolfHeader
+			title="🏆 Classement Final"
+			onNext={() => undefined}
+			onPrev={() => nextCard(Step.scoring)}
+		/>
 		<RankingPodium />
 
 		<button on:click={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button>
@@ -168,47 +166,9 @@
 		transition: width 0.3s;
 	}
 
-	.btn-next {
-		background-color: blue;
-		color: #eee;
-		border: none;
-		padding: 1rem;
-		margin: 0.5rem 0;
-		border-radius: 12px;
-		font-weight: bold;
-		font-size: 1.2rem;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	}
-
-	.btn-next:active {
-		transform: scale(0.98);
-	}
-
 	.btn {
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;
-	}
-
-	.header-section {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
-		padding: 0.5rem 0;
-		border-bottom: 1px solid #ccc;
-		margin-bottom: 1rem;
-	}
-
-	.btn-icon {
-		background: none;
-		border: 1px solid var(--primary); /* Ton vert golf */
-		color: var(--primary);
-		border-radius: 4px;
-		padding: 4px 8px;
-		width: 20%;
-		font-weight: lighter;
-		font-size: 1.5rem;
-		cursor: pointer;
 	}
 </style>

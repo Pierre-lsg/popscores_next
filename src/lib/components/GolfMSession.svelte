@@ -10,7 +10,6 @@
 </script>
 
 <div class="step-content" in:slide>
-	<h2>⚙️ Lieu - règle - date - météo ?</h2>
 	<div class="setup-fields">
 		<Param label="⛳ Nom du Golf" type="text" bind:value={$sessionSettings.locationName} />
 

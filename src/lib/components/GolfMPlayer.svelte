@@ -73,7 +73,6 @@
 </script>
 
 <div class="step-content" in:slide>
-	<h2>👥 Qui joue ?</h2>
 	<button on:click={addPlayer} class="btn btn-primary">Ajouter un Joueur</button>
 	<button on:click={createTeam} class="btn btn-primary {isHidden}">Calculer les équipes</button>
 
