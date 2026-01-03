@@ -5,8 +5,10 @@
 	import { sessionSettings } from '$lib/stores/gameSessionStore';
 
 	import type { Player } from '$lib/types/types';
+	import { smartSort, shuffle } from '$lib/utils/sharedFunction';
 
 	$: players = $playersStore;
+	$: teams = $teamsStore;
 
 	let isHidden: string = $sessionSettings.teamGame ? '' : 'hidden';
 
@@ -22,7 +24,6 @@
 		const playersSorted = shuffle(players);
 
 		let membersId: string[] = [];
-		let player: Player | undefined;
 
 		teamsStore.reset();
 
@@ -49,21 +50,6 @@
 			playersStore.set(players);
 		}
 	}
-
-	function confirmDeletePlayer(player: Player) {
-		playersStore.remove(player.id);
-	}
-
-	function shuffle<T>(array: T[]): T[] {
-		const newArray = [...array];
-
-		for (let i = newArray.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-		}
-
-		return newArray;
-	}
 </script>
 
 <div class="step-content" in:slide>
@@ -74,22 +60,42 @@
 		<table>
 			<thead>
 				<tr class="par-row">
-					<th class="sticky-col {isHidden}">Equipe</th>
-					<th class="sticky-col"><strong>Joueurs</strong></th>
+					<th class="sticky-col {isHidden}">
+						<button
+							class="invisible-button"
+							on:click={() => ($playersStore = smartSort(players, 'team'))}>Equipes</button
+						>
+					</th>
+					<th class="sticky-col">
+						<button
+							class="invisible-button"
+							on:click={() => ($playersStore = smartSort($playersStore, 'name'))}>Joueurs</button
+						>
+					</th>
 					<th class="action-header">Action</th>
 				</tr>
 			</thead>
 			<tbody>
 				{#each $playersStore as player, i}
 					<tr>
-						<td class="sticky-col {isHidden}">
-							<input
-								type="text"
-								bind:value={player.team}
-								class="player-name-input"
-								title="Cliquez pour renommer"
-							/>
-						</td>
+						{#if true}
+							<td class="sticky-col {isHidden}">
+								<input
+									type="text"
+									bind:value={player.team}
+									class="player-name-input"
+									title="Cliquez pour renommer"
+								/>
+							</td>
+						{:else}
+							<td>
+								<select id="team{player.id}" bind:value={player.team}>
+									{#each $teamsStore as team}
+										<option value={team.name}>{team.name}</option>
+									{/each}
+								</select>
+							</td>
+						{/if}
 						<td>
 							<input
 								type="text"
@@ -101,7 +107,7 @@
 						<td>
 							<button
 								class="btn-delete"
-								on:click={() => confirmDeletePlayer(player)}
+								on:click={() => playersStore.remove(player.id)}
 								title="Supprimer le joueur"
 							>
 								&minus;
@@ -131,5 +137,14 @@
 
 	.hidden {
 		display: none;
+	}
+
+	.invisible-button {
+		background: none;
+		border: none;
+		padding: 0;
+		font: inherit;
+		cursor: pointer;
+		color: inherit;
 	}
 </style>
