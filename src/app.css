@@ -44,7 +44,7 @@
 	/* Couleurs principales */
 	--primary: #000000;
 	--primary-light: #e8f5e9;
-	--secondary: #546e7a;
+	--secondary: dimgray;
 
 	/* Neutres */
 	--bg-app: #ffffff;
@@ -84,6 +84,11 @@ button {
 
 .btn-primary {
 	background: var(--primary);
+	color: white;
+}
+
+.btn-secondary {
+	background: var(--secondary);
 	color: white;
 }
 .btn-primary:hover {

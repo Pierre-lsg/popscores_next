@@ -1,5 +1,7 @@
 import { writable } from 'svelte/store';
-import type { Player } from '$lib/types/types';
+import { derived } from 'svelte/store';
+import type { Player } from '$lib/types/playerIntfc';
+import { teamsStore } from './teamsStore';
 
 // Clé unique pour identifier nos données dans le navigateur
 const STORAGE_KEY = 'golf-players-data';
@@ -17,11 +19,17 @@ function createPlayersStore() {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 		},
 
-		add: (name: string, team: '', holeCount: number) =>
+		add: (name: string, team: '', teamId: '', holeCount: number) =>
 			update((players) => {
 				const newList = [
 					...players,
-					{ id: crypto.randomUUID(), name, team: name, scores: Array(holeCount).fill(0) }
+					{
+						id: crypto.randomUUID(),
+						name,
+						team: name,
+						teamId: '',
+						scores: Array(holeCount).fill(0)
+					}
 				];
 				localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
 				return newList;
@@ -69,3 +77,18 @@ function createPlayersStore() {
 }
 
 export const playersStore = createPlayersStore();
+
+// Derivative Store : playersWithTeams
+
+export const playersWithTeams = derived([playersStore, teamsStore], ([$players, $teams]) => {
+	return $players.map((player) => {
+		// On cherche l'équipe correspondante
+		const team = $teams.find((t) => t.id === player.teamId);
+
+		// On retourne un nouvel objet avec le nom de l'équipe inclus
+		return {
+			...player,
+			teamName: team ? team.name : 'Individuel'
+		};
+	});
+});

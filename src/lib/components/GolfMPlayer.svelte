@@ -1,14 +1,9 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { playersStore } from '$lib/stores/playersStore';
+	import { playersStore, playersWithTeams } from '$lib/stores/playersStore';
 	import { teamsStore } from '$lib/stores/teamsStore';
 	import { sessionSettings } from '$lib/stores/gameSessionStore';
-
-	import type { Player } from '$lib/types/types';
 	import { smartSort, shuffle } from '$lib/utils/sharedFunction';
-
-	$: players = $playersStore;
-	$: teams = $teamsStore;
 
 	let isTeamGame: boolean = $sessionSettings.teamGame;
 	let isSortTeamAsc: boolean = true;
@@ -16,11 +11,16 @@
 	let isSettingTeams: boolean = false;
 	let isEditingTeams: boolean = false;
 	let isModifyingCompo: boolean = false;
+	let listPlayersWithTeams = [];
+
+	$: players = $playersStore;
+	$: teams = $teamsStore;
+	$: listPlayersWithTeams = smartSort($playersWithTeams, 'teamName', isSortTeamAsc);
 
 	export let holeCount: number;
 
 	function addPlayer() {
-		playersStore.add('Joueur #' + (players.length + 1), '', holeCount);
+		playersStore.add('Joueur #' + (players.length + 1), '', '', holeCount);
 	}
 
 	function createTeam() {
@@ -35,6 +35,7 @@
 		// Répartition des joueurs dans les équipes
 		for (let i = 0; i < nbTeams; i++) {
 			const teamName = 'Team #' + (i + 1);
+			const teamId = crypto.randomUUID();
 			membersId = [];
 
 			for (let j = 0; j < nbPlayerPerTeam; j++) {
@@ -43,14 +44,11 @@
 					playersSorted.shift();
 				}
 			}
-			teamsStore.add(teamName, membersId);
+			teamsStore.add(teamId, teamName, membersId);
 
 			// Mise à jour des joueurs
 			membersId.forEach((playerId) => {
-				players.find((p) => p.id === playerId)!.team = teamName;
-			});
-			players.sort((a, b) => {
-				return a.team.localeCompare(b.team);
+				players.find((p) => p.id === playerId)!.teamId = teamId;
 			});
 			playersStore.set(players);
 		}
@@ -70,7 +68,6 @@
 	}
 
 	function sortPlayersByTeam() {
-		$playersStore = smartSort(players, 'team', isSortTeamAsc);
 		isSortTeamAsc = !isSortTeamAsc;
 	}
 
@@ -142,11 +139,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each $playersStore as player, i}
+				{#each listPlayersWithTeams as player, i}
 					<tr>
 						{#if isTeamGame}
 							<td class="sticky-col">
-								{player.team}
+								{player.teamName}
 							</td>
 						{/if}
 						<!--							

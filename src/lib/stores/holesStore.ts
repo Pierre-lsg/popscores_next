@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Hole } from '$lib/types/types';
+import type { Hole } from '$lib/types/holesIntfc';
 
 const STORAGE_KEY = 'golf-holes-data';
 

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Team } from '$lib/types/types';
+import type { Team } from '$lib/types/teamIntfc';
 
 // Clé unique pour identifier nos données dans le navigateur
 const STORAGE_KEY = 'golf-teams-data';
@@ -17,9 +17,9 @@ function createTeamsStore() {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 		},
 
-		add: (name: string, membersId: string[]) =>
+		add: (id: string, name: string, membersId: string[]) =>
 			update((teams) => {
-				const newList = [...teams, { id: crypto.randomUUID(), name, membersId }];
+				const newList = [...teams, { id, name, membersId }];
 				localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
 				return newList;
 			}),
