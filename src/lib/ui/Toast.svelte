@@ -1,38 +1,30 @@
 <script lang="ts">
-  import { toast } from '$lib/stores/toastStore';
-  import { fade, fly } from 'svelte/transition';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { fade, fly } from 'svelte/transition';
 </script>
 
-{#if $toast}
-  <div 
-    class="toast-container" 
-    in:fly={{ y: 50, duration: 400 }} 
-    out:fade
-  >
-    <div class="toast-content">
-      <span>{$toast}</span>
-    </div>
-  </div>
-{/if}
+{#if toastStore.message}
+	<button
+		transition:fly={{ y: 50, duration: 300 }}
+		class="toast-button"
+		onclick={() => toastStore.dismiss()}
+	>
+		{toastStore.message}
+	</button>{/if}
 
 <style>
-  .toast-container {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-  }
-
-  .toast-content {
-    background: #333;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border-radius: 50px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+	.toast-button {
+		/* On annule le style par défaut du bouton */
+		background: var(--primary);
+		color: white;
+		border: none;
+		padding: 0.8rem 1.5rem;
+		border-radius: 8px;
+		cursor: pointer;
+		/* Positionnement */
+		position: fixed;
+		bottom: 2rem;
+		left: 50%;
+		transform: translateX(-50%);
+	}
 </style>

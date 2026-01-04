@@ -1,32 +1,31 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { playersStore, playersWithTeams } from '$lib/stores/playersStore';
-	import { teamsStore } from '$lib/stores/teamsStore';
-	import { sessionSettings } from '$lib/stores/gameSessionStore';
+	import { playersStore } from '$lib/stores/playersStore.svelte';
+	import { teamsStore } from '$lib/stores/teamsStore.svelte';
+	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { smartSort, shuffle } from '$lib/utils/sharedFunction';
 
-	let isTeamGame: boolean = $sessionSettings.teamGame;
+	const s = sessionSettingsStore.settings;
+
+	let isTeamGame: boolean = s.teamGame;
 	let isSortTeamAsc: boolean = true;
 	let isSortPlayerAsc: boolean = true;
-	let isSettingTeams: boolean = false;
-	let isEditingTeams: boolean = false;
+	let isSettingTeams: boolean = $state(false);
+	let isEditingTeams: boolean = $state(false);
 	let isModifyingCompo: boolean = false;
-	let listPlayersWithTeams = [];
 
-	$: players = $playersStore;
-	$: teams = $teamsStore;
-	$: listPlayersWithTeams = smartSort($playersWithTeams, 'teamName', isSortTeamAsc);
+	let { holeCount }: { holeCount: number } = $props();
 
-	export let holeCount: number;
+	// $inspect(isEditingTeams, isTeamGame, playersStore.list);
 
 	function addPlayer() {
-		playersStore.add('Joueur #' + (players.length + 1), '', '', holeCount);
+		playersStore.add('Joueur #' + (playersStore.list.length + 1), holeCount);
 	}
 
 	function createTeam() {
-		const nbPlayerPerTeam = $sessionSettings.playersPerTeam;
-		const nbTeams = Math.floor(players.length / nbPlayerPerTeam) + 1;
-		const playersSorted = shuffle(players);
+		const nbPlayerPerTeam = s.playersPerTeam;
+		const nbTeams = Math.floor(playersStore.list.length / nbPlayerPerTeam) + 1;
+		const playersSorted = shuffle(playersStore.list);
 
 		let membersId: string[] = [];
 
@@ -48,9 +47,9 @@
 
 			// Mise à jour des joueurs
 			membersId.forEach((playerId) => {
-				players.find((p) => p.id === playerId)!.teamId = teamId;
+				playersStore.list.find((p) => p.id === playerId)!.teamId = teamId;
 			});
-			playersStore.set(players);
+			// playersStore.list = players;
 		}
 	}
 
@@ -72,19 +71,19 @@
 	}
 
 	function sortPlayersByPlayer() {
-		$playersStore = smartSort(players, 'name', isSortPlayerAsc);
+		playersStore.list = smartSort(playersStore.list, 'name', isSortPlayerAsc);
 		isSortPlayerAsc = !isSortPlayerAsc;
 	}
 </script>
 
 <div class="step-content" in:slide>
-	<button on:click={addPlayer} class="btn btn-primary">Ajouter un Joueur</button>
-	{#if isTeamGame}<button on:click={settingTeams} class="btn btn-primary">☰ Param équipes</button
+	<button onclick={addPlayer} class="btn btn-primary">Ajouter un Joueur</button>
+	{#if isTeamGame}<button onclick={settingTeams} class="btn btn-primary">☰ Param équipes</button
 		>{/if}
 	{#if isSettingTeams}
-		<button on:click={createTeam} class="btn btn-secondary">Définir les équipes</button>
-		<button on:click={editTeams} class="btn btn-secondary">Editer les équipes</button>
-		<button on:click={modifyCompo} class="btn btn-secondary">Modifier les équipes</button>
+		<button onclick={createTeam} class="btn btn-secondary">Définir les équipes</button>
+		<button onclick={editTeams} class="btn btn-secondary">Editer les équipes</button>
+		<button onclick={modifyCompo} class="btn btn-secondary">Modifier les équipes</button>
 	{/if}
 
 	<div class="card-list">
@@ -98,7 +97,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each $teamsStore as team}
+					{#each teamsStore.list as team}
 						<tr>
 							<td>
 								<input
@@ -111,7 +110,7 @@
 							<td>
 								<button
 									class="btn-delete"
-									on:click={() => teamsStore.remove(team.id)}
+									onclick={() => teamsStore.remove(team.id)}
 									title="Supprimer l'équipe"
 								>
 									&minus;
@@ -129,32 +128,23 @@
 				<tr class="par-row">
 					{#if isTeamGame}
 						<th class="sticky-col">
-							<button class="invisible-button" on:click={() => sortPlayersByTeam()}>Equipes</button>
+							<button class="invisible-button" onclick={() => sortPlayersByTeam()}>Equipes</button>
 						</th>
 					{/if}
 					<th class="sticky-col">
-						<button class="invisible-button" on:click={() => sortPlayersByPlayer()}>Joueurs</button>
+						<button class="invisible-button" onclick={() => sortPlayersByPlayer()}>Joueurs</button>
 					</th>
 					<th class="action-header">Action</th>
 				</tr>
 			</thead>
 			<tbody>
-				{#each listPlayersWithTeams as player, i}
+				{#each playersStore.list as player}
 					<tr>
 						{#if isTeamGame}
 							<td class="sticky-col">
-								{player.teamName}
+								{playersStore.getTeamName(player)}
 							</td>
 						{/if}
-						<!--							
-						<td>
-								<select id="team{player.id}" bind:value={player.team}>
-									{#each $teamsStore as team}
-										<option value={team.name}>{team.name}</option>
-									{/each}
-								</select>
-							</td>
--->
 						<td>
 							<input
 								type="text"
@@ -166,7 +156,7 @@
 						<td>
 							<button
 								class="btn-delete"
-								on:click={() => playersStore.remove(player.id)}
+								onclick={() => playersStore.remove(player.id)}
 								title="Supprimer le joueur"
 							>
 								&minus;

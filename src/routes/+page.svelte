@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { currentPage } from '$lib/stores/routerStore';
+	import { router } from '$lib/stores/routerStore.svelte';
 
 	import Hub from '$lib/views/Hub.svelte';
 	import GolfGame from '$lib/views/GolfGame.svelte';
@@ -7,8 +7,6 @@
 
 	import ThemeSelector from '$lib/ui/ThemeSelector.svelte';
 	import NetworkBanner from '$lib/ui/NetworkBanner.svelte';
-	// On écoute la page courante
-	$: page = $currentPage;
 </script>
 
 <NetworkBanner />
@@ -16,10 +14,8 @@
 <main>
 	<div class="top-bar">
 		<div class="nav-action">
-			{#if page === 'golf-score' || page === 'params'}
-				<button class="btn btn-back" on:click={() => currentPage.set('hub')}>
-					← Retour au Hub
-				</button>
+			{#if router.current === 'golf-score' || router.current === 'params'}
+				<button class="btn btn-back" onclick={() => router.goTo('hub')}> ← Retour au Hub </button>
 			{:else}
 				<span></span>
 			{/if}
@@ -28,11 +24,11 @@
 		<ThemeSelector />
 	</div>
 
-	{#if page === 'hub'}
+	{#if router.current === 'hub'}
 		<Hub />
-	{:else if page === 'golf-score'}
+	{:else if router.current === 'golf-score'}
 		<GolfGame />
-	{:else if page === 'params'}
+	{:else if router.current === 'params'}
 		<Params />
 	{/if}
 </main>

@@ -1,33 +1,34 @@
 <script lang="ts">
 	import type { Player } from '$lib/types/playerIntfc';
 	import { getTotalStrokes } from '$lib/utils/utils';
-	import { holesStore } from '$lib/stores/holesStore';
+	import { holesStore } from '$lib/stores/holesStore.svelte';
 	import { getRelativeScore } from '$lib/utils/utils';
-	import { gameStatus } from '$lib/stores/gameStatusStore';
+	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
 	export let players: Player[];
 
 	// On recalcule le classement ici de façon réactive
 	// $: ranking = [...players].sort((a, b) => getTotal(a.scores) - getTotal(b.scores));
 	$: ranking = [...players].sort(
-		(a, b) => getRelativeScore(a.scores, $holesStore) - getRelativeScore(b.scores, $holesStore)
+		(a, b) =>
+			getRelativeScore(a.scores, holesStore.list) - getRelativeScore(b.scores, holesStore.list)
 	);
 </script>
 
-{#if $gameStatus === 'finished'}
+{#if gameStatus.status === 'finished'}
 	<div class="podium">
 		{#each ranking.slice(0, 3) as player, i}
 			<div class="podium-spot rank-{i + 1}">
 				<span class="medal">{i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
 				<span class="name">{player.name}</span>
-				<span class="score">{getRelativeScore(player.scores, $holesStore)}</span>
+				<span class="score">{getRelativeScore(player.scores, holesStore.list)}</span>
 			</div>
 		{/each}
 	</div>
 {/if}
 
 <section class="ranking-card">
-	{#if $gameStatus === 'finished'}
+	{#if gameStatus.status === 'finished'}
 		<h2>🏆 Classement Final</h2>
 	{:else}
 		<h2>Classement Actuel</h2>

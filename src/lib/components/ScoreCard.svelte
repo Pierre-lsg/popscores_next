@@ -1,23 +1,25 @@
 <script lang="ts">
 	import type { Player } from '$lib/types/playerIntfc';
 	import type { Hole } from '$lib/types/holesIntfc';
-	import { holesStore } from '$lib/stores/holesStore';
-	import { playersStore } from '$lib/stores/playersStore';
+	import { holesStore } from '$lib/stores/holesStore.svelte';
+	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { getRelativeScore, getTotalStrokes } from '$lib/utils/utils';
-	import { gameStatus } from '$lib/stores/gameStatusStore';
+	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
-	export let players: Player[];
-	export let holes: Hole[];
-	export let holeCount: number;
+	let {
+		players = playersStore.list
+	}: {
+		players?: Player[];
+	} = $props();
 
-	$: holes = $holesStore;
-	$: holeCount = holes.length;
-	$: totalPar = holes.reduce((acc, h) => acc + (h.par || 0), 0);
+	let holes = $derived(holesStore.list);
+	let holeCount = $derived(holes.length);
+	let totalPar = $derived(holes.reduce((acc, h) => acc + (h.par || 0), 0));
 
-	$: isSetup = $gameStatus === 'setup';
-	$: isFinished = $gameStatus === 'finished';
-	$: isLocked = isFinished || $gameStatus === 'in_progress';
-	$: isHidden = isLocked ? 'hide' : '';
+	let isSetup = $derived(gameStatus.status === 'setup');
+	let isFinished = $derived(gameStatus.status === 'finished');
+	let isLocked = $derived(isFinished || gameStatus.status === 'in_progress');
+	let isHidden = $derived(isLocked ? 'hide' : '');
 
 	function confirmDeleteHole(index: number) {
 		if (confirm(`Supprimer le trou n°${index + 1} ?`)) {
@@ -46,7 +48,7 @@
 								type="number"
 								bind:value={hole.par}
 								disabled={isLocked}
-								on:input={() => holesStore.updatePar(i, hole.par || 0)}
+								oninput={() => holesStore.updatePar(i, hole.par || 0)}
 								class="par-input"
 								min="1"
 							/>
@@ -63,7 +65,7 @@
 				{#each Array(holeCount) as _, i}
 					<th class="hole-header">
 						T{i + 1}
-						<button class="btn-mini-delete {isHidden}" on:click={() => confirmDeleteHole(i)}>
+						<button class="btn-mini-delete {isHidden}" onclick={() => confirmDeleteHole(i)}>
 							&times;
 						</button>
 					</th>
@@ -96,7 +98,7 @@
 								bind:value={player.scores[i]}
 								disabled={isSetup || isFinished}
 								placeholder={isSetup ? '-' : '0'}
-								on:input={() => playersStore.set(players)}
+								oninput={() => (playersStore.list = players)}
 								min="0"
 								class="score-input"
 							/>
@@ -119,7 +121,7 @@
 					<td>
 						<button
 							class="btn-delete {isHidden}"
-							on:click={() => confirmDeletePlayer(player)}
+							onclick={() => confirmDeletePlayer(player)}
 							title="Supprimer le joueur"
 						>
 							&minus;

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { isMobile } from '$lib/stores/viewportStore';
+	import { viewport } from '$lib/stores/viewportStore.svelte';
 	import GolfMobile from '$lib/views/golf/GolfMobile.svelte';
 	import GolfDesktop from '$lib/views/golf/GolfDesktop.svelte';
 </script>
 
 <div class="game-wrapper">
-	{#if $isMobile}
+	{#if viewport.isMobile}
 		<GolfMobile />
 	{:else}
 		<div class="desktop-container">

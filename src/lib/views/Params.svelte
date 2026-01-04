@@ -1,26 +1,27 @@
 <script>
-	import { settings } from '$lib/stores/settingsStore';
+	import { appSettings } from '$lib/stores/settingsStore.svelte';
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
+	import Stepper from '$lib/ui/Stepper.svelte';
 </script>
 
 <div class="settings-page">
 	<h2>Paramètres globaux</h2>
-	<Param label="Nom du club" type="text" bind:value={$settings.clubName} />
-	<Param label="Mon Index (HCP)" type="number" bind:value={$settings.hcp} />
-	<Toggle label="Calcul Stableford" bind:checked={$settings.useStableford} />
+	<Param label="Nom du club" type="text" bind:value={appSettings.values.clubName} />
+	<Stepper label="Mon Index (HCP)" bind:value={appSettings.values.hcp} min={0} />
+	<Toggle label="Calcul Stableford" bind:checked={appSettings.values.useStableford} />
 
 	<h2>Paramètres de sessions de golf</h2>
 
-	<Toggle label="Malus fixe en cas de X" bind:checked={$settings.hasCrossAFixedPenalty} />
+	<Toggle label="Malus fixe en cas de X" bind:checked={appSettings.values.hasCrossAFixedPenalty} />
 
-	{#if $settings.hasCrossAFixedPenalty}
-		<Param label="Malus fixe" type="number" bind:value={$settings.malusValue} />
+	{#if appSettings.values.hasCrossAFixedPenalty}
+		<Stepper label="Malus fixe" bind:value={appSettings.values.malusValue} />
 	{:else}
-		<Param label="Malus ajouté au par" type="number" bind:value={$settings.malusOverPar} />
+		<Stepper label="Malus ajouté au par" bind:value={appSettings.values.malusOverPar} />
 	{/if}
 
-	<Toggle label="Partie en équipe" bind:checked={$settings.teamGame} />
+	<Toggle label="Partie en équipe" bind:checked={appSettings.values.isTeamGame} />
 </div>
 
 <style>

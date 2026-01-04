@@ -32,15 +32,15 @@
 	// --
 </script>
 
-<div class="header-section" on:touchstart={handleTouchStart} on:touchend={handleTouchEnd}>
+<div class="header-section" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
 	<h2>{title}</h2>
 
 	<div class="actions">
 		{#if typeof onPrev === 'function'}
-			<button class="btn btn-icon" on:click={onPrev}>&lt;&lt;</button>
+			<button class="btn btn-icon" onclick={onPrev}>&lt;&lt;</button>
 		{/if}
 		{#if typeof onPrev === 'function'}
-			<button class="btn btn-icon" on:click={onNext}>&gt;&gt;</button>
+			<button class="btn btn-icon" onclick={onNext}>&gt;&gt;</button>
 		{/if}
 	</div>
 </div>

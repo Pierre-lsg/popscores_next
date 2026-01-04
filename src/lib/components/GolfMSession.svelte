@@ -1,43 +1,39 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { sessionSettings } from '$lib/stores/gameSessionStore';
+	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 
 	const weatherOptions = ['Soleil', 'Nuageux', 'Pluie', 'Venté', 'Froid'];
+	const s = sessionSettingsStore.settings;
 </script>
 
 <div class="step-content" in:slide>
 	<div class="setup-fields">
-		<Param label="⛳ Nom du Golf" type="text" bind:value={$sessionSettings.locationName} />
+		<Param label="⛳ Nom du Golf" type="text" bind:value={s.locationName} />
 
 		<div class="field">
 			<label for="weather">☁️ Météo</label>
-			<select id="weather" bind:value={$sessionSettings.weatherCondition}>
+			<select id="weather" bind:value={s.weatherCondition}>
 				{#each weatherOptions as option}
 					<option value={option}>{option}</option>
 				{/each}
 			</select>
 		</div>
 
-		<Toggle label="Malus fixe en cas de X" bind:checked={$sessionSettings.hasCrossAFixedPenalty} />
+		<Toggle label="Malus fixe en cas de X" bind:checked={s.hasCrossAFixedPenalty} />
 
-		{#if $sessionSettings.hasCrossAFixedPenalty}
-			<Stepper label="Malus fixe" bind:value={$sessionSettings.fixedMalus} min={7} />
+		{#if s.hasCrossAFixedPenalty}
+			<Stepper label="Malus fixe" bind:value={s.malusValue} min={7} />
 		{:else}
-			<Stepper label="Malus ajouté au Par" bind:value={$sessionSettings.malusOverPar} min={3} />
+			<Stepper label="Malus ajouté au Par" bind:value={s.malusOverPar} min={3} />
 		{/if}
 
-		<Toggle label="Partie en équipe" bind:checked={$sessionSettings.teamGame} />
-		{#if $sessionSettings.teamGame}
-			<Param
-				label="Nombre de joueurs par équipe"
-				type="number"
-				bind:value={$sessionSettings.playersPerTeam}
-				inputmode="numeric"
-			/>
+		<Toggle label="Partie en équipe" bind:checked={s.teamGame} />
+		{#if s.teamGame}
+			<Stepper label="Nombre de joueurs par équipe" bind:value={s.playersPerTeam} min={2} />
 		{/if}
 	</div>
 </div>

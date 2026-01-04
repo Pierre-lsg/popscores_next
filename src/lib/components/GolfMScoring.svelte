@@ -1,27 +1,31 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { playersStore } from '$lib/stores/playersStore';
-	import { holesStore } from '$lib/stores/holesStore';
-	import { sessionSettings } from '$lib/stores/gameSessionStore';
-	import { currentHoleIndex } from '$lib/stores/gameStatusStore';
+	import { playersStore } from '$lib/stores/playersStore.svelte';
+	import { holesStore } from '$lib/stores/holesStore.svelte';
+	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
+	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
 	import Stepper from '$lib/ui/Stepper.svelte';
 
-	$: currentHole = $holesStore[activeHoleIndex];
-	$: isFirstHole = activeHoleIndex === 0;
-	$: isLastHole = activeHoleIndex === $holesStore.length - 1;
-	$: currentHoleIndex.set(activeHoleIndex);
+	const s = sessionSettingsStore.settings;
 
-	$: minTrys = currentHole.rule === 'Bonus' ? -3 : 0;
-	$: maxTrys =
-		currentHole.rule === 'Bonus'
+	let activeHoleIndex = $derived(gameStatus.currentHoleIndex);
+
+	let currentHole = $derived(holesStore.list[activeHoleIndex]);
+	let isFirstHole = $derived(activeHoleIndex === 0);
+	let isLastHole = $derived(activeHoleIndex === holesStore.list.length - 1);
+
+	let minTrys = $derived(currentHole?.rule === 'Bonus' ? -3 : 0);
+
+	let maxTrys = $derived(
+		currentHole?.rule === 'Bonus'
 			? 0
-			: hasCrossAFixedPenalty
-				? $sessionSettings.fixedMalus
-				: currentHole.par + $sessionSettings.malusOverPar;
+			: s.hasCrossAFixedPenalty
+				? s.malusValue
+				: currentHole.par + s.malusOverPar
+	);
 
-	let activeHoleIndex = $currentHoleIndex || 0;
-	let hasCrossAFixedPenalty = $sessionSettings.hasCrossAFixedPenalty;
+	let hasCrossAFixedPenalty = s.hasCrossAFixedPenalty;
 
 	let prevHoleBtn: HTMLButtonElement;
 	let nextHoleBtn: HTMLButtonElement;
@@ -64,8 +68,8 @@
 </script>
 
 <div class="step-content" in:slide>
-	<header class="hole-header" on:touchstart={handleTouchStart} on:touchend={handleTouchEnd}>
-		<button bind:this={prevHoleBtn} on:click={() => activeHoleIndex--} disabled={isFirstHole}
+	<header class="hole-header" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
+		<button bind:this={prevHoleBtn} onclick={() => activeHoleIndex--} disabled={isFirstHole}
 			>◀</button
 		>
 		<div class="hole-info">
@@ -77,7 +81,7 @@
 				{/if}
 			</div>
 		</div>
-		<button bind:this={nextHoleBtn} on:click={() => activeHoleIndex++} disabled={isLastHole}
+		<button bind:this={nextHoleBtn} onclick={() => activeHoleIndex++} disabled={isLastHole}
 			>▶</button
 		>
 	</header>
@@ -85,7 +89,7 @@
 	<div class="scores-grid">
 		<table>
 			<tbody>
-				{#each $playersStore as player}
+				{#each playersStore.list as player}
 					<tr>
 						<td>
 							<span class="player-name">{player.name}</span>
@@ -96,12 +100,12 @@
 						<td class="btn-actions">
 							<button
 								class="btn-par"
-								on:click={() => (player.scores[activeHoleIndex] = currentHole.par)}
+								onclick={() => (player.scores[activeHoleIndex] = currentHole.par)}
 								title="Par">=</button
 							>
 							<button
 								class="btn-delete"
-								on:click={() => (player.scores[activeHoleIndex] = maxTrys)}
+								onclick={() => (player.scores[activeHoleIndex] = maxTrys)}
 								title="Echec">X</button
 							>
 						</td>

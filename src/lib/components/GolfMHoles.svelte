@@ -3,9 +3,9 @@
 	import Param from '$lib/ui/Param.svelte';
 
 	import { slide } from 'svelte/transition';
-	import { holesStore } from '$lib/stores/holesStore';
-	import { playersStore } from '$lib/stores/playersStore';
-	import { currentHoleIndex } from '$lib/stores/gameStatusStore';
+	import { holesStore } from '$lib/stores/holesStore.svelte';
+	import { playersStore } from '$lib/stores/playersStore.svelte';
+	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
 	const ruleOptions = ['Individuel', 'Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus'];
 	let isAdding = false;
@@ -36,19 +36,19 @@
 		newHoleRule = 'individuel';
 
 		// Et l'index du trou en cours de saisie si nécessaire
-		currentHoleIndex.set(0);
+		gameStatus.currentHoleIndex = 0;
 	}
 
 	function confirmDeleteHole(index: number) {
 		holesStore.remove(index);
 		playersStore.syncRemoveHole(index);
-		currentHoleIndex.set(0);
+		gameStatus.currentHoleIndex = 0;
 	}
 </script>
 
 <div class="step-content" in:slide>
 	{#if !isAdding}
-		<button on:click={() => addHole()} class="btn btn-primary">Ajouter un Trou ≡</button>
+		<button onclick={() => addHole()} class="btn btn-primary">Ajouter un Trou ≡</button>
 	{:else}
 		<div class="hole-config-box">
 			<Param label="Nom du Trou" type="text" bind:value={newHoleName} />
@@ -63,8 +63,8 @@
 			</div>
 
 			<div class="actions">
-				<button class="btn btn-cancel" on:click={() => (isAdding = false)}>Annuler</button>
-				<button class="btn btn-confirm" on:click={confirmAdd}>Confirmer</button>
+				<button class="btn btn-cancel" onclick={() => (isAdding = false)}>Annuler</button>
+				<button class="btn btn-confirm" onclick={confirmAdd}>Confirmer</button>
 			</div>
 		</div>
 	{/if}
@@ -78,7 +78,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each $holesStore as hole, i}
+			{#each holesStore.list as hole, i}
 				<tr class="scroll-area">
 					<td>
 						<Stepper label="" bind:value={hole.par} min={0} disabled={hole.rule === 'Bonus'} />
@@ -94,7 +94,7 @@
 						<button
 							aria-label="Ouvrir le menu"
 							class="btn-icon"
-							on:click={() => toggleHoleDetails(i)}
+							onclick={() => toggleHoleDetails(i)}
 							>{openedHoleIndex === i ? 'x' : '☰'}
 						</button>
 					</td>
@@ -104,7 +104,7 @@
 						<td colspan="3">
 							<div class="field-container">
 								<Param label="Nom" type="text" bind:value={hole.name} />
-								<button class="btn btn-suppress" on:click={() => confirmDeleteHole(i)}>
+								<button class="btn btn-suppress" onclick={() => confirmDeleteHole(i)}>
 									Supprimer
 								</button>
 							</div>

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { playersStore } from '$lib/stores/playersStore';
-	import { holesStore } from '$lib/stores/holesStore';
+	import { playersStore } from '$lib/stores/playersStore.svelte';
+	import { holesStore } from '$lib/stores/holesStore.svelte';
 	import type { Player } from '$lib/types/playerIntfc';
 
 	// On trie les joueurs par score total (le plus bas gagne au golf !)
-	$: rankedPlayers = [...$playersStore].sort((a, b) => {
+	$: rankedPlayers = [...playersStore.list].sort((a, b) => {
 		const totalA = a.scores.reduce((sum, s) => sum + s, 0);
 		const totalB = b.scores.reduce((sum, s) => sum + s, 0);
 		return totalA - totalB;
@@ -12,7 +12,7 @@
 
 	$: top3 = rankedPlayers.slice(0, 3);
 	$: others = rankedPlayers.slice(3);
-	$: totalPar = $holesStore.reduce((sum, h) => sum + h.par, 0);
+	$: totalPar = holesStore.list.reduce((sum, h) => sum + h.par, 0);
 
 	function getTotal(player: Player) {
 		return player.scores.reduce((sum, s) => sum + s, 0);
@@ -94,7 +94,7 @@
 		</div>
 	{/if}
 
-	<button class="share-button" on:click={shareResults}>
+	<button class="share-button" onclick={shareResults}>
 		<span class="icon">📤</span> Partager les résultats
 	</button>
 </div>

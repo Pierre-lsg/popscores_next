@@ -9,10 +9,10 @@
 <div class="stepper-container">
 	{#if label}<span class="label">{label}</span>{/if}
 	<div class="controls">
-		<button on:click={() => value > min && value--} class="btn-step" {disabled}>-</button>
+		<button onclick={() => value > min && value--} class="btn-step" {disabled}>-</button>
 		<div class="value-display">{value}</div>
 		<button
-			on:click={() => value < (max === undefined ? Infinity : max) && value++}
+			onclick={() => value < (max === undefined ? Infinity : max) && value++}
 			class="btn-step"
 			{disabled}>+</button
 		>

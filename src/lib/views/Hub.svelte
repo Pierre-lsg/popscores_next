@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { currentPage } from '$lib/stores/routerStore';
-	import { settings } from '$lib/stores/settingsStore';
+	import { router } from '$lib/stores/routerStore.svelte';
+	import { appSettings } from '$lib/stores/settingsStore.svelte';
 </script>
 
-<h1>Bienvenue au {$settings.clubName}</h1>
+<h1>Bienvenue au {appSettings.values.clubName}</h1>
 
 <div class="hub-container">
 	<h1>Round 2/1 ...</h1>
 
 	<div class="grid-container">
-		<button class="card" on:click={() => currentPage.set('golf-score')}>
+		<button class="card" onclick={() => router.goTo('golf-score')}>
 			<span class="icon">⛳</span>
 			<h3>Golf Score</h3>
 			<p>Suivi de partie entre amis</p>
@@ -21,7 +21,7 @@
 			<p>Bientôt disponible...</p>
 		</button>
 
-		<button class="card" on:click={() => currentPage.set('params')}>
+		<button class="card" onclick={() => router.goTo('params')}>
 			<span class="icon">⚙️</span>
 			<h3>Paramétrages</h3>
 			<p>Configuration de l'application</p>
