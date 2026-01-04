@@ -10,7 +10,12 @@
 	$: players = $playersStore;
 	$: teams = $teamsStore;
 
-	let isHidden: string = $sessionSettings.teamGame ? '' : 'hidden';
+	let isTeamGame: boolean = $sessionSettings.teamGame;
+	let isSortTeamAsc: boolean = true;
+	let isSortPlayerAsc: boolean = true;
+	let isSettingTeams: boolean = false;
+	let isEditingTeams: boolean = false;
+	let isModifyingCompo: boolean = false;
 
 	export let holeCount: number;
 
@@ -50,27 +55,88 @@
 			playersStore.set(players);
 		}
 	}
+
+	function settingTeams() {
+		isSettingTeams = !isSettingTeams;
+	}
+
+	function editTeams() {
+		isEditingTeams = !isEditingTeams;
+	}
+
+	function modifyCompo() {
+		isModifyingCompo = !isModifyingCompo;
+		alert('b');
+	}
+
+	function sortPlayersByTeam() {
+		$playersStore = smartSort(players, 'team', isSortTeamAsc);
+		isSortTeamAsc = !isSortTeamAsc;
+	}
+
+	function sortPlayersByPlayer() {
+		$playersStore = smartSort(players, 'name', isSortPlayerAsc);
+		isSortPlayerAsc = !isSortPlayerAsc;
+	}
 </script>
 
 <div class="step-content" in:slide>
 	<button on:click={addPlayer} class="btn btn-primary">Ajouter un Joueur</button>
-	<button on:click={createTeam} class="btn btn-primary {isHidden}">Calculer les équipes</button>
+	{#if isTeamGame}<button on:click={settingTeams} class="btn btn-primary">☰ Param équipes</button
+		>{/if}
+	{#if isSettingTeams}
+		<button on:click={createTeam} class="btn btn-secondary">Définir les équipes</button>
+		<button on:click={editTeams} class="btn btn-secondary">Editer les équipes</button>
+		<button on:click={modifyCompo} class="btn btn-secondary">Modifier les équipes</button>
+	{/if}
 
 	<div class="card-list">
+		<!-- Liste des équipes -->
+		{#if isEditingTeams}
+			<table>
+				<thead>
+					<tr class="par-row">
+						<th class="sticky-col">Equipes</th>
+						<th class="sticky-col">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each $teamsStore as team}
+						<tr>
+							<td>
+								<input
+									type="text"
+									bind:value={team.name}
+									class="player-name-input"
+									title="Cliquez pour renommer"
+								/>
+							</td>
+							<td>
+								<button
+									class="btn-delete"
+									on:click={() => teamsStore.remove(team.id)}
+									title="Supprimer l'équipe"
+								>
+									&minus;
+								</button>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		{/if}
+
+		<!-- Liste des joueurs -->
 		<table>
 			<thead>
 				<tr class="par-row">
-					<th class="sticky-col {isHidden}">
-						<button
-							class="invisible-button"
-							on:click={() => ($playersStore = smartSort(players, 'team'))}>Equipes</button
-						>
-					</th>
+					{#if isTeamGame}
+						<th class="sticky-col">
+							<button class="invisible-button" on:click={() => sortPlayersByTeam()}>Equipes</button>
+						</th>
+					{/if}
 					<th class="sticky-col">
-						<button
-							class="invisible-button"
-							on:click={() => ($playersStore = smartSort($playersStore, 'name'))}>Joueurs</button
-						>
+						<button class="invisible-button" on:click={() => sortPlayersByPlayer()}>Joueurs</button>
 					</th>
 					<th class="action-header">Action</th>
 				</tr>
@@ -78,24 +144,20 @@
 			<tbody>
 				{#each $playersStore as player, i}
 					<tr>
-						{#if true}
-							<td class="sticky-col {isHidden}">
-								<input
-									type="text"
-									bind:value={player.team}
-									class="player-name-input"
-									title="Cliquez pour renommer"
-								/>
+						{#if isTeamGame}
+							<td class="sticky-col">
+								{player.team}
 							</td>
-						{:else}
-							<td>
+						{/if}
+						<!--							
+						<td>
 								<select id="team{player.id}" bind:value={player.team}>
 									{#each $teamsStore as team}
 										<option value={team.name}>{team.name}</option>
 									{/each}
 								</select>
 							</td>
-						{/if}
+-->
 						<td>
 							<input
 								type="text"
@@ -133,10 +195,6 @@
 		user-select: none;
 		font-weight: bold;
 		font-size: 1.2rem;
-	}
-
-	.hidden {
-		display: none;
 	}
 
 	.invisible-button {

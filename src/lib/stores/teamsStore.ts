@@ -24,18 +24,6 @@ function createTeamsStore() {
 				return newList;
 			}),
 
-		// addPlayerToTeam: (teamId: string, membersId: string) =>
-		// 	update((teams) => {
-		// 		const newList = teams.map((team) => {
-		// 			if (team.id === teamId) {
-		// 				return { ...team, membersId: [...team.membersId, membersId] };
-		// 			}
-		// 			return team;
-		// 		});
-		// 		localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
-		// 		return newList;
-		// 	}),
-
 		remove: (id: string) =>
 			update((teams) => {
 				const newList = teams.filter((t) => t.id !== id);

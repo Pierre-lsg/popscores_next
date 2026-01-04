@@ -1,3 +1,13 @@
+# Présentation
+
+Application de gestion des sessions de street golf.
+Tourne uniqument sur Client Web.
+// Faire une description plus complète
+
+# License
+
+Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
