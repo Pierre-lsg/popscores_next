@@ -6,6 +6,8 @@
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import { createSolutionBuilderWithWatch } from 'typescript';
+	import { onMount } from 'svelte';
 
 	const s = sessionSettingsStore.settings;
 
@@ -64,12 +66,32 @@
 			else prevTargetClick();
 		}
 	}
-	// --
+
+	function showNextTarget() {
+		activeTargetIndex++;
+		initScoresPlayerOnTarget();
+	}
+
+	function showPrevTarget() {
+		activeTargetIndex--;
+	}
+
+	function initScoresPlayerOnTarget() {
+		playersStore.list.forEach((player) => {
+			if (player.scores[currentTarget.id] === undefined) {
+				player.scores[currentTarget.id] = currentTarget.par;
+			}
+		});
+	}
+
+	onMount(() => {
+		initScoresPlayerOnTarget();
+	});
 </script>
 
 <div class="step-content" in:slide>
 	<header class="target-header" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
-		<button bind:this={prevTargetBtn} onclick={() => activeTargetIndex--} disabled={isFirstTarget}
+		<button bind:this={prevTargetBtn} onclick={() => showPrevTarget()} disabled={isFirstTarget}
 			>◀</button
 		>
 		<div class="target-info">
@@ -81,7 +103,7 @@
 				{/if}
 			</div>
 		</div>
-		<button bind:this={nextTargetBtn} onclick={() => activeTargetIndex++} disabled={isLastTarget}
+		<button bind:this={nextTargetBtn} onclick={() => showNextTarget()} disabled={isLastTarget}
 			>▶</button
 		>
 	</header>

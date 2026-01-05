@@ -3,25 +3,33 @@
 	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import type { Player } from '$lib/types/playerInterface';
 
-	// On trie les joueurs par score total (le plus bas gagne au golf !)
-	$: rankedPlayers = [...playersStore.list].sort((a, b) => {
-		const totalA = a.scores.reduce((sum, s) => sum + s, 0);
-		const totalB = b.scores.reduce((sum, s) => sum + s, 0);
-		return totalA - totalB;
-	});
+	// Helper interne pour calculer le score d'un joueur basé sur les cibles actuelles
+	const calculatePlayerScore = (player: Player) => {
+		return targetsStore.list.reduce((sum, target) => {
+			return sum + (player.scores[target.id] || 0);
+		}, 0);
+	};
 
-	$: top3 = rankedPlayers.slice(0, 3);
-	$: others = rankedPlayers.slice(3);
-	$: totalPar = targetsStore.list.reduce((sum, h) => sum + h.par, 0);
+	// Calcul du Par total du parcours
+	const totalPar = $derived(targetsStore.list.reduce((sum, t) => sum + t.par, 0));
 
-	function getTotal(player: Player) {
-		return player.scores.reduce((sum, s) => sum + s, 0);
-	}
+	// Classement : Trie les joueurs par score total
+	const rankedPlayers = $derived(
+		[...playersStore.list].sort((a, b) => {
+			return calculatePlayerScore(a) - calculatePlayerScore(b);
+		})
+	);
 
+	// Dérivations pour l'affichage
+	const top3 = $derived(rankedPlayers.slice(0, 3));
+	const others = $derived(rankedPlayers.slice(3));
+
+	// Fonction utilitaire pour l'UI (utilisée dans le HTML)
 	function getPlayerStats(player: Player) {
-		const gross = player.scores.reduce((sum, s) => sum + s, 0);
+		const gross = calculatePlayerScore(player);
 		const diff = gross - totalPar;
-		let diffText = diff > 0 ? `(+${diff})` : diff < 0 ? `(${diff})` : '(E)';
+		const diffText = diff > 0 ? `(+${diff})` : diff < 0 ? `(${diff})` : '(E)';
+
 		return { gross, diffText, diff };
 	}
 	async function shareResults() {
@@ -57,25 +65,28 @@
 <div class="podium-container">
 	<div class="podium-visual">
 		{#if top3[1]}
+			{@const stats = getPlayerStats(top3[1])}
 			<div class="place silver">
-				<span class="score">{getTotal(top3[1])} ({getTotal(top3[1]) - totalPar})</span>
+				, <span class="score">{stats.gross} ({stats.diff})</span>
 				<div class="bar"></div>
 				<span class="name">{top3[1].name}</span>
 			</div>
 		{/if}
 
 		{#if top3[0]}
+			{@const stats = getPlayerStats(top3[1])}
 			<div class="place gold">
 				<span class="medal">👑</span>
-				<span class="score">{getTotal(top3[0])} ({getTotal(top3[0]) - totalPar})</span>
+				<span class="score">{stats.gross} ({stats.diff})</span>
 				<div class="bar"></div>
 				<span class="name">{top3[0].name}</span>
 			</div>
 		{/if}
 
 		{#if top3[2]}
+			{@const stats = getPlayerStats(top3[1])}
 			<div class="place bronze">
-				<span class="score">{getTotal(top3[2])} ({getTotal(top3[2]) - totalPar})</span>
+				<span class="score">{stats.gross} ({stats.diff})</span>
 				<div class="bar"></div>
 				<span class="name">{top3[2].name}</span>
 			</div>
@@ -85,10 +96,11 @@
 	{#if others.length > 0}
 		<div class="others-list">
 			{#each others as player, i}
+				{@const stats = getPlayerStats(player)}
 				<div class="other-item">
 					<span class="rank">{i + 4}</span>
 					<span class="name">{player.name}</span>
-					<span class="score">{getTotal(player)} ({getTotal(player) - totalPar})</span>
+					<span class="score">{stats.gross} ({stats.diff})</span>
 				</div>
 			{/each}
 		</div>

@@ -57,27 +57,19 @@ class PlayersStore {
 		this.list = this.list.filter((p) => p.id !== id);
 	}
 
-	/*syncAddTarget(par: number = 0) {
-		this.list.forEach((p) => p.scores.push(par));
-	}
-
-	syncRemoveTarget(index: number) {
-		this.list.forEach((p) => p.scores.splice(index, 1));
-	}*/
-
-	updateScore(playerId: string, holeId: string, value: number) {
+	updateScore(playerId: string, targetId: string, value: number) {
 		const player = this.list.find((p) => p.id === playerId);
 		if (player) {
 			// Svelte 5 détecte le changement dans l'objet interne
-			player.scores[holeId] = value;
+			player.scores[targetId] = value;
 		}
 	}
 
-	cleanOrphanScores(activeHoleIds: string[]) {
+	cleanOrphanScores(activeTargetIds: string[]) {
 		this.list.forEach((player) => {
-			Object.keys(player.scores).forEach((holeId) => {
-				if (!activeHoleIds.includes(holeId)) {
-					delete player.scores[holeId];
+			Object.keys(player.scores).forEach((targetId) => {
+				if (!activeTargetIds.includes(targetId)) {
+					delete player.scores[targetId];
 				}
 			});
 		});

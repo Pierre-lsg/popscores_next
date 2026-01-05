@@ -2,6 +2,8 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Param from '$lib/ui/Param.svelte';
 
+	import type { Target } from '$lib/types/targetsInterface';
+
 	import { slide } from 'svelte/transition';
 	import { fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
@@ -20,7 +22,7 @@
 	let newTargetRule = $state(ruleOptions[0]); // Règle par défaut
 
 	function addTarget() {
-		targetsStore.add(newTargetRule === 'bonus' ? 0 : 4, newTargetName, newTargetRule);
+		targetsStore.add(newTargetRule === 'Bonus' ? 0 : 4, newTargetName, newTargetRule);
 		gameStatus.currentTargetIndex = 0;
 	}
 
@@ -29,6 +31,7 @@
 		if (removedItem) {
 			targetsStore.list = targetsStore.list.filter((h) => h.id !== removedItem.id);
 		}
+		playersStore.cleanOrphanScores(targetsStore.list.map((h) => h.id));
 		gameStatus.currentTargetIndex = 0;
 		isDragging = false;
 	}
@@ -91,7 +94,11 @@
 						</button>
 					{/if}
 					<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
-					<select id="rule{target.id}" bind:value={target.rule}>
+					<select
+						id="rule{target.id}"
+						bind:value={target.rule}
+						onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+					>
 						{#each ruleOptions as option}
 							<option value={option}>{option}</option>
 						{/each}
