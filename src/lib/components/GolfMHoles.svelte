@@ -3,126 +3,119 @@
 	import Param from '$lib/ui/Param.svelte';
 
 	import { slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+	import { dndzone } from 'svelte-dnd-action';
+
 	import { holesStore } from '$lib/stores/holesStore.svelte';
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
 	const ruleOptions = ['Individuel', 'Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus'];
-	let isAdding = false;
-	let newHoleName = 'Trou';
-	let newHoleRule = ruleOptions[0]; // Règle par défaut
-	let openedHoleIndex: number | null = null;
+	const flipDurationMs = 300;
 
-	function toggleHoleDetails(index: number) {
-		if (openedHoleIndex === index) openedHoleIndex = null;
-		else openedHoleIndex = index;
-	}
+	let editingId = $state<string | null>(null);
+	let isDragging = $state(false);
+	let newHoleName = $state('Trou');
+	let newHoleRule = $state(ruleOptions[0]); // Règle par défaut
 
 	function addHole() {
-		isAdding = true;
-		openedHoleIndex = null;
-	}
-
-	function confirmAdd() {
-		// On ajoute le trou au store avec les paramètres saisis
 		holesStore.add(newHoleRule === 'bonus' ? 0 : 4, newHoleName, newHoleRule);
-
-		// à améliorer
 		playersStore.syncAddHole(4);
-
-		// On réinitialise pour le prochain ajout
-		isAdding = false;
-		newHoleName = 'Trou';
-		newHoleRule = 'individuel';
-
-		// Et l'index du trou en cours de saisie si nécessaire
 		gameStatus.currentHoleIndex = 0;
 	}
 
-	function confirmDeleteHole(index: number) {
-		holesStore.remove(index);
-		playersStore.syncRemoveHole(index);
-		gameStatus.currentHoleIndex = 0;
+	function handleRemoveDrop(e: CustomEvent<{ items: any[] }>) {
+		const removedItem = e.detail.items[0];
+		if (removedItem) {
+			holesStore.list = holesStore.list.filter((h) => h.id !== removedItem.id);
+		}
+		isDragging = false;
+	}
+
+	function handleConsider() {
+		isDragging = true;
+	}
+	function handleFinalize(e: CustomEvent<{ items: any[] }>) {
+		holesStore.list = e.detail.items;
+		isDragging = false;
+	}
+
+	function editHoleName(id: string) {
+		editingId = id;
+	}
+
+	function saveName(e: Event) {
+		// Dès qu'on perd le focus (blur) ou appuie sur Entrée
+		editingId = null;
+	}
+	function focus(node: HTMLInputElement) {
+		node.focus();
+		node.select(); // Optionnel : sélectionne tout le texte pour écraser vite
 	}
 </script>
 
 <div class="step-content" in:slide>
-	{#if !isAdding}
-		<button onclick={() => addHole()} class="btn btn-primary">Ajouter un Trou ≡</button>
-	{:else}
-		<div class="hole-config-box">
-			<Param label="Nom du Trou" type="text" bind:value={newHoleName} />
+	<button onclick={() => addHole()} class="btn btn-primary">Ajouter un Trou ≡</button>
 
-			<div class="field-container">
-				Règle
-				<select bind:value={newHoleRule}>
-					{#each ruleOptions as option}
-						<option value={option}>{option}</option>
-					{/each}
-				</select>
+	<div
+		class="holes-list"
+		use:dndzone={{
+			items: holesStore.list,
+			flipDurationMs,
+			dropTargetStyle: { outline: '2px dashed var(--primary)', borderRadius: '8px' }
+		}}
+		onconsider={(e) => {
+			handleConsider();
+			holesStore.list = e.detail.items;
+		}}
+		onfinalize={handleFinalize}
+	>
+		{#each holesStore.list as hole (hole.id)}
+			<div class="hole-item" animate:flip={{ duration: flipDurationMs }}>
+				<div class="content">
+					{#if editingId === hole.id}
+						<input
+							class="name-input"
+							bind:value={hole.name}
+							onblur={saveName}
+							onkeydown={(e) => e.key === 'Enter' && saveName(e)}
+							use:focus
+						/>
+					{:else}
+						<button
+							class="content-edit-item invisible-button"
+							onclick={() => editHoleName(hole.id)}
+						>
+							{hole.name || `Trou ${holesStore.list.indexOf(hole) + 1}`}
+						</button>
+					{/if}
+					<Stepper label="" bind:value={hole.par} min={0} disabled={hole.rule === 'Bonus'} />
+					<select id="rule{hole.id}" bind:value={hole.rule}>
+						{#each ruleOptions as option}
+							<option value={option}>{option}</option>
+						{/each}
+					</select>
+				</div>
+				<div class="handle">☰</div>
 			</div>
+		{/each}
+	</div>
 
-			<div class="actions">
-				<button class="btn btn-cancel" onclick={() => (isAdding = false)}>Annuler</button>
-				<button class="btn btn-confirm" onclick={confirmAdd}>Confirmer</button>
-			</div>
+	{#if isDragging}
+		<div
+			transition:fly={{ x: 100, duration: 300 }}
+			class="delete-zone"
+			use:dndzone={{ items: [] }}
+			onfinalize={handleRemoveDrop}
+		>
+			<div class="trash-icon">🗑️</div>
+			<p>Lâcher pour supprimer</p>
 		</div>
 	{/if}
-
-	<table>
-		<thead>
-			<tr class="par-row">
-				<th class="sticky-col"><strong>Par</strong></th>
-				<th class="sticky-col"><strong>Règle</strong></th>
-				<th class="action-header"></th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each holesStore.list as hole, i}
-				<tr class="scroll-area">
-					<td>
-						<Stepper label="" bind:value={hole.par} min={0} disabled={hole.rule === 'Bonus'} />
-					</td>
-					<td>
-						<select id="rule{hole.id}" bind:value={hole.rule}>
-							{#each ruleOptions as option}
-								<option value={option}>{option}</option>
-							{/each}
-						</select>
-					</td>
-					<td>
-						<button
-							aria-label="Ouvrir le menu"
-							class="btn-icon"
-							onclick={() => toggleHoleDetails(i)}
-							>{openedHoleIndex === i ? 'x' : '☰'}
-						</button>
-					</td>
-				</tr>
-				{#if openedHoleIndex === i}
-					<tr>
-						<td colspan="3">
-							<div class="field-container">
-								<Param label="Nom" type="text" bind:value={hole.name} />
-								<button class="btn btn-suppress" onclick={() => confirmDeleteHole(i)}>
-									Supprimer
-								</button>
-							</div>
-						</td>
-					</tr>
-				{/if}
-			{/each}
-		</tbody>
-	</table>
 </div>
 
 <style>
-	.scroll-area {
-		max-height: 60vh;
-		overflow-y: auto;
-		padding-right: 5px;
-	}
-
 	.btn {
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
@@ -130,75 +123,85 @@
 		font-weight: bold;
 		font-size: 1.2rem;
 	}
-	.btn-icon {
-		background: none;
-		color: var(--primary);
-		border: none;
-		font-size: 1.2rem;
-		cursor: pointer;
-	}
-
-	.btn-suppress {
-		background-color: rgb(255, 120, 120);
-		width: 50%;
-		-webkit-tap-highlight-color: transparent;
-		user-select: none;
-		font-weight: bold;
-		font-size: 1rem;
-	}
-
-	.btn-cancel {
-		background-color: #ffaf87;
-		width: 100%;
-		-webkit-tap-highlight-color: transparent;
-		user-select: none;
-		margin-left: 20px;
-		font-weight: bold;
-		font-size: 1rem;
-	}
-
-	.btn-confirm {
-		background-color: rgb(120, 255, 120);
-		width: 100%;
-		-webkit-tap-highlight-color: transparent;
-		user-select: none;
-		font-weight: bold;
-		font-size: 1rem;
-	}
 
 	select {
-		padding: 0.8rem;
+		padding: 0.1rem;
+		width: 6.5rem;
+		height: 2rem;
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		font-size: 1rem;
 	}
 
-	.hole-config-box {
-		background: var(--bg-card);
+	.holes-list {
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
-		align-items: center;
-		width: 100%;
-		padding: 0.5rem 0;
-		border-radius: 10px;
-		margin-bottom: 1rem;
+		gap: 0.5rem;
+		min-height: 50px; /* Important pour pouvoir redéposer dans une liste vide */
 	}
 
-	.actions {
-		background: var(--bg-card);
+	.hole-item {
 		display: flex;
-		width: 80%;
+		align-items: center;
+		justify-content: space-between;
+		background: var(--bg-card);
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		padding: 0.5rem;
+		touch-action: shadow; /* Aide à la gestion tactile */
+	}
+
+	.handle {
+		padding: 0 0 0 0.5rem;
+		width: 5%;
+		text-align: center;
+		cursor: grab;
+		color: var(--text-muted);
+		user-select: none;
+	}
+
+	.content {
+		display: flex;
 		flex-direction: row;
-		justify-content: space-between;
+		width: 95%;
 		align-items: center;
+		overflow: hidden;
+		justify-content: space-between;
 	}
 
-	.field-container {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		margin-bottom: 1.2rem;
+	.content-edit-item {
+		/* Pour le texte : points de suspension si trop long */
+		display: -webkit-box;
+		-line-clamp: 1; /* Limite à une seule ligne */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		height: 1.2em; /* On réserve l'espace exact d'une ligne */
+		width: 4em;
+	}
+
+	.delete-zone {
+		margin-top: 1rem;
+		background: rgba(255, 0, 0, 0.149);
+		color: white;
+		border: red 2px dashed;
+	}
+
+	.invisible-button,
+	.name-input {
+		background: none;
+		border: none;
 		width: 100%;
+		padding: 0;
+		font: inherit;
+		cursor: pointer;
+		color: inherit;
+	}
+
+	.name-input {
+		border-bottom: 2px solid var(--primary);
+		outline: none;
+		color: var(--primary);
 	}
 </style>

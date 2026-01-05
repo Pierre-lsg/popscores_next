@@ -32,7 +32,7 @@
 	.controls {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
+		gap: 0.5rem;
 	}
 	.btn-step {
 		width: 40px;

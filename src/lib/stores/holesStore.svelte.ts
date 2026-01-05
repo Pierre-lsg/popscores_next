@@ -36,6 +36,20 @@ class HolesStore {
 		}
 	}
 
+	moveHole(fromIndex: number, toIndex: number) {
+		const item = this.list[fromIndex];
+		this.list.splice(fromIndex, 1); // Retire
+		this.list.splice(toIndex, 0, item); // Insère
+	}
+
+	addHole() {
+		this.list.push({
+			id: crypto.randomUUID(), // Identifiant unique stable
+			par: 3,
+			rule: 'Greensome'
+		});
+	}
+
 	remove(index: number) {
 		this.list.splice(index, 1);
 	}
