@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { holesStore } from '$lib/stores/holesStore.svelte';
+	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import { teamsStore } from '$lib/stores/teamsStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import { onMount } from 'svelte';
@@ -14,29 +14,29 @@
 	import RankingPodium from '$lib/components/RankingPodium.svelte';
 	import GolfMSession from '$lib/components/GolfMSession.svelte';
 	import GolfMPlayer from '$lib/components/GolfMPlayer.svelte';
-	import GolfMHoles from '$lib/components/GolfMHoles.svelte';
+	import GolfMTargets from '$lib/components/GolfMTargets.svelte';
 	import GolfMScoring from '$lib/components/GolfMScoring.svelte';
 
-	const Step = { session: 1, players: 2, holes: 3, scoring: 4, ranking: 5 };
+	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5 };
 
 	let currentStep: number = $state(1);
 
-	let activeHoleIndex = gameStatus.currentHoleIndex || 0;
+	let activeTargetIndex = gameStatus.currentTargetIndex || 0;
 
 	let locationName = '';
 	let weatherCondition = 'Soleil';
 
-	let holes = $derived(holesStore.list);
-	let holeCount = $derived(holes.length);
+	let targets = $derived(targetsStore.list);
+	let targetCount = $derived(targets.length);
 
-	gameStatus.currentHoleIndex = activeHoleIndex;
+	gameStatus.currentTargetIndex = activeTargetIndex;
 
 	onMount(() => {
 		const importedData = shareService.loadFromUrl();
 		if (importedData) {
 			if (confirm('Une partie a été trouvée via ce lien. Voulez-vous charger les scores ?')) {
 				playersStore.list = importedData.players;
-				holesStore.list = importedData.holes;
+				targetsStore.list = importedData.targets;
 				window.history.replaceState({}, '', window.location.pathname);
 			}
 		}
@@ -50,7 +50,7 @@
 		currentStep = nextStep;
 		if (nextStep === Step.session) gameStatus.status = 'setup';
 		else if (nextStep === Step.players) gameStatus.status = 'setup';
-		else if (nextStep === Step.holes) gameStatus.status = 'setup';
+		else if (nextStep === Step.targets) gameStatus.status = 'setup';
 		else if (nextStep === Step.scoring) gameStatus.status = 'in_progress';
 		else if (nextStep === Step.ranking) gameStatus.status = 'finished';
 	}
@@ -58,9 +58,9 @@
 	function resetGame() {
 		if (confirm('Voulez-vous vraiment recommencer à zéro ?')) {
 			playersStore.reset();
-			holesStore.reset();
+			targetsStore.reset();
 			teamsStore.reset();
-			activeHoleIndex = 0;
+			activeTargetIndex = 0;
 			nextCard(Step.session);
 		}
 	}
@@ -72,7 +72,7 @@
 			location: locationName,
 			weather: weatherCondition,
 			players: playersStore.list,
-			holes: holesStore.list
+			targets: targetsStore.list
 		};
 
 		historyStore.archiveGame(newArchive);
@@ -80,7 +80,7 @@
 
 	async function copyShareLink() {
 		try {
-			const link = shareService.generateLink(playersStore.list, holesStore.list);
+			const link = shareService.generateLink(playersStore.list, targetsStore.list);
 			await navigator.clipboard.writeText(link);
 
 			// On déclenche le toast !
@@ -109,26 +109,26 @@
 	{:else if currentStep === Step.players}
 		<GolfHeader
 			title="👥 Saisie des joueurs"
-			onNext={() => nextCard(Step.holes)}
+			onNext={() => nextCard(Step.targets)}
 			onPrev={() => nextCard(Step.session)}
 		/>
-		<GolfMPlayer {holeCount} />
+		<GolfMPlayer {targetCount} />
 
 		<!-- Saisie du parcours : trous, par, ... -->
-	{:else if currentStep === Step.holes}
+	{:else if currentStep === Step.targets}
 		<GolfHeader
 			title="⛳ Saisie du parcours"
 			onNext={() => nextCard(Step.scoring)}
 			onPrev={() => nextCard(Step.players)}
 		/>
-		<GolfMHoles />
+		<GolfMTargets />
 
 		<!-- Saisie du score lors du parcours -->
 	{:else if currentStep === Step.scoring}
 		<GolfHeader
 			title="📝 Saisie des scores"
 			onNext={() => nextCard(Step.ranking)}
-			onPrev={() => nextCard(Step.holes)}
+			onPrev={() => nextCard(Step.targets)}
 		/>
 		<GolfMScoring />
 

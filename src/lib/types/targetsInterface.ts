@@ -1,4 +1,4 @@
-export interface Hole {
+export interface Target {
 	id: string;
 	par: number;
 	name?: string;

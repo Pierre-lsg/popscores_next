@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Player } from '$lib/types/playerIntfc';
+	import type { Player } from '$lib/types/playerInterface';
 	import { getTotalStrokes } from '$lib/utils/utils';
-	import { holesStore } from '$lib/stores/holesStore.svelte';
+	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import { getRelativeScore } from '$lib/utils/utils';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
@@ -11,7 +11,7 @@
 	// $: ranking = [...players].sort((a, b) => getTotal(a.scores) - getTotal(b.scores));
 	$: ranking = [...players].sort(
 		(a, b) =>
-			getRelativeScore(a.scores, holesStore.list) - getRelativeScore(b.scores, holesStore.list)
+			getRelativeScore(a.scores, targetsStore.list) - getRelativeScore(b.scores, targetsStore.list)
 	);
 </script>
 
@@ -21,7 +21,7 @@
 			<div class="podium-spot rank-{i + 1}">
 				<span class="medal">{i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
 				<span class="name">{player.name}</span>
-				<span class="score">{getRelativeScore(player.scores, holesStore.list)}</span>
+				<span class="score">{getRelativeScore(player.scores, targetsStore.list)}</span>
 			</div>
 		{/each}
 	</div>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { holesStore } from '$lib/stores/holesStore.svelte';
-	import type { Player } from '$lib/types/playerIntfc';
+	import { targetsStore } from '$lib/stores/targetsStore.svelte';
+	import type { Player } from '$lib/types/playerInterface';
 
 	// On trie les joueurs par score total (le plus bas gagne au golf !)
 	$: rankedPlayers = [...playersStore.list].sort((a, b) => {
@@ -12,7 +12,7 @@
 
 	$: top3 = rankedPlayers.slice(0, 3);
 	$: others = rankedPlayers.slice(3);
-	$: totalPar = holesStore.list.reduce((sum, h) => sum + h.par, 0);
+	$: totalPar = targetsStore.list.reduce((sum, h) => sum + h.par, 0);
 
 	function getTotal(player: Player) {
 		return player.scores.reduce((sum, s) => sum + s, 0);

@@ -1,15 +1,17 @@
-import type { Hole } from '$lib/types/types';
+import type { Target } from '$lib/types/targetsInterface';
 
-export const getRelativeScore = (playerScores: number[], holes: Hole[]): number => {
-	return playerScores.reduce((total, stroke, index) => {
-		// Si le score n'est pas encore saisi (0), on ne compte rien
-		if (stroke === 0) return total;
-
-		const holePar = holes[index]?.par || 0;
-		return total + (stroke - holePar);
+export function getRelativeScore(playerScores: Record<string, number>, targets: Target[]): number {
+	return targets.reduce((acc, target) => {
+		const score = playerScores[target.id];
+		if (!score) return acc; // Si pas de score saisi, on ignore
+		return acc + (score - (target.par || 0));
 	}, 0);
-};
+}
 
 // On garde aussi le total brut pour l'affichage
-export const getTotalStrokes = (scores: number[]) =>
-	scores.reduce((a, b) => Number(a) + Number(b), 0);
+
+export function getTotalStrokes(playerScores: Record<string, number>, targets: Target[]): number {
+	return targets.reduce((acc, target) => {
+		return acc + (playerScores[target.id] || 0);
+	}, 0);
+}

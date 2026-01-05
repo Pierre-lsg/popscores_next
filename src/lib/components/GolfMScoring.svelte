@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { holesStore } from '$lib/stores/holesStore.svelte';
+	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
@@ -9,33 +9,33 @@
 
 	const s = sessionSettingsStore.settings;
 
-	let activeHoleIndex = $derived(gameStatus.currentHoleIndex);
+	let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
 
-	let currentHole = $derived(holesStore.list[activeHoleIndex]);
-	let isFirstHole = $derived(activeHoleIndex === 0);
-	let isLastHole = $derived(activeHoleIndex === holesStore.list.length - 1);
+	let currentTarget = $derived(targetsStore.list[activeTargetIndex]);
+	let isFirstTarget = $derived(activeTargetIndex === 0);
+	let isLastTarget = $derived(activeTargetIndex === targetsStore.list.length - 1);
 
-	let minTrys = $derived(currentHole?.rule === 'Bonus' ? -3 : 0);
+	let minTrys = $derived(currentTarget?.rule === 'Bonus' ? -3 : 0);
 
 	let maxTrys = $derived(
-		currentHole?.rule === 'Bonus'
+		currentTarget?.rule === 'Bonus'
 			? 0
 			: s.hasCrossAFixedPenalty
 				? s.malusValue
-				: currentHole.par + s.malusOverPar
+				: currentTarget.par + s.malusOverPar
 	);
 
 	let hasCrossAFixedPenalty = s.hasCrossAFixedPenalty;
 
-	let prevHoleBtn: HTMLButtonElement;
-	let nextHoleBtn: HTMLButtonElement;
+	let prevTargetBtn: HTMLButtonElement;
+	let nextTargetBtn: HTMLButtonElement;
 
-	function prevHoleClick() {
-		prevHoleBtn?.click();
+	function prevTargetClick() {
+		prevTargetBtn?.click();
 	}
 
-	function nextHoleClick() {
-		nextHoleBtn?.click();
+	function nextTargetClick() {
+		nextTargetBtn?.click();
 	}
 
 	// --
@@ -60,28 +60,28 @@
 		const distance = touchEndX - touchStartX;
 
 		if (Math.abs(distance) > SWIPE_THRESHOLD) {
-			if (distance > 0) nextHoleClick();
-			else prevHoleClick();
+			if (distance > 0) nextTargetClick();
+			else prevTargetClick();
 		}
 	}
 	// --
 </script>
 
 <div class="step-content" in:slide>
-	<header class="hole-header" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
-		<button bind:this={prevHoleBtn} onclick={() => activeHoleIndex--} disabled={isFirstHole}
+	<header class="target-header" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
+		<button bind:this={prevTargetBtn} onclick={() => activeTargetIndex--} disabled={isFirstTarget}
 			>◀</button
 		>
-		<div class="hole-info">
-			<h3>{currentHole.name} (# {activeHoleIndex + 1})</h3>
-			<div class="hole-details">
-				<span class="par-badge">{currentHole.rule}</span>
-				{#if currentHole.rule !== 'Bonus'}
-					<span class="par-badge">PAR {currentHole.par}</span>
+		<div class="target-info">
+			<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
+			<div class="target-details">
+				<span class="par-badge">{currentTarget.rule}</span>
+				{#if currentTarget.rule !== 'Bonus'}
+					<span class="par-badge">PAR {currentTarget.par}</span>
 				{/if}
 			</div>
 		</div>
-		<button bind:this={nextHoleBtn} onclick={() => activeHoleIndex++} disabled={isLastHole}
+		<button bind:this={nextTargetBtn} onclick={() => activeTargetIndex++} disabled={isLastTarget}
 			>▶</button
 		>
 	</header>
@@ -95,17 +95,22 @@
 							<span class="player-name">{player.name}</span>
 						</td>
 						<td>
-							<Stepper bind:value={player.scores[activeHoleIndex]} min={minTrys} max={maxTrys} />
+							<Stepper
+								value={player.scores[currentTarget.id] ?? 0}
+								min={minTrys}
+								max={maxTrys}
+								onchange={(val) => (player.scores[currentTarget.id] = val)}
+							/>
 						</td>
 						<td class="btn-actions">
 							<button
 								class="btn-par"
-								onclick={() => (player.scores[activeHoleIndex] = currentHole.par)}
+								onclick={() => (player.scores[currentTarget.id] = currentTarget.par)}
 								title="Par">=</button
 							>
 							<button
 								class="btn-delete"
-								onclick={() => (player.scores[activeHoleIndex] = maxTrys)}
+								onclick={() => (player.scores[currentTarget.id] = maxTrys)}
 								title="Echec">X</button
 							>
 						</td>
@@ -123,7 +128,7 @@
 		gap: 1.5rem;
 	}
 
-	.hole-info {
+	.target-info {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -131,7 +136,7 @@
 		gap: 0.3rem;
 	}
 
-	.hole-header {
+	.target-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -141,7 +146,7 @@
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	}
 
-	.hole-details {
+	.target-details {
 		display: flex;
 		gap: 0.5rem;
 	}

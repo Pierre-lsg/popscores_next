@@ -1,46 +1,46 @@
 export type GameStatus = 'setup' | 'in_progress' | 'finished';
 
 const KEY_STATUS = 'golf-game-status';
-const KEY_HOLE = 'golf-current-hole-index';
+const KEY_TARGET = 'golf-current-target-index';
 
 class GameStatusStore {
 	// On utilise $state pour les deux valeurs
 	status = $state<GameStatus>('setup');
-	currentHoleIndex = $state<number>(0);
+	currentTargetIndex = $state<number>(0);
 
 	constructor() {
 		if (typeof window !== 'undefined') {
 			// Chargement initial
 			const savedStatus = localStorage.getItem(KEY_STATUS) as GameStatus;
-			const savedHole = localStorage.getItem(KEY_HOLE);
+			const savedTarget = localStorage.getItem(KEY_TARGET);
 
 			this.status = savedStatus || 'setup';
-			this.currentHoleIndex = savedHole ? parseInt(savedHole) : 0;
+			this.currentTargetIndex = savedTarget ? parseInt(savedTarget) : 0;
 
 			// Effet racine pour sauvegarder automatiquement les changements
 			$effect.root(() => {
 				$effect(() => {
 					localStorage.setItem(KEY_STATUS, this.status);
-					localStorage.setItem(KEY_HOLE, this.currentHoleIndex.toString());
+					localStorage.setItem(KEY_TARGET, this.currentTargetIndex.toString());
 				});
 			});
 		}
 	}
 
 	// Méthodes pour modifier l'état
-	nextHole() {
-		this.currentHoleIndex++;
+	nextTarget() {
+		this.currentTargetIndex++;
 	}
 
-	prevHole() {
-		if (this.currentHoleIndex > 0) this.currentHoleIndex--;
+	prevTarget() {
+		if (this.currentTargetIndex > 0) this.currentTargetIndex--;
 	}
 
 	reset() {
 		this.status = 'setup';
-		this.currentHoleIndex = 0;
+		this.currentTargetIndex = 0;
 		localStorage.removeItem(KEY_STATUS);
-		localStorage.removeItem(KEY_HOLE);
+		localStorage.removeItem(KEY_TARGET);
 	}
 }
 

@@ -1,5 +1,5 @@
 // import { browse } from '$app/environment';
-import type { Team } from '$lib/types/teamIntfc';
+import type { Team } from '$lib/types/teamInterface';
 
 const STORAGE_KEY = 'golf-teams-data';
 

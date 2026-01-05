@@ -1,25 +1,102 @@
 <script lang="ts">
-	export let value: number = 0;
-	export let min: number = 0;
-	export let max: number | undefined = undefined;
-	export let label: string = '';
-	export let disabled: boolean = false;
+	interface Props {
+		value: number;
+		min?: number;
+		max?: number;
+		label?: string;
+		disabled?: boolean;
+		onchange?: (val: number) => void;
+	}
+
+	let {
+		value = $bindable(0),
+		min = 0,
+		max = Infinity,
+		label = '',
+		disabled = false,
+		onchange
+	}: Props = $props();
+
+	let timer: ReturnType<typeof setInterval> | null = null;
+	let delayTimer: ReturnType<typeof setTimeout> | null = null;
+
+	function update(newValue: number) {
+		if (disabled) return;
+		if (newValue >= min && newValue <= max) {
+			value = newValue;
+			onchange?.(value);
+		}
+	}
+
+	// Gestion de l'appui long
+	function start(e: Event, step: number) {
+		if (e.cancelable) e.preventDefault();
+		stop(); // Sécurité : on nettoie tout timer précédent
+		update(value + step); // Premier clic immédiat
+
+		delayTimer = setTimeout(() => {
+			timer = setInterval(() => {
+				const next = value + step;
+				if (next >= min && next <= max) {
+					update(next);
+				} else {
+					stop();
+				}
+			}, 100); // Vitesse de défilement (10 fois par seconde)
+		}, 500); // Délai avant de commencer à répéter
+	}
+
+	function stop() {
+		if (delayTimer) clearTimeout(delayTimer);
+		if (timer) clearInterval(timer);
+	}
 </script>
 
 <div class="stepper-container">
 	{#if label}<span class="label">{label}</span>{/if}
 	<div class="controls">
-		<button onclick={() => value > min && value--} class="btn-step" {disabled}>-</button>
-		<div class="value-display">{value}</div>
 		<button
-			onclick={() => value < (max === undefined ? Infinity : max) && value++}
+			type="button"
 			class="btn-step"
-			{disabled}>+</button
-		>
+			{disabled}
+			onpointerdown={(e) => start(e, -1)}
+			onpointerup={stop}
+			onpointerleave={stop}
+			ontouchend={stop}
+			style="touch-action: none;"
+			><span aria-hidden="true" style="pointer-events: none;">-</span>
+		</button>
+
+		<div class="value-display">{value}</div>
+
+		<button
+			type="button"
+			class="btn-step"
+			{disabled}
+			onpointerdown={(e) => start(e, 1)}
+			onpointerup={stop}
+			onpointerleave={stop}
+			ontouchend={stop}
+			style="touch-action: none;"
+			><span aria-hidden="true" style="pointer-events: none;">+</span>
+		</button>
 	</div>
 </div>
 
 <style>
+	/* Ajoute un petit effet visuel quand on appuie */
+	.btn-step:active {
+		background-color: var(--primary);
+		color: white;
+		transform: scale(0.95);
+	}
+	.value-display {
+		min-width: 2rem;
+		text-align: center;
+		font-weight: bold;
+		font-size: 1.2rem;
+	}
+
 	.stepper-container {
 		display: flex;
 		align-items: center;
@@ -42,7 +119,9 @@
 		background: white;
 		font-size: 1.5rem;
 		color: var(--primary);
-		touch-action: manipulation;
+		touch-action: none;
+		-webkit-user-select: none;
+		user-select: none;
 	}
 	.value-display {
 		font-size: 1.2rem;

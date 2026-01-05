@@ -1,4 +1,4 @@
-import type { Player } from '$lib/types/playerIntfc';
+import type { Player } from '$lib/types/playerInterface';
 import { teamsStore } from './teamsStore.svelte';
 
 const STORAGE_KEY = 'golf-players-data';
@@ -43,12 +43,12 @@ class PlayersStore {
 	}
 
 	// --- Méthodes d'actions ---
-	add(name: string, holeCount: number) {
+	add(name: string, targetCount: number) {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
 			teamId: '', // Initialement vide
-			scores: Array(holeCount).fill(0)
+			scores: {}
 		});
 		console.log('Liste après ajout :', this.list.length);
 	}
@@ -57,12 +57,30 @@ class PlayersStore {
 		this.list = this.list.filter((p) => p.id !== id);
 	}
 
-	syncAddHole(par: number = 0) {
+	/*syncAddTarget(par: number = 0) {
 		this.list.forEach((p) => p.scores.push(par));
 	}
 
-	syncRemoveHole(index: number) {
+	syncRemoveTarget(index: number) {
 		this.list.forEach((p) => p.scores.splice(index, 1));
+	}*/
+
+	updateScore(playerId: string, holeId: string, value: number) {
+		const player = this.list.find((p) => p.id === playerId);
+		if (player) {
+			// Svelte 5 détecte le changement dans l'objet interne
+			player.scores[holeId] = value;
+		}
+	}
+
+	cleanOrphanScores(activeHoleIds: string[]) {
+		this.list.forEach((player) => {
+			Object.keys(player.scores).forEach((holeId) => {
+				if (!activeHoleIds.includes(holeId)) {
+					delete player.scores[holeId];
+				}
+			});
+		});
 	}
 
 	reset() {

@@ -1,10 +1,10 @@
-import type { Hole } from '$lib/types/holesIntfc';
+import type { Target } from '$lib/types/targetsInterface';
 
-const STORAGE_KEY = 'golf-holes-data';
+const STORAGE_KEY = 'golf-targets-data';
 
-class HolesStore {
+class TargetsStore {
 	// On initialise avec une liste vide, puis on charge le localStorage dans le constructeur
-	list = $state<Hole[]>([]);
+	list = $state<Target[]>([]);
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -36,13 +36,13 @@ class HolesStore {
 		}
 	}
 
-	moveHole(fromIndex: number, toIndex: number) {
+	moveTarget(fromIndex: number, toIndex: number) {
 		const item = this.list[fromIndex];
 		this.list.splice(fromIndex, 1); // Retire
 		this.list.splice(toIndex, 0, item); // Insère
 	}
 
-	addHole() {
+	addTarget() {
 		this.list.push({
 			id: crypto.randomUUID(), // Identifiant unique stable
 			par: 3,
@@ -59,4 +59,4 @@ class HolesStore {
 	}
 }
 
-export const holesStore = new HolesStore();
+export const targetsStore = new TargetsStore();

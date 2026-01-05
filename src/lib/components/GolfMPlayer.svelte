@@ -14,12 +14,12 @@
 	let isEditingTeams: boolean = $state(false);
 	let isModifyingCompo: boolean = false;
 
-	let { holeCount }: { holeCount: number } = $props();
+	let { targetCount }: { targetCount: number } = $props();
 
 	// $inspect(isEditingTeams, isTeamGame, playersStore.list);
 
 	function addPlayer() {
-		playersStore.add('Joueur #' + (playersStore.list.length + 1), holeCount);
+		playersStore.add('Joueur #' + (playersStore.list.length + 1), targetCount);
 	}
 
 	function createTeam() {

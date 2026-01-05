@@ -7,7 +7,7 @@
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 
-	import { holesStore } from '$lib/stores/holesStore.svelte';
+	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
@@ -16,20 +16,20 @@
 
 	let editingId = $state<string | null>(null);
 	let isDragging = $state(false);
-	let newHoleName = $state('Trou');
-	let newHoleRule = $state(ruleOptions[0]); // Règle par défaut
+	let newTargetName = $state('Trou');
+	let newTargetRule = $state(ruleOptions[0]); // Règle par défaut
 
-	function addHole() {
-		holesStore.add(newHoleRule === 'bonus' ? 0 : 4, newHoleName, newHoleRule);
-		playersStore.syncAddHole(4);
-		gameStatus.currentHoleIndex = 0;
+	function addTarget() {
+		targetsStore.add(newTargetRule === 'bonus' ? 0 : 4, newTargetName, newTargetRule);
+		gameStatus.currentTargetIndex = 0;
 	}
 
 	function handleRemoveDrop(e: CustomEvent<{ items: any[] }>) {
 		const removedItem = e.detail.items[0];
 		if (removedItem) {
-			holesStore.list = holesStore.list.filter((h) => h.id !== removedItem.id);
+			targetsStore.list = targetsStore.list.filter((h) => h.id !== removedItem.id);
 		}
+		gameStatus.currentTargetIndex = 0;
 		isDragging = false;
 	}
 
@@ -37,11 +37,11 @@
 		isDragging = true;
 	}
 	function handleFinalize(e: CustomEvent<{ items: any[] }>) {
-		holesStore.list = e.detail.items;
+		targetsStore.list = e.detail.items;
 		isDragging = false;
 	}
 
-	function editHoleName(id: string) {
+	function editTargetName(id: string) {
 		editingId = id;
 	}
 
@@ -56,28 +56,28 @@
 </script>
 
 <div class="step-content" in:slide>
-	<button onclick={() => addHole()} class="btn btn-primary">Ajouter un Trou ≡</button>
+	<button onclick={() => addTarget()} class="btn btn-primary">Ajouter un Trou ≡</button>
 
 	<div
-		class="holes-list"
+		class="targets-list"
 		use:dndzone={{
-			items: holesStore.list,
+			items: targetsStore.list,
 			flipDurationMs,
 			dropTargetStyle: { outline: '2px dashed var(--primary)', borderRadius: '8px' }
 		}}
 		onconsider={(e) => {
 			handleConsider();
-			holesStore.list = e.detail.items;
+			targetsStore.list = e.detail.items;
 		}}
 		onfinalize={handleFinalize}
 	>
-		{#each holesStore.list as hole (hole.id)}
-			<div class="hole-item" animate:flip={{ duration: flipDurationMs }}>
+		{#each targetsStore.list as target (target.id)}
+			<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
 				<div class="content">
-					{#if editingId === hole.id}
+					{#if editingId === target.id}
 						<input
 							class="name-input"
-							bind:value={hole.name}
+							bind:value={target.name}
 							onblur={saveName}
 							onkeydown={(e) => e.key === 'Enter' && saveName(e)}
 							use:focus
@@ -85,13 +85,13 @@
 					{:else}
 						<button
 							class="content-edit-item invisible-button"
-							onclick={() => editHoleName(hole.id)}
+							onclick={() => editTargetName(target.id)}
 						>
-							{hole.name || `Trou ${holesStore.list.indexOf(hole) + 1}`}
+							{target.name || `Trou ${targetsStore.list.indexOf(target) + 1}`}
 						</button>
 					{/if}
-					<Stepper label="" bind:value={hole.par} min={0} disabled={hole.rule === 'Bonus'} />
-					<select id="rule{hole.id}" bind:value={hole.rule}>
+					<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
+					<select id="rule{target.id}" bind:value={target.rule}>
 						{#each ruleOptions as option}
 							<option value={option}>{option}</option>
 						{/each}
@@ -133,14 +133,14 @@
 		font-size: 1rem;
 	}
 
-	.holes-list {
+	.targets-list {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 		min-height: 50px; /* Important pour pouvoir redéposer dans une liste vide */
 	}
 
-	.hole-item {
+	.target-item {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;

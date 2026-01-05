@@ -1,7 +1,6 @@
 <script lang="ts">
-	import type { Player } from '$lib/types/playerIntfc';
-	import type { Hole } from '$lib/types/holesIntfc';
-	import { holesStore } from '$lib/stores/holesStore.svelte';
+	import type { Player } from '$lib/types/playerInterface';
+	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { getRelativeScore, getTotalStrokes } from '$lib/utils/utils';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
@@ -12,20 +11,20 @@
 		players?: Player[];
 	} = $props();
 
-	let holes = $derived(holesStore.list);
-	let holeCount = $derived(holes.length);
-	let totalPar = $derived(holes.reduce((acc, h) => acc + (h.par || 0), 0));
+	let targets = $derived(targetsStore.list);
+	let targetCount = $derived(targets.length);
+	let totalPar = $derived(targets.reduce((acc, h) => acc + (h.par || 0), 0));
 
 	let isSetup = $derived(gameStatus.status === 'setup');
 	let isFinished = $derived(gameStatus.status === 'finished');
 	let isLocked = $derived(isFinished || gameStatus.status === 'in_progress');
 	let isHidden = $derived(isLocked ? 'hide' : '');
 
-	function confirmDeleteHole(index: number) {
+	function confirmDeleteTarget(index: number) {
 		if (confirm(`Supprimer le trou n°${index + 1} ?`)) {
 			// On appelle les deux stores pour rester synchronisé
-			holesStore.remove(index);
-			playersStore.syncRemoveHole(index);
+			targetsStore.remove(index);
+			playersStore.syncRemoveTarget(index);
 		}
 	}
 
@@ -41,19 +40,19 @@
 		<thead>
 			<tr class="par-row">
 				<td class="sticky-col"><strong>PAR</strong></td>
-				{#each holes as hole, i}
+				{#each targets as target, i}
 					<td>
 						{#if !isLocked}
 							<input
 								type="number"
-								bind:value={hole.par}
+								bind:value={target.par}
 								disabled={isLocked}
-								oninput={() => holesStore.updatePar(i, hole.par || 0)}
+								oninput={() => targetsStore.updatePar(i, target.par || 0)}
 								class="par-input"
 								min="1"
 							/>
 						{:else}
-							<strong>{hole.par}</strong>
+							<strong>{target.par}</strong>
 						{/if}
 					</td>
 				{/each}
@@ -62,10 +61,10 @@
 			</tr>
 			<tr>
 				<th class="sticky-col">Joueur</th>
-				{#each Array(holeCount) as _, i}
-					<th class="hole-header">
+				{#each Array(targetCount) as _, i}
+					<th class="target-header">
 						T{i + 1}
-						<button class="btn-mini-delete {isHidden}" onclick={() => confirmDeleteHole(i)}>
+						<button class="btn-mini-delete {isHidden}" onclick={() => confirmDeleteTarget(i)}>
 							&times;
 						</button>
 					</th>
@@ -106,7 +105,7 @@
 					{/each}
 
 					{#if true}
-						{@const relativeScore = getRelativeScore(player.scores, holes)}
+						{@const relativeScore = getRelativeScore(player.scores, targets)}
 						<td
 							class="total-cell {relativeScore < 0
 								? 'under-par'
