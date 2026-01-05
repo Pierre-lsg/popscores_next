@@ -6,7 +6,6 @@
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
 	import Stepper from '$lib/ui/Stepper.svelte';
-	import { createSolutionBuilderWithWatch } from 'typescript';
 	import { onMount } from 'svelte';
 
 	const s = sessionSettingsStore.settings;
