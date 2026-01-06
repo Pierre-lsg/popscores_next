@@ -1,4 +1,3 @@
-// import { browse } from '$app/environment';
 import type { Team } from '$lib/types/teamInterface';
 
 const STORAGE_KEY = 'golf-teams-data';
@@ -27,8 +26,8 @@ class TeamsStore {
 	}
 
 	// Plus besoin d'utiliser .update(), on manipule le tableau directement
-	add(id: string, name: string, membersId: string[]) {
-		this.list.push({ id, name, membersId });
+	add(id: string, name: string, playersId: string[]) {
+		this.list.push({ id, name, playersId });
 	}
 
 	remove(id: string) {

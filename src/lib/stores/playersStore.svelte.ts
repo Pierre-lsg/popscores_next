@@ -7,6 +7,10 @@ class PlayersStore {
 	// État de base (la liste brute)
 	list = $state<Player[]>([]);
 
+	unassignedPlayers = $derived(this.list.filter((player) => player.teamId === ''));
+
+	assignedPlayers = $derived(this.list.filter((player) => player.teamId !== ''));
+
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
@@ -39,18 +43,29 @@ class PlayersStore {
 	// On ajoute une méthode simple pour récupérer le nom
 	getTeamName(player: Player) {
 		const team = teamsStore.list.find((t) => t.id === player.teamId);
-		return team ? team.name : 'Individuel';
+		return team ? team.name : player.name;
+	}
+
+	getPlayerNameById(playerId: string) {
+		const player = this.list.find((p) => p.id === playerId);
+		return player ? player : { id: '', name: '', teamId: '', scores: {} };
+	}
+
+	assignPlayerToTeam(playerId: string, teamId: string) {
+		const player = this.list.find((p) => p.id === playerId);
+		if (player) {
+			player.teamId = teamId;
+		}
 	}
 
 	// --- Méthodes d'actions ---
-	add(name: string, targetCount: number) {
+	add(name: string) {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
 			teamId: '', // Initialement vide
 			scores: {}
 		});
-		console.log('Liste après ajout :', this.list.length);
 	}
 
 	remove(id: string) {

@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { targetsStore } from '$lib/stores/targetsStore.svelte';
+	import { ConfettiCannon } from 'svelte-canvas-confetti';
+	import { onMount } from 'svelte';
 	import type { Player } from '$lib/types/playerInterface';
+
+	let confettiCannon = $state(false);
 
 	// Helper interne pour calculer le score d'un joueur basé sur les cibles actuelles
 	const calculatePlayerScore = (player: Player) => {
@@ -60,6 +64,10 @@
 			alert("Le partage n'est pas supporté sur ce navigateur. Voici les résultats :\n\n" + message);
 		}
 	}
+
+	onMount(() => {
+		confettiCannon = true;
+	});
 </script>
 
 <div class="podium-container">
@@ -74,7 +82,7 @@
 		{/if}
 
 		{#if top3[0]}
-			{@const stats = getPlayerStats(top3[1])}
+			{@const stats = getPlayerStats(top3[0])}
 			<div class="place gold">
 				<span class="medal">👑</span>
 				<span class="score">{stats.gross} ({stats.diff})</span>
@@ -84,7 +92,7 @@
 		{/if}
 
 		{#if top3[2]}
-			{@const stats = getPlayerStats(top3[1])}
+			{@const stats = getPlayerStats(top3[2])}
 			<div class="place bronze">
 				<span class="score">{stats.gross} ({stats.diff})</span>
 				<div class="bar"></div>
@@ -104,6 +112,16 @@
 				</div>
 			{/each}
 		</div>
+	{/if}
+
+	{#if confettiCannon}
+		<ConfettiCannon
+			origin={[window.innerWidth / 2, window.innerHeight]}
+			angle={-90}
+			spread={35}
+			force={35}
+			particleCount={200}
+		/>
 	{/if}
 
 	<button class="share-button" onclick={shareResults}>

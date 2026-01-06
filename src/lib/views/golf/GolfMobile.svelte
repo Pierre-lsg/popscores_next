@@ -112,7 +112,7 @@
 			onNext={() => nextCard(Step.targets)}
 			onPrev={() => nextCard(Step.session)}
 		/>
-		<GolfMPlayer {targetCount} />
+		<GolfMPlayer />
 
 		<!-- Saisie du parcours : trous, par, ... -->
 	{:else if currentStep === Step.targets}

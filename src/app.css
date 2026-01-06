@@ -133,6 +133,7 @@ button {
 
 /* Style des inputs partagé */
 input[type='number'] {
+	color: var(--primary);
 	border: 1px solid var(--border-color);
 	border-radius: 4px;
 	padding: 0.4rem;
@@ -310,4 +311,41 @@ td {
 
 .hide {
 	display: none;
+}
+
+/* Drag & Drop interactions */
+
+.handle {
+	padding: 0 0 0 0.5rem;
+	width: 10%;
+	text-align: center;
+	cursor: grab;
+	color: var(--text-muted);
+	user-select: none;
+}
+
+.content {
+	display: flex;
+	flex-direction: row;
+	width: 95%;
+	align-items: center;
+	overflow: hidden;
+	justify-content: space-between;
+}
+
+.content-edit-item {
+	display: -webkit-box;
+	-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.2em;
+	width: 4em;
+}
+
+.delete-zone {
+	margin-top: 1rem;
+	background: rgba(255, 0, 0, 0.149);
+	color: white;
+	border: red 2px dashed;
 }

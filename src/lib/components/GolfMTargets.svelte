@@ -1,11 +1,8 @@
 <script lang="ts">
 	import Stepper from '$lib/ui/Stepper.svelte';
-	import Param from '$lib/ui/Param.svelte';
+	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 
-	import type { Target } from '$lib/types/targetsInterface';
-
-	import { slide } from 'svelte/transition';
-	import { fly } from 'svelte/transition';
+	import { slide, fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 
@@ -13,12 +10,17 @@
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
-	const ruleOptions = ['Individuel', 'Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus'];
-	const flipDurationMs = 300;
+	let isTeamGame: boolean = sessionSettingsStore.settings.teamGame;
 
 	let editingId = $state<string | null>(null);
 	let isDragging = $state(false);
-	let newTargetName = $state('Trou');
+	let newTargetName = $state('');
+
+	const ruleOptions = isTeamGame
+		? ['Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus']
+		: ['Individuel', 'Bonus'];
+	const flipDurationMs = 300;
+
 	let newTargetRule = $state(ruleOptions[0]); // Règle par défaut
 
 	function addTarget() {
@@ -59,7 +61,9 @@
 </script>
 
 <div class="step-content" in:slide>
-	<button onclick={() => addTarget()} class="btn btn-primary">Ajouter un Trou ≡</button>
+	<button style="margin: 0.5rem 0;" onclick={() => addTarget()} class="btn btn-primary"
+		>Ajouter une cible ≡</button
+	>
 
 	<div
 		class="targets-list"
@@ -90,7 +94,7 @@
 							class="content-edit-item invisible-button"
 							onclick={() => editTargetName(target.id)}
 						>
-							{target.name || `Trou ${targetsStore.list.indexOf(target) + 1}`}
+							{target.name || `Cible ${targetsStore.list.indexOf(target) + 1}`}
 						</button>
 					{/if}
 					<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
@@ -156,43 +160,6 @@
 		border-radius: 8px;
 		padding: 0.5rem;
 		touch-action: shadow; /* Aide à la gestion tactile */
-	}
-
-	.handle {
-		padding: 0 0 0 0.5rem;
-		width: 5%;
-		text-align: center;
-		cursor: grab;
-		color: var(--text-muted);
-		user-select: none;
-	}
-
-	.content {
-		display: flex;
-		flex-direction: row;
-		width: 95%;
-		align-items: center;
-		overflow: hidden;
-		justify-content: space-between;
-	}
-
-	.content-edit-item {
-		/* Pour le texte : points de suspension si trop long */
-		display: -webkit-box;
-		-line-clamp: 1; /* Limite à une seule ligne */
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-		text-overflow: ellipsis;
-
-		height: 1.2em; /* On réserve l'espace exact d'une ligne */
-		width: 4em;
-	}
-
-	.delete-zone {
-		margin-top: 1rem;
-		background: rgba(255, 0, 0, 0.149);
-		color: white;
-		border: red 2px dashed;
 	}
 
 	.invisible-button,
