@@ -3,7 +3,7 @@
 	import { flip } from 'svelte/animate';
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import { smartSort, shuffle } from '$lib/utils/sharedFunction';
+	import { smartSort } from '$lib/utils/sharedFunction';
 	import { dndzone } from 'svelte-dnd-action';
 
 	const s = sessionSettingsStore.settings;
@@ -116,29 +116,6 @@
 </div>
 
 <style>
-	.step-content {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.btn {
-		width: 100%;
-		-webkit-tap-highlight-color: transparent;
-		user-select: none;
-		font-weight: bold;
-		font-size: 1.2rem;
-	}
-
-	.invisible-button {
-		background: none;
-		border: none;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		color: inherit;
-	}
-
 	.players-header {
 		display: flex;
 		flex-direction: row;
@@ -153,13 +130,6 @@
 
 	.player-item-header {
 		padding: 0 5rem 0 2rem;
-		gap: 0.5rem;
-		min-height: 50px;
-	}
-
-	.players-list {
-		display: flex;
-		flex-direction: column;
 		gap: 0.5rem;
 		min-height: 50px;
 	}

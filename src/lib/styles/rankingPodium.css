@@ -1,0 +1,99 @@
+.podium-container {
+	width: 100%;
+	padding-top: 2rem;
+}
+
+.podium-visual {
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	gap: 10px;
+	margin-bottom: 2rem;
+	height: 230px;
+}
+
+.place {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex: 1;
+	max-width: 110px;
+}
+
+.bar {
+	width: 100%;
+	border-radius: 8px 8px 0 0;
+}
+.podium-name {
+	font-size: 0.8rem;
+	font-weight: bold;
+	margin-top: 5px;
+	text-align: center;
+}
+.podium-score {
+	font-size: 1.2rem;
+	font-weight: 800;
+	color: var(--primary);
+}
+
+/* Hauteurs différentes pour l'effet escalier */
+.gold .bar {
+	height: 150px;
+	background: #ffd700;
+	border: 2px solid #e6c200;
+}
+.silver .bar {
+	height: 105px;
+	background: #c0c0c0;
+	border: 2px solid #a9a9a9;
+}
+.bronze .bar {
+	height: 75px;
+	background: #cd7f32;
+	border: 2px solid #b87333;
+}
+
+.medal {
+	font-size: 1.5rem;
+	margin-bottom: 5px;
+}
+
+.others-list {
+	background: #f9f9f9;
+	border-radius: 12px;
+	padding: 10px;
+}
+.other-item {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+	background-color: var(--bg-card);
+}
+.rank {
+	color: #999;
+	font-weight: bold;
+	width: 25px;
+}
+
+.share-button {
+	margin-top: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	background-color: var(--primary);
+	color: white;
+	border: none;
+	padding: 1rem 2rem;
+	border-radius: 50px;
+	font-size: 1.1rem;
+	font-weight: bold;
+	width: 100%;
+	box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+.share-button:active {
+	transform: scale(0.98);
+	background-color: #266b2a;
+}

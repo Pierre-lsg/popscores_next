@@ -21,7 +21,7 @@
 		: ['Individuel', 'Bonus'];
 	const flipDurationMs = 300;
 
-	let newTargetRule = $state(ruleOptions[0]); // Règle par défaut
+	let newTargetRule = $state(ruleOptions[0]);
 
 	function addTarget() {
 		targetsStore.add(newTargetRule === 'Bonus' ? 0 : 4, newTargetName, newTargetRule);
@@ -51,12 +51,11 @@
 	}
 
 	function saveName(e: Event) {
-		// Dès qu'on perd le focus (blur) ou appuie sur Entrée
 		editingId = null;
 	}
 	function focus(node: HTMLInputElement) {
 		node.focus();
-		node.select(); // Optionnel : sélectionne tout le texte pour écraser vite
+		node.select();
 	}
 </script>
 

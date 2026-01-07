@@ -1,0 +1,30 @@
+.step-content {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.btn {
+	width: 100%;
+	-webkit-tap-highlight-color: transparent;
+	user-select: none;
+	font-weight: bold;
+	font-size: 1.2rem;
+}
+
+.invisible-button {
+	background: none;
+	border: none;
+	width: 100%;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	color: inherit;
+}
+
+.players-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	min-height: 50px;
+}

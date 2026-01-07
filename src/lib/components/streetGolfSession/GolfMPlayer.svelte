@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import GolfMPlayerSolo from './GolfMPlayerSolo.svelte';
-	import GolfMPlayerTeam from './GolfMPlayerTeam.svelte';
+	import GolfMPlayerSolo from './golfMPlayer/GolfMPlayerSolo.svelte';
+	import GolfMPlayerTeam from './golfMPlayer/GolfMPlayerTeam.svelte';
+	import '$lib/styles/golfMPlayer.css';
 
 	const s = sessionSettingsStore.settings;
 

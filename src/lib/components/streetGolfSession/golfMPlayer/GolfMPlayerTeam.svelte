@@ -1,16 +1,12 @@
 <script lang="ts">
-	import { slide, fly } from 'svelte/transition';
-	import { flip } from 'svelte/animate';
+	import { slide } from 'svelte/transition';
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { teamsStore } from '$lib/stores/teamsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import { smartSort, shuffle } from '$lib/utils/sharedFunction';
-	import { dndzone } from 'svelte-dnd-action';
+	import { shuffle } from '$lib/utils/sharedFunction';
 
 	const s = sessionSettingsStore.settings;
 
-	let isSortTeamAsc: boolean = true;
-	let isSortPlayerAsc: boolean = true;
 	let isSettingTeams: boolean = $state(false);
 	let isEditingTeams: boolean = $state(false);
 
@@ -58,15 +54,6 @@
 	function settingTeams() {
 		isSettingTeams = !isSettingTeams;
 		isEditingTeams = false;
-	}
-
-	function sortPlayersByTeam() {
-		isSortTeamAsc = !isSortTeamAsc;
-	}
-
-	function sortPlayersByPlayer() {
-		playersStore.list = smartSort(playersStore.list, 'name', isSortPlayerAsc);
-		isSortPlayerAsc = !isSortPlayerAsc;
 	}
 
 	function editPlayerName(id: string) {
@@ -127,16 +114,6 @@
 
 	<!-- Liste des équipes -->
 	<div class="card-list">
-		<div class="players-header">
-			<button class="invisible-button player-item-header" onclick={() => sortPlayersByTeam()}
-				>Equipes</button
-			>
-			<button class="invisible-button player-item-header" onclick={() => sortPlayersByPlayer()}
-				>Joueurs</button
-			>
-			<div class="handle">&nbsp;</div>
-		</div>
-
 		<div>
 			{#each teamsStore.list as team (team.id)}
 				<div class="team-items">
@@ -248,54 +225,8 @@
 		font-size: 1rem;
 	}
 
-	.step-content {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
-
-	.btn {
-		width: 100%;
-		-webkit-tap-highlight-color: transparent;
-		user-select: none;
-		font-weight: bold;
-		font-size: 1.2rem;
-	}
-
 	.invisible-button {
-		background: none;
-		border: none;
 		text-align: left;
-		width: 100%;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		color: inherit;
-	}
-
-	.players-header {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		border-radius: 8px;
-		background: var(--bg-card);
-		margin: 0 0 0.5rem 0;
-		gap: 0.5rem;
-		min-height: 50px;
-	}
-
-	.player-item-header {
-		padding: 0 5rem 0 2rem;
-		gap: 0.5rem;
-		min-height: 50px;
-	}
-
-	.players-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		min-height: 50px;
 	}
 
 	.player-items {

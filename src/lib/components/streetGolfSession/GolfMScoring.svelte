@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import GolfMScoringSolo from './GolfMScoringSolo.svelte';
-	import GolfMScoringTeam from './GolfMScoringTeam.svelte';
+	import GolfMScoringSolo from './golfMScoring/GolfMScoringSolo.svelte';
+	import GolfMScoringTeam from './golfMScoring/GolfMScoringTeam.svelte';
+	import '$lib/styles/golfMScoring.css';
 
 	const s = sessionSettingsStore.settings;
 
