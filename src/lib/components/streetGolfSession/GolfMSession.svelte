@@ -35,6 +35,7 @@
 		{#if s.teamGame}
 			<Stepper label="Nombre de joueurs par équipe" bind:value={s.playersPerTeam} min={2} />
 		{/if}
+		<Toggle label="Partenaires ghost à 'X'" bind:checked={s.usePenalizingGhost} />
 	</div>
 </div>
 

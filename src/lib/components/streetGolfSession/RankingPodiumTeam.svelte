@@ -1,36 +1,95 @@
 <script lang="ts">
 	import { playersStore } from '$lib/stores/playersStore.svelte';
+	import { teamsStore } from '$lib/stores/teamsStore.svelte';
 	import { targetsStore } from '$lib/stores/targetsStore.svelte';
+	import type { Player } from '$lib/types/playerInterface';
+
 	import { ConfettiCannon } from 'svelte-canvas-confetti';
 	import { onMount } from 'svelte';
-	import type { Player } from '$lib/types/playerInterface';
+
+	import type { Team } from '$lib/types/teamInterface';
+	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
+
+	const s = sessionSettingsStore.settings;
 
 	let confettiCannon = $state(false);
 
-	// Helper interne pour calculer le score d'un joueur basé sur les cibles actuelles
-	const calculatePlayerScore = (player: Player) => {
+	// Calcule le score de l'équipe
+	const calculateTeamScore = (team: Team) => {
+		// Pour toutes les cibles du parcours
 		return targetsStore.list.reduce((sum, target) => {
-			return sum + (player.scores[target.id] || 0);
+			// 1. Récupération des scores réels présents
+			const scores = team.playersId.map((id) => {
+				const p = playersStore.list.find((p) => p.id === id);
+				return p?.scores[target.id] || 0;
+			});
+
+			// 2. Injection des fantômes si l'équipe est incomplète
+			while (scores.length < s.playersPerTeam) {
+				let ghostValue: number;
+				switch (target.rule) {
+					case 'Bonus':
+						ghostValue = 0;
+						break;
+					case 'Individuel':
+						if (s.usePenalizingGhost) {
+							if (s.hasCrossAFixedPenalty) ghostValue = s.malusValue;
+							else ghostValue = target.par + s.malusOverPar;
+						} else ghostValue = scores[0];
+						break;
+					default:
+						ghostValue = scores[0];
+						break;
+				}
+				scores.push(ghostValue);
+			}
+
+			// 3. Somme des scores de la cible pour l'équipe
+			const targetTotal = scores.reduce((a, b) => a + b, 0);
+
+			return sum + targetTotal;
 		}, 0);
 	};
 
-	// Calcul du Par total du parcours
-	const totalPar = $derived(targetsStore.list.reduce((sum, t) => sum + t.par, 0));
+	// Liste les joueurs de l'équipe
+	const listTeamPlayer = (team: Team) => {
+		// On mappe les IDs de l'équipe vers les objets joueurs du store
+		return team.playersId
+			.map((id) => {
+				return playersStore.list.find((p) => p.id === id);
+			})
+			.filter((p) => p !== undefined); // Sécurité pour éviter les éléments vides
+	};
 
-	// Classement : Trie les joueurs par score total
-	const rankedPlayers = $derived(
-		[...playersStore.list].sort((a, b) => {
-			return calculatePlayerScore(a) - calculatePlayerScore(b);
+	const formatPlayerList = (players: Player[]) => {
+		const names = players.map((p) => p.name);
+
+		// On crée le formateur pour le français
+		const formatter = new Intl.ListFormat('fr', {
+			style: 'long',
+			type: 'conjunction'
+		});
+
+		return formatter.format(names);
+	};
+
+	// Calcul du Par total du parcours
+	const totalPar: number = $derived(targetsStore.list.reduce((sum, t) => sum + t.par, 0));
+
+	// Classement : Trie les équipes par score total
+	const rankedTeams = $derived(
+		[...teamsStore.list].sort((a, b) => {
+			return calculateTeamScore(a) - calculateTeamScore(b);
 		})
 	);
 
 	// Dérivations pour l'affichage
-	const top3 = $derived(rankedPlayers.slice(0, 3));
-	const others = $derived(rankedPlayers.slice(3));
+	const top3 = $derived(rankedTeams.slice(0, 3));
+	const others = $derived(rankedTeams.slice(3));
 
 	// Fonction utilitaire pour l'UI (utilisée dans le HTML)
-	function getPlayerStats(player: Player) {
-		const gross = calculatePlayerScore(player);
+	function getTeamStats(team: Team) {
+		const gross = calculateTeamScore(team);
 		const diff = gross - totalPar;
 		const diffText = diff > 0 ? `(+${diff})` : diff < 0 ? `(${diff})` : '(E)';
 
@@ -40,10 +99,10 @@
 		// 1. On prépare le texte du message
 		let message = `🏆 Résultats Golf Score Hub\n\n`;
 
-		rankedPlayers.forEach((player, index) => {
-			const stats = getPlayerStats(player);
+		rankedTeams.forEach((team, index) => {
+			const stats = getTeamStats(team);
 			const medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '🔹 ';
-			message += `${medal}${player.name}: ${stats.gross} ${stats.diffText}\n`;
+			message += `${medal}${team.name}: ${stats.gross} ${stats.diffText}\n`;
 		});
 
 		message += `\nJoué avec Golf Score Hub ⛳`;
@@ -73,41 +132,44 @@
 <div class="podium-container">
 	<div class="podium-visual">
 		{#if top3[1]}
-			{@const stats = getPlayerStats(top3[1])}
+			{@const stats = getTeamStats(top3[1])}
 			<div class="place silver">
-				, <span class="score">{stats.gross} ({stats.diff})</span>
+				<span class="score">{stats.gross} ({stats.diff})</span>
 				<div class="bar"></div>
 				<span class="name">{top3[1].name}</span>
+				<span class="name">({formatPlayerList(listTeamPlayer(top3[1]))})</span>
 			</div>
 		{/if}
 
 		{#if top3[0]}
-			{@const stats = getPlayerStats(top3[0])}
+			{@const stats = getTeamStats(top3[0])}
 			<div class="place gold">
 				<span class="medal">👑</span>
 				<span class="score">{stats.gross} ({stats.diff})</span>
 				<div class="bar"></div>
-				<span class="name">{top3[0].name}</span>
+				<span class="name">{top3[0].name} </span>
+				<span class="name">({formatPlayerList(listTeamPlayer(top3[0]))})</span>
 			</div>
 		{/if}
 
 		{#if top3[2]}
-			{@const stats = getPlayerStats(top3[2])}
+			{@const stats = getTeamStats(top3[2])}
 			<div class="place bronze">
 				<span class="score">{stats.gross} ({stats.diff})</span>
 				<div class="bar"></div>
 				<span class="name">{top3[2].name}</span>
+				<span class="name">({formatPlayerList(listTeamPlayer(top3[2]))})</span>
 			</div>
 		{/if}
 	</div>
 
 	{#if others.length > 0}
 		<div class="others-list">
-			{#each others as player, i}
-				{@const stats = getPlayerStats(player)}
+			{#each others as team, i}
+				{@const stats = getTeamStats(team)}
 				<div class="other-item">
 					<span class="rank">{i + 4}</span>
-					<span class="name">{player.name}</span>
+					<span class="name">{team.name}</span>
 					<span class="score">{stats.gross} ({stats.diff})</span>
 				</div>
 			{/each}
@@ -141,7 +203,7 @@
 		justify-content: center;
 		gap: 10px;
 		margin-bottom: 2rem;
-		height: 180px;
+		height: 230px;
 	}
 
 	.place {
@@ -149,7 +211,7 @@
 		flex-direction: column;
 		align-items: center;
 		flex: 1;
-		max-width: 80px;
+		max-width: 110px;
 	}
 
 	.bar {
@@ -170,17 +232,17 @@
 
 	/* Hauteurs différentes pour l'effet escalier */
 	.gold .bar {
-		height: 100px;
+		height: 150px;
 		background: #ffd700;
 		border: 2px solid #e6c200;
 	}
 	.silver .bar {
-		height: 70px;
+		height: 105px;
 		background: #c0c0c0;
 		border: 2px solid #a9a9a9;
 	}
 	.bronze .bar {
-		height: 50px;
+		height: 75px;
 		background: #cd7f32;
 		border: 2px solid #b87333;
 	}

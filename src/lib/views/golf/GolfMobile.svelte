@@ -11,11 +11,11 @@
 	import Toast from '$lib/ui/Toast.svelte';
 	import GolfHeader from '$lib/ui/GolfHeader.svelte';
 
-	import RankingPodium from '$lib/components/RankingPodium.svelte';
-	import GolfMSession from '$lib/components/GolfMSession.svelte';
-	import GolfMPlayer from '$lib/components/GolfMPlayer.svelte';
-	import GolfMTargets from '$lib/components/GolfMTargets.svelte';
-	import GolfMScoring from '$lib/components/GolfMScoring.svelte';
+	import RankingPodium from '$lib/components/streetGolfSession/RankingPodium.svelte';
+	import GolfMSession from '$lib/components/streetGolfSession/GolfMSession.svelte';
+	import GolfMPlayer from '$lib/components/streetGolfSession/GolfMPlayer.svelte';
+	import GolfMTargets from '$lib/components/streetGolfSession/GolfMTargets.svelte';
+	import GolfMScoring from '$lib/components/streetGolfSession/GolfMScoring.svelte';
 
 	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5 };
 
@@ -27,7 +27,6 @@
 	let weatherCondition = 'Soleil';
 
 	let targets = $derived(targetsStore.list);
-	let targetCount = $derived(targets.length);
 
 	gameStatus.currentTargetIndex = activeTargetIndex;
 
@@ -164,6 +163,7 @@
 		background: #eee;
 		border-radius: 2px;
 	}
+
 	.fill {
 		height: 100%;
 		background: var(--primary);

@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { teamsStore } from '$lib/stores/teamsStore.svelte';
 	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
-	import type { Team } from '$lib/types/teamInterface';
 
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import { onMount } from 'svelte';
@@ -27,8 +25,6 @@
 				? s.malusValue
 				: currentTarget.par + s.malusOverPar
 	);
-
-	let hasCrossAFixedPenalty = s.hasCrossAFixedPenalty;
 
 	let prevTargetBtn: HTMLButtonElement;
 	let nextTargetBtn: HTMLButtonElement;
@@ -85,17 +81,17 @@
 		});
 	}
 
-	function updateScoreTeam(team: Team, targetId: string, score: number) {
-		// updateScore(playerId: string, targetId: string, value: number)
-		team.playersId.forEach((playerId) => {
-			playersStore.updateScore(playerId, targetId, score);
-		});
-	}
-
 	onMount(() => {
 		initScoresPlayerOnTarget();
 	});
 </script>
+
+<div class="progress-bar">
+	<div
+		class="fill"
+		style="width: {(100 * (activeTargetIndex + 1)) / targetsStore.list.length}%"
+	></div>
+</div>
 
 <div class="step-content" in:slide>
 	<header class="target-header" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
@@ -119,75 +115,51 @@
 	<div class="scores-grid">
 		<table>
 			<tbody>
-				{#if currentTarget.rule !== 'Bonus'}
-					{#each teamsStore.list as team}
-						{@const player = playersStore.list.find((p) => p.id === team.playersId[0]) || {
-							id: '',
-							name: '',
-							teamId: '',
-							scores: {}
-						}}
-						<tr>
-							<td>
-								<span class="player-name">{team.name}</span>
-							</td>
-							<td>
-								<Stepper
-									value={player.scores[currentTarget.id] ?? 0}
-									min={minTrys}
-									max={maxTrys}
-									onchange={(val) => updateScoreTeam(team, currentTarget.id, val)}
-								/>
-							</td>
-							<td class="btn-actions">
-								<button
-									class="btn-par"
-									onclick={() => updateScoreTeam(team, currentTarget.id, currentTarget.par)}
-									title="Par">=</button
-								>
-								<button
-									class="btn-delete"
-									onclick={() => updateScoreTeam(team, currentTarget.id, maxTrys)}
-									title="Echec">X</button
-								>
-							</td>
-						</tr>
-					{/each}
-				{:else}
-					{#each playersStore.list as player}
-						<tr>
-							<td>
-								<span class="player-name">{player.name}</span>
-							</td>
-							<td>
-								<Stepper
-									value={player.scores[currentTarget.id] ?? 0}
-									min={minTrys}
-									max={maxTrys}
-									onchange={(val) => (player.scores[currentTarget.id] = val)}
-								/>
-							</td>
-							<td class="btn-actions">
-								<button
-									class="btn-par"
-									onclick={() => (player.scores[currentTarget.id] = currentTarget.par)}
-									title="Par">=</button
-								>
-								<button
-									class="btn-delete"
-									onclick={() => (player.scores[currentTarget.id] = maxTrys)}
-									title="Echec">X</button
-								>
-							</td>
-						</tr>
-					{/each}
-				{/if}
+				{#each playersStore.list as player}
+					<tr>
+						<td>
+							<span class="player-name">{player.name}</span>
+						</td>
+						<td>
+							<Stepper
+								value={player.scores[currentTarget.id] ?? 0}
+								min={minTrys}
+								max={maxTrys}
+								onchange={(val) => (player.scores[currentTarget.id] = val)}
+							/>
+						</td>
+						<td class="btn-actions">
+							<button
+								class="btn-par"
+								onclick={() => (player.scores[currentTarget.id] = currentTarget.par)}
+								title="Par">=</button
+							>
+							<button
+								class="btn-delete"
+								onclick={() => (player.scores[currentTarget.id] = maxTrys)}
+								title="Echec">X</button
+							>
+						</td>
+					</tr>
+				{/each}
 			</tbody>
 		</table>
 	</div>
 </div>
 
 <style>
+	.progress-bar {
+		height: 4px;
+		background: #eee;
+		border-radius: 2px;
+	}
+
+	.fill {
+		height: 100%;
+		background: var(--primary);
+		transition: width 0.3s;
+	}
+
 	.step-content {
 		display: flex;
 		flex-direction: column;

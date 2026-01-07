@@ -17,7 +17,7 @@
 	let newTargetName = $state('');
 
 	const ruleOptions = isTeamGame
-		? ['Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus']
+		? ['Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus', 'Individuel']
 		: ['Individuel', 'Bonus'];
 	const flipDurationMs = 300;
 

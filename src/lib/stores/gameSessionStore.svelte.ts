@@ -9,6 +9,7 @@ export interface SessionSettings {
 	malusValue: number;
 	teamGame: boolean;
 	playersPerTeam: number;
+	usePenalizingGhost: boolean;
 }
 
 const STORAGE_KEY = 'golf-session_settings';
@@ -20,7 +21,8 @@ const defaultSettings: SessionSettings = {
 	malusOverPar: 4,
 	malusValue: 10,
 	teamGame: false,
-	playersPerTeam: 2
+	playersPerTeam: 2,
+	usePenalizingGhost: false
 };
 
 class GameSessionStore {
