@@ -16,8 +16,9 @@
 	import GolfMPlayer from '$lib/components/streetGolfSession/GolfMPlayer.svelte';
 	import GolfMTargets from '$lib/components/streetGolfSession/GolfMTargets.svelte';
 	import GolfMScoring from '$lib/components/streetGolfSession/GolfMScoring.svelte';
+	import ScoreCard from '$lib/components/streetGolfSession/ScoreCard.svelte';
 
-	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5 };
+	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5, scoreCard: 51 };
 
 	let currentStep: number = $state(1);
 
@@ -91,9 +92,11 @@
 </script>
 
 <div class="mobile-wizard">
-	<div class="progress-bar">
-		<div class="fill" style="width: {currentStep * 20}%"></div>
-	</div>
+	{#if currentStep < 10}
+		<div class="progress-bar">
+			<div class="fill" style="width: {currentStep * 20}%"></div>
+		</div>
+	{/if}
 
 	<!-- Saisie des inforamtions de la partie -->
 	{#if currentStep === Step.session}
@@ -140,11 +143,21 @@
 		/>
 		<RankingPodium />
 
+		<button class="btn btn-primary" onclick={() => nextCard(Step.scoreCard)}>Carte de score</button>
 		<button onclick={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button>
 		<button class="btn btn-primary" onclick={() => resetGame()}>Nouvelle partie</button>
 		<button class="btn btn-primary" onclick={() => saveGameToHistory()}
 			>Sauvegarder la partie</button
 		>
+
+		<!-- Résultat de la Partie : carte de score -->
+	{:else if currentStep === Step.scoreCard}
+		<GolfHeader
+			title="🏆 Carte de score"
+			onNext={() => undefined}
+			onPrev={() => nextCard(Step.ranking)}
+		/>
+		<ScoreCard />
 
 		<Toast />
 	{/if}

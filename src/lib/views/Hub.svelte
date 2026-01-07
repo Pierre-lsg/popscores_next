@@ -6,7 +6,7 @@
 <h1>Bienvenue au {appSettings.values.clubName}</h1>
 
 <div class="hub-container">
-	<h1>Round 2/1 ...</h1>
+	<h1>Round 8/1 ...</h1>
 
 	<div class="grid-container">
 		<button class="card" onclick={() => router.goTo('golf-score')}>

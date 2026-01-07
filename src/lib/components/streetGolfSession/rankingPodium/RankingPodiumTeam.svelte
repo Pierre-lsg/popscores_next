@@ -91,7 +91,7 @@
 	// Fonction utilitaire pour l'UI (utilisée dans le HTML)
 	function getTeamStats(team: Team) {
 		const gross = calculateTeamScore(team);
-		const diff = gross - totalPar;
+		const diff = gross - totalPar * s.playersPerTeam;
 		const diffText = diff > 0 ? `(+${diff})` : diff < 0 ? `(${diff})` : '(E)';
 
 		return { gross, diffText, diff };
