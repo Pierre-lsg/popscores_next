@@ -4,11 +4,15 @@
 	import {
 		calculatePlayerScore,
 		rankedPlayers,
-		totalPar
+		totalPar, 
+		listTeamPlayer, 
+		rankedTeams, 
+		calculateTeamScore
 	} from '$lib/utils/streetGolfSession/golfScoringFunction';
 	import { teamsStore } from '$lib/stores/teamsStore.svelte';
 	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import type { Target } from '$lib/types/targetsInterface';
+	import { playersStore } from '$lib/stores/playersStore.svelte';
 
 	const s = sessionSettingsStore.settings;
 
@@ -46,7 +50,68 @@
 	<!-- carte de score en équipe -->
 	<h2>Classement par équipe</h2>
 
-	ddd
+	<table class="table-container">
+		<thead>
+			<tr class="header">
+				<th rowspan=2 class="fixed-column">Cibles</th>
+				<th rowspan=2 class="vertical-header par-row"><span>Par</span></th>
+				{#each rankedTeams as team}
+					<th colspan={listTeamPlayer(team).length} class="last-cell"><span>{team.name}</span></th>
+				{/each}
+			</tr>
+			<tr class="header">
+				{#each rankedTeams as team}
+					{#each listTeamPlayer(team) as player, i}
+						{#if i === listTeamPlayer(team).length - 1}
+							<th class="vertical-header last-cell"><span>{player.name}</span></th>
+						{:else}
+							<th class="vertical-header"><span>{player.name}</span></th>
+						{/if}
+					{/each}
+				{/each}
+			</tr>
+		</thead>
+		<tbody>
+		{#each targetsStore.list as target, i}
+			<tr>
+				<td class="fixed-column">{target.name || 'Trou ' + (i + 1)}</td>
+				<td class="par-row">{target.par}</td>
+				
+				
+				{#each rankedTeams as team}
+					{@const teamScore = listTeamPlayer(team)[0].scores[target.id]}
+					{#if target.rule !== 'Bonus'}
+						<td colspan={listTeamPlayer(team).length} class="score-cell team-merge {getScoreClass(teamScore, target)}">
+						<div class="shape">{teamScore}</div>
+						</td>
+					{:else}
+						{#each listTeamPlayer(team) as player, i}
+						{@const playerScore = player.scores[target.id]}
+							{#if i === listTeamPlayer(team).length - 1}
+								<td class="score-cell {getScoreClass(playerScore, target)} last-cell">
+									<div class="shape">{playerScore}</div>
+								</td>
+							{:else}
+								<td class="score-cell {getScoreClass(playerScore, target)}">
+									<div class="shape">{playerScore}</div>
+								</td>
+							{/if}
+						{/each}
+					{/if}
+				{/each}
+			</tr>
+		{/each}
+		</tbody>
+		<tfoot>
+			<tr class="footer">
+				<td class="fixed-column">Total</td>
+				<td class="par-row">{totalPar}</td>
+				{#each rankedTeams as team}
+					<td colspan={listTeamPlayer(team).length} class="last-cell">{calculateTeamScore(team)}</td>
+				{/each}
+			</tr>
+		</tfoot>
+	</table>
 {/if}
 
 <!-- carte de score en individuel -->
@@ -76,6 +141,8 @@
 				{/each}
 			</tr>
 		{/each}
+	</tbody>
+	<tfoot>
 		<tr class="footer">
 			<td class="fixed-column">Total</td>
 			<td class="par-row">{totalPar}</td>
@@ -83,7 +150,7 @@
 				<td>{calculatePlayerScore(player)}</td>
 			{/each}
 		</tr>
-	</tbody>
+	</tfoot>
 </table>
 
 <style>
@@ -116,6 +183,10 @@
 	}
 
 	.par-row {
+		border-right: 2px solid #ddd;
+	}
+
+	.last-cell {
 		border-right: 2px solid #ddd;
 	}
 
@@ -201,4 +272,12 @@
 	.score-par .shape {
 		border: none;
 	}
+
+	.team-merge {
+    background-color: rgba(0, 0, 0, 0.03); /* Léger fond pour distinguer l'équipe */
+    text-align: center;
+    font-weight: bold;
+    border-left: 2px solid #ccc;
+    border-right: 2px solid #ccc;
+}
 </style>

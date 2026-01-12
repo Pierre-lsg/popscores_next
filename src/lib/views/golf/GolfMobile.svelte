@@ -17,6 +17,7 @@
 	import GolfMTargets from '$lib/components/streetGolfSession/GolfMTargets.svelte';
 	import GolfMScoring from '$lib/components/streetGolfSession/GolfMScoring.svelte';
 	import ScoreCard from '$lib/components/streetGolfSession/ScoreCard.svelte';
+	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 
 	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5, scoreCard: 51 };
 
@@ -67,12 +68,11 @@
 
 	function saveGameToHistory() {
 		const newArchive = {
-			id: crypto.randomUUID(), // Identifiant unique
-			date: new Date().toISOString(),
-			location: locationName,
-			weather: weatherCondition,
+			id: crypto.randomUUID(), 
+			settings: sessionSettingsStore.settings,
+			targets: targetsStore.list,
+			teams: teamsStore.list,
 			players: playersStore.list,
-			targets: targetsStore.list
 		};
 
 		historyStore.archiveGame(newArchive);

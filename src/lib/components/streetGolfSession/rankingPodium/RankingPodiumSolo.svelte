@@ -8,6 +8,7 @@
 
 	import { ConfettiCannon } from 'svelte-canvas-confetti';
 	import { onMount } from 'svelte';
+	import { playersStore } from '$lib/stores/playersStore.svelte';
 
 	let confettiCannon = $state(false);
 	async function shareResults() {
@@ -43,6 +44,7 @@
 		confettiCannon = true;
 	});
 </script>
+
 
 <div class="podium-container">
 	<div class="podium-visual">

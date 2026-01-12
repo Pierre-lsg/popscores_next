@@ -1,4 +1,4 @@
-export type Page = 'hub' | 'golf-score' | 'params' | 'other-service';
+export type Page = 'hub' | 'golf-score' | 'golf-history' | 'params' | 'other-service';
 
 class RouterStore {
 	// La rune $state remplace le writable

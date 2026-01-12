@@ -6,13 +6,19 @@
 <h1>Bienvenue au {appSettings.values.clubName}</h1>
 
 <div class="hub-container">
-	<h1>Round 8/1 ...</h1>
+	<h1>Carte de score OK</h1>
 
 	<div class="grid-container">
 		<button class="card" onclick={() => router.goTo('golf-score')}>
 			<span class="icon">⛳</span>
 			<h3>Golf Score</h3>
 			<p>Suivi de partie entre amis</p>
+		</button>
+
+		<button class="card" onclick={() => router.goTo('golf-history')}>
+			<span class="icon">📜</span>
+			<h3>Historique</h3>
+			<p>Revoir les sessions précédentes</p>
 		</button>
 
 		<button class="card disabled">

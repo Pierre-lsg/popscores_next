@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'golf_history';
+const STORAGE_KEY = 'golf-history';
 
 class HistoryStore {
 	// La rune $state remplace le writable
