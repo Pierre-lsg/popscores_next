@@ -28,7 +28,7 @@
 		a.click();
 	};
     */
-
+ 
 	const getScoreClass = (score: number, target: Target) => {
 		if (score === 0) return ''; // Pas encore joué
 		if (target.rule === 'Bonus') return 'score-bonus';
@@ -45,6 +45,8 @@
 {#if isTeamGame}
 	<!-- carte de score en équipe -->
 	<h2>Classement par équipe</h2>
+
+	ddd
 {/if}
 
 <!-- carte de score en individuel -->
