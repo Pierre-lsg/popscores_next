@@ -5,6 +5,7 @@
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import DatePicker from '$lib/ui/DatePicker.svelte';
 
 	const weatherOptions = ['Soleil', 'Nuageux', 'Pluie', 'Venté', 'Froid'];
 	const s = sessionSettingsStore.settings;
@@ -12,6 +13,7 @@
 
 <div class="step-content" in:slide>
 	<div class="setup-fields">
+		<DatePicker label="📅 Date de la session" bind:value={s.sessionBeginning} />
 		<Param label="⛳ Nom du Golf" type="text" bind:value={s.locationName} />
 
 		<div class="field">

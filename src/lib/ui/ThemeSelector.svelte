@@ -6,7 +6,9 @@
 	const themes: { id: Theme; label: string; icon: string }[] = [
 		{ id: 'classic', label: 'Classique', icon: '🌿' },
 		{ id: 'modern', label: 'Sombre', icon: '🌙' },
-		{ id: 'high-contrast', label: 'Soleil', icon: '☀️' }
+		{ id: 'high-contrast', label: 'Soleil', icon: '☀️' },
+		{ id: 'warm', label: 'Warm', icon: '🔥' }
+
 	];
 </script>
 

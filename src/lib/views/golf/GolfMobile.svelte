@@ -25,11 +25,6 @@
 
 	let activeTargetIndex = gameStatus.currentTargetIndex || 0;
 
-	let locationName = '';
-	let weatherCondition = 'Soleil';
-
-	let targets = $derived(targetsStore.list);
-
 	gameStatus.currentTargetIndex = activeTargetIndex;
 
 	onMount(() => {

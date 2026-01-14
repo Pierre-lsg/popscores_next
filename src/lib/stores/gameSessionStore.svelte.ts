@@ -4,6 +4,7 @@ import { browser } from '$app/environment';
 export interface SessionSettings {
 	locationName: string;
 	weatherCondition: string;
+	sessionBeginning: string;
 	hasCrossAFixedPenalty: boolean;
 	malusOverPar: number;
 	malusValue: number;
@@ -17,6 +18,7 @@ const STORAGE_KEY = 'golf-session_settings';
 const defaultSettings: SessionSettings = {
 	locationName: 'La Doua',
 	weatherCondition: 'Soleil',
+	sessionBeginning: new Date().toISOString().split('T')[0],
 	hasCrossAFixedPenalty: false,
 	malusOverPar: 4,
 	malusValue: 10,

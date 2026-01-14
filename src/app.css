@@ -19,8 +19,8 @@
 	--secondary: #546e7a;
 
 	/* Neutres */
-	--bg-app: #f8f9fa;
-	--bg-card: #ffffff;
+	--bg-app: #e2fdd9;
+	--bg-card: #cef7c0;
 	--text-main: #263238;
 	--border-color: #cfd8dc;
 }
@@ -52,6 +52,21 @@
 	--text-main: #000000;
 	--border-color: #000000;
 }
+
+/* Thème Chaleureux (Warm) */
+[data-theme='warm'] {
+	/* Couleurs principales */
+	--primary: #d84315;
+	--primary-light: #fff3e0;
+	--secondary: #bf360c;
+
+	/* Neutres */
+	--bg-app: #fdecd7;
+	--bg-card: #fad9b0;
+	--text-main: #3e2723;
+	--border-color: #d7ccc8;
+}
+
 
 body {
 	background-color: var(--bg-app);

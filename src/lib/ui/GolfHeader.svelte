@@ -1,8 +1,13 @@
 <script lang="ts">
-	export let title: string = '';
-	export let onNext: () => void;
-	export let onPrev: () => void;
-
+	let { 
+        title = '', 
+        onNext, 
+        onPrev 
+    } = $props<{
+        title?: string;
+        onNext: () => void;
+        onPrev: () => void;
+    }>();
 	// --
 	// Code pour gestion du Swipe
 	// Todo: à refactoriser car utilisé ailleurs
@@ -36,10 +41,10 @@
 	<h2>{title}</h2>
 
 	<div class="actions">
-		{#if typeof onPrev === 'function'}
+		{#if onPrev}
 			<button class="btn btn-icon" onclick={onPrev}>&lt;&lt;</button>
 		{/if}
-		{#if typeof onPrev === 'function'}
+		{#if onNext}
 			<button class="btn btn-icon" onclick={onNext}>&gt;&gt;</button>
 		{/if}
 	</div>

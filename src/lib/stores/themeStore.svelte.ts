@@ -1,4 +1,4 @@
-export type Theme = 'classic' | 'modern' | 'high-contrast';
+export type Theme = 'classic' | 'modern' | 'high-contrast' | 'warm';
 
 const STORAGE_KEY = 'golf-app-theme';
 

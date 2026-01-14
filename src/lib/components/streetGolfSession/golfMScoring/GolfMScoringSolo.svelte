@@ -76,7 +76,7 @@
 	function initScoresPlayerOnTarget() {
 		playersStore.list.forEach((player) => {
 			if (player.scores[currentTarget.id] === undefined) {
-				player.scores[currentTarget.id] = currentTarget.par;
+				playersStore.updateScore(player.id, currentTarget.id, currentTarget.par);
 			}
 		});
 	}
@@ -125,18 +125,18 @@
 								value={player.scores[currentTarget.id] ?? 0}
 								min={minTrys}
 								max={maxTrys}
-								onchange={(val) => (player.scores[currentTarget.id] = val)}
+								onchange={(val) => (playersStore.updateScore(player.id, currentTarget.id, val))}
 							/>
 						</td>
 						<td class="btn-actions">
 							<button
 								class="btn-par"
-								onclick={() => (player.scores[currentTarget.id] = currentTarget.par)}
+								onclick={() => (playersStore.updateScore(player.id, currentTarget.id, currentTarget.par))}
 								title="Par">=</button
 							>
 							<button
 								class="btn-delete"
-								onclick={() => (player.scores[currentTarget.id] = maxTrys)}
+								onclick={() => (playersStore.updateScore(player.id, currentTarget.id, maxTrys))}
 								title="Echec">X</button
 							>
 						</td>
