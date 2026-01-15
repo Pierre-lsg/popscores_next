@@ -1,8 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { SvelteKitPWA } from '@vite-pwa/sveltekit';
-import mkcert from 'vite-plugin-mkcert'
-
+import mkcert from 'vite-plugin-mkcert';
 
 export default defineConfig({
 	plugins: [
@@ -14,7 +13,7 @@ export default defineConfig({
 				name: 'Golf Score Hub',
 				short_name: 'GolfScore',
 				description: 'Suivi de score de golf en temps réel',
-				start_url: '/popscores_next/',
+				start_url: '/',
 				scope: '/popscores_next/',
 				display: 'standalone',
 				background_color: '#ffffff',
