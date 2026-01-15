@@ -1,21 +1,20 @@
 <script lang="ts">
 	import {
-		rankedPlayers,
+		getRankedPlayers,
 		getPlayerStats,
 		top3Players,
 		othersRankedPlayers
-	} from '$lib/utils/streetGolfSession/golfScoringFunction';
+	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
 
 	import { ConfettiCannon } from 'svelte-canvas-confetti';
 	import { onMount } from 'svelte';
-	import { playersStore } from '$lib/stores/playersStore.svelte';
 
 	let confettiCannon = $state(false);
 	async function shareResults() {
 		// 1. On prépare le texte du message
 		let message = `🏆 Résultats Golf Score Hub\n\n`;
 
-		rankedPlayers.forEach((player, index) => {
+		getRankedPlayers().forEach((player, index) => {
 			const stats = getPlayerStats(player);
 			const medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '🔹 ';
 			message += `${medal}${player.name}: ${stats.gross} ${stats.diffText}\n`;
@@ -44,7 +43,6 @@
 		confettiCannon = true;
 	});
 </script>
-
 
 <div class="podium-container">
 	<div class="podium-visual">

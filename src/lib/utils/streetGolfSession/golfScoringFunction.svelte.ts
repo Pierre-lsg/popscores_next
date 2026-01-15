@@ -7,13 +7,17 @@ import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 
 const s = sessionSettingsStore.settings;
 
+export interface RankedPlayer {
+	rank: number;
+	player: any;
+	totalScore: number;
+	isTie: boolean;
+}
+
 // Calcul du Par total du parcours
 export const totalPar = targetsStore.list.reduce((sum, t) => sum + t.par, 0);
 
-// --
 // Calcul des scores individuels
-// --
-// Score total du joueur
 export const calculatePlayerScore = (player: Player) => {
 	return targetsStore.list.reduce((sum, target) => {
 		return sum + (player.scores[target.id] || 0);
@@ -21,9 +25,45 @@ export const calculatePlayerScore = (player: Player) => {
 };
 
 // Tri des joueurs par score total
-export const rankedPlayers = [...playersStore.list].sort((a, b) => {
-	return calculatePlayerScore(a) - calculatePlayerScore(b);
-});
+const rankedPlayers = $derived(
+	[...playersStore.list].sort((a, b) => {
+		return calculatePlayerScore(a) - calculatePlayerScore(b);
+	})
+);
+
+export const getRankedPlayers = (players: any[]): RankedPlayer[] => {
+	// 1. On calcule les scores totaux et on trie
+	const sorted = [...players]
+		.map((p) => ({
+			player: p,
+			totalScore: calculatePlayerScore(p)
+		}))
+		.sort((a, b) => a.totalScore - b.totalScore);
+
+	// 2. On attribue les rangs avec gestion des ex-aequo
+	return sorted.map((entry, index, array) => {
+		let rank = index + 1;
+		let isTie = false;
+
+		if (index > 0 && entry.totalScore === array[index - 1].totalScore) {
+			// Si même score que le précédent, on cherche le rang du premier de la série
+			let i = index;
+			while (i > 0 && array[i].totalScore === array[i - 1].totalScore) {
+				i--;
+			}
+			rank = i + 1;
+			isTie = true;
+		} else if (index < array.length - 1 && entry.totalScore === array[index + 1].totalScore) {
+			isTie = true;
+		}
+
+		return {
+			...entry,
+			rank,
+			isTie
+		};
+	});
+};
 
 // Score total par rapport au Par
 export function getPlayerStats(player: Player) {

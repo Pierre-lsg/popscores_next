@@ -67,6 +67,20 @@
 	--border-color: #d7ccc8;
 }
 
+/* Thème plage (Sand & Beach) */
+[data-theme='beach'] {
+	/* Couleurs principales */
+	--primary: #ac8d00;
+	--primary-light: #fff9c4;
+	--secondary: #a1887f;
+
+	/* Neutres */
+	--bg-app: #e4dcaf;
+	--bg-card: #ebdf98;
+	--text-main: #263238;
+	--border-color: #b71c1c;
+}
+
 
 body {
 	background-color: var(--bg-app);

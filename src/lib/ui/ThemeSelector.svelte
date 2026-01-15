@@ -7,8 +7,8 @@
 		{ id: 'classic', label: 'Classique', icon: '🌿' },
 		{ id: 'modern', label: 'Sombre', icon: '🌙' },
 		{ id: 'high-contrast', label: 'Soleil', icon: '☀️' },
-		{ id: 'warm', label: 'Warm', icon: '🔥' }
-
+		{ id: 'warm', label: 'Warm', icon: '🔥' },
+		{ id: 'beach', label: 'Beach', icon: '🏖️' },
 	];
 </script>
 

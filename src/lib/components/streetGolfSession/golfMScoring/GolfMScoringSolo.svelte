@@ -7,10 +7,15 @@
 
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import { onMount } from 'svelte';
+	import {
+		getRankedPlayers,
+		getPlayerStats
+	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
 
 	const s = sessionSettingsStore.settings;
 
 	let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
+	let rankedPlayerList = $derived(getRankedPlayers(playersStore.list));
 
 	let currentTarget = $derived(targetsStore.list[activeTargetIndex]);
 	let isFirstTarget = $derived(activeTargetIndex === 0);
@@ -29,6 +34,13 @@
 	let prevTargetBtn: HTMLButtonElement;
 	let nextTargetBtn: HTMLButtonElement;
 
+	let touchStartX = 0;
+	let touchEndX = 0;
+
+	let showRanking: boolean = $state(false);
+
+	const SWIPE_THRESHOLD = 50;
+
 	function prevTargetClick() {
 		prevTargetBtn?.click();
 	}
@@ -36,15 +48,6 @@
 	function nextTargetClick() {
 		nextTargetBtn?.click();
 	}
-
-	// --
-	// Code pour gestion du Swipe
-	// Todo: à refactoriser car utilisé ailleurs
-	let touchStartX = 0;
-	let touchEndX = 0;
-
-	// Seuil minimal pour éviter de changer d'écran par erreur (en pixels)
-	const SWIPE_THRESHOLD = 50;
 
 	function handleTouchStart(e: TouchEvent) {
 		touchStartX = e.changedTouches[0].screenX;
@@ -86,6 +89,35 @@
 	});
 </script>
 
+<div class="step-content">
+	<div
+		onpointerdown={() => (showRanking = true)}
+		onpointerup={() => (showRanking = false)}
+		onpointerleave={() => (showRanking = false)}
+		ontouchend={() => (showRanking = false)}
+	>
+		🔥 Show
+	</div>
+	{#if showRanking}
+		<div class="others-list">
+			{#each rankedPlayerList as player, i}
+				{@const p = player.player}
+				{@const stats = getPlayerStats(p)}
+				<div class="other-item">
+					<span class="rank"
+						>{player.rank}
+						{#if player.isTie}
+							*
+						{/if}
+					</span>
+					<span class="podium-name">{p.name}</span>
+					<span class="podium-score">{stats.gross} ({stats.diff})</span>
+				</div>
+			{/each}
+		</div>
+	{/if}
+</div>
+
 <div class="progress-bar">
 	<div
 		class="fill"
@@ -125,18 +157,19 @@
 								value={player.scores[currentTarget.id] ?? 0}
 								min={minTrys}
 								max={maxTrys}
-								onchange={(val) => (playersStore.updateScore(player.id, currentTarget.id, val))}
+								onchange={(val) => playersStore.updateScore(player.id, currentTarget.id, val)}
 							/>
 						</td>
 						<td class="btn-actions">
 							<button
 								class="btn-par"
-								onclick={() => (playersStore.updateScore(player.id, currentTarget.id, currentTarget.par))}
+								onclick={() =>
+									playersStore.updateScore(player.id, currentTarget.id, currentTarget.par)}
 								title="Par">=</button
 							>
 							<button
 								class="btn-delete"
-								onclick={() => (playersStore.updateScore(player.id, currentTarget.id, maxTrys))}
+								onclick={() => playersStore.updateScore(player.id, currentTarget.id, maxTrys)}
 								title="Echec">X</button
 							>
 						</td>
