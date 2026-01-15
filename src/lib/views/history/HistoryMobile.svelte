@@ -1,61 +1,37 @@
 <script lang="ts">
-	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import { onMount } from 'svelte';
-	import { shareService } from '$lib/utils/shareService';
-	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import type { SessionArchive } from '$lib/types/sessionInterface';
 
+	import HistoryList from '$lib/components/history/HistoryList.svelte';
+	import SessionDetails from '$lib/components/history/SessionDetails.svelte';
 
-    import HistoryList from '$lib/components/history/HistoryList.svelte';
-    import SessionDetails from '$lib/components/history/SessionDetails.svelte';
-    import SessionPodium from '$lib/components/history/SessionPodium.svelte';
-    import SessionScoreCard from '$lib/components/history/SessionScoreCard.svelte';
+	let history = $state<SessionArchive[]>([]);
+	let currentSession: string = $state('');
 
-	const Step = { list: 1, details: 2, podium: 3, scoreCard: 4};
-
-	let currentStep: number = $state(1);
+	let session: SessionArchive | null = $derived(
+		history.find((s) => s.id === currentSession) || null
+	);
 
 	let activeTargetIndex = gameStatus.currentTargetIndex || 0;
 
 	gameStatus.currentTargetIndex = activeTargetIndex;
 
 	onMount(() => {
-		const importedData = shareService.loadFromUrl();
-	});
-
-	function nextCard(nextStep: number) {
-		currentStep = nextStep;
-	}
-
-	async function copyShareLink() {
-		try {
-			const link = shareService.generateLink(playersStore.list, targetsStore.list);
-			await navigator.clipboard.writeText(link);
-
-			// On déclenche le toast !
-			toastStore.show('🔗 Lien de partage copié !');
-		} catch (err) {
-			toastStore.show('❌ Erreur lors de la copie');
+		const data = localStorage.getItem('golf-history');
+		if (data) {
+			history = JSON.parse(data);
 		}
-	}
+	});
 </script>
 
 <div class="mobile-wizard">
-	<!-- Liste des sessions historisées en local -->
-	{#if currentStep === Step.list}
-		<HistoryList
-			title="👥 Liste des sessions passées"
-		/>
-
+	{#if currentSession === ''}
+		<!-- Liste des sessions historisées en local -->
+		<HistoryList title="👥 Liste des sessions passées" bind:currentSession />
+	{:else}
 		<!-- Details de la session	 -->
-	{:else if currentStep === Step.details}
-
-		<!-- Résultat de la Partie : classement final -->
-	{:else if currentStep === Step.list}
-
-		<button class="btn btn-primary" onclick={() => nextCard(Step.scoreCard)}>Carte de score</button>
-		<button onclick={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button>
+		<SessionDetails title="📄 Détails de la session" bind:currentSession {session} />
 	{/if}
 </div>
 
