@@ -15,7 +15,7 @@
 	const s = sessionSettingsStore.settings;
 
 	let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
-	let rankedPlayerList = $derived(getRankedPlayers(playersStore.list));
+	let rankedPlayerList = $derived(getRankedPlayers(playersStore.list, targetsStore.list));
 
 	let currentTarget = $derived(targetsStore.list[activeTargetIndex]);
 	let isFirstTarget = $derived(activeTargetIndex === 0);
@@ -102,7 +102,7 @@
 		<div class="others-list">
 			{#each rankedPlayerList as player, i}
 				{@const p = player.player}
-				{@const stats = getPlayerStats(p)}
+				{@const stats = getPlayerStats(p, targetsStore.list)}
 				<div class="other-item">
 					<span class="rank"
 						>{player.rank}

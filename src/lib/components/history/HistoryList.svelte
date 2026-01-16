@@ -74,18 +74,6 @@
 		background-color: #f8f9fa;
 	}
 
-	.date {
-		font-size: 0.85rem;
-		background: #f0f0f0;
-		padding: 4px 8px;
-		border-radius: 6px;
-		color: #666;
-		margin-right: 15px;
-		font-weight: bold;
-		min-width: 80px;
-		text-align: center;
-	}
-
 	.details {
 		flex-grow: 1;
 		display: flex;

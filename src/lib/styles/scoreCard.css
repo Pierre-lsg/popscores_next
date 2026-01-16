@@ -1,0 +1,126 @@
+.table-container {
+	overflow-x: auto;
+	/* On garde la première colonne visible quand on scrolle à droite */
+	& th:nth-child(1),
+	& td:nth-child(1) {
+		position: sticky;
+		left: 0;
+		z-index: 3;
+		background-color: var(--bg-card);
+	}
+
+	& th:nth-child(2),
+	& td:nth-child(2) {
+		position: sticky;
+		left: 80px; /* À ajuster selon la largeur réelle de ta colonne 1 */
+		z-index: 2;
+		background-color: var(--bg-card);
+	}
+}
+
+table {
+	border-collapse: collapse;
+}
+
+.header {
+	border-bottom: 2px solid #ddd;
+}
+
+.par-row {
+	border-right: 2px solid #ddd;
+}
+
+.last-cell {
+	border-right: 2px solid #ddd;
+}
+
+.footer {
+	border-top: 2px solid #ddd;
+}
+
+th.vertical-header {
+	/* On limite la largeur de la colonne au minimum */
+	width: 40px;
+	max-height: 150px; /* Hauteur nécessaire pour les noms longs */
+	vertical-align: center;
+	padding-bottom: 10px;
+}
+
+th.vertical-header span {
+	/* La magie : vertical de bas en haut */
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	text-align: left;
+	white-space: nowrap;
+	font-size: 0.9rem;
+	letter-spacing: 1px;
+}
+
+/* On stylise la colonne de gauche (nom des trous) pour qu'elle reste lisible */
+.fixed-column {
+	text-align: left;
+	background-color: var(--bg-card);
+	padding-right: 20px;
+	border-right: 2px solid #ddd;
+}
+
+/* Couleur suivant score */
+.score-cell {
+	padding: 5px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+/* La forme commune (cercle ou carré) */
+.shape {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	margin: auto;
+	font-weight: bold;
+	font-size: 1.1rem;
+	line-height: 1;
+}
+
+/* Birdie : Un cercle */
+.score-birdie .shape {
+	border: 2px solid #333; /* Ou une couleur comme #4caf50 */
+	border-radius: 50%;
+}
+
+/* Eagle (encore plus bas que Birdie) : Double cercle */
+.score-eagle .shape {
+	border: 2px solid #333;
+	border-radius: 50%;
+	box-shadow:
+		0 0 0 2px white,
+		0 0 0 4px #333; /* Effet double contour */
+}
+
+/* Bogey : Un carré */
+.score-bogey .shape {
+	border: 2px solid #333; /* Ou une couleur comme #ff9800 */
+	border-radius: 0; /* Carré parfait */
+}
+
+/* Double Bogey ou pire : Double carré */
+.score-double-bogey .shape {
+	border: 2px solid #333;
+	outline: 2px solid #333;
+	outline-offset: 2px;
+}
+
+/* Par : Pas de forme, juste le texte */
+.score-par .shape {
+	border: none;
+}
+
+.team-merge {
+	background-color: rgba(0, 0, 0, 0.03); /* Léger fond pour distinguer l'équipe */
+	text-align: center;
+	font-weight: bold;
+	border-left: 2px solid #ccc;
+	border-right: 2px solid #ccc;
+}

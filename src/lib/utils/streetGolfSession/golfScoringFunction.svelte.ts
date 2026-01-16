@@ -1,39 +1,35 @@
 import type { Player, RankedPlayer } from '$lib/types/playerInterface';
 import type { Team, RankedTeam } from '$lib/types/teamInterface';
 import type { Target } from '$lib/types/targetsInterface';
-
-import { playersStore } from '$lib/stores/playersStore.svelte';
-import { targetsStore } from '$lib/stores/targetsStore.svelte';
-import { teamsStore } from '$lib/stores/teamsStore.svelte';
-import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-
-const s = sessionSettingsStore.settings;
+import type { SessionSettings } from '$lib/types/gameSessionInterface';
 
 //                      //
 // --    Parcours    -- //
 //                      //
 
 // Retourne le Par total du parcours
-export const totalPar = targetsStore.list.reduce((sum, t) => sum + t.par, 0);
+export function getTotalPar(targets: Target[]) {
+	return targets.reduce((sum, t) => sum + t.par, 0);
+}
 
 //                      //
 // --    Joueurs     -- //
 //                      //
 
-// Retourne le score total d'un joueur
-export const calculatePlayerScore = (player: Player) => {
-	return targetsStore.list.reduce((sum, target) => {
+// Retourne le score total d'un joueur sur un parcours
+export const calculatePlayerScore = (player: Player, targets: Target[]) => {
+	return targets.reduce((sum, target) => {
 		return sum + (player.scores[target.id] || 0);
 	}, 0);
 };
 
 // Retourne la liste des joueurs classés par score avec mise à jour
-export const getRankedPlayers = (players: Player[]): RankedPlayer[] => {
+export const getRankedPlayers = (players: Player[], targets: Target[]): RankedPlayer[] => {
 	// 1. On calcule les scores totaux et on trie
 	const sorted = [...players]
 		.map((p) => ({
 			player: p,
-			totalScore: calculatePlayerScore(p)
+			totalScore: calculatePlayerScore(p, targets)
 		}))
 		.sort((a, b) => a.totalScore - b.totalScore);
 
@@ -63,10 +59,10 @@ export const getRankedPlayers = (players: Player[]): RankedPlayer[] => {
 };
 
 // Retourne pour le score d'un joueur
-// son score brut et son écart par rapport au Par
-export function getPlayerStats(player: Player) {
-	const gross = calculatePlayerScore(player);
-	const diff = gross - totalPar;
+// son score brut et son écart par rapport au Par du parcours
+export function getPlayerStats(player: Player, targets: Target[]) {
+	const gross = calculatePlayerScore(player, targets);
+	const diff = gross - getTotalPar(targets);
 	const diffText = diff > 0 ? `(+${diff})` : diff < 0 ? `(${diff})` : '(E)';
 
 	return { gross, diffText, diff };
@@ -84,27 +80,32 @@ export const getOthersRankedPlayers = (rankedPlayers: RankedPlayer[]) => {
 // --    Équipes    --  //
 //                      //
 
-// Retourne le score total d'une équipe
-export const calculateTeamScore = (team: Team) => {
+// Retourne le score total d'une équipe pour un parcours
+export const calculateTeamScore = (
+	team: Team,
+	targets: Target[],
+	players: Player[],
+	settings: SessionSettings
+) => {
 	// Pour toutes les cibles du parcours
-	return targetsStore.list.reduce((sum, target) => {
+	return targets.reduce((sum, target) => {
 		// 1. Récupération des scores réels présents
 		const scores = team.playersId.map((id) => {
-			const p = playersStore.list.find((p) => p.id === id);
+			const p = players.find((p) => p.id === id);
 			return p?.scores[target.id] || 0;
 		});
 
 		// 2. Injection des fantômes si l'équipe est incomplète
-		while (scores.length < s.playersPerTeam) {
+		while (scores.length < settings.playersPerTeam) {
 			let ghostValue: number;
 			switch (target.rule) {
 				case 'Bonus':
 					ghostValue = 0;
 					break;
 				case 'Individuel':
-					if (s.usePenalizingGhost) {
-						if (s.hasCrossAFixedPenalty) ghostValue = s.malusValue;
-						else ghostValue = target.par + s.malusOverPar;
+					if (settings.usePenalizingGhost) {
+						if (settings.hasCrossAFixedPenalty) ghostValue = settings.malusValue;
+						else ghostValue = target.par + settings.malusOverPar;
 					} else ghostValue = scores[0];
 					break;
 				default:
@@ -122,19 +123,19 @@ export const calculateTeamScore = (team: Team) => {
 };
 
 // Retourne la liste des id des joueurs de l'équipe
-export const listTeamPlayer = (team: Team) => {
+export const listTeamPlayer = (team: Team, players: Player[]) => {
 	// On mappe les IDs de l'équipe vers les objets joueurs du store
 	return team.playersId
 		.map((id) => {
-			return playersStore.list.find((p) => p.id === id);
+			return players.find((p) => p.id === id);
 		})
 		.filter((p) => p !== undefined); // Sécurité pour éviter les éléments vides
 };
 
 // Retourne la liste formattée des noms des joueurs de l'équipe
-export const formatPlayerList = (players: Player[]) => {
+export const formatPlayerList = (players: Player[], settings: SessionSettings) => {
 	let names = players.map((p) => p.name);
-	if (names.length < s.playersPerTeam) names.push('👻');
+	if (names.length < settings.playersPerTeam) names.push('👻');
 
 	// On crée le formateur pour le français
 	const formatter = new Intl.ListFormat('fr', {
@@ -146,26 +147,31 @@ export const formatPlayerList = (players: Player[]) => {
 };
 
 // Retourne pour le score d'une équipe
-// son score brut et son écart par rapport au Par
-export function getTeamStats(team: Team) {
-	const gross = calculateTeamScore(team);
-	const diff = gross - totalPar * s.playersPerTeam;
+// son score brut et son écart par rapport au Par du parcours
+export function getTeamStats(
+	team: Team,
+	targets: Target[],
+	players: Player[],
+	settings: SessionSettings
+) {
+	const gross = calculateTeamScore(team, targets, players, settings);
+	const diff = gross - getTotalPar(targets) * settings.playersPerTeam;
 	const diffText = diff > 0 ? `(+${diff})` : diff < 0 ? `(${diff})` : '(E)';
 
 	return { gross, diffText, diff };
 }
 
-// // Retourne la liste des équipes classés par score
-export const rankedTeams = [...teamsStore.list].sort((a, b) => {
-	return calculateTeamScore(a) - calculateTeamScore(b);
-});
-
-export const getRankedTeams = (teams: Team[]): RankedTeam[] => {
+export const getRankedTeams = (
+	teams: Team[],
+	targets: Target[],
+	players: Player[],
+	settings: SessionSettings
+): RankedTeam[] => {
 	// 1. On calcule les scores totaux et on trie
 	const sorted = [...teams]
 		.map((team) => ({
 			team: team,
-			totalScore: calculateTeamScore(team)
+			totalScore: calculateTeamScore(team, targets, players, settings)
 		}))
 		.sort((a, b) => a.totalScore - b.totalScore);
 
@@ -214,3 +220,66 @@ export const getScoreClass = (score: number, target: Target) => {
 	if (diff === 1) return 'score-bogey'; // +1
 	return 'score-double-bogey'; // +2 ou plus
 };
+
+// Partage des résultats des joueurs via l'API native de partage
+export const shareResultsPlayers =
+	(rankedPlayers: RankedPlayer[], targets: Target[]) => async () => {
+		// 1. On prépare le texte du message
+		let message = `🏆 Résultats Golf Score Hub\n\n`;
+
+		rankedPlayers.forEach((rankedPlayer, index) => {
+			const stats = getPlayerStats(rankedPlayer.player, targets);
+			const medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '🔹 ';
+			message += `${medal}${rankedPlayer.player.name}: ${stats.gross} ${stats.diffText}\n`;
+		});
+
+		message += `\nJoué avec Golf Score Hub ⛳`;
+
+		// 2. On utilise l'API native
+		if (navigator.share) {
+			try {
+				await navigator.share({
+					title: 'Scores de la partie de Golf',
+					text: message,
+					url: window.location.origin
+				});
+			} catch (err) {
+				console.log('Partage annulé ou erreur:', err);
+			}
+		} else {
+			// Option de secours si le navigateur est trop vieux
+			alert("Le partage n'est pas supporté sur ce navigateur. Voici les résultats :\n\n" + message);
+		}
+	};
+
+// Partage des résultats d'équipes via l'API native de partage
+export const shareResultsTeams =
+	(rankedTeams: RankedTeam[], targets: Target[], players: Player[], settings: SessionSettings) =>
+	async () => {
+		// 1. On prépare le texte du message
+		let message = `🏆 Résultats Golf Score Hub\n\n`;
+
+		rankedTeams.forEach((team, index) => {
+			const stats = getTeamStats(team.team, targets, players, settings);
+			const medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '🔹 ';
+			message += `${medal}${team.team.name}: ${stats.gross} ${stats.diffText}\n`;
+		});
+
+		message += `\nJoué avec Golf Score Hub ⛳`;
+
+		// 2. On utilise l'API native
+		if (navigator.share) {
+			try {
+				await navigator.share({
+					title: 'Scores de la partie de Golf',
+					text: message,
+					url: window.location.origin
+				});
+			} catch (err) {
+				console.log('Partage annulé ou erreur:', err);
+			}
+		} else {
+			// Option de secours si le navigateur est trop vieux
+			alert("Le partage n'est pas supporté sur ce navigateur. Voici les résultats :\n\n" + message);
+		}
+	};
