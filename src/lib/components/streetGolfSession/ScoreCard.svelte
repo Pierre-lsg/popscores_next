@@ -6,12 +6,12 @@
 		getRankedPlayers,
 		totalPar,
 		listTeamPlayer,
+		calculateTeamScore,
 		rankedTeams,
-		calculateTeamScore
+		getScoreClass
 	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
-	import { teamsStore } from '$lib/stores/teamsStore.svelte';
+
 	import { targetsStore } from '$lib/stores/targetsStore.svelte';
-	import type { Target } from '$lib/types/targetsInterface';
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 
 	const s = sessionSettingsStore.settings;
@@ -19,33 +19,6 @@
 	let isTeamGame: boolean = s.teamGame;
 
 	let rankedPlayerList = $derived(getRankedPlayers(playersStore.list));
-
-	/*
-	const exportToCSV = (data) => {
-		const csvRows = [
-			['Trou', 'Par', 'Joueur 1', 'Joueur 2'].join(','), // En-tête
-			...data.map((row) => row.join(',')) // Données
-		];
-		const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
-		const url = window.URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.setAttribute('href', url);
-		a.setAttribute('download', 'scorecard.csv');
-		a.click();
-	};
-    */
-
-	const getScoreClass = (score: number, target: Target) => {
-		if (score === 0) return ''; // Pas encore joué
-		if (target.rule === 'Bonus') return 'score-bonus';
-
-		const diff = score - target.par;
-
-		if (diff < 0) return 'score-birdie'; // En dessous du par
-		if (diff === 0) return 'score-par'; // Pile le par
-		if (diff === 1) return 'score-bogey'; // +1
-		return 'score-double-bogey'; // +2 ou plus
-	};
 </script>
 
 {#if isTeamGame}

@@ -4,3 +4,10 @@ export interface Team {
 	name: string;
 	playersId: string[];
 }
+
+export interface RankedTeam {
+	rank: number;
+	team: Team;
+	totalScore: number;
+	isTie: boolean;
+}

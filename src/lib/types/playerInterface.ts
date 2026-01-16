@@ -4,3 +4,10 @@ export interface Player {
 	teamId: string;
 	scores: Record<string, number>;
 }
+
+export interface RankedPlayer {
+	rank: number;
+	player: Player;
+	totalScore: number;
+	isTie: boolean;
+}

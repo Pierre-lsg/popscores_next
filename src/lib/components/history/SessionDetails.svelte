@@ -4,7 +4,8 @@
 		getRankedPlayers,
 		getPlayerStats,
 		calculatePlayerScore,
-		totalPar
+		totalPar,
+		getScoreClass
 	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
 	import { slide, fade } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
@@ -37,18 +38,6 @@
 	function retourHistorique() {
 		currentSession = '';
 	}
-
-	const getScoreClass = (score: number, target: Target) => {
-		if (score === 0) return ''; // Pas encore joué
-		if (target.rule === 'Bonus') return 'score-bonus';
-
-		const diff = score - target.par;
-
-		if (diff < 0) return 'score-birdie'; // En dessous du par
-		if (diff === 0) return 'score-par'; // Pile le par
-		if (diff === 1) return 'score-bogey'; // +1
-		return 'score-double-bogey'; // +2 ou plus
-	};
 </script>
 
 <div>
@@ -57,33 +46,33 @@
 	{#if session}
 		<div>
 			<!-- Détails de la session -->
-			<div class="session-card">
-				<div class="row">
+			<div class="list-card">
+				<div class="item-card">
 					<strong>Date :</strong>
 					{new Date(settings.sessionBeginning).toLocaleDateString()}
 				</div>
-				<div class="row">
+				<div class="item-card">
 					<strong>Lieu :</strong>
 					{settings.locationName}
 				</div>
 				{#if isExpanded}
 					<div transition:slide={{ duration: 600, easing: quintOut }} class="parchment-content">
 						<div in:fade={{ duration: 400 }}>
-							<div class="row">
+							<div class="item-card">
 								<strong>Météo :</strong>
 								{settings.weatherCondition}
 							</div>
-							<div class="row">
+							<div class="item-card">
 								<strong>Jeu en équipe :</strong>
 								{settings.teamGame ? 'Oui' : 'Non'}
 							</div>
 							{#if settings.teamGame}
-								<div class="row">
+								<div class="item-card">
 									<strong>Nombre de joueurs par équipe :</strong>
 									{settings.playersPerTeam}
 								</div>
 							{/if}
-							<div class="list-row">
+							<div class="list-item-card">
 								<strong>Règles - valeur de la 'X' :</strong>
 								<div>
 									{#if settings.hasCrossAFixedPenalty}
@@ -93,11 +82,11 @@
 									{/if}
 								</div>
 							</div>
-							<div class="row">
+							<div class="item-card">
 								<strong>Parcours :</strong>
 								{settings.locationName}
 							</div>
-							<div class="row">
+							<div class="item-card">
 								<strong>Joueurs :</strong>
 								{#each players as p, i}
 									{p.name}{i < players.length - 1 ? ', ' : ''}
@@ -112,11 +101,11 @@
 				</button>
 			</div>
 			<!-- Affichage du podium -->
-			<div class="session-card">
+			<div class="list-card">
 				{#each rankedPlayerList as player, i}
 					{@const p = player.player}
 					{@const stats = getPlayerStats(p)}
-					<div class="row">
+					<div class="item-card">
 						<span class="rank"
 							>{player.rank}
 							{#if player.isTie}
@@ -176,14 +165,14 @@
 		font-size: 1rem;
 	}
 
-	.row {
+	.item-card {
 		display: flex;
 		justify-content: space-between;
 		margin: 0.5rem 0rem;
 		background-color: var(--bg-card);
 	}
 
-	.session-card {
+	.list-card {
 		border: 1px solid var(--primary);
 		background-color: var(--bg-card);
 		border-radius: 12px;
