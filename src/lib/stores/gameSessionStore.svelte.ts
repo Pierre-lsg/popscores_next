@@ -2,6 +2,7 @@ import { browser } from '$app/environment';
 
 // On définit l'interface pour le typage TypeScript
 export interface SessionSettings {
+	id: string;
 	locationName: string;
 	weatherCondition: string;
 	sessionBeginning: string;
@@ -16,6 +17,7 @@ export interface SessionSettings {
 const STORAGE_KEY = 'golf-session_settings';
 
 const defaultSettings: SessionSettings = {
+	id: crypto.randomUUID(),
 	locationName: 'La Doua',
 	weatherCondition: 'Soleil',
 	sessionBeginning: new Date().toISOString().split('T')[0],

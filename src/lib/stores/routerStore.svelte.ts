@@ -1,13 +1,35 @@
-export type Page = 'hub' | 'golf-score' | 'golf-history' | 'params' | 'other-service';
+//
+// Router général de l'application
+//
+export type Page =
+	| 'hub'
+	| 'golf-score'
+	| 'golf-championship'
+	| 'golf-history'
+	| 'params'
+	| 'other-service';
 
 class RouterStore {
-	// La rune $state remplace le writable
 	current = $state<Page>('hub');
 
-	// Une méthode simple pour changer de page
 	goTo(newPage: Page) {
 		this.current = newPage;
 	}
 }
 
 export const router = new RouterStore();
+
+//
+// Router pour le championnat
+//
+export type ChampionshipPage = 'hub' | 'players' | 'params' | 'competition';
+
+class ChampionshipRouterStore {
+	current = $state<ChampionshipPage>('hub');
+
+	goTo(newPage: ChampionshipPage) {
+		this.current = newPage;
+	}
+}
+
+export const csRouter = new ChampionshipRouterStore();

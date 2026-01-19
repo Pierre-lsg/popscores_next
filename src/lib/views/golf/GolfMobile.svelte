@@ -56,6 +56,8 @@
 			playersStore.reset();
 			targetsStore.reset();
 			teamsStore.reset();
+			sessionSettingsStore.reset();
+			gameStatus.reset();
 			activeTargetIndex = 0;
 			nextCard(Step.session);
 		}
@@ -63,11 +65,11 @@
 
 	function saveGameToHistory() {
 		const newArchive = {
-			id: crypto.randomUUID(), 
+			id: sessionSettingsStore.settings.id,
 			settings: sessionSettingsStore.settings,
 			targets: targetsStore.list,
 			teams: teamsStore.list,
-			players: playersStore.list,
+			players: playersStore.list
 		};
 
 		historyStore.archiveGame(newArchive);

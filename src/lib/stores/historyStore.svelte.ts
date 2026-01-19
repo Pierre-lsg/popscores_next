@@ -1,8 +1,10 @@
+import type { SessionArchive } from '$lib/types/sessionInterface';
+
 const STORAGE_KEY = 'golf-history';
 
 class HistoryStore {
 	// La rune $state remplace le writable
-	list = $state<any[]>([]);
+	list = $state<SessionArchive[]>([]);
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -22,10 +24,11 @@ class HistoryStore {
 	/**
 	 * Archive une nouvelle partie en haut de la liste
 	 */
-	archiveGame(gameData: any) {
-		// En Svelte 5, on peut modifier le tableau directement.
-		// On utilise un spread pour ajouter au début, ou .unshift()
-		this.list = [gameData, ...this.list];
+	archiveGame(historySession: SessionArchive) {
+		// Si la partie existe déjà, on la retire d'abord
+		this.list = this.list.filter((a) => a.id !== historySession.id);
+		// On ajoute l'archive en début de liste
+		this.list = [historySession, ...this.list];
 	}
 
 	/**

@@ -3,6 +3,7 @@
 
 	import Hub from '$lib/views/Hub.svelte';
 	import GolfGame from '$lib/views/GolfGame.svelte';
+	import GolfChampionship from '$lib/views/GolfChampionship.svelte';
 	import History from '$lib/views/History.svelte';
 	import Params from '$lib/views/Params.svelte';
 
@@ -15,7 +16,7 @@
 <main>
 	<div class="top-bar">
 		<div class="nav-action">
-			{#if router.current !== 'hub' }
+			{#if router.current !== 'hub'}
 				<button class="btn btn-back" onclick={() => router.goTo('hub')}> ← Retour au Hub </button>
 			{:else}
 				<span></span>
@@ -29,6 +30,8 @@
 		<Hub />
 	{:else if router.current === 'golf-score'}
 		<GolfGame />
+	{:else if router.current === 'golf-championship'}
+		<GolfChampionship />
 	{:else if router.current === 'params'}
 		<Params />
 	{:else if router.current === 'golf-history'}

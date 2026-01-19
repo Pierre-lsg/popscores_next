@@ -1,40 +1,28 @@
 <script lang="ts">
-	import { router } from '$lib/stores/routerStore.svelte';
+	import { csRouter } from '$lib/stores/routerStore.svelte';
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
 </script>
 
-<h1>Bienvenue au {appSettings.values.clubName}</h1>
+<h1>Championnat {appSettings.values.clubName}</h1>
 
 <div class="hub-container">
 	<div class="grid-container">
-		<button class="card" onclick={() => router.goTo('golf-score')}>
-			<span class="icon">⛳</span>
-			<h3>Partie rapide</h3>
-			<p>Suivi de partie entre amis</p>
+		<button class="card" onclick={() => csRouter.goTo('competition')}>
+			<span class="icon">🏆</span>
+			<h3>Compétitions</h3>
+			<p>Les étapes du Championnat</p>
 		</button>
 
-		<button class="card" onclick={() => router.goTo('golf-championship')}>
-			<span class="icon">👑</span>
-			<h3>Championnat</h3>
-			<p>Suivi des compétitions</p>
+		<button class="card" onclick={() => csRouter.goTo('players')}>
+			<span class="icon">👥</span>
+			<h3>Participants</h3>
+			<p>Clubs, équipes et joueurs Participants</p>
 		</button>
 
-		<button class="card" onclick={() => router.goTo('golf-history')}>
-			<span class="icon">📜</span>
-			<h3>Historique</h3>
-			<p>Revoir les sessions précédentes</p>
-		</button>
-
-		<button class="card disabled">
-			<span class="icon">📈</span>
-			<h3>Stats Pro</h3>
-			<p>Bientôt disponible...</p>
-		</button>
-
-		<button class="card" onclick={() => router.goTo('params')}>
+		<button class="card" onclick={() => csRouter.goTo('params')}>
 			<span class="icon">⚙️</span>
 			<h3>Paramétrages</h3>
-			<p>Configuration de l'application</p>
+			<p>Configuration du championnat</p>
 		</button>
 	</div>
 </div>
