@@ -1,5 +1,5 @@
 <script lang="ts">
-	import GolfChampionship from '$lib/views/GolfChampionship.svelte';
+	import Competitions from '$lib/views/championship/Competitions.svelte';
 </script>
 
-<GolfChampionship />
+<Competitions />

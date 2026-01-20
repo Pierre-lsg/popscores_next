@@ -22,10 +22,10 @@
 <main>
 	<div class="top-bar">
 		<div class="nav-action">
-			{#if $page.url.pathname.startsWith('/championship/')}
-				<a class="btn btn-back" href="/championship">👑 Accueil</a>
+			{#if $page.url.pathname.includes('/championship/')}
+				<a class="btn btn-back" href={base + '/championship'}>👑 Accueil</a>
 			{:else}
-				<a class="btn btn-back" href="/">🏠 Accueil</a>
+				<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 			{/if}
 		</div>
 

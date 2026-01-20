@@ -1,4 +1,4 @@
-import type { Player } from '$lib/types/playerInterface';
+import type { Player } from '$lib/types/playerType';
 import { teamsStore } from './teamsStore.svelte';
 
 const STORAGE_KEY = 'golf-players-data';

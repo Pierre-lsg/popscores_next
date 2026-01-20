@@ -14,8 +14,8 @@
 		getRankedTeams,
 		getTop3Teams,
 		getOthersRankedTeams
-	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
-	import type { RankedTeam } from '$lib/types/teamInterface';
+	} from '$lib/utils/session/golfScoringFunction.svelte';
+	import type { RankedTeam } from '$lib/types/teamType';
 
 	const s = sessionSettingsStore.settings;
 	const t = targetsStore.list;

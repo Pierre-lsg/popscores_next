@@ -1,5 +1,5 @@
 <script lang="ts">
-	import GolfGame from '$lib/views/golf/QuickSession.svelte';
+	import GolfGame from '$lib/views/session/QuickSession.svelte';
 </script>
 
 <GolfGame />

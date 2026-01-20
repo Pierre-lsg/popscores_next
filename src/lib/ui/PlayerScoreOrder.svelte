@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { RankedPlayer } from '$lib/types/playerInterface';
-	import type { Target } from '$lib/types/targetsInterface';
+	import type { RankedPlayer } from '$lib/types/playerType';
+	import type { Target } from '$lib/types/targetsType';
 
-	import { getPlayerStats } from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
+	import { getPlayerStats } from '$lib/utils/session/golfScoringFunction.svelte';
 
 	let { rankedPlayers, targets }: { rankedPlayers: RankedPlayer[]; targets: Target[] } = $props<{
 		rankedPlayers: RankedPlayer[];

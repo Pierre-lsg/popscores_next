@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { SessionArchive } from '$lib/types/sessionInterface';
-	import type { SessionSettings } from '$lib/types/gameSessionInterface';
+	import type { SessionArchive } from '$lib/types/sessionType';
+	import type { SessionSettings } from '$lib/types/gameSessionType';
 
 	let history = $state<SessionArchive[]>([]);
 

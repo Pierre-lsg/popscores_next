@@ -1,23 +1,24 @@
 <script lang="ts">
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
+	import { base } from '$app/paths';
 </script>
 
 <h1>Championnat {appSettings.values.clubName}</h1>
 
 <div class="hub-container">
 	<div class="grid-container">
-		<a class="card" href="/championship/competitions">
+		<a class="card" href={base + '/championship/competitions'}>
 			<span class="icon">🏆</span>
 			<h3>Compétitions</h3>
 			<p>Les étapes du Championnat</p>
 		</a>
-		<a class="card" href="/championship/players">
+		<a class="card" href={base + '/championship/players'}>
 			<span class="icon">👥</span>
 			<h3>Participants</h3>
 			<p>Clubs, équipes et joueurs Participants</p>
 		</a>
 
-		<a class="card" href="/championship/params">
+		<a class="card" href={base + '/championship/params'}>
 			<span class="icon">⚙️</span>
 			<h3>Paramétrages</h3>
 			<p>Configuration du championnat</p>

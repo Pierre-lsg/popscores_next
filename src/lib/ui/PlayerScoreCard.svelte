@@ -1,14 +1,14 @@
 <script lang="ts">
 	import '$lib/styles/scoreCard.css';
 
-	import type { Target } from '$lib/types/targetsInterface';
-	import type { RankedPlayer } from '$lib/types/playerInterface';
+	import type { Target } from '$lib/types/targetsType';
+	import type { RankedPlayer } from '$lib/types/playerType';
 
 	import {
 		getScoreClass,
 		calculatePlayerScore,
 		getTotalPar
-	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
+	} from '$lib/utils/session/golfScoringFunction.svelte';
 
 	let { rankedPlayers, targets }: { rankedPlayers: RankedPlayer[]; targets: Target[] } = $props<{
 		rankedPlayers: RankedPlayer[];

@@ -5,11 +5,11 @@
 		getTop3Players,
 		getOthersRankedPlayers,
 		shareResultsPlayers
-	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
+	} from '$lib/utils/session/golfScoringFunction.svelte';
 
 	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
-	import type { RankedPlayer } from '$lib/types/playerInterface';
+	import type { RankedPlayer } from '$lib/types/playerType';
 
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { confetti } from '@neoconfetti/svelte';

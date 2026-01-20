@@ -11,12 +11,12 @@
 	import Toast from '$lib/ui/Toast.svelte';
 	import GolfHeader from '$lib/ui/GolfHeader.svelte';
 
-	import RankingPodium from '$lib/components/streetGolfSession/RankingPodium.svelte';
-	import GolfMSession from '$lib/components/streetGolfSession/GolfMSession.svelte';
-	import GolfMPlayer from '$lib/components/streetGolfSession/GolfMPlayer.svelte';
-	import GolfMTargets from '$lib/components/streetGolfSession/GolfMTargets.svelte';
-	import GolfMScoring from '$lib/components/streetGolfSession/GolfMScoring.svelte';
-	import ScoreCard from '$lib/components/streetGolfSession/ScoreCard.svelte';
+	import RankingPodium from '$lib/components/session/RankingPodium.svelte';
+	import GolfMSession from '$lib/components/session/GolfMSession.svelte';
+	import GolfMPlayer from '$lib/components/session/GolfMPlayer.svelte';
+	import GolfMTargets from '$lib/components/session/GolfMTargets.svelte';
+	import GolfMScoring from '$lib/components/session/GolfMScoring.svelte';
+	import ScoreCard from '$lib/components/session/ScoreCard.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 
 	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5, scoreCard: 51 };

@@ -4,10 +4,7 @@
 	import { playersStore } from '$lib/stores/playersStore.svelte';
 	import { targetsStore } from '$lib/stores/targetsStore.svelte';
 
-	import {
-		getRankedPlayers,
-		getRankedTeams
-	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
+	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 
 	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
 	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';

@@ -1,24 +1,25 @@
 <script lang="ts">
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
+	import { base } from '$app/paths';
 </script>
 
 <h1>Bienvenue au {appSettings.values.clubName}</h1>
 
 <div class="hub-container">
 	<div class="grid-container">
-		<a class="card" href="/quickSession">
+		<a class="card" href={base + '/quickSession'}>
 			<span class="icon">⛳</span>
 			<h3>Partie rapide</h3>
 			<p>Suivi de partie entre amis</p>
 		</a>
 
-		<a class="card" href="/championship">
+		<a class="card" href={base + '/championship'}>
 			<span class="icon">👑</span>
 			<h3>Championnat</h3>
 			<p>Suivi des compétitions</p>
 		</a>
 
-		<a class="card" href="/history">
+		<a class="card" href={base + '/history'}>
 			<span class="icon">📜</span>
 			<h3>Historique</h3>
 			<p>Revoir les sessions précédentes</p>
@@ -30,7 +31,7 @@
 			<p>Bientôt disponible...</p>
 		</a>
 
-		<a class="card" href="/params">
+		<a class="card" href={base + '/params'}>
 			<span class="icon">⚙️</span>
 			<h3>Paramétrages</h3>
 			<p>Configuration de l'application</p>

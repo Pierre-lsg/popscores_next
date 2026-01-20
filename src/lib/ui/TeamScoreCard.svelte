@@ -1,17 +1,17 @@
 <script lang="ts">
 	import '$lib/styles/scoreCard.css';
 
-	import type { RankedTeam } from '$lib/types/teamInterface';
-	import type { Target } from '$lib/types/targetsInterface';
-	import type { Player } from '$lib/types/playerInterface';
-	import type { SessionSettings } from '$lib/types/gameSessionInterface';
+	import type { RankedTeam } from '$lib/types/teamType';
+	import type { Target } from '$lib/types/targetsType';
+	import type { Player } from '$lib/types/playerType';
+	import type { SessionSettings } from '$lib/types/gameSessionType';
 
 	import {
 		listTeamPlayer,
 		calculateTeamScore,
 		getScoreClass,
 		getTotalPar
-	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
+	} from '$lib/utils/session/golfScoringFunction.svelte';
 
 	let {
 		rankedTeams,

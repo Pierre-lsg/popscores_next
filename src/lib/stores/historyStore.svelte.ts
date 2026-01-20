@@ -1,4 +1,4 @@
-import type { SessionArchive } from '$lib/types/sessionInterface';
+import type { SessionArchive } from '$lib/types/sessionType';
 
 const STORAGE_KEY = 'golf-history';
 

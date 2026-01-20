@@ -1,14 +1,11 @@
 <script lang="ts">
-	import type { SessionArchive } from '$lib/types/sessionInterface';
-	import {
-		getRankedPlayers,
-		getRankedTeams
-	} from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
+	import type { SessionArchive } from '$lib/types/sessionType';
+	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 
-	import type { Player } from '$lib/types/playerInterface';
-	import type { SessionSettings } from '$lib/types/gameSessionInterface';
-	import type { Team } from '$lib/types/teamInterface';
-	import type { Target } from '$lib/types/targetsInterface';
+	import type { Player } from '$lib/types/playerType';
+	import type { SessionSettings } from '$lib/types/gameSessionType';
+	import type { Team } from '$lib/types/teamType';
+	import type { Target } from '$lib/types/targetsType';
 
 	import SessionDetails from '$lib/ui/SessionDetails.svelte';
 	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';

@@ -1,7 +1,7 @@
-import type { Player, RankedPlayer } from '$lib/types/playerInterface';
-import type { Team, RankedTeam } from '$lib/types/teamInterface';
-import type { Target } from '$lib/types/targetsInterface';
-import type { SessionSettings } from '$lib/types/gameSessionInterface';
+import type { Player, RankedPlayer } from '$lib/types/playerType';
+import type { Team, RankedTeam } from '$lib/types/teamType';
+import type { Target } from '$lib/types/targetsType';
+import type { SessionSettings } from '$lib/types/gameSessionType';
 
 //                      //
 // --    Parcours    -- //

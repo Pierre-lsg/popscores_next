@@ -1,12 +1,12 @@
 <script lang="ts">
 	import '$lib/styles/scoreCard.css';
 
-	import type { RankedTeam } from '$lib/types/teamInterface';
-	import type { Target } from '$lib/types/targetsInterface';
-	import type { SessionSettings } from '$lib/types/gameSessionInterface';
-	import type { Player } from '$lib/types/playerInterface';
+	import type { RankedTeam } from '$lib/types/teamType';
+	import type { Target } from '$lib/types/targetsType';
+	import type { SessionSettings } from '$lib/types/gameSessionType';
+	import type { Player } from '$lib/types/playerType';
 
-	import { getTeamStats } from '$lib/utils/streetGolfSession/golfScoringFunction.svelte';
+	import { getTeamStats } from '$lib/utils/session/golfScoringFunction.svelte';
 
 	let {
 		rankedTeams,

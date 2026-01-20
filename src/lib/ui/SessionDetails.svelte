@@ -1,10 +1,10 @@
 <script lang="ts">
 	import '$lib/styles/scoreCard.css';
 
-	import type { Target } from '$lib/types/targetsInterface';
-	import type { Player } from '$lib/types/playerInterface';
-	import type { SessionSettings } from '$lib/types/gameSessionInterface';
-	import type { Team } from '$lib/types/teamInterface';
+	import type { Target } from '$lib/types/targetsType';
+	import type { Player } from '$lib/types/playerType';
+	import type { SessionSettings } from '$lib/types/gameSessionType';
+	import type { Team } from '$lib/types/teamType';
 
 	let {
 		players,

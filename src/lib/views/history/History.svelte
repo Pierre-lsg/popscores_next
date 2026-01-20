@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import { onMount } from 'svelte';
-	import type { SessionArchive } from '$lib/types/sessionInterface';
+	import type { SessionArchive } from '$lib/types/sessionType';
 
 	import HistoryList from '$lib/components/history/HistoryList.svelte';
 	import SessionDetails from '$lib/components/history/SessionDetails.svelte';
@@ -41,11 +41,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-	}
-
-	.btn {
-		width: 100%;
-		-webkit-tap-highlight-color: transparent;
-		user-select: none;
 	}
 </style>

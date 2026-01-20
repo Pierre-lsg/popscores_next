@@ -1,4 +1,4 @@
-import type { Target } from '$lib/types/targetsInterface';
+import type { Target } from '$lib/types/targetsType';
 
 const STORAGE_KEY = 'golf-targets-data';
 

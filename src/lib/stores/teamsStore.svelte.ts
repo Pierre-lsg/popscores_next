@@ -1,4 +1,4 @@
-import type { Team } from '$lib/types/teamInterface';
+import type { Team } from '$lib/types/teamType';
 
 const STORAGE_KEY = 'golf-teams-data';
 

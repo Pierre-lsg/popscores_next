@@ -1,4 +1,4 @@
-import type { Target } from '$lib/types/targetsInterface';
+import type { Target } from '$lib/types/targetsType';
 
 export function getRelativeScore(playerScores: Record<string, number>, targets: Target[]): number {
 	return targets.reduce((acc, target) => {
