@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { csRouter } from '$lib/stores/routerStore.svelte';
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
 </script>
 
@@ -7,23 +6,22 @@
 
 <div class="hub-container">
 	<div class="grid-container">
-		<button class="card" onclick={() => csRouter.goTo('competition')}>
+		<a class="card" href="/championship/competitions">
 			<span class="icon">🏆</span>
 			<h3>Compétitions</h3>
 			<p>Les étapes du Championnat</p>
-		</button>
-
-		<button class="card" onclick={() => csRouter.goTo('players')}>
+		</a>
+		<a class="card" href="/championship/players">
 			<span class="icon">👥</span>
 			<h3>Participants</h3>
 			<p>Clubs, équipes et joueurs Participants</p>
-		</button>
+		</a>
 
-		<button class="card" onclick={() => csRouter.goTo('params')}>
+		<a class="card" href="/championship/params">
 			<span class="icon">⚙️</span>
 			<h3>Paramétrages</h3>
 			<p>Configuration du championnat</p>
-		</button>
+		</a>
 	</div>
 </div>
 
@@ -45,12 +43,20 @@
 	}
 
 	.card {
-		background: white;
-		border: 2px solid #eee;
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: var(--text-primary);
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		background: var(--bg-card);
+		border: 2px solid var(--border-color);
 		border-radius: 12px;
-		padding: 1.5rem;
+		padding: 1rem;
 		cursor: pointer;
 		transition: transform 0.2s;
+		font-size: 0.9rem;
 	}
 	.card:hover {
 		transform: translateY(-5px);

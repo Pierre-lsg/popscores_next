@@ -11,7 +11,7 @@ const config = {
 		adapter: adapter({
 			pages: 'dist',
 			assets: 'dist',
-			fallback: '404.html',
+			fallback: 'index.html',
 			precompress: false,
 			strict: true
 		}),

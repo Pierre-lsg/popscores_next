@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { router } from '$lib/stores/routerStore.svelte';
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
 </script>
 
@@ -7,35 +6,35 @@
 
 <div class="hub-container">
 	<div class="grid-container">
-		<button class="card" onclick={() => router.goTo('golf-score')}>
+		<a class="card" href="/quickSession">
 			<span class="icon">⛳</span>
 			<h3>Partie rapide</h3>
 			<p>Suivi de partie entre amis</p>
-		</button>
+		</a>
 
-		<button class="card" onclick={() => router.goTo('golf-championship')}>
+		<a class="card" href="/championship">
 			<span class="icon">👑</span>
 			<h3>Championnat</h3>
 			<p>Suivi des compétitions</p>
-		</button>
+		</a>
 
-		<button class="card" onclick={() => router.goTo('golf-history')}>
+		<a class="card" href="/history">
 			<span class="icon">📜</span>
 			<h3>Historique</h3>
 			<p>Revoir les sessions précédentes</p>
-		</button>
+		</a>
 
-		<button class="card disabled">
+		<a class="card disabled" href="/">
 			<span class="icon">📈</span>
 			<h3>Stats Pro</h3>
 			<p>Bientôt disponible...</p>
-		</button>
+		</a>
 
-		<button class="card" onclick={() => router.goTo('params')}>
+		<a class="card" href="/params">
 			<span class="icon">⚙️</span>
 			<h3>Paramétrages</h3>
 			<p>Configuration de l'application</p>
-		</button>
+		</a>
 	</div>
 </div>
 
@@ -57,12 +56,20 @@
 	}
 
 	.card {
-		background: white;
-		border: 2px solid #eee;
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: var(--text-primary);
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		background: var(--bg-card);
+		border: 2px solid var(--border-color);
 		border-radius: 12px;
-		padding: 1.5rem;
+		padding: 1rem;
 		cursor: pointer;
 		transition: transform 0.2s;
+		font-size: 0.9rem;
 	}
 	.card:hover {
 		transform: translateY(-5px);

@@ -37,6 +37,12 @@
 			}
 		}
 
+		if (gameStatus.status !== 'setup') {
+			if (confirm('Une partie est déjà en cours. Voulez-vous commencer une nouvelle partie ?')) {
+				resetGame();
+			}
+		}
+
 		if (gameStatus.status === 'setup') nextCard(Step.session);
 		else if (gameStatus.status === 'in_progress') nextCard(Step.scoring);
 		else if (gameStatus.status === 'finished') nextCard(Step.ranking);
@@ -51,16 +57,20 @@
 		else if (nextStep === Step.ranking) gameStatus.status = 'finished';
 	}
 
-	function resetGame() {
+	function resetGameConfirm() {
 		if (confirm('Voulez-vous vraiment recommencer à zéro ?')) {
-			playersStore.reset();
-			targetsStore.reset();
-			teamsStore.reset();
-			sessionSettingsStore.reset();
-			gameStatus.reset();
-			activeTargetIndex = 0;
-			nextCard(Step.session);
+			resetGame();
 		}
+	}
+
+	function resetGame() {
+		playersStore.reset();
+		targetsStore.reset();
+		teamsStore.reset();
+		sessionSettingsStore.reset();
+		gameStatus.reset();
+		activeTargetIndex = 0;
+		nextCard(Step.session);
 	}
 
 	function saveGameToHistory() {
@@ -142,7 +152,7 @@
 
 		<button class="btn btn-primary" onclick={() => nextCard(Step.scoreCard)}>Carte de score</button>
 		<button onclick={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button>
-		<button class="btn btn-primary" onclick={() => resetGame()}>Nouvelle partie</button>
+		<button class="btn btn-primary" onclick={() => resetGameConfirm()}>Nouvelle partie</button>
 		<button class="btn btn-primary" onclick={() => saveGameToHistory()}
 			>Sauvegarder la partie</button
 		>

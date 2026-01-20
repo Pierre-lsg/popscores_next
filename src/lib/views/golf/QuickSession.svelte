@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { viewport } from '$lib/stores/viewportStore.svelte';
-	import HistoryMobile from '$lib/views/history/HistoryMobile.svelte';
+	import GolfMobile from '$lib/views/golf/GolfMobile.svelte';
+	import GolfDesktop from '$lib/views/golf/GolfDesktop.svelte';
 </script>
 
 <div class="game-wrapper">
 	{#if viewport.isMobile}
-		<HistoryMobile />
+		<GolfMobile />
 	{:else}
 		<div class="desktop-container">
 			Todo : version Desktop
-			<HistoryMobile />
+			<GolfMobile />
 		</div>
 	{/if}
 </div>
