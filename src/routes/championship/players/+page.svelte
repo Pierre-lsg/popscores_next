@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ClubsTeamsPlayers from '$lib/views/championship/ClubsTeamsPlayers.svelte';
+	import Clubs from '$lib/views/championship/ClubsTeamsPlayers.svelte';
 </script>
 
-<ClubsTeamsPlayers />
+<Clubs />

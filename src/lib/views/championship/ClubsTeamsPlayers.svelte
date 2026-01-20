@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
-	import { onMount } from 'svelte';
-	import CompetitionManagement from './CompetitionManagement.svelte';
-	import CompetitionsList from '$lib/components/championship/CompetitionsList.svelte';
+	import ClubsList from '$lib/components/championship/ClubsList.svelte';
+	import ClubManagement from '$lib/components/championship/ClubManagement.svelte';
 
-	let currentCompetition: string = '';
+	let currentClub: string = $state('');
 </script>
 
 <div class="mobile-wizard">
@@ -16,7 +14,15 @@
 		<li>Lister les joueurs sans club</li>
 	</ul>
 
-	<CompetitionsList {currentCompetition} />
+	<p>Club en cours : {currentClub}</p>
+
+	{#if currentClub === ''}
+		<!-- Gestion des clubs -->
+		<ClubsList bind:currentClub />
+	{:else}
+		<!-- Suivi d'un club -->
+		<ClubManagement bind:currentClub />
+	{/if}
 </div>
 
 <style>

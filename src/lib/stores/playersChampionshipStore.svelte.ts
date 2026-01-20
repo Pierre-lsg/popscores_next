@@ -60,10 +60,13 @@ class PlayersChampionshipStore {
 	}
 
 	// --- Méthodes d'actions ---
-	add(name: string) {
+	add(name: string, surname: string, nickname: string, clubId: string) {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
+			surname,
+			nickname,
+			clubId,
 			teamId: '', // Initialement vide
 			scores: {}
 		});
