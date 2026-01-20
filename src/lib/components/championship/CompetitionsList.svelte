@@ -7,6 +7,7 @@
 
 	let competitions = $state<Competition[]>(competitionsStore.list);
 	let editCompetition: boolean[] = $state([]);
+	let numCompetitions: number = $derived(competitions.length);
 
 	let addNewCompetition: boolean = $state(false);
 
@@ -35,11 +36,18 @@
 		}
 		competitions = competitionsStore.list;
 	}
+
+	function editingCompetition(index: number) {
+		for (let i = 0; i < numCompetitions; i++) {
+			if (i !== index) editCompetition[i] = false;
+		}
+		editCompetition[index] = !editCompetition[index];
+	}
 </script>
 
-<div class="competitions-list">
-	<h2>Compétitions</h2>
+<h2>Compétitions</h2>
 
+<div class="competitions-list">
 	{#each competitions as competition, i}
 		<div class="competition-item">
 			<div
@@ -53,26 +61,32 @@
 				<div>{competition.startDate}</div>
 				<div class="icon">🏆</div>
 			</div>
-			<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
-			<button onclick={() => (editCompetition[i] = !editCompetition[i])}>✏️</button>
-		</div>
-
-		{#if editCompetition[i]}
-			<div class="competition-form">
-				<h3>Modifier la Compétition</h3>
-				<Param label="⛳ Nom de la compétition" type="text" bind:value={competition.name} />
-				<DatePicker label="📅 Date de la compétition" bind:value={competition.startDate} />
-				<DatePicker
-					label="📅 Publication des résultats"
-					bind:value={competition.scorePublicationDate}
-				/>
-				<Param label="⛳ Localisation" type="text" bind:value={competition.location} />
+			<div class="action">
+				<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
+				<button onclick={() => editingCompetition(i)}>✏️</button>
 			</div>
-		{/if}
-	{:else}
-		<p>Aucune compétition enregistrée pour le moment. 🏆</p>
+		</div>
 	{/each}
 </div>
+
+{#each competitions as competition, i}
+	{#if editCompetition[i]}
+		<div class="competition-form">
+			<h3>Modifier la Compétition</h3>
+			<Param label="⛳ Nom de la compétition" type="text" bind:value={competition.name} />
+			<DatePicker label="📅 Date de la compétition" bind:value={competition.startDate} />
+			<DatePicker
+				label="📅 Publication des résultats"
+				bind:value={competition.scorePublicationDate}
+			/>
+			<Param label="⛳ Localisation" type="text" bind:value={competition.location} />
+		</div>
+	{/if}
+{/each}
+
+{#if competitions.length === 0}
+	<p>Aucune compétition enregistrée pour le moment. 🏆</p>
+{/if}
 
 <button onclick={() => (addNewCompetition = true)}>Ajouter une nouvelle compétition</button>
 
@@ -90,28 +104,29 @@
 
 <style>
 	.competitions-list {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-		padding: 16px;
-		margin: 0.5rem;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		margin: 0rem;
 	}
 
 	.competition-item {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
+		width: 95%;
+		margin-bottom: 1rem;
 	}
 
 	.competition-card {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
 		background-color: var(--bg-card);
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		padding: 16px;
 		cursor: pointer;
+		margin: 0 0.5rem 0 0;
 	}
 
 	.competition-card:hover {
@@ -120,13 +135,23 @@
 	}
 
 	.details {
-		display: flex;
 		align-items: center;
+		margin: 0.5rem;
 		gap: 8px;
 	}
 
 	.icon {
+		margin: 0.5rem;
 		font-size: 24px;
 		color: #2c3e50;
+	}
+
+	.action {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		width: 100%;
+		gap: 2rem;
+		margin-top: 0.5rem;
 	}
 </style>

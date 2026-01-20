@@ -1,27 +1,17 @@
 <script lang="ts">
-	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
-	import { onMount } from 'svelte';
 	import CompetitionManagement from './CompetitionManagement.svelte';
 	import CompetitionsList from '$lib/components/championship/CompetitionsList.svelte';
 
-	let currentCompetition: string = '';
+	let currentCompetition: string = $state('');
 </script>
 
 <div class="mobile-wizard">
-	<h2>Compétitions de championnat</h2>
-	<p>Cette section permettra de gérer les compétitions de championnat à venir.</p>
-	<ul>
-		<li>Lister les compétitions</li>
-		<li>Créer / éditer une compétition</li>
-		<li>Suivre une compétition en cours</li>
-	</ul>
-
 	{#if currentCompetition === ''}
 		<!-- Gestion des compétitions -->
-		<CompetitionsList {currentCompetition} />
+		<CompetitionsList bind:currentCompetition />
 	{:else}
 		<!-- Suivi d'une compétition -->
-		<CompetitionManagement />
+		<CompetitionManagement bind:currentCompetition />
 	{/if}
 </div>
 
