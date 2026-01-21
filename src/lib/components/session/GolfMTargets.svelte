@@ -16,18 +16,22 @@
 	let isDragging = $state(false);
 	let newTargetName = $state('');
 
+	// Set rule options based on whether it's a team game or not
 	const ruleOptions = isTeamGame
 		? ['Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus', 'Individuel']
 		: ['Individuel', 'Bonus'];
 	const flipDurationMs = 300;
 
+	// Set the default value of newTargetRule to the first item in ruleOptions
 	let newTargetRule = $state(ruleOptions[0]);
 
+	// Function to add a new target to targetsStore with specified parameters
 	function addTarget() {
 		targetsStore.add(newTargetRule === 'Bonus' ? 0 : 4, newTargetName, newTargetRule);
 		gameStatus.currentTargetIndex = 0;
 	}
 
+	// Function to handle the removal of a target from dndzone
 	function handleRemoveDrop(e: CustomEvent<{ items: any[] }>) {
 		const removedItem = e.detail.items[0];
 		if (removedItem) {
@@ -38,21 +42,28 @@
 		isDragging = false;
 	}
 
+	// Function to handle the consideration of a target in dndzone
 	function handleConsider() {
 		isDragging = true;
 	}
+
+	// Function to finalize the reordering of targets in dndzone
 	function handleFinalize(e: CustomEvent<{ items: any[] }>) {
 		targetsStore.list = e.detail.items;
 		isDragging = false;
 	}
 
+	// Function to set editingId to the specified target id for editing its name
 	function editTargetName(id: string) {
 		editingId = id;
 	}
 
+	// Function to save the edited name of a target and reset editingId to null
 	function saveName(e: Event) {
 		editingId = null;
 	}
+
+	// Focus function for input element to set focus on it and select its text
 	function focus(node: HTMLInputElement) {
 		node.focus();
 		node.select();

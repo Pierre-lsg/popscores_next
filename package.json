@@ -40,6 +40,7 @@
 	"dependencies": {
 		"@neoconfetti/svelte": "^2.2.2",
 		"lz-string": "^1.5.0",
+		"pocketbase": "^0.26.6",
 		"svelte-dnd-action": "^0.9.69"
 	}
 }
