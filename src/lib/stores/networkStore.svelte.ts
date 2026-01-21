@@ -1,12 +1,11 @@
-// On n'a plus besoin de writable !
+// NetworkStore class that manages network status
 class NetworkStore {
-	// La rune $state remplace le writable
+	// A private property to store online status using $state
 	#online = $state(typeof navigator !== 'undefined' ? navigator.onLine : true);
 
 	constructor() {
 		if (typeof window !== 'undefined') {
-			// On utilise $effect.root pour s'assurer que l'abonnement
-			// reste actif tant que l'application tourne
+			// Using $effect.root to ensure the subscription stays active throughout app lifecycle
 			$effect.root(() => {
 				const updateStatus = () => {
 					this.#online = navigator.onLine;
@@ -15,7 +14,7 @@ class NetworkStore {
 				window.addEventListener('online', updateStatus);
 				window.addEventListener('offline', updateStatus);
 
-				// On retourne une fonction de nettoyage (cleanup)
+				// Returning a cleanup function to remove event listeners when component unmounts
 				return () => {
 					window.removeEventListener('online', updateStatus);
 					window.removeEventListener('offline', updateStatus);
@@ -24,7 +23,7 @@ class NetworkStore {
 		}
 	}
 
-	// Getter pour accéder à la valeur en lecture seule
+	// Getter method to access online status in a read-only manner
 	get isOnline() {
 		return this.#online;
 	}

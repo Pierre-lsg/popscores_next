@@ -47,11 +47,23 @@ class PlayersChampionshipStore {
 		return team ? team.name : player.name;
 	}
 
+	/**
+	 * Gets a player by ID.
+	 *
+	 * @param playerId - The ID of the player to get.
+	 * @returns The player object, or an empty player object if not found.
+	 */
 	getPlayerNameById(playerId: string) {
 		const player = this.list.find((p) => p.id === playerId);
 		return player ? player : { id: '', name: '', teamId: '', scores: {} };
 	}
 
+	/**
+	 * Assigns a player to a team.
+	 *
+	 * @param playerId - The ID of the player to assign.
+	 * @param teamId - The ID of the team to assign the player to.
+	 */
 	assignPlayerToTeam(playerId: string, teamId: string) {
 		const player = this.list.find((p) => p.id === playerId);
 		if (player) {
@@ -60,6 +72,15 @@ class PlayersChampionshipStore {
 	}
 
 	// --- Méthodes d'actions ---
+
+	/**
+	 * Adds a new player to the list.
+	 *
+	 * @param name - The name of the player.
+	 * @param surname - The surname of the player.
+	 * @param nickname - The nickname of the player.
+	 * @param clubId - The ID of the club the player belongs to.
+	 */
 	add(name: string, surname: string, nickname: string, clubId: string) {
 		this.list.push({
 			id: crypto.randomUUID(),
@@ -72,10 +93,22 @@ class PlayersChampionshipStore {
 		});
 	}
 
+	/**
+	 * Removes a player from the list.
+	 *
+	 * @param id - The ID of the player to remove.
+	 */
 	remove(id: string) {
 		this.list = this.list.filter((p) => p.id !== id);
 	}
 
+	/**
+	 * Updates a player's score for a specific target.
+	 *
+	 * @param playerId - The ID of the player whose score to update.
+	 * @param targetId - The ID of the target to update the score for.
+	 * @param value - The new score value.
+	 */
 	updateScore(playerId: string, targetId: string, value: number) {
 		const player = this.list.find((p) => p.id === playerId);
 		if (player) {
@@ -84,6 +117,11 @@ class PlayersChampionshipStore {
 		}
 	}
 
+	/**
+	 * Cleans up orphan scores that no longer correspond to active targets.
+	 *
+	 * @param activeTargetIds - The IDs of the currently active targets.
+	 */
 	cleanOrphanScores(activeTargetIds: string[]) {
 		this.list.forEach((player) => {
 			Object.keys(player.scores).forEach((targetId) => {
@@ -94,6 +132,9 @@ class PlayersChampionshipStore {
 		});
 	}
 
+	/**
+	 * Resets the list of players and clears the local storage.
+	 */
 	reset() {
 		this.list = [];
 		if (typeof window !== 'undefined') {

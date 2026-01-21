@@ -5,6 +5,11 @@ class ToastStore {
 	// Référence interne pour le timer afin de pouvoir l'annuler
 	private timer: ReturnType<typeof setTimeout> | null = null;
 
+	/**
+	 * Affiche un toast avec un message donné et une durée.
+	 * @param msg Le message à afficher dans le toast.
+	 * @param duration La durée en millisecondes avant que le toast ne se ferme automatiquement. Par défaut, 3000 ms (3 secondes).
+	 */
 	show(msg: string, duration = 3000) {
 		// 1. Si un toast est déjà en cours, on annule son compte à rebours
 		if (this.timer) clearTimeout(this.timer);
@@ -18,8 +23,9 @@ class ToastStore {
 			this.timer = null;
 		}, duration);
 	}
-
-	// Permet de fermer manuellement le toast (ex: clic sur une croix)
+	/**
+	 * Ferme manuellement le toast.
+	 */
 	dismiss() {
 		this.message = null;
 		if (this.timer) {

@@ -2,10 +2,12 @@ import type { Team } from '$lib/types/teamType';
 
 const STORAGE_KEY = 'golf-teams-data';
 
-// On utilise une classe pour encapsuler l'état et les méthodes
+/**
+ * A class to encapsulate state and methods related to teams.
+ */
 class TeamsStore {
-	// La rune $state rend le tableau réactif
-	// On initialise avec le localStorage si on est dans le navigateur
+	// The rune $state makes the array reactive.
+	// It initializes with localStorage if we are in the browser.
 	list = $state<Team[]>([]);
 
 	constructor() {
@@ -15,8 +17,8 @@ class TeamsStore {
 				this.list = JSON.parse(savedData);
 			}
 
-			// La rune $effect surveille 'this.list'
-			// Dès qu'elle change, elle sauvegarde automatiquement
+			// The rune $effect watches for changes to `this.list`.
+			// Whenever it changes, it automatically saves.
 			$effect.root(() => {
 				$effect(() => {
 					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
@@ -25,15 +27,27 @@ class TeamsStore {
 		}
 	}
 
-	// Plus besoin d'utiliser .update(), on manipule le tableau directement
+	/**
+	 * Adds a new team to the list.
+	 * @param id - The id of the team
+	 * @param name - The name of the team
+	 * @param playersId[] - A collection of player's id
+	 */
 	add(id: string, name: string, playersId: string[]) {
 		this.list.push({ id, name, playersId });
 	}
 
+	/**
+	 * Removes a team from the list.
+	 * @param id - The ID of the team to remove
+	 */
 	remove(id: string) {
 		this.list = this.list.filter((t) => t.id !== id);
 	}
 
+	/**
+	 * Resets the team list and removes the stored data from localStorage.
+	 */
 	reset() {
 		this.list = [];
 		if (typeof window !== 'undefined') {
@@ -42,5 +56,5 @@ class TeamsStore {
 	}
 }
 
-// On exporte une instance unique (Singleton)
+// Export a single instance of TeamsStore to be used throughout the application.
 export const teamsStore = new TeamsStore();

@@ -51,6 +51,9 @@ class GameSessionStore {
 		}
 	}
 
+	/**
+	 * Resets the game session settings to their default values.
+	 */
 	reset() {
 		this.settings = { ...defaultSettings };
 	}

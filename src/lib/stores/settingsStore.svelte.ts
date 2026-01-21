@@ -1,5 +1,8 @@
 import { browser } from '$app/environment';
 
+/**
+ * Interface for application settings.
+ */
 export interface AppSettings {
 	clubName: string;
 	useStableford: boolean;
@@ -11,8 +14,14 @@ export interface AppSettings {
 	isTeamGame: boolean;
 }
 
+/**
+ * Key used to store settings in local storage.
+ */
 const STORAGE_KEY = 'app_settings';
 
+/**
+ * Default application settings.
+ */
 const defaultSettings: AppSettings = {
 	clubName: 'Mon Club',
 	useStableford: true,
@@ -24,6 +33,9 @@ const defaultSettings: AppSettings = {
 	isTeamGame: false
 };
 
+/**
+ * Class for managing application settings.
+ */
 class SettingsStore {
 	// Un seul objet réactif pour tous les réglages
 	values = $state<AppSettings>(defaultSettings);
@@ -52,9 +64,15 @@ class SettingsStore {
 		}
 	}
 
+	/**
+	 * Resets settings to default.
+	 */
 	reset() {
 		this.values = { ...defaultSettings };
 	}
 }
 
+/**
+ * Instance of SettingsStore for managing application settings.
+ */
 export const appSettings = new SettingsStore();

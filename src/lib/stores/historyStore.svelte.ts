@@ -25,14 +25,14 @@ class HistoryStore {
 	 * Archive une nouvelle partie en haut de la liste
 	 */
 	archiveGame(historySession: SessionArchive) {
-		// Si la partie existe déjà, on la retire d'abord
+		// If the game already exists in the list, remove it first
 		this.list = this.list.filter((a) => a.id !== historySession.id);
-		// On ajoute l'archive en début de liste
+		// Add the new game at the beginning of the list
 		this.list = [historySession, ...this.list];
 	}
 
 	/**
-	 * Supprime une partie de l'historique
+	 * Supprime une partie de l'historique par son index
 	 */
 	removeGame(index: number) {
 		this.list.splice(index, 1);

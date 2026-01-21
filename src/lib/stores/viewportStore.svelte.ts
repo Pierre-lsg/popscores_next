@@ -1,3 +1,4 @@
+// Breakpoint for mobile devices width screen
 const MOBILE_BREAKPOINT = 768;
 
 class ViewportStore {
@@ -15,11 +16,17 @@ class ViewportStore {
 		}
 	}
 
-	// Le "getter" permet d'utiliser viewport.isMobile sans pouvoir le modifier par erreur
+	/**
+	 * Getter for the isMobile property.
+	 * @returns {boolean} True if the viewport width is less than the mobile breakpoint, false otherwise.
+	 */
 	get isMobile() {
 		return this.#isMobile;
 	}
 
+	/**
+	 * Private method to update the isMobile property based on the current window width.
+	 */
 	#update() {
 		this.#isMobile = window.innerWidth < MOBILE_BREAKPOINT;
 	}

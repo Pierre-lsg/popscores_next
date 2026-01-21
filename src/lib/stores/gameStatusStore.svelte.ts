@@ -27,15 +27,17 @@ class GameStatusStore {
 		}
 	}
 
-	// Méthodes pour modifier l'état
+	// Méthode pour passer au cible suivante
 	nextTarget() {
 		this.currentTargetIndex++;
 	}
 
+	// Méthode pour revenir à la cible précédente
 	prevTarget() {
 		if (this.currentTargetIndex > 0) this.currentTargetIndex--;
 	}
 
+	// Méthode pour réinitialiser le jeu
 	reset() {
 		this.status = 'setup';
 		this.currentTargetIndex = 0;
