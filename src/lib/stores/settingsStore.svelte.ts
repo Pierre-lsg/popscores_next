@@ -12,6 +12,9 @@ export interface AppSettings {
 	malusValue: number;
 	malusOverPar: number;
 	isTeamGame: boolean;
+	cloudUrl: string;
+	cloudLogin: string;
+	cloudPassword: string;
 }
 
 /**
@@ -30,7 +33,10 @@ const defaultSettings: AppSettings = {
 	hasCrossAFixedPenalty: false,
 	malusValue: 10,
 	malusOverPar: 4,
-	isTeamGame: false
+	isTeamGame: false,
+	cloudUrl: 'http://192.168.1.143:8090',
+	cloudLogin: 'pierre.bonnafous@gmail.com',
+	cloudPassword: 'totototo'
 };
 
 /**

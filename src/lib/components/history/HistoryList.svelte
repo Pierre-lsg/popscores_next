@@ -1,40 +1,75 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import type { SessionArchive } from '$lib/types/sessionType';
+	import { historyStore } from '$lib/stores/historyStore.svelte';
 	import type { SessionSettings } from '$lib/types/gameSessionType';
+	import type { SessionArchive } from '$lib/types/sessionType';
+	import { getAllSessionsFromPB } from '$lib/utils/pocketbase/pbSessions';
+	import { onMount } from 'svelte';
 
-	let history = $state<SessionArchive[]>([]);
+	let allSessions: SessionArchive[] = $state([]);
+	let loading = $state(true);
 
 	let { title = '', currentSession = $bindable('') } = $props<{
 		title?: string;
 		currentSession: string;
 	}>();
 
-	onMount(() => {
-		const data = localStorage.getItem('golf-history');
-		if (data) {
-			history = JSON.parse(data).sort((a: SessionArchive, b: SessionArchive) =>
-				b.settings.sessionBeginning.localeCompare(a.settings.sessionBeginning)
-			);
-		}
+	onMount(async () => {
+		allSessions = await getAllSessionsFromPB();
+		loading = false;
 	});
+
+	const removeSession = (index: number) => {
+		historyStore.removeGame(index);
+	};
+
+	const loadSessionfromCloud = (index: number) => {
+		// Si la session n'existe pas déjà
+		const aSession = historyStore.list.filter((s) => s.id === allSessions[index].id);
+		console.log('aSession : ', aSession);
+		if (aSession.length == 0) {
+			if (confirm('Voulez-vous importer la session ?')) {
+				const newArchive = {
+					id: allSessions[index].id,
+					settings: allSessions[index].settings,
+					targets: allSessions[index].targets,
+					teams: allSessions[index].teams,
+					players: allSessions[index].players
+				};
+
+				historyStore.archiveGame(newArchive);
+			}
+		}
+	};
 </script>
 
 <div class="history-list">
 	<h2>{title}</h2>
 
-	{#each history as session}
-		{@const settings: SessionSettings = session.settings}
+	{#each historyStore.list as session, i}
 		<button class="session-card" onclick={() => (currentSession = session.id)}>
 			<div class="details">
-				{settings.locationName}
+				{session.id} -
+				{session.settings.locationName}
 			</div>
-			<div>{settings.sessionBeginning}</div>
+			<div>{session.settings.sessionBeginning}</div>
 			<div class="icon">📜</div>
 		</button>
+		<button onclick={() => removeSession(i)}> 🗑️ </button>
 	{:else}
 		<p>Aucune session archivée pour le moment. ⛳</p>
 	{/each}
+
+	<h3>Sessions disponibles sur le Cloud</h3>
+
+	{#if loading}
+		<p>Chargement ...</p>
+	{:else}
+		{#each allSessions as session, i}
+			<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
+				<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
+			</button>
+		{/each}
+	{/if}
 </div>
 
 <style>

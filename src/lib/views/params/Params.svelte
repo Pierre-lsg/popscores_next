@@ -3,6 +3,7 @@
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import Password from '$lib/ui/Password.svelte';
 </script>
 
 <div class="settings-page">
@@ -22,6 +23,12 @@
 	{/if}
 
 	<Toggle label="Partie en équipe" bind:checked={appSettings.values.isTeamGame} />
+
+	<h2>Paramètres de sauvegarde Cloud (PocketBase)</h2>
+
+	<Param label="URL vers le serveur" type="text" bind:value={appSettings.values.cloudUrl} />
+	<Param label="Identifiant" type="text" bind:value={appSettings.values.cloudLogin} />
+	<Password label="Mot de passe" bind:value={appSettings.values.cloudPassword} />
 </div>
 
 <style>

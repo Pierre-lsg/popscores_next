@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { SessionArchive } from '$lib/types/sessionType';
 	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
-	import { saveSessionToCloud } from '$lib/utils/pocketbase/golfHistorySessionSave';
+	import { saveSessionToPB } from '$lib/utils/pocketbase/pbSessions';
 
 	import type { Player } from '$lib/types/playerType';
 	import type { SessionSettings } from '$lib/types/gameSessionType';
@@ -41,8 +41,8 @@
 
 <div>
 	<button onclick={() => retourHistorique()}>Back</button>
-	<button onclick={() => saveSessionToCloud(session)}>Save</button>
-	<h2>{title}</h2>
+	<button onclick={() => saveSessionToPB(session)}>Save</button>
+	<h2>{title} - {currentSession} - todo : récupérer la session à l'ouverture de la vue</h2>
 	{#if session}
 		<div>
 			<!-- Détails de la session -->
