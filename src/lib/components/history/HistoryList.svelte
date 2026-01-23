@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { historyStore } from '$lib/stores/historyStore.svelte';
-	import type { SessionSettings } from '$lib/types/gameSessionType';
 	import type { SessionArchive } from '$lib/types/sessionType';
 	import { getAllSessionsFromPB } from '$lib/utils/pocketbase/pbSessions';
 	import { onMount } from 'svelte';
 
 	let allSessions: SessionArchive[] = $state([]);
 	let loading = $state(true);
+	let knownSessionsId: string[] = $derived(historyStore.list.map((session) => session.id));
+	let filteredSessions: SessionArchive[] = $derived(
+		allSessions.filter((sessionArchive) => !knownSessionsId.includes(sessionArchive.id))
+	);
 
 	let { title = '', currentSession = $bindable('') } = $props<{
 		title?: string;
@@ -14,6 +17,7 @@
 	}>();
 
 	onMount(async () => {
+		// Retrieve all sessions known in the Cloud
 		allSessions = await getAllSessionsFromPB();
 		loading = false;
 	});
@@ -23,19 +27,18 @@
 	};
 
 	const loadSessionfromCloud = (index: number) => {
-		// Si la session n'existe pas déjà
-		const aSession = historyStore.list.filter((s) => s.id === allSessions[index].id);
-		console.log('aSession : ', aSession);
+		// If session doesn't exist
+		const aSession = historyStore.list.filter((s) => s.id === filteredSessions[index].id);
 		if (aSession.length == 0) {
 			if (confirm('Voulez-vous importer la session ?')) {
 				const newArchive = {
-					id: allSessions[index].id,
-					settings: allSessions[index].settings,
-					targets: allSessions[index].targets,
-					teams: allSessions[index].teams,
-					players: allSessions[index].players
+					id: filteredSessions[index].id,
+					settings: filteredSessions[index].settings,
+					targets: filteredSessions[index].targets,
+					teams: filteredSessions[index].teams,
+					players: filteredSessions[index].players
 				};
-
+				// Add session to the local Store
 				historyStore.archiveGame(newArchive);
 			}
 		}
@@ -48,7 +51,6 @@
 	{#each historyStore.list as session, i}
 		<button class="session-card" onclick={() => (currentSession = session.id)}>
 			<div class="details">
-				{session.id} -
 				{session.settings.locationName}
 			</div>
 			<div>{session.settings.sessionBeginning}</div>
@@ -64,7 +66,7 @@
 	{#if loading}
 		<p>Chargement ...</p>
 	{:else}
-		{#each allSessions as session, i}
+		{#each filteredSessions as session, i}
 			<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
 				<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
 			</button>

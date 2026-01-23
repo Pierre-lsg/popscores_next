@@ -9,10 +9,6 @@
 	let history = $state<SessionArchive[]>([]);
 	let currentSession: string = $state('');
 
-	let session: SessionArchive | null = $derived(
-		history.find((s) => s.id === currentSession) || null
-	);
-
 	let activeTargetIndex = gameStatus.currentTargetIndex || 0;
 
 	gameStatus.currentTargetIndex = activeTargetIndex;
@@ -31,7 +27,7 @@
 		<HistoryList title="👥 Liste des sessions passées" bind:currentSession />
 	{:else}
 		<!-- Details de la session	 -->
-		<SessionDetails title="📄 Détails de la session" bind:currentSession {session} />
+		<SessionDetails title="📄 Détails de la session" bind:currentSession />
 	{/if}
 </div>
 

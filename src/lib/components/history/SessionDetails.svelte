@@ -2,6 +2,7 @@
 	import type { SessionArchive } from '$lib/types/sessionType';
 	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { saveSessionToPB } from '$lib/utils/pocketbase/pbSessions';
+	import { historyStore } from '$lib/stores/historyStore.svelte';
 
 	import type { Player } from '$lib/types/playerType';
 	import type { SessionSettings } from '$lib/types/gameSessionType';
@@ -16,20 +17,19 @@
 
 	const data = localStorage.getItem('golf-history');
 
-	let {
-		title = '',
-		session = null,
-		currentSession = $bindable('')
-	} = $props<{
+	let { title = '', currentSession = $bindable('') } = $props<{
 		title?: string;
-		session?: SessionArchive | null;
 		currentSession: string;
 	}>();
 
-	let settings: SessionSettings = $derived(session.settings);
-	let players: Player[] = $derived(session.players || []);
-	let targets: Target[] = $derived(session.targets || []);
-	let teams: Team[] = $derived(session.teams || []);
+	let session: SessionArchive | undefined = $derived(
+		historyStore.list.find((s) => s.id === currentSession)
+	);
+
+	let settings: SessionSettings = $derived(session?.settings ?? ({} as SessionSettings));
+	let players: Player[] = $derived(session?.players || []);
+	let targets: Target[] = $derived(session?.targets || []);
+	let teams: Team[] = $derived(session?.teams || []);
 
 	let rankedPlayers = $derived(getRankedPlayers(players || [], targets || []));
 	let rankedTeams = $derived(getRankedTeams(teams || [], targets || [], players || [], settings));
@@ -37,12 +37,16 @@
 	function retourHistorique() {
 		currentSession = '';
 	}
+
+	function saveSessionToCloud() {
+		if (session) saveSessionToPB(session);
+	}
 </script>
 
 <div>
 	<button onclick={() => retourHistorique()}>Back</button>
-	<button onclick={() => saveSessionToPB(session)}>Save</button>
-	<h2>{title} - {currentSession} - todo : récupérer la session à l'ouverture de la vue</h2>
+	<button onclick={() => saveSessionToCloud()}>Save</button>
+	<h2>{title}</h2>
 	{#if session}
 		<div>
 			<!-- Détails de la session -->

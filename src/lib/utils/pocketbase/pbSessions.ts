@@ -44,7 +44,11 @@ export async function getAllSessionsFromPB(): Promise<SessionArchive[]> {
 
 	if (pb.authStore.isValid) {
 		try {
-			const record = await pb.collection('sessions').getFullList(200);
+			const record = await pb.collection('sessions').getFullList({
+				page: 1,
+				perPage: 50
+				// filter: 'localId="8832ae3d-5b9a-484d-853a-a87a7237bb0a"'
+			});
 			console.log(record);
 			record.forEach((e) => {
 				if (e.data) allSessions.push(e.data as SessionArchive);
