@@ -7,11 +7,11 @@
 		shareResultsPlayers
 	} from '$lib/utils/session/golfScoringFunction.svelte';
 
-	import { targetsStore } from '$lib/stores/targetsStore.svelte';
+	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
 	import type { RankedPlayer } from '$lib/types/playerType';
 
-	import { playersStore } from '$lib/stores/playersStore.svelte';
+	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { confetti } from '@neoconfetti/svelte';
 
 	let t = targetsStore.list;

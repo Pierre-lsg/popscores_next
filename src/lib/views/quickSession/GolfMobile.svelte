@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { targetsStore } from '$lib/stores/targetsStore.svelte';
-	import { teamsStore } from '$lib/stores/teamsStore.svelte';
+	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
+	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
+	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import { onMount } from 'svelte';
 	import { shareService } from '$lib/utils/shareService';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
-	import { historyStore } from '$lib/stores/historyStore.svelte';
+	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 
 	import Toast from '$lib/ui/Toast.svelte';
 	import GolfHeader from '$lib/ui/GolfHeader.svelte';
 
-	import RankingPodium from '$lib/components/session/RankingPodium.svelte';
-	import GolfMSession from '$lib/components/session/GolfMSession.svelte';
-	import GolfMPlayer from '$lib/components/session/GolfMPlayer.svelte';
-	import GolfMTargets from '$lib/components/session/GolfMTargets.svelte';
-	import GolfMScoring from '$lib/components/session/GolfMScoring.svelte';
-	import ScoreCard from '$lib/components/session/ScoreCard.svelte';
+	import RankingPodium from '$lib/components/quickSession/RankingPodium.svelte';
+	import GolfMSession from '$lib/components/quickSession/GolfMSession.svelte';
+	import GolfMPlayer from '$lib/components/quickSession/GolfMPlayer.svelte';
+	import GolfMTargets from '$lib/components/quickSession/GolfMTargets.svelte';
+	import GolfMScoring from '$lib/components/quickSession/GolfMScoring.svelte';
+	import ScoreCard from '$lib/components/quickSession/ScoreCard.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 
 	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5, scoreCard: 51 };

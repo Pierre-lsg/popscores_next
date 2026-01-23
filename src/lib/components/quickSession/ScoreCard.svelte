@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import { teamsStore } from '$lib/stores/teamsStore.svelte';
-	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { targetsStore } from '$lib/stores/targetsStore.svelte';
+	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
+	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
+	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 
 	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 

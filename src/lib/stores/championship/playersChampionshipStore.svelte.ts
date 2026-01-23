@@ -1,9 +1,9 @@
 import type { Player } from '$lib/types/playerType';
-import { teamsStore } from './teamsStore.svelte';
+import { teamsChampionshipStore } from './teamsChampionshipStore.svelte';
 
-const STORAGE_KEY = 'golf-players-data';
+const STORAGE_KEY = 'golf-players-championship-data';
 
-class PlayersStore {
+class PlayersChampionshipStore {
 	// État de base (la liste brute)
 	list = $state<Player[]>([]);
 
@@ -21,19 +21,18 @@ class PlayersStore {
 			// Sauvegarde automatique dès que la liste (ou un élément de la liste) change
 			$effect.root(() => {
 				$effect(() => {
-					console.log('Liste des joueurs', this.list.length);
+					//console.log('Liste des joueurs', this.list.length);
 					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
 				});
 			});
 		}
 	}
 
-	/**
-	 * Returns an array of players with their corresponding team names
-	 */
+	// --- La vue dérivée (Remplaçante de playersWithTeams) ---
+	// Elle est recalculée automatiquement si this.list ou teamsStore.list changent
 	get playersWithTeams() {
 		return this.list.map((player) => {
-			const team = teamsStore.list.find((t) => t.id === player.teamId);
+			const team = teamsChampionshipStore.list.find((t) => t.id === player.teamId);
 			return {
 				...player,
 				teamName: team ? team.name : 'Individuel'
@@ -41,18 +40,18 @@ class PlayersStore {
 		});
 	}
 
-	/**
-	 * Retrieves the team name of a given player
-	 * @param player - The player object to retrieve the team name for
-	 */
+	// Dans playersStore.svelte.ts
+	// On ajoute une méthode simple pour récupérer le nom
 	getTeamName(player: Player) {
-		const team = teamsStore.list.find((t) => t.id === player.teamId);
+		const team = teamsChampionshipStore.list.find((t) => t.id === player.teamId);
 		return team ? team.name : player.name;
 	}
 
 	/**
-	 * Retrieves a player by their ID
-	 * @param playerId - The ID of the player to retrieve
+	 * Gets a player by ID.
+	 *
+	 * @param playerId - The ID of the player to get.
+	 * @returns The player object, or an empty player object if not found.
 	 */
 	getPlayerNameById(playerId: string) {
 		const player = this.list.find((p) => p.id === playerId);
@@ -60,9 +59,10 @@ class PlayersStore {
 	}
 
 	/**
-	 * Assigns a player to a team by updating their team ID
-	 * @param playerId - The ID of the player to assign to a team
-	 * @param teamId - The ID of the team to assign the player to
+	 * Assigns a player to a team.
+	 *
+	 * @param playerId - The ID of the player to assign.
+	 * @param teamId - The ID of the team to assign the player to.
 	 */
 	assignPlayerToTeam(playerId: string, teamId: string) {
 		const player = this.list.find((p) => p.id === playerId);
@@ -71,43 +71,56 @@ class PlayersStore {
 		}
 	}
 
+	// --- Méthodes d'actions ---
+
 	/**
-	 * Adds a new player with the given name and an empty team ID
-	 * @param name - The name of the player to add
+	 * Adds a new player to the list.
+	 *
+	 * @param name - The name of the player.
+	 * @param surname - The surname of the player.
+	 * @param nickname - The nickname of the player.
+	 * @param clubId - The ID of the club the player belongs to.
 	 */
-	add(name: string) {
+	add(name: string, surname: string, nickname: string, clubId: string) {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
-			teamId: '',
+			surname,
+			nickname,
+			clubId,
+			teamId: '', // Initialement vide
 			scores: {}
 		});
 	}
 
 	/**
-	 * Removes a player from the list by their ID
-	 * @param id - The ID of the player to remove
+	 * Removes a player from the list.
+	 *
+	 * @param id - The ID of the player to remove.
 	 */
 	remove(id: string) {
 		this.list = this.list.filter((p) => p.id !== id);
 	}
 
 	/**
-	 * Updates the score for a given target and player
-	 * @param playerId - The ID of the player whose score is being updated
-	 * @param targetId - The ID of the target whose score is being updated
-	 * @param value - The new score value to update
+	 * Updates a player's score for a specific target.
+	 *
+	 * @param playerId - The ID of the player whose score to update.
+	 * @param targetId - The ID of the target to update the score for.
+	 * @param value - The new score value.
 	 */
 	updateScore(playerId: string, targetId: string, value: number) {
 		const player = this.list.find((p) => p.id === playerId);
 		if (player) {
+			// Svelte 5 détecte le changement dans l'objet interne
 			player.scores[targetId] = value;
 		}
 	}
 
 	/**
-	 * Cleans up any orphaned scores that no longer correspond to active targets
-	 * @param activeTargetIds - An array of the IDs of active targets
+	 * Cleans up orphan scores that no longer correspond to active targets.
+	 *
+	 * @param activeTargetIds - The IDs of the currently active targets.
 	 */
 	cleanOrphanScores(activeTargetIds: string[]) {
 		this.list.forEach((player) => {
@@ -120,7 +133,7 @@ class PlayersStore {
 	}
 
 	/**
-	 * Resets the list of players and removes any saved data from localStorage
+	 * Resets the list of players and clears the local storage.
 	 */
 	reset() {
 		this.list = [];
@@ -130,4 +143,4 @@ class PlayersStore {
 	}
 }
 
-export const playersStore = new PlayersStore();
+export const playersChampionshipStore = new PlayersChampionshipStore();

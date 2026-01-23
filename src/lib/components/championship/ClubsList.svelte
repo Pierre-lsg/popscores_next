@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Club } from '$lib/types/clubType';
-	import { clubsStore } from '$lib/stores/clubsStore.svelte';
+	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import Param from '$lib/ui/Param.svelte';
 
 	let clubs = $state<Club[]>(clubsStore.list);

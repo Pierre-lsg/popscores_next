@@ -2,7 +2,7 @@
 	import type { SessionArchive } from '$lib/types/sessionType';
 	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { saveSessionToPB } from '$lib/utils/pocketbase/pbSessions';
-	import { historyStore } from '$lib/stores/historyStore.svelte';
+	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 
 	import type { Player } from '$lib/types/playerType';
 	import type { SessionSettings } from '$lib/types/gameSessionType';

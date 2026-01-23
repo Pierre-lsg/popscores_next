@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { viewport } from '$lib/stores/viewportStore.svelte';
-	import GolfMobile from '$lib/views/session/GolfMobile.svelte';
+	import GolfMobile from '$lib/views/quickSession/GolfMobile.svelte';
 </script>
 
 <div class="game-wrapper">

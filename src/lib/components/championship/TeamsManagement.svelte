@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { clubsStore } from '$lib/stores/clubsStore.svelte';
-	import { teamsChampionshipStore } from '$lib/stores/teamsChampionshipStore.svelte';
+	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
+	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 
 	import Param from '$lib/ui/Param.svelte';
 

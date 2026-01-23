@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { slide, fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
-	import { playersStore } from '$lib/stores/playersStore.svelte';
+	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { smartSort } from '$lib/utils/sharedFunction';
 	import { dndzone } from 'svelte-dnd-action';

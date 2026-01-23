@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { historyStore } from '$lib/stores/historyStore.svelte';
+	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 	import type { SessionArchive } from '$lib/types/sessionType';
 	import { getAllSessionsFromPB } from '$lib/utils/pocketbase/pbSessions';
 	import { onMount } from 'svelte';

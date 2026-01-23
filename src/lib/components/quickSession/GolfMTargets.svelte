@@ -6,8 +6,8 @@
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 
-	import { targetsStore } from '$lib/stores/targetsStore.svelte';
-	import { playersStore } from '$lib/stores/playersStore.svelte';
+	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
+	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
 	let isTeamGame: boolean = sessionSettingsStore.settings.teamGame;

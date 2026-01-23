@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { targetsStore } from '$lib/stores/targetsStore.svelte';
+	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
+	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 

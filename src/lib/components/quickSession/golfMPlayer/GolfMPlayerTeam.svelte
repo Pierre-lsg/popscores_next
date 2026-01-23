@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { playersStore } from '$lib/stores/playersStore.svelte';
-	import { teamsStore } from '$lib/stores/teamsStore.svelte';
+	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
+	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { shuffle } from '$lib/utils/sharedFunction';
 

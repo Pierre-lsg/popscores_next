@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Competition } from '$lib/types/competitionType';
-	import { competitionsStore } from '$lib/stores/competitionsStore.svelte';
+	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
 

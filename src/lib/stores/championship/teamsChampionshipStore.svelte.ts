@@ -36,7 +36,6 @@ class TeamsChampionshipStore {
 			playersId: [],
 			clubId
 		});
-		console.log('Ajout équipe');
 	}
 
 	/**
