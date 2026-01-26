@@ -5,7 +5,7 @@
 	import { page } from '$app/stores';
 	import ThemeSelector from '$lib/ui/ThemeSelector.svelte';
 	import NetworkBanner from '$lib/ui/NetworkBanner.svelte';
-	import { viewport } from '$lib/stores/viewportStore.svelte';
+	import Toast from '$lib/ui/Toast.svelte';
 
 	let { children } = $props();
 
@@ -18,6 +18,7 @@
 </svelte:head>
 
 <NetworkBanner />
+<Toast />
 
 <main>
 	<div class="top-bar">

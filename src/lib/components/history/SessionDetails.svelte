@@ -3,6 +3,7 @@
 	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { saveSessionToPB } from '$lib/utils/pocketbase/pbSessions';
 	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	import type { Player } from '$lib/types/playerType';
 	import type { SessionSettings } from '$lib/types/gameSessionType';
@@ -38,8 +39,12 @@
 		currentSession = '';
 	}
 
-	function saveSessionToCloud() {
-		if (session) saveSessionToPB(session);
+	async function saveSessionToCloud() {
+		let status: string = 'failure';
+		if (session) status = await saveSessionToPB(session);
+		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
+		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
+		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
 	}
 </script>
 

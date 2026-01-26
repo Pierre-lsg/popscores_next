@@ -8,7 +8,8 @@ let pb: PocketBase = await connectToPB();
  * Saves a session object to the cloud database.
  * @param mySession - The session to save.
  */
-export async function saveSessionToPB(mySession: SessionArchive) {
+export async function saveSessionToPB(mySession: SessionArchive): Promise<string> {
+	let status: string = 'warning';
 	if (pb.authStore.isValid) {
 		/* Checking if the session doesn't exist */
 		try {
@@ -22,20 +23,22 @@ export async function saveSessionToPB(mySession: SessionArchive) {
 				owner: pb.authStore.record?.id,
 				data: mySession
 			};
-			console.log('data2Save : ', dataToSave);
 
 			try {
-				console.log('Avant le drame');
 				const record = await pb.collection('sessions').create(dataToSave);
+				status = 'success';
 				console.log("Session sauvegardée avec l'ID:", record.id);
 			} catch (error) {
+				status = 'failure';
 				console.error('Erreur de sauvegarde:', error);
 			}
 		}
 	} else {
+		status = 'failure';
 		console.log('No connection to PB');
 		pb = await connectToPB();
 	}
+	return status;
 }
 
 /**
