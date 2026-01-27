@@ -99,7 +99,7 @@ class PlayersStore {
 		return this.list.map((player) => ({
 			playerId: player.id,
 			name: player.name,
-			score: player.scores[targetId] || null
+			score: player.scores[targetId]
 		}));
 	}
 

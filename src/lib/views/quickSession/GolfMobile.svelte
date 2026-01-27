@@ -3,7 +3,10 @@
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
+
 	import { onMount } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
+
 	import { shareService } from '$lib/utils/shareService';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
@@ -27,21 +30,25 @@
 
 	gameStatus.currentTargetIndex = activeTargetIndex;
 
+	afterNavigate(({ type }) => {
+		if (type === 'link') {
+			if (gameStatus.status !== 'setup') {
+				if (confirm('Une partie est déjà en cours. Voulez-vous commencer une nouvelle partie ?')) {
+					resetGame();
+				}
+			}
+		}
+	});
+
 	onMount(() => {
-		const importedData = shareService.loadFromUrl();
+		/*const importedData = shareService.loadFromUrl();
 		if (importedData) {
 			if (confirm('Une partie a été trouvée via ce lien. Voulez-vous charger les scores ?')) {
 				playersStore.list = importedData.players;
 				targetsStore.list = importedData.targets;
 				window.history.replaceState({}, '', window.location.pathname);
 			}
-		}
-
-		if (gameStatus.status !== 'setup') {
-			if (confirm('Une partie est déjà en cours. Voulez-vous commencer une nouvelle partie ?')) {
-				resetGame();
-			}
-		}
+		}*/
 
 		if (gameStatus.status === 'setup') nextCard(Step.session);
 		else if (gameStatus.status === 'in_progress') nextCard(Step.scoring);
@@ -90,6 +97,8 @@
 		let hasAllScoresEntered = true;
 		targetsStore.list.forEach((t) => {
 			const playersScore = playersStore.getPlayersScore(t.id);
+			console.log(playersScore);
+
 			if (playersScore.length === playersStore.list.length) {
 				for (const ps of playersScore) {
 					if (ps.score === null || ps.score === undefined) {

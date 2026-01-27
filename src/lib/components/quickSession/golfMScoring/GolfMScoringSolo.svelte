@@ -10,6 +10,7 @@
 	import { getRankedPlayers, getPlayerStats } from '$lib/utils/session/golfScoringFunction.svelte';
 
 	const s = sessionSettingsStore.settings;
+	const ruleOptions = ['Individuel', 'Bonus'];
 
 	let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
 	let rankedPlayerList = $derived(getRankedPlayers(playersStore.list, targetsStore.list));
@@ -17,9 +18,10 @@
 	let currentTarget = $derived(targetsStore.list[activeTargetIndex]);
 	let isFirstTarget = $derived(activeTargetIndex === 0);
 	let isLastTarget = $derived(activeTargetIndex === targetsStore.list.length - 1);
+	let updatingPar: boolean = $state(false);
+	let updatingRule: boolean = $state(false);
 
 	let minTrys = $derived(currentTarget?.rule === 'Bonus' ? -3 : 0);
-
 	let maxTrys = $derived(
 		currentTarget?.rule === 'Bonus'
 			? 0
@@ -38,48 +40,62 @@
 
 	const SWIPE_THRESHOLD = 50;
 
-	function prevTargetClick() {
+	const prevTargetClick = () => {
 		prevTargetBtn?.click();
-	}
+	};
 
-	function nextTargetClick() {
+	const nextTargetClick = () => {
 		nextTargetBtn?.click();
-	}
+	};
 
-	function handleTouchStart(e: TouchEvent) {
+	const handleTouchStart = (e: TouchEvent) => {
 		touchStartX = e.changedTouches[0].screenX;
-	}
+	};
 
-	function handleTouchEnd(e: TouchEvent) {
+	const handleTouchEnd = (e: TouchEvent) => {
 		touchEndX = e.changedTouches[0].screenX;
 		checkSwipe();
-	}
+	};
 
-	function checkSwipe() {
+	const checkSwipe = () => {
 		const distance = touchEndX - touchStartX;
 
 		if (Math.abs(distance) > SWIPE_THRESHOLD) {
 			if (distance > 0) nextTargetClick();
 			else prevTargetClick();
 		}
-	}
+	};
 
-	function showNextTarget() {
+	const showNextTarget = () => {
+		updatingPar = false;
+		updatingRule = false;
 		activeTargetIndex++;
 		initScoresPlayerOnTarget();
-	}
+	};
 
-	function showPrevTarget() {
+	const showPrevTarget = () => {
+		updatingPar = false;
+		updatingRule = false;
 		activeTargetIndex--;
-	}
+	};
 
-	function initScoresPlayerOnTarget() {
+	const initScoresPlayerOnTarget = () => {
 		playersStore.list.forEach((player) => {
 			if (player.scores[currentTarget.id] === undefined) {
 				playersStore.updateScore(player.id, currentTarget.id, currentTarget.par);
 			}
 		});
-	}
+	};
+
+	const modifyPar = () => {
+		updatingRule = false;
+		updatingPar = !updatingPar;
+	};
+
+	const modifyRule = () => {
+		updatingPar = false;
+		updatingRule = !updatingRule;
+	};
 
 	onMount(() => {
 		initScoresPlayerOnTarget();
@@ -93,7 +109,7 @@
 		onpointerleave={() => (showRanking = false)}
 		ontouchend={() => (showRanking = false)}
 	>
-		🔥 Show
+		🔥 Provisoire
 	</div>
 	{#if showRanking}
 		<div class="others-list">
@@ -130,9 +146,11 @@
 		<div class="target-info">
 			<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
 			<div class="target-details">
-				<span class="par-badge">{currentTarget.rule}</span>
+				<span role="none" class="par-badge" onclick={() => modifyRule()}>{currentTarget.rule}</span>
 				{#if currentTarget.rule !== 'Bonus'}
-					<span class="par-badge">PAR {currentTarget.par}</span>
+					<span role="none" class="par-badge" onclick={() => modifyPar()}
+						>PAR {currentTarget.par}</span
+					>
 				{/if}
 			</div>
 		</div>
@@ -140,6 +158,30 @@
 			>▶</button
 		>
 	</header>
+
+	{#if updatingPar}
+		<Stepper
+			label="Modification du Par : "
+			bind:value={currentTarget.par}
+			min={0}
+			disabled={currentTarget.rule === 'Bonus'}
+		/>
+	{/if}
+
+	{#if updatingRule}
+		<div class="target-details" style="background-color: var(--bg-card);">
+			Modification de la règle :
+			<select
+				id="rule{currentTarget.id}"
+				bind:value={currentTarget.rule}
+				onchange={() => (currentTarget.par = currentTarget.rule === 'Bonus' ? 0 : 4)}
+			>
+				{#each ruleOptions as option}
+					<option value={option}>{option}</option>
+				{/each}
+			</select>
+		</div>
+	{/if}
 
 	<div class="scores-grid">
 		<table>
