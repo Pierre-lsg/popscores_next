@@ -14,7 +14,7 @@ export default defineConfig({
 				short_name: 'GolfScore',
 				description: 'Suivi de score de golf en temps réel',
 				start_url: '/popscores_next/',
-				scope: '/',
+				scope: '/popscores_next/',
 				display: 'standalone',
 				background_color: '#ffffff',
 				theme_color: '#2e7d32',
