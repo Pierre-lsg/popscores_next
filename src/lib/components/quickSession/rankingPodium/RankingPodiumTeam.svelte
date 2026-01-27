@@ -21,6 +21,8 @@
 	const t = targetsStore.list;
 	const p = playersStore.list;
 
+	let files: any;
+
 	let rankedTeams = getRankedTeams(teamsStore.list, t, p, s);
 	let top3Teams = getTop3Teams(rankedTeams);
 	let othersRankedTeams = getOthersRankedTeams(rankedTeams);
@@ -99,7 +101,41 @@
 		/>
 	{/if}
 
-	<button class="share-button" onclick={shareResultsTeams(rankedTeams, t, p, s)}>
-		<span class="icon">📤</span> Partager les résultats
-	</button>
+	<div class="btn-action">
+		<button class="share-button" onclick={shareResultsTeams(rankedTeams, t, p, s)}>
+			<span class="icon">📤</span>
+			Partager les résultats
+		</button>
+		<span>
+			<input
+				type="file"
+				accept="image/*"
+				capture="environment"
+				bind:files
+				onchange={shareResultsTeams(rankedTeams, t, p, s, files[0])}
+				id="camera-input"
+				hidden
+			/>
+
+			<label for="camera-input" class="btn-photo"> 📷 Avec photo </label>
+		</span>
+	</div>
 </div>
+
+<style>
+	.btn-photo {
+		display: inline-block;
+		padding: 6px 0px;
+		background-color: #4338ca;
+		color: white;
+		border-radius: 8px;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+	}
+
+	.btn-action {
+		display: flex;
+		flex-direction: row;
+	}
+</style>

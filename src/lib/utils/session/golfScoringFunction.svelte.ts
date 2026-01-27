@@ -223,9 +223,12 @@ export const getScoreClass = (score: number, target: Target) => {
 
 // Partage des résultats des joueurs via l'API native de partage
 export const shareResultsPlayers =
-	(rankedPlayers: RankedPlayer[], targets: Target[]) => async () => {
+	(rankedPlayers: RankedPlayer[], targets: Target[], photo?: any) => async () => {
+		console.log('photo', photo);
+
 		// 1. On prépare le texte du message
-		let message = `🏆 Résultats Golf Score Hub\n\n`;
+		let message = `🏆 Résultats avec PopScores\n\n`;
+		let shared: boolean = false;
 
 		rankedPlayers.forEach((rankedPlayer, index) => {
 			const stats = getPlayerStats(rankedPlayer.player, targets);
@@ -233,15 +236,30 @@ export const shareResultsPlayers =
 			message += `${medal}${rankedPlayer.player.name}: ${stats.gross} ${stats.diffText}\n`;
 		});
 
-		message += `\nJoué avec Golf Score Hub ⛳`;
+		message += `\nLa session du jour ⛳`;
 
-		// 2. On utilise l'API native
-		if (navigator.share) {
+		// Envoi avec photo si elle existe
+		if (photo) {
+			if (navigator.canShare && navigator.canShare({ files: [photo] })) {
+				try {
+					await navigator.share({
+						files: [photo],
+						title: 'Résultat de la partie',
+						text: message
+					});
+					shared = true;
+				} catch (err) {
+					console.log("Echec de l'envoi avec photo : ", err);
+				}
+			}
+		}
+
+		// Envoi si pas de photo ou échec envoi avec photo
+		if (navigator.share && !shared) {
 			try {
 				await navigator.share({
-					title: 'Scores de la partie de Golf',
-					text: message,
-					url: window.location.origin
+					title: 'Résultat de la partie',
+					text: message
 				});
 			} catch (err) {
 				console.log('Partage annulé ou erreur:', err);
@@ -254,10 +272,19 @@ export const shareResultsPlayers =
 
 // Partage des résultats d'équipes via l'API native de partage
 export const shareResultsTeams =
-	(rankedTeams: RankedTeam[], targets: Target[], players: Player[], settings: SessionSettings) =>
+	(
+		rankedTeams: RankedTeam[],
+		targets: Target[],
+		players: Player[],
+		settings: SessionSettings,
+		photo?: any
+	) =>
 	async () => {
+		console.log('photo', photo);
+
 		// 1. On prépare le texte du message
-		let message = `🏆 Résultats Golf Score Hub\n\n`;
+		let message = `🏆 Résultats PopScores \n\n`;
+		let shared: boolean = false;
 
 		rankedTeams.forEach((team, index) => {
 			const stats = getTeamStats(team.team, targets, players, settings);
@@ -265,15 +292,30 @@ export const shareResultsTeams =
 			message += `${medal}${team.team.name}: ${stats.gross} ${stats.diffText}\n`;
 		});
 
-		message += `\nJoué avec Golf Score Hub ⛳`;
+		message += `\nJoué avec PopScores ⛳`;
 
-		// 2. On utilise l'API native
-		if (navigator.share) {
+		// Envoi avec photo si elle existe
+		if (photo) {
+			if (navigator.canShare && navigator.canShare({ files: [photo] })) {
+				try {
+					await navigator.share({
+						files: [photo],
+						title: 'Résultat de la partie',
+						text: message
+					});
+					shared = true;
+				} catch (err) {
+					console.log("Echec de l'envoi avec photo : ", err);
+				}
+			}
+		}
+
+		// Envoi si pas de photo ou échec envoi avec photo
+		if (navigator.share && !shared) {
 			try {
 				await navigator.share({
-					title: 'Scores de la partie de Golf',
-					text: message,
-					url: window.location.origin
+					title: 'Résultat de la partie',
+					text: message
 				});
 			} catch (err) {
 				console.log('Partage annulé ou erreur:', err);

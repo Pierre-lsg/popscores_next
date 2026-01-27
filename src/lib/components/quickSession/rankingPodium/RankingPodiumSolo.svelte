@@ -15,6 +15,7 @@
 	import { confetti } from '@neoconfetti/svelte';
 
 	let t = targetsStore.list;
+	let files: any;
 
 	let rankedPlayers = getRankedPlayers(playersStore.list, targetsStore.list);
 	let top3Players = getTop3Players(rankedPlayers);
@@ -80,7 +81,41 @@
 		<PlayerScoreCard rankedPlayers={viewedPlayer} targets={targetsStore.list} />
 	{/if}
 
-	<button class="share-button" onclick={shareResultsPlayers(rankedPlayers, t)}>
-		<span class="icon">📤</span> Partager les résultats
-	</button>
+	<div class="btn-action">
+		<button class="share-button" onclick={shareResultsPlayers(rankedPlayers, t)}>
+			<span class="icon">📤</span>
+			Partager les résultats
+		</button>
+		<span>
+			<input
+				type="file"
+				accept="image/*"
+				capture="environment"
+				bind:files
+				onchange={shareResultsPlayers(rankedPlayers, t, files[0])}
+				id="camera-input"
+				hidden
+			/>
+
+			<label for="camera-input" class="btn-photo"> 📷 Avec photo </label>
+		</span>
+	</div>
 </div>
+
+<style>
+	.btn-photo {
+		display: inline-block;
+		padding: 6px 0px;
+		background-color: #4338ca;
+		color: white;
+		border-radius: 8px;
+		cursor: pointer;
+		font-weight: bold;
+		text-align: center;
+	}
+
+	.btn-action {
+		display: flex;
+		flex-direction: row;
+	}
+</style>
