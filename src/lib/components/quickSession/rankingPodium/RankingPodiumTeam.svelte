@@ -124,7 +124,8 @@
 
 <style>
 	.btn-photo {
-		display: inline-block;
+		display: flex;
+		align-items: center; /* Center text vertically */
 		padding: 6px 0px;
 		background-color: #4338ca;
 		color: white;
@@ -132,6 +133,7 @@
 		cursor: pointer;
 		font-weight: bold;
 		text-align: center;
+		height: 80%;
 	}
 
 	.btn-action {
