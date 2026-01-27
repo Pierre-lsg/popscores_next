@@ -1,13 +1,13 @@
 <script lang="ts">
-	let { 
-        title = '', 
-        onNext, 
-        onPrev 
-    } = $props<{
-        title?: string;
-        onNext: () => void;
-        onPrev: () => void;
-    }>();
+	let {
+		title = '',
+		onNext,
+		onPrev
+	} = $props<{
+		title?: string;
+		onNext?: () => void;
+		onPrev?: () => void;
+	}>();
 	// --
 	// Code pour gestion du Swipe
 	// Todo: à refactoriser car utilisé ailleurs
@@ -66,8 +66,9 @@
 	.actions {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		justify-content: center;
 		gap: 10px;
+		height: 60px;
 	}
 
 	.btn {

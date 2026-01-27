@@ -26,10 +26,10 @@
 	let newTargetRule = $state(ruleOptions[0]);
 
 	// Function to add a new target to targetsStore with specified parameters
-	function addTarget() {
+	const addTarget = () => {
 		targetsStore.add(newTargetRule === 'Bonus' ? 0 : 4, newTargetName, newTargetRule);
 		gameStatus.currentTargetIndex = 0;
-	}
+	};
 
 	// Function to handle the removal of a target from dndzone
 	function handleRemoveDrop(e: CustomEvent<{ items: any[] }>) {

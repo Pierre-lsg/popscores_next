@@ -48,22 +48,22 @@
 		else if (gameStatus.status === 'finished') nextCard(Step.ranking);
 	});
 
-	function nextCard(nextStep: number) {
+	const nextCard = (nextStep: number) => {
 		currentStep = nextStep;
 		if (nextStep === Step.session) gameStatus.status = 'setup';
 		else if (nextStep === Step.players) gameStatus.status = 'setup';
 		else if (nextStep === Step.targets) gameStatus.status = 'setup';
 		else if (nextStep === Step.scoring) gameStatus.status = 'in_progress';
 		else if (nextStep === Step.ranking) gameStatus.status = 'finished';
-	}
+	};
 
-	function resetGameConfirm() {
+	const resetGameConfirm = () => {
 		if (confirm('Voulez-vous vraiment recommencer à zéro ?')) {
 			resetGame();
 		}
-	}
+	};
 
-	function resetGame() {
+	const resetGame = () => {
 		playersStore.reset();
 		targetsStore.reset();
 		teamsStore.reset();
@@ -71,9 +71,9 @@
 		gameStatus.reset();
 		activeTargetIndex = 0;
 		nextCard(Step.session);
-	}
+	};
 
-	function saveGameToHistory() {
+	const saveGameToHistory = () => {
 		const newArchive = {
 			id: sessionSettingsStore.settings.id,
 			settings: sessionSettingsStore.settings,
@@ -83,9 +83,30 @@
 		};
 
 		historyStore.archiveGame(newArchive);
-	}
+	};
 
-	async function copyShareLink() {
+	const showPodium = () => {
+		// All scores have been entered ?
+		let hasAllScoresEntered = true;
+		targetsStore.list.forEach((t) => {
+			const playersScore = playersStore.getPlayersScore(t.id);
+			if (playersScore.length === playersStore.list.length) {
+				for (const ps of playersScore) {
+					if (ps.score === null || ps.score === undefined) {
+						hasAllScoresEntered = false;
+					}
+				}
+			} else hasAllScoresEntered = false;
+		});
+
+		if (hasAllScoresEntered) nextCard(Step.ranking);
+		else {
+			if (confirm("Tous les scores n'ont pas été saisis.\nVoulez-vous accéder au Podium ?"))
+				nextCard(Step.ranking);
+		}
+	};
+
+	const copyShareLink = async () => {
 		try {
 			const link = shareService.generateLink(playersStore.list, targetsStore.list);
 			await navigator.clipboard.writeText(link);
@@ -95,7 +116,7 @@
 		} catch (err) {
 			toastStore.show('❌ Erreur lors de la copie');
 		}
-	}
+	};
 </script>
 
 <div class="mobile-wizard">
@@ -107,11 +128,7 @@
 
 	<!-- Saisie des inforamtions de la partie -->
 	{#if currentStep === Step.session}
-		<GolfHeader
-			title="⚙️ Params de la session"
-			onNext={() => nextCard(Step.players)}
-			onPrev={() => undefined}
-		/>
+		<GolfHeader title="⚙️ Params de la session" onNext={() => nextCard(Step.players)} />
 		<GolfMSession />
 
 		<!-- Saisie des joueurs de la partie -->
@@ -136,34 +153,25 @@
 	{:else if currentStep === Step.scoring}
 		<GolfHeader
 			title="📝 Saisie des scores"
-			onNext={() => nextCard(Step.ranking)}
+			onNext={() => showPodium()}
 			onPrev={() => nextCard(Step.targets)}
 		/>
 		<GolfMScoring />
 
 		<!-- Résultat de la Partie : classement final -->
 	{:else if currentStep === Step.ranking}
-		<GolfHeader
-			title="🏆 Classement Final"
-			onNext={() => undefined}
-			onPrev={() => nextCard(Step.scoring)}
-		/>
+		<GolfHeader title="🏆 Classement Final" onPrev={() => nextCard(Step.scoring)} />
 		<RankingPodium />
 
 		<button class="btn btn-primary" onclick={() => nextCard(Step.scoreCard)}>Carte de score</button>
-		<button onclick={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button>
+		<!-- <button onclick={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button> -->
 		<button class="btn btn-primary" onclick={() => resetGameConfirm()}>Nouvelle partie</button>
-		<button class="btn btn-primary" onclick={() => saveGameToHistory()}
-			>Sauvegarder la partie</button
+		<button class="btn btn-primary" onclick={() => saveGameToHistory()}>Historiser la partie</button
 		>
 
 		<!-- Résultat de la Partie : carte de score -->
 	{:else if currentStep === Step.scoreCard}
-		<GolfHeader
-			title="🏆 Carte de score"
-			onNext={() => undefined}
-			onPrev={() => nextCard(Step.ranking)}
-		/>
+		<GolfHeader title="🏆 Carte de score" onPrev={() => nextCard(Step.ranking)} />
 		<ScoreCard />
 
 		<Toast />

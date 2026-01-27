@@ -91,6 +91,17 @@ class PlayersStore {
 	remove(id: string) {
 		this.list = this.list.filter((p) => p.id !== id);
 	}
+	/**
+	 * Retrieves the scores of each player for a given target
+	 * @param targetId - The ID of the target to retrieve scores for
+	 */
+	getPlayersScore(targetId: string) {
+		return this.list.map((player) => ({
+			playerId: player.id,
+			name: player.name,
+			score: player.scores[targetId] || null
+		}));
+	}
 
 	/**
 	 * Updates the score for a given target and player

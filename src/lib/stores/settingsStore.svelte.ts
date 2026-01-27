@@ -1,5 +1,8 @@
 import { browser } from '$app/environment';
 
+// TODO : suppress cloud password.
+// Asked (prompt) it at the connection
+
 /**
  * Interface for application settings.
  */
