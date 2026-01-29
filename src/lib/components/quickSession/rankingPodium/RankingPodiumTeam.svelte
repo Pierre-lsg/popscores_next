@@ -6,6 +6,7 @@
 	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
 
 	import { confetti } from '@neoconfetti/svelte';
+	import { onDestroy } from 'svelte';
 	import {
 		listTeamPlayer,
 		formatPlayerList,
@@ -21,7 +22,9 @@
 	const t = targetsStore.list;
 	const p = playersStore.list;
 
-	let files: any;
+	let files: any = $state();
+	let previewUrl = $state('');
+	let fileInput: any = $state();
 
 	let rankedTeams = getRankedTeams(teamsStore.list, t, p, s);
 	let top3Teams = getTop3Teams(rankedTeams);
@@ -35,6 +38,26 @@
 			viewedTeam = [];
 		}
 	}
+
+	function handlePhotoTaken(e: Event) {
+		const file = (e.target as HTMLInputElement).files?.[0];
+		if (file) {
+			if (previewUrl) URL.revokeObjectURL(previewUrl);
+			previewUrl = URL.createObjectURL(file);
+		}
+	}
+
+	function catchNewPhoto() {
+		if (previewUrl) URL.revokeObjectURL(previewUrl);
+		previewUrl = '';
+		if (fileInput) {
+			fileInput.value = '';
+		}
+	}
+
+	onDestroy(() => {
+		if (previewUrl) URL.revokeObjectURL(previewUrl);
+	});
 </script>
 
 <div use:confetti={{ particleCount: 200 }}></div>
@@ -101,24 +124,39 @@
 		/>
 	{/if}
 
-	<div class="btn-action">
-		<button class="share-button" onclick={shareResultsTeams(rankedTeams, t, p, s)}>
-			<span class="icon">📤</span>
-			Partager les résultats
-		</button>
-		<span>
-			<input
-				type="file"
-				accept="image/*"
-				capture="environment"
-				bind:files
-				onchange={shareResultsTeams(rankedTeams, t, p, s, files[0])}
-				id="camera-input"
-				hidden
-			/>
+	<div>
+		<input
+			type="file"
+			accept="image/*"
+			capture="environment"
+			bind:this={fileInput}
+			bind:files
+			onchange={handlePhotoTaken}
+			id="camera-input"
+			hidden
+		/>
 
-			<label for="camera-input" class="btn-photo"> 📷 Avec photo </label>
-		</span>
+		<div class="btn-action">
+			{#if !previewUrl}
+				<button class="share-button" onclick={shareResultsTeams(rankedTeams, t, p, s)}>
+					<span class="icon">📤</span>
+					Partager les résultats
+				</button>
+				<span>
+					<label for="camera-input" class="btn-photo"> 📷 Avec photo </label>
+				</span>
+			{/if}
+		</div>
+
+		{#if previewUrl}
+			<img src={previewUrl} alt="Preview" class="preview-img" />
+			<div class="btn-action">
+				<button class="share-button" onclick={shareResultsTeams(rankedTeams, t, p, s, files[0])}>
+					📤 Partager maintenant
+				</button>
+				<button class="btn-photo" onclick={catchNewPhoto}> Refaire la photo </button>
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -139,5 +177,11 @@
 	.btn-action {
 		display: flex;
 		flex-direction: row;
+	}
+
+	.preview-img {
+		width: 100%;
+		border-radius: 8px;
+		margin: 10 px;
 	}
 </style>
