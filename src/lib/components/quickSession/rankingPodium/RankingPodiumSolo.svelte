@@ -15,7 +15,7 @@
 	import { confetti } from '@neoconfetti/svelte';
 
 	let t = targetsStore.list;
-	let files: any;
+	let files: FileList | null = $state(null);
 
 	let rankedPlayers = getRankedPlayers(playersStore.list, targetsStore.list);
 	let top3Players = getTop3Players(rankedPlayers);
@@ -28,6 +28,17 @@
 		} else {
 			viewedPlayer = [];
 		}
+	}
+
+	function resultsSharing() {
+		if (files && files[0]) {
+			try {
+				shareResultsPlayers(rankedPlayers, t, files[0]);
+			} catch (e) {
+				console.error('Error sharing results:', e);
+			}
+			files = null;
+		} else shareResultsPlayers(rankedPlayers, t);
 	}
 </script>
 
@@ -92,7 +103,7 @@
 				accept="image/*"
 				capture="environment"
 				bind:files
-				onchange={shareResultsPlayers(rankedPlayers, t, files[0])}
+				onchange={resultsSharing}
 				id="camera-input"
 				hidden
 			/>

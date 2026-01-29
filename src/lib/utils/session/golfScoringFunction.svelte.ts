@@ -224,7 +224,7 @@ export const getScoreClass = (score: number, target: Target) => {
 // Partage des résultats des joueurs via l'API native de partage
 export const shareResultsPlayers =
 	(rankedPlayers: RankedPlayer[], targets: Target[], photo?: any) => async () => {
-		console.log('photo', photo);
+		console.log('gfd', photo);
 
 		// 1. On prépare le texte du message
 		let message = `🏆 Résultats avec PopScores\n\n`;
@@ -240,7 +240,9 @@ export const shareResultsPlayers =
 
 		// Envoi avec photo si elle existe
 		if (photo) {
+			console.log('il existe une photo');
 			if (navigator.canShare && navigator.canShare({ files: [photo] })) {
+				console.log('et le navigateur veut partager ');
 				try {
 					await navigator.share({
 						files: [photo],
@@ -251,7 +253,7 @@ export const shareResultsPlayers =
 				} catch (err) {
 					console.log("Echec de l'envoi avec photo : ", err);
 				}
-			}
+			} else console.log('pas de partage avec photo');
 		}
 
 		// Envoi si pas de photo ou échec envoi avec photo
