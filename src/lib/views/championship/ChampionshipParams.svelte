@@ -1,11 +1,30 @@
-<script>
+<script lang="ts">
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { saveChampionship2Cloud } from '$lib/utils/pocketbase/championship2Cloud';
+	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
+	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 
 	import Param from '$lib/ui/Param.svelte';
 	import ScaleUpdater from '$lib/components/championship/ScaleUpdate.svelte';
 
+	let idvScale: MarkedPointScale;
+	let cltScale: MarkedPointScale;
+
 	const csStore = $state(championshipStore.list[0]);
+
+	async function saveChampionshipToCloud() {
+		let status: string = 'failure';
+		idvScale = mpsStore.list.filter((m) => (m.id = csStore.individualScale))[0];
+		cltScale = mpsStore.list.filter((m) => (m.id = csStore.collectiveScale))[0];
+		if (csStore) status = await saveChampionship2Cloud(csStore, idvScale, cltScale);
+		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
+		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
+		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
+	}
 </script>
+
+<button onclick={() => saveChampionshipToCloud()}>Save</button>
 
 <div class="settings-page">
 	<h2>Paramètres du championnat</h2>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { SessionArchive } from '$lib/types/sessionType';
 	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
-	import { saveSessionToPB } from '$lib/utils/pocketbase/pbSessions';
+	import { saveSession2Cloud } from '$lib/utils/pocketbase/sessions2Cloud';
 	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
@@ -41,7 +41,7 @@
 
 	async function saveSessionToCloud() {
 		let status: string = 'failure';
-		if (session) status = await saveSessionToPB(session);
+		if (session) status = await saveSession2Cloud(session);
 		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
 		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
 		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);

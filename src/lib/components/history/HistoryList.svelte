@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 	import type { SessionArchive } from '$lib/types/sessionType';
-	import { getAllSessionsFromPB } from '$lib/utils/pocketbase/pbSessions';
+	import { getAllSessionsFromCloud } from '$lib/utils/pocketbase/sessions2Cloud';
 	import { onMount } from 'svelte';
 
 	let allSessions: SessionArchive[] = $state([]);
@@ -18,7 +18,7 @@
 
 	onMount(async () => {
 		// Retrieve all sessions known in the Cloud
-		allSessions = await getAllSessionsFromPB();
+		allSessions = await getAllSessionsFromCloud();
 		loading = false;
 	});
 

@@ -8,14 +8,15 @@
 
 	let scale: MarkedPointScale = $state({ id: '', name: '', isIndividual: false, points: [] });
 
-	let qtyToAdd = 1; // Quantité de rangs à ajouter d'un coup
+	let qtyToAdd = $state(1); // Quantité de rangs à ajouter d'un coup
+	let step = $state(1);
 
 	function addRanks() {
 		let newPoints = [...scale.points];
 		for (let i = 0; i < qtyToAdd; i++) {
 			const lastScore = newPoints[newPoints.length - 1] || 0;
 			// Décrémentation de 1 point, minimum 0
-			const nextScore = Math.max(0, lastScore - 1);
+			const nextScore = Math.max(0, lastScore - step);
 			newPoints.push(nextScore);
 		}
 		scale.points = newPoints;
@@ -58,6 +59,7 @@
 			<button class="btn-add" on:click={addRanks}>
 				Ajouter {qtyToAdd > 1 ? qtyToAdd + ' rangs' : 'un rang'}
 			</button>
+			<input type="number" min="1" max="50" bind:value={step} class="input-qty" />
 		</div>
 
 		{#if scale.points.length > 0}

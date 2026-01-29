@@ -1,14 +1,14 @@
 import PocketBase from 'pocketbase';
 import type { SessionArchive } from '$lib/types/sessionType';
-import { connectToPB } from './pbConnection';
+import { connect2PB } from './connectionPocketBase';
 
-let pb: PocketBase = await connectToPB();
+let pb: PocketBase = await connect2PB();
 
 /**
  * Saves a session object to the cloud database.
  * @param mySession - The session to save.
  */
-export async function saveSessionToPB(mySession: SessionArchive): Promise<string> {
+export async function saveSession2Cloud(mySession: SessionArchive): Promise<string> {
 	let status: string = 'warning';
 	if (pb.authStore.isValid) {
 		/* Checking if the session doesn't exist */
@@ -35,8 +35,8 @@ export async function saveSessionToPB(mySession: SessionArchive): Promise<string
 		}
 	} else {
 		status = 'failure';
-		console.log('No connection to PB');
-		pb = await connectToPB();
+		console.log('No connection to PB. Trying to reconnect');
+		pb = await connect2PB();
 	}
 	return status;
 }
@@ -44,7 +44,7 @@ export async function saveSessionToPB(mySession: SessionArchive): Promise<string
 /**
  * Retrieves all sessions from Pocket Base.
  */
-export async function getAllSessionsFromPB(): Promise<SessionArchive[]> {
+export async function getAllSessionsFromCloud(): Promise<SessionArchive[]> {
 	let allSessions: SessionArchive[] = [];
 
 	if (pb.authStore.isValid) {
