@@ -13,9 +13,7 @@ class TeamsStore {
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
-			if (savedData) {
-				this.list = JSON.parse(savedData);
-			}
+			this.list = savedData ? JSON.parse(savedData) : [];
 
 			// The rune $effect watches for changes to `this.list`.
 			// Whenever it changes, it automatically saves.

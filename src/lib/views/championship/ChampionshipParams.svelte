@@ -6,17 +6,18 @@
 	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 
 	import Param from '$lib/ui/Param.svelte';
-	import ScaleUpdater from '$lib/components/championship/ScaleUpdate.svelte';
-
-	let idvScale: MarkedPointScale;
-	let cltScale: MarkedPointScale;
+	import ScaleUpdate from '$lib/components/championship/ScaleUpdate.svelte';
 
 	const csStore = $state(championshipStore.list[0]);
 
 	async function saveChampionshipToCloud() {
 		let status: string = 'failure';
-		idvScale = mpsStore.list.filter((m) => (m.id = csStore.individualScale))[0];
-		cltScale = mpsStore.list.filter((m) => (m.id = csStore.collectiveScale))[0];
+		let idvScale: MarkedPointScale = mpsStore.list.filter(
+			(m) => (m.id = csStore.individualScale)
+		)[0];
+		let cltScale: MarkedPointScale = mpsStore.list.filter(
+			(m) => (m.id = csStore.collectiveScale)
+		)[0];
 		if (csStore) status = await saveChampionship2Cloud(csStore, idvScale, cltScale);
 		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
 		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
@@ -32,8 +33,8 @@
 	<Param label="Saison" type="text" bind:value={csStore.season} />
 	<Param label="Localisation" type="text" bind:value={csStore.location} />
 	<h2>Barèmes de points</h2>
-	<ScaleUpdater bind:scaleId={csStore.collectiveScale} isIndividual={false} />
-	<ScaleUpdater bind:scaleId={csStore.individualScale} isIndividual={true} />
+	<ScaleUpdate bind:scaleId={csStore.collectiveScale} isIndividual={false} />
+	<ScaleUpdate bind:scaleId={csStore.individualScale} isIndividual={true} />
 </div>
 
 <style>

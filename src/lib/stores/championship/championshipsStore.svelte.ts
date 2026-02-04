@@ -9,11 +9,7 @@ class ChampionsStore {
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
-			this.list = savedData
-				? JSON.parse(savedData)
-				: [
-						{ id: crypto.randomUUID(), name: 'à définir', collectiveScale: '', individualScale: '' }
-					];
+			this.list = savedData ? JSON.parse(savedData) : [];
 
 			// Save data automatically when championships list changes
 			$effect.root(() => {

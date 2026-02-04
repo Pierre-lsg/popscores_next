@@ -14,9 +14,7 @@ class PlayersChampionshipStore {
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
-			if (savedData) {
-				this.list = JSON.parse(savedData);
-			}
+			this.list = savedData ? JSON.parse(savedData) : [];
 
 			// Sauvegarde automatique dès que la liste (ou un élément de la liste) change
 			$effect.root(() => {

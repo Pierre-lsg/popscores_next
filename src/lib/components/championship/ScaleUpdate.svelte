@@ -4,8 +4,7 @@
 	import { onMount } from 'svelte';
 
 	// Le barème passé en propriété
-	let { scaleId = $bindable(), isIndividual } = $props();
-
+	let { scaleId = $bindable(), isIndividual = false } = $props();
 	let scale: MarkedPointScale = $state({ id: '', name: '', isIndividual: false, points: [] });
 
 	let qtyToAdd = $state(1); // Quantité de rangs à ajouter d'un coup
@@ -30,6 +29,7 @@
 
 	onMount(() => {
 		let scaleTemp = mpsStore.list.find((scale) => scale.id === scaleId);
+		console.log(scaleTemp);
 		if (scaleTemp) scale = scaleTemp;
 		else {
 			scale = mpsStore.new(isIndividual);
@@ -56,14 +56,14 @@
 	<div class="actions-bar">
 		<div class="add-group">
 			<input type="number" min="1" max="50" bind:value={qtyToAdd} class="input-qty" />
-			<button class="btn-add" on:click={addRanks}>
+			<button class="btn-add" onclick={addRanks}>
 				Ajouter {qtyToAdd > 1 ? qtyToAdd + ' rangs' : 'un rang'}
 			</button>
 			<input type="number" min="1" max="50" bind:value={step} class="input-qty" />
 		</div>
 
 		{#if scale.points.length > 0}
-			<button class="btn-remove" on:click={removeLastRank} title="Supprimer la dernière place">
+			<button class="btn-remove" onclick={removeLastRank} title="Supprimer la dernière place">
 				Supprimer la place {scale.points.length}
 			</button>
 		{/if}
@@ -75,7 +75,7 @@
 		border: 1px solid #ddd;
 		border-radius: 8px;
 		padding: 1rem;
-		background: #fff;
+		background: var(--bg-card);
 	}
 
 	.scale-header {
@@ -88,7 +88,7 @@
 	}
 
 	.badge {
-		background: #e0e7ff;
+		background: var(--bg-card);
 		color: #4338ca;
 		padding: 2px 8px;
 		border-radius: 12px;

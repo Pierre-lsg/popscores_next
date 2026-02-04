@@ -12,9 +12,7 @@ class TeamsChampionshipStore {
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
-			if (savedData) {
-				this.list = JSON.parse(savedData);
-			}
+			this.list = savedData ? JSON.parse(savedData) : [];
 
 			$effect.root(() => {
 				$effect(() => {

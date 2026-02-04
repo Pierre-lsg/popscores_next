@@ -80,33 +80,33 @@ async function updateChampionship(cloudChamp: CloudChampionship) {
 	};
 
 	try {
-		const record = await pb.collection('sessions').update(cloudChamp.id, dataToSave);
+		const record = await pb.collection('championships').update(cloudChamp.id, dataToSave);
 	} catch (err) {
 		throw err;
 	}
 }
 
 /**
- * Retrieves all sessions from Pocket Base.
+ * Retrieves all championships from Pocket Base.
  */
-export async function getAllSessionsFromCloud(): Promise<Championship[]> {
-	let allSessions: Championship[] = [];
+export async function getAllChampionshipsFromCloud(): Promise<Championship[]> {
+	let allChampionships: Championship[] = [];
 
 	if (pb.authStore.isValid) {
 		try {
-			const record = await pb.collection('sessions').getFullList({
+			const record = await pb.collection('championships').getFullList({
 				page: 1,
 				perPage: 50
 				// filter: 'localId="8832ae3d-5b9a-484d-853a-a87a7237bb0a"'
 			});
 			console.log(record);
 			record.forEach((e) => {
-				if (e.data) allSessions.push(e.data as Championship);
+				if (e.data) allChampionships.push(e.data as Championship);
 			});
 		} catch (error) {
-			console.error('Error retrieving all sessions:', error);
+			console.error('Error retrieving all championships:', error);
 		}
 	}
 
-	return allSessions;
+	return allChampionships;
 }

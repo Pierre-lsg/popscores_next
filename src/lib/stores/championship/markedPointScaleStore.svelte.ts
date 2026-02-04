@@ -9,9 +9,7 @@ class MarkedPointScaleStore {
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
-			this.list = savedData
-				? JSON.parse(savedData)
-				: [{ id: crypto.randomUUID(), name: 'à définir' }];
+			this.list = savedData ? JSON.parse(savedData) : [];
 
 			// Save data automatically when scale list changes
 			$effect.root(() => {
@@ -25,13 +23,14 @@ class MarkedPointScaleStore {
 	/**
 	 * Adds a new markedPointScale to the list.
 	 *
+	 * @param id - Identifiant of the markedPointScale
 	 * @param name - Name of the markedPointScale
 	 * @param isIndividual - scale for individual or collective ranking
 	 * @param points - Marked point scale
 	 */
-	add(name: string, isIndividual: boolean, points: number[]) {
+	add(id: string, name: string, isIndividual: boolean, points: number[]) {
 		this.list.push({
-			id: crypto.randomUUID(),
+			id,
 			name,
 			isIndividual,
 			points
@@ -45,8 +44,8 @@ class MarkedPointScaleStore {
 		let newScale: MarkedPointScale = {
 			id: crypto.randomUUID(),
 			name: '',
-			isIndividual: isIndividual,
-			points: []
+			points: [],
+			isIndividual: isIndividual
 		};
 		this.list.push(newScale);
 		return newScale;

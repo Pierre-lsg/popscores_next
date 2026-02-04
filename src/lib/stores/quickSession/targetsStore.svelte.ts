@@ -9,7 +9,7 @@ class TargetsStore {
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
-			this.list = savedData ? JSON.parse(savedData) : [{ id: crypto.randomUUID(), par: 4 }];
+			this.list = savedData ? JSON.parse(savedData) : [];
 
 			// Sauvegarde automatique à chaque modification de la liste ou d'un par
 			$effect.root(() => {

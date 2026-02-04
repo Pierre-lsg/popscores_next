@@ -791,8 +791,8 @@
   },
   {
     "id": "pbc_1077774838",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "",
+    "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
     "updateRule": "owner = @request.auth.id ",
     "deleteRule": "owner = @request.auth.id",

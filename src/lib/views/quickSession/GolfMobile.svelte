@@ -115,6 +115,16 @@
 		}
 	};
 
+	const showTargets = () => {
+		if (playersStore.list.length > 0) nextCard(Step.targets);
+		else alert('Veuillez saisir un joueur');
+	};
+
+	const showScoring = () => {
+		if (targetsStore.list.length) nextCard(Step.scoring);
+		else alert('Veuillez saisir une cible');
+	};
+
 	const copyShareLink = async () => {
 		try {
 			const link = shareService.generateLink(playersStore.list, targetsStore.list);
@@ -144,7 +154,7 @@
 	{:else if currentStep === Step.players}
 		<GolfHeader
 			title="👥 Saisie des joueurs"
-			onNext={() => nextCard(Step.targets)}
+			onNext={() => showTargets()}
 			onPrev={() => nextCard(Step.session)}
 		/>
 		<GolfMPlayer />
@@ -153,7 +163,7 @@
 	{:else if currentStep === Step.targets}
 		<GolfHeader
 			title="⛳ Saisie du parcours"
-			onNext={() => nextCard(Step.scoring)}
+			onNext={() => showScoring()}
 			onPrev={() => nextCard(Step.players)}
 		/>
 		<GolfMTargets />

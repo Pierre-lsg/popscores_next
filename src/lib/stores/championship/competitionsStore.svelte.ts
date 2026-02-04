@@ -9,9 +9,7 @@ class CompetitionsStore {
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
-			this.list = savedData
-				? JSON.parse(savedData)
-				: [{ id: crypto.randomUUID(), name: 'à définir' }];
+			this.list = savedData ? JSON.parse(savedData) : [];
 
 			// Save data automatically when competitions list changes
 			$effect.root(() => {

@@ -36,6 +36,7 @@
 		<tr class="header">
 			<th rowspan="2" class="fixed-column">Cibles</th>
 			<th rowspan="2" class="vertical-header par-row"><span>Par</span></th>
+			<th rowspan="2" class="vertical-header par-row"><span>RdJ</span></th>
 			{#each rankedTeams as rankedTeam}
 				{@const team = rankedTeam.team}
 				<th colspan={listTeamPlayer(team, players).length} class="last-cell"
@@ -61,11 +62,11 @@
 			<tr>
 				<td class="fixed-column">{target.name || 'Trou ' + (i + 1)}</td>
 				<td class="par-row">{target.par}</td>
-
+				<td class="par-row">{target.rule?.slice(0, 3) || ''}</td>
 				{#each rankedTeams as rankedTeam}
 					{@const team = rankedTeam.team}
 					{@const teamScore = listTeamPlayer(team, players)[0].scores[target.id]}
-					{#if target.rule !== 'Bonus'}
+					{#if target.rule !== 'Bonus' && target.rule !== 'Individuel'}
 						<td
 							colspan={listTeamPlayer(team, players).length}
 							class="score-cell team-merge {getScoreClass(teamScore, target)}"
@@ -94,6 +95,7 @@
 		<tr class="footer">
 			<td class="fixed-column">Total</td>
 			<td class="par-row">{getTotalPar(targets)}</td>
+			<td class="par-row">|||</td>
 			{#each rankedTeams as rankedTeam}
 				{@const team = rankedTeam.team}
 				<td colspan={listTeamPlayer(team, players).length} class="last-cell"

@@ -21,6 +21,7 @@
 		<tr class="header">
 			<th class="fixed-column">Cibles</th>
 			<th class="vertical-header par-row"><span>Par</span></th>
+			<th class="vertical-header par-row"><span>RdJ</span></th>
 			{#each rankedPlayers as player}
 				<th class="vertical-header"><span>{player.player.name}</span></th>
 			{/each}
@@ -31,6 +32,7 @@
 			<tr>
 				<td class="fixed-column">{target.name || 'Trou ' + (i + 1)}</td>
 				<td class="par-row">{target.par}</td>
+				<td class="par-row">{target.rule?.slice(0, 3) || ''}</td>
 				{#each rankedPlayers as player}
 					{@const score = player.player.scores[target.id]}
 					<td class={getScoreClass(score, target)}>
@@ -46,6 +48,7 @@
 		<tr class="footer">
 			<td class="fixed-column">Total</td>
 			<td class="par-row">{getTotalPar(targets)}</td>
+			<td class="par-row">|||</td>
 			{#each rankedPlayers as player}
 				<td>{calculatePlayerScore(player.player, targets)}</td>
 			{/each}

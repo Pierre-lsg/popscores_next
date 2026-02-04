@@ -8,9 +8,7 @@ class ClubsStore {
 	constructor() {
 		if (typeof window !== 'undefined') {
 			const savedData = localStorage.getItem(STORAGE_KEY);
-			this.list = savedData
-				? JSON.parse(savedData)
-				: [{ id: crypto.randomUUID(), name: 'à définir' }];
+			this.list = savedData ? JSON.parse(savedData) : [];
 
 			// Sauvegarde automatique à chaque modification sur les clubs
 			$effect.root(() => {
