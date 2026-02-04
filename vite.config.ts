@@ -8,11 +8,18 @@ export default defineConfig({
 		mkcert(),
 		sveltekit(),
 		SvelteKitPWA({
+			devOptions: {
+				enabled: true,
+				type: 'classic',
+				suppressWarnings: false
+			},
 			registerType: 'autoUpdate',
 			injectRegister: 'auto',
 			workbox: {
-				globPatterns: ['client/**/*.{js,css,json,html,png,txt,js,nojekyll,webmanifest,ico}'],
-				navigateFallback: '/'
+				globPatterns: ['**/*.{js,css,json,html,png,txt,js,webmanifest,ico}'],
+				navigateFallback: '/popscores_next/index.html',
+				maximumFileSizeToCacheInBytes: 3000000,
+				cleanupOutdatedCaches: true
 			},
 			manifest: {
 				name: 'Popscores',

@@ -105,7 +105,12 @@
 </div>
 
 <div class="step-content" in:slide>
-	<header class="target-header" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
+	<header
+		role="none"
+		class="target-header"
+		ontouchstart={handleTouchStart}
+		ontouchend={handleTouchEnd}
+	>
 		<button bind:this={prevTargetBtn} onclick={() => showPrevTarget()} disabled={isFirstTarget}
 			>◀</button
 		>

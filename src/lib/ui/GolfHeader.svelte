@@ -37,7 +37,7 @@
 	// --
 </script>
 
-<div class="header-section" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
+<div role="none" class="header-section" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
 	<h2>{title}</h2>
 
 	<div class="actions">

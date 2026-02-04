@@ -66,8 +66,4 @@
 	.icon {
 		font-size: 2.5rem;
 	}
-	.disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
 </style>

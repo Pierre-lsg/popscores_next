@@ -104,6 +104,7 @@
 
 <div class="step-content">
 	<div
+		role="none"
 		onpointerdown={() => (showRanking = true)}
 		onpointerup={() => (showRanking = false)}
 		onpointerleave={() => (showRanking = false)}
@@ -139,7 +140,12 @@
 </div>
 
 <div class="step-content" in:slide>
-	<header class="target-header" ontouchstart={handleTouchStart} ontouchend={handleTouchEnd}>
+	<header
+		role="none"
+		class="target-header"
+		ontouchstart={handleTouchStart}
+		ontouchend={handleTouchEnd}
+	>
 		<button bind:this={prevTargetBtn} onclick={() => showPrevTarget()} disabled={isFirstTarget}
 			>◀</button
 		>
