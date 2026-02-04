@@ -7,8 +7,9 @@
 
 	import Param from '$lib/ui/Param.svelte';
 	import ScaleUpdate from '$lib/components/championship/ScaleUpdate.svelte';
+	import { onMount } from 'svelte';
 
-	const csStore = $state(championshipStore.list[0]);
+	let csStore = $state(championshipStore.list[0]);
 
 	async function saveChampionshipToCloud() {
 		let status: string = 'failure';
@@ -23,18 +24,30 @@
 		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
 		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
 	}
+
+	const showAvailableChampionship = () => {
+		alert('A faire : récupérer et afficher les championnats disponibles');
+	};
+
+	onMount(() => {
+		if (!csStore) csStore = championshipStore.new();
+	});
 </script>
 
 <button onclick={() => saveChampionshipToCloud()}>Save</button>
 
+<button onclick={() => showAvailableChampionship()}>Load championship</button>
+
 <div class="settings-page">
-	<h2>Paramètres du championnat</h2>
-	<Param label="Nom du championnat" type="text" bind:value={csStore.name} />
-	<Param label="Saison" type="text" bind:value={csStore.season} />
-	<Param label="Localisation" type="text" bind:value={csStore.location} />
-	<h2>Barèmes de points</h2>
-	<ScaleUpdate bind:scaleId={csStore.collectiveScale} isIndividual={false} />
-	<ScaleUpdate bind:scaleId={csStore.individualScale} isIndividual={true} />
+	{#if csStore}
+		<h2>Paramètres du championnat</h2>
+		<Param label="Nom du championnat" type="text" bind:value={csStore.name} />
+		<Param label="Saison" type="text" bind:value={csStore.season} />
+		<Param label="Localisation" type="text" bind:value={csStore.location} />
+		<h2>Barèmes de points</h2>
+		<ScaleUpdate bind:scaleId={csStore.collectiveScale} isIndividual={false} />
+		<ScaleUpdate bind:scaleId={csStore.individualScale} isIndividual={true} />
+	{/if}
 </div>
 
 <style>

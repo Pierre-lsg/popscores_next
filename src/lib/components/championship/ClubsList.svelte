@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { Club } from '$lib/types/clubType';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import Param from '$lib/ui/Param.svelte';
+	import { getAllClubsFromCloud, saveClub2Cloud } from '$lib/utils/pocketbase/club2Cloud';
+
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	let clubs = $state<Club[]>(clubsStore.list);
 	let editClub: boolean[] = $state([]);
@@ -11,8 +15,14 @@
 	let clubName: string = $state('Club');
 	let clubDescription: string = $state('Description du club');
 
-	let { currentClub = $bindable('') } = $props<{
+	let allClubs: Club[] = $state([]);
+	let loading = $state(true);
+	let knownClubsId: string[] = $derived(clubsStore.list.map((c) => c.id));
+	let filteredClubs: Club[] = $derived(allClubs.filter((c) => !knownClubsId.includes(c.id)));
+
+	let { currentClub = $bindable(''), csId } = $props<{
 		currentClub: string;
+		csId: string;
 	}>();
 
 	function createClub() {
@@ -35,6 +45,39 @@
 	function quickViewTeams(index: number) {
 		alert(`Affichage rapide des équipes du club : ${clubs[index].name}`);
 	}
+
+	const savingClub = async (id: string) => {
+		let status: string = 'failure';
+		let aClub = clubsStore.find(id);
+		if (aClub) status = await saveClub2Cloud(aClub, csId);
+		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
+		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
+		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
+	};
+
+	const loadClubfromCloud = (index: number) => {
+		// If club doesn't exist
+		const aCompet = clubsStore.list.filter((c) => c.id === filteredClubs[index].id);
+		if (aCompet.length == 0) {
+			if (confirm('Voulez-vous importer le club ?')) {
+				const newClub = {
+					id: filteredClubs[index].id,
+					name: filteredClubs[index].name,
+					description: filteredClubs[index].description,
+					playersId: filteredClubs[index].playersId,
+					teamsId: filteredClubs[index].teamsId
+				};
+				// Load session to the local Store
+				clubsStore.load(newClub);
+			}
+		}
+	};
+
+	onMount(async () => {
+		// Retrieve all clubs known in the Cloud
+		allClubs = await getAllClubsFromCloud(csId);
+		loading = false;
+	});
 </script>
 
 <h2>Clubs</h2>
@@ -53,6 +96,7 @@
 				<button onclick={() => removeClub(club.id)}> 🗑️ </button>
 				<button onclick={() => editingClub(i)}>✏️</button>
 				<button onclick={() => quickViewTeams(i)}>👁️</button>
+				<button onclick={() => savingClub(club.id)}>☁️</button>
 			</div>
 		</div>
 	{/each}
@@ -82,6 +126,18 @@
 		<button onclick={createClub}>Créer</button>
 		<button onclick={() => (addNewClub = false)}>Annuler</button>
 	</div>
+{/if}
+
+<h3>Clubs disponibles sur le Cloud</h3>
+
+{#if loading}
+	<p>Chargement ...</p>
+{:else}
+	{#each filteredClubs as c, i}
+		<button onclick={() => loadClubfromCloud(i)}>
+			<div>{c.name} - {c.description?.slice(0, 30)}</div>
+		</button>
+	{/each}
 {/if}
 
 <style>

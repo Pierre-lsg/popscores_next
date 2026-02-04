@@ -29,7 +29,6 @@
 
 	onMount(() => {
 		let scaleTemp = mpsStore.list.find((scale) => scale.id === scaleId);
-		console.log(scaleTemp);
 		if (scaleTemp) scale = scaleTemp;
 		else {
 			scale = mpsStore.new(isIndividual);

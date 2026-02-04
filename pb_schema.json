@@ -876,11 +876,11 @@
   },
   {
     "id": "pbc_1861980104",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "",
+    "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
     "updateRule": "owner = @request.auth.id",
-    "deleteRule": "",
+    "deleteRule": "owner = @request.auth.id",
     "name": "clubs",
     "type": "base",
     "fields": [
@@ -913,16 +913,6 @@
         "type": "text"
       },
       {
-        "hidden": false,
-        "id": "json2918445923",
-        "maxSize": 0,
-        "name": "data",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "json"
-      },
-      {
         "cascadeDelete": false,
         "collectionId": "_pb_users_auth_",
         "hidden": false,
@@ -942,11 +932,21 @@
         "id": "relation3954040426",
         "maxSelect": 999,
         "minSelect": 0,
-        "name": "championships",
+        "name": "championship",
         "presentable": false,
         "required": false,
         "system": false,
         "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
       },
       {
         "hidden": false,
@@ -975,7 +975,7 @@
   {
     "id": "pbc_4031054395",
     "listRule": "",
-    "viewRule": null,
+    "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
     "updateRule": "@request.auth.id != \"\"",
     "deleteRule": "@request.auth.id != \"\"",
@@ -1035,6 +1035,16 @@
         "required": false,
         "system": false,
         "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
       },
       {
         "hidden": false,
@@ -1126,6 +1136,16 @@
       },
       {
         "hidden": false,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
         "id": "autodate2990389176",
         "name": "created",
         "onCreate": true,
@@ -1200,16 +1220,6 @@
         "type": "relation"
       },
       {
-        "hidden": false,
-        "id": "json2918445923",
-        "maxSize": 0,
-        "name": "data",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "json"
-      },
-      {
         "cascadeDelete": false,
         "collectionId": "_pb_users_auth_",
         "hidden": false,
@@ -1221,6 +1231,16 @@
         "required": false,
         "system": false,
         "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
       },
       {
         "hidden": false,

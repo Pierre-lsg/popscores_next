@@ -23,7 +23,7 @@
 <main>
 	<div class="top-bar">
 		<div class="nav-action">
-			{#if $page.url.pathname.includes('/championship/')}
+			{#if $page.url.pathname.includes('/championship/') && $page.url.pathname !== '/championship/'}
 				<a class="btn btn-back" href={base + '/championship'}>👑 Accueil</a>
 			{:else}
 				<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>

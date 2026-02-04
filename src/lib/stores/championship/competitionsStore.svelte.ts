@@ -39,6 +39,24 @@ class CompetitionsStore {
 	}
 
 	/**
+	 * Loads an external competition to the list.
+	 *
+	 * @param aCompetition - competition
+	 */
+	load(aCompetition: Competition) {
+		this.list.push(aCompetition);
+	}
+
+	/**
+	 * Find a competition from the list.
+	 *
+	 * @param id - ID of the competition to remove
+	 */
+	find(id: string): Competition | undefined {
+		return this.list.find((c) => c.id === id);
+	}
+
+	/**
 	 * Removes a competition from the list.
 	 *
 	 * @param id - ID of the competition to remove

@@ -38,6 +38,24 @@ class ClubsStore {
 	}
 
 	/**
+	 * Loads an external club to the list.
+	 *
+	 * @param aClub - club
+	 */
+	load(aClub: Club) {
+		this.list.push(aClub);
+	}
+
+	/**
+	 * Find a club from the list.
+	 *
+	 * @param id - ID of the club to remove
+	 */
+	find(id: string): Club | undefined {
+		return this.list.find((c) => c.id === id);
+	}
+
+	/**
 	 * Removes a club from the list.
 	 *
 	 * @param id - The ID of the club to remove.

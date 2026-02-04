@@ -2,12 +2,25 @@
 	import { onMount } from 'svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
+	import {
+		getAllCompetitionsFromCloud,
+		saveCompetition2Cloud
+	} from '$lib/utils/pocketbase/competition2Cloud';
+
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	let competitions = $state<Competition[]>(competitionsStore.list);
 	let editCompetition: boolean[] = $state([]);
 	let numCompetitions: number = $derived(competitions.length);
+
+	let allCompetitions: Competition[] = $state([]);
+	let loading = $state(true);
+	let knownCompetitionsId: string[] = $derived(competitionsStore.list.map((c) => c.id));
+	let filteredCompetitions: Competition[] = $derived(
+		allCompetitions.filter((c) => !knownCompetitionsId.includes(c.id))
+	);
 
 	let addNewCompetition: boolean = $state(false);
 
@@ -16,33 +29,62 @@
 	let publicationDate: string = $state(new Date().toISOString().split('T')[0]);
 	let competitionLocation: string = $state('Localisation');
 
-	let { currentCompetition = $bindable('') } = $props<{
+	let { currentCompetition = $bindable(''), csId } = $props<{
 		currentCompetition: string;
+		csId: string;
 	}>();
 
-	onMount(() => {
-		//
-		// Simuler le chargement des compétitions (à remplacer par une vraie source de données)
-	});
-
-	function createCompetition() {
+	const createCompetition = () => {
 		competitionsStore.add(competitionName, competitionDate, publicationDate, competitionLocation);
 		addNewCompetition = false;
-	}
+	};
 
-	function removeCompetition(id: string) {
+	const removeCompetition = (id: string) => {
 		if (confirm('Voulez-vous vraiment supprimer cette compétition ?')) {
 			competitionsStore.remove(id);
 		}
 		competitions = competitionsStore.list;
-	}
+	};
 
-	function editingCompetition(index: number) {
+	const editingCompetition = (index: number) => {
 		for (let i = 0; i < numCompetitions; i++) {
 			if (i !== index) editCompetition[i] = false;
 		}
 		editCompetition[index] = !editCompetition[index];
-	}
+	};
+
+	const savingCompetition = async (id: string) => {
+		let status: string = 'failure';
+		let aCompetition = competitionsStore.find(id);
+		if (aCompetition) status = await saveCompetition2Cloud(aCompetition, csId);
+		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
+		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
+		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
+	};
+
+	const loadCompetitionfromCloud = (index: number) => {
+		// If competition doesn't exist
+		const aCompet = competitionsStore.list.filter((c) => c.id === filteredCompetitions[index].id);
+		if (aCompet.length == 0) {
+			if (confirm('Voulez-vous importer la compétition ?')) {
+				const newCompetition = {
+					id: filteredCompetitions[index].id,
+					name: filteredCompetitions[index].name,
+					startDate: filteredCompetitions[index].startDate,
+					scorePulicationDate: filteredCompetitions[index].scorePublicationDate,
+					location: filteredCompetitions[index].location
+				};
+				// Load session to the local Store
+				competitionsStore.load(newCompetition);
+			}
+		}
+	};
+
+	onMount(async () => {
+		// Retrieve all competitions known in the Cloud
+		allCompetitions = await getAllCompetitionsFromCloud(csId);
+		loading = false;
+	});
 </script>
 
 <h2>Compétitions</h2>
@@ -64,6 +106,7 @@
 			<div class="action">
 				<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
 				<button onclick={() => editingCompetition(i)}>✏️</button>
+				<button onclick={() => savingCompetition(competition.id)}>☁️</button>
 			</div>
 		</div>
 	{/each}
@@ -100,6 +143,18 @@
 		<button onclick={createCompetition}>Créer</button>
 		<button onclick={() => (addNewCompetition = false)}>Annuler</button>
 	</div>
+{/if}
+
+<h3>Competitions disponibles sur le Cloud</h3>
+
+{#if loading}
+	<p>Chargement ...</p>
+{:else}
+	{#each filteredCompetitions as c, i}
+		<button onclick={() => loadCompetitionfromCloud(i)}>
+			<div>{c.name} - {c.startDate}</div>
+		</button>
+	{/each}
 {/if}
 
 <style>

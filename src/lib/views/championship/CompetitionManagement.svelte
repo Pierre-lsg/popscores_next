@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 
-	let { currentCompetition = $bindable('') } = $props<{
+	let { currentCompetition = $bindable(''), csId } = $props<{
 		currentCompetition: string;
+		csId: string;
 	}>();
 </script>
 

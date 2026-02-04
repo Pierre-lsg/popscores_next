@@ -1,9 +1,16 @@
 <script lang="ts">
-	import { appSettings } from '$lib/stores/settingsStore.svelte';
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
+	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+
+	let csStore = $state(championshipStore.list[0]);
+
+	onMount(() => {
+		if (!csStore) csStore = championshipStore.new();
+	});
 </script>
 
-<h1>Championnat {appSettings.values.clubName}</h1>
+<h2>Championnat {csStore.name}</h2>
 
 <div class="hub-container">
 	<div class="grid-container">

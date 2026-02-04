@@ -6,8 +6,9 @@
 
 	import type { Club } from '$lib/types/clubType';
 
-	let { currentClub = $bindable('') } = $props<{
+	let { currentClub = $bindable(''), csId } = $props<{
 		currentClub: string;
+		csId: string;
 	}>();
 
 	let club: Club = clubsStore.list.filter((c) => c.id === currentClub)[0];

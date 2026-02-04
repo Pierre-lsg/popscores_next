@@ -39,6 +39,22 @@ class ChampionsStore {
 	}
 
 	/**
+	 * Create a new championship and add it to the store.
+	 */
+	new(): Championship {
+		let newChampionship: Championship = {
+			id: crypto.randomUUID(),
+			name: '',
+			season: '',
+			location: '',
+			collectiveScale: crypto.randomUUID(),
+			individualScale: crypto.randomUUID()
+		};
+		this.list.push(newChampionship);
+		return newChampionship;
+	}
+
+	/**
 	 * Removes a championship from the list.
 	 *
 	 * @param id - ID of the championship to remove
