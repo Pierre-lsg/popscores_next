@@ -9,9 +9,14 @@ export default defineConfig({
 		sveltekit(),
 		SvelteKitPWA({
 			registerType: 'autoUpdate',
+			injectRegister: 'auto',
+			workbox: {
+				globPatterns: ['client/**/*.{js,css,json,html,png,txt,js,nojekyll,webmanifest,ico}'],
+				navigateFallback: '/'
+			},
 			manifest: {
-				name: 'Golf Score Hub',
-				short_name: 'GolfScore',
+				name: 'Popscores',
+				short_name: 'Popscores',
 				description: 'Suivi de score de golf en temps réel',
 				start_url: '/popscores_next/',
 				scope: '/popscores_next/',
@@ -37,12 +42,6 @@ export default defineConfig({
 						type: 'image/png',
 						purpose: 'any maskable'
 					}
-				]
-			},
-			workbox: {
-				globPatterns: [
-					'client/**/*.{js,css,json}',
-					'client/*.{png,txt,js,nojekyll,webmanifest,ico}'
 				]
 			}
 		})
