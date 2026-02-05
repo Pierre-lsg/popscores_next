@@ -44,6 +44,24 @@ class TeamsStore {
 	}
 
 	/**
+	 * Loads an external team to the list.
+	 *
+	 * @param aTeam - Team
+	 */
+	load(aTeam: Team) {
+		this.list.push(aTeam);
+	}
+
+	/**
+	 * Find a team from the list.
+	 *
+	 * @param id - ID of the Team to remove
+	 */
+	find(id: string): Team | undefined {
+		return this.list.find((t) => t.id === id);
+	}
+
+	/**
 	 * Resets the team list and removes the stored data from localStorage.
 	 */
 	reset() {

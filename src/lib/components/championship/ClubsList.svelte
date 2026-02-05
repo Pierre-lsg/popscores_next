@@ -2,8 +2,10 @@
 	import { onMount } from 'svelte';
 	import type { Club } from '$lib/types/clubType';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
+	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import { getAllClubsFromCloud, saveClub2Cloud } from '$lib/utils/pocketbase/club2Cloud';
+	import { saveTeam2Cloud } from '$lib/utils/pocketbase/team2Cloud';
 
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
@@ -50,9 +52,21 @@
 		let status: string = 'failure';
 		let aClub = clubsStore.find(id);
 		if (aClub) status = await saveClub2Cloud(aClub, csId);
-		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
-		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
-		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
+		if (status === 'success') toastStore.show('💾 Club sauvegardé ...', status);
+		else if (status === 'warning') toastStore.show('💾 Club mis à jour ...', status);
+		else if (status === 'failure') toastStore.show('💾 Erreur enregistrement ...', status);
+		savingTeams(aClub?.teamsId || [], id);
+	};
+
+	const savingTeams = async (ids: string[], clId: string) => {
+		let status: string = 'failure';
+		for (let id of ids) {
+			let aTeam = teamsChampionshipStore.find(id);
+			if (aTeam) status = await saveTeam2Cloud(aTeam, clId);
+			if (status === 'success') toastStore.show('💾 Equipe sauvegardée ...', status);
+			else if (status === 'warning') toastStore.show('💾 Equipe mise à jour ...', status);
+			else if (status === 'failure') toastStore.show('💾 Erreur enregistrement ...', status);
+		}
 	};
 
 	const loadClubfromCloud = (index: number) => {
@@ -144,14 +158,14 @@
 	.clubs-list {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		margin: 0rem;
 	}
 
 	.club-item {
 		display: flex;
 		flex-direction: column;
-		width: 95%;
+		width: 180px;
 		margin-bottom: 1rem;
+		box-sizing: border-box;
 	}
 
 	.club-card {
@@ -159,12 +173,12 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: space-between;
-		width: 100%;
 		background-color: var(--bg-card);
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		cursor: pointer;
 		margin: 0 0.5rem 0 0;
+		box-sizing: border-box;
 	}
 
 	.club-card:hover {
@@ -174,22 +188,17 @@
 
 	.details {
 		align-items: center;
-		margin: 0.5rem;
-		gap: 8px;
+		box-sizing: border-box;
 	}
 
 	.icon {
-		margin: 0.5rem;
-		font-size: 24px;
-		color: #2c3e50;
+		font-size: 36px;
+		background-color: var(--bg-card);
 	}
 
 	.action {
 		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		width: 100%;
-		gap: 2rem;
-		margin-top: 0.5rem;
+		justify-content: space-between;
+		margin: 0 0.5rem 0 0;
 	}
 </style>

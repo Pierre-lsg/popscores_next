@@ -22,7 +22,12 @@
 
 	// Function to add a new team
 	const addNewTeam = () => {
-		teamsChampionshipStore.add(teamName, club.id);
+		const newTeam = teamsChampionshipStore.add(teamName, club.id);
+		if (!club.teamsId.includes(newTeam.id)) {
+			club.teamsId.push(newTeam.id);
+		}
+
+		teamName = '';
 		creatingNewTeam = false;
 	};
 
