@@ -8,7 +8,12 @@
 
 <div class="settings-page">
 	<h2>Paramètres globaux</h2>
-	<Param label="Nom du club" type="text" bind:value={appSettings.values.clubName} />
+	<Param
+		label="Nom du club"
+		type="text"
+		bind:value={appSettings.values.clubName}
+		placeholder="Nom du club"
+	/>
 	<Stepper label="Mon Index (HCP)" bind:value={appSettings.values.hcp} min={0} />
 	<Toggle label="Calcul Stableford" bind:checked={appSettings.values.useStableford} />
 
@@ -26,8 +31,18 @@
 
 	<h2>Paramètres de sauvegarde Cloud (PocketBase)</h2>
 
-	<Param label="URL vers le serveur" type="text" bind:value={appSettings.values.cloudUrl} />
-	<Param label="Identifiant" type="text" bind:value={appSettings.values.cloudLogin} />
+	<Param
+		label="URL stockage"
+		type="text"
+		bind:value={appSettings.values.cloudUrl}
+		placeholder="URL du serveur de stockage externe"
+	/>
+	<Param
+		label="Identifiant"
+		type="text"
+		bind:value={appSettings.values.cloudLogin}
+		placeholder="Identifiant"
+	/>
 	<Password label="Mot de passe" bind:value={appSettings.values.cloudPassword} />
 </div>
 

@@ -7,7 +7,7 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 
-	const weatherOptions = ['Soleil', 'Nuageux', 'Pluie', 'Venté', 'Froid'];
+	const weatherOptions = ['☀️ Soleil', '☁️ Nuageux', '🌧️ Pluie', '🌬️ Vent', '❄️ Froid'];
 	const s = sessionSettingsStore.settings;
 </script>
 
@@ -15,8 +15,7 @@
 	<div class="setup-fields">
 		<DatePicker label="📅 Date de la session" bind:value={s.sessionBeginning} />
 		<Param label="⛳ Nom du Golf" type="text" bind:value={s.locationName} />
-
-		<div class="field">
+		<div class="weather">
 			<label for="weather">☁️ Météo</label>
 			<select id="weather" bind:value={s.weatherCondition}>
 				{#each weatherOptions as option}
@@ -61,5 +60,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
+	}
+
+	select {
+		background-color: var(--bg-ui);
+	}
+	.weather {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 </style>

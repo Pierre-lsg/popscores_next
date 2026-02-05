@@ -1,9 +1,22 @@
-<script>
+<script lang="ts">
 	export let label = ''; // Le titre du champ
 	export let value = ''; // La valeur liée (bind)
 	export let type = 'text'; // text, number, etc.
 	export let placeholder = ''; // Texte d'aide
-	export let inputmode = 'text'; // Pour forcer le pavé numérique (ex: "numeric")
+	export let inputmode:
+		| 'text'
+		| 'search'
+		| 'none'
+		| 'tel'
+		| 'url'
+		| 'email'
+		| 'numeric'
+		| 'decimal' = 'text'; // Pour forcer le pavé numérique (ex: "numeric")
+	export let focus = false;
+
+	function init(elt: any) {
+		if (focus) elt.focus();
+	}
 </script>
 
 <div class="field-container">
@@ -11,7 +24,16 @@
 		<label for="input-field">{label}</label>
 	{/if}
 
-	<input id="input-field" {type} {placeholder} {inputmode} bind:value on:input on:keydown />
+	<input
+		id="input-field"
+		{type}
+		{placeholder}
+		{inputmode}
+		bind:value
+		on:input
+		on:keydown
+		use:init
+	/>
 	<slot />
 </div>
 
@@ -38,6 +60,7 @@
 		font-size: 1rem;
 		transition: border-color 0.2s;
 		outline: none;
+		background-color: var(--bg-ui);
 	}
 
 	input:focus {

@@ -91,6 +91,7 @@
 		transition: border-color 0.2s;
 		outline: none;
 		width: 100%;
+		background-color: var(--bg-ui);
 	}
 
 	.toggle-btn {

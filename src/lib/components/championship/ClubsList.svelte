@@ -4,8 +4,8 @@
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import Param from '$lib/ui/Param.svelte';
-	import { getAllClubsFromCloud, saveClub2Cloud } from '$lib/utils/pocketbase/club2Cloud';
-	import { saveTeam2Cloud } from '$lib/utils/pocketbase/team2Cloud';
+	import { getAllClubsFromCloud, saveClub2Cloud } from '$lib/utils/pocketbase/clubs2Cloud';
+	import { saveTeam2Cloud } from '$lib/utils/pocketbase/teams2Cloud';
 
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
@@ -14,8 +14,8 @@
 
 	let addNewClub: boolean = $state(false);
 
-	let clubName: string = $state('Club');
-	let clubDescription: string = $state('Description du club');
+	let clubName: string = $state('');
+	let clubDescription: string = $state('');
 
 	let allClubs: Club[] = $state([]);
 	let loading = $state(true);
@@ -120,8 +120,19 @@
 	{#if editClub[i]}
 		<div class="club-form">
 			<h3>Modifier le Club</h3>
-			<Param label="⛳ Nom du club" type="text" bind:value={club.name} />
-			<Param label="⛳ Description du club" type="text" bind:value={club.description} />
+			<Param
+				label="⛳ Nom du club"
+				type="text"
+				bind:value={club.name}
+				placeholder="Nom du club"
+				focus={true}
+			/>
+			<Param
+				label="⛳ Description du club"
+				type="text"
+				bind:value={club.description}
+				placeholder="Description du club"
+			/>
 		</div>
 	{/if}
 {/each}
@@ -135,8 +146,19 @@
 {#if addNewClub}
 	<div class="club-form">
 		<h3>Nouveau Club</h3>
-		<Param label="⛳ Nom du club" type="text" bind:value={clubName} />
-		<Param label="⛳ Description du club" type="text" bind:value={clubDescription} />
+		<Param
+			label="⛳ Nom du club"
+			type="text"
+			bind:value={clubName}
+			placeholder="Nom du club"
+			focus={true}
+		/>
+		<Param
+			label="⛳ Description du club"
+			type="text"
+			bind:value={clubDescription}
+			placeholder="Description du club"
+		/>
 		<button onclick={createClub}>Créer</button>
 		<button onclick={() => (addNewClub = false)}>Annuler</button>
 	</div>

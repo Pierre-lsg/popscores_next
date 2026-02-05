@@ -52,7 +52,7 @@
 		margin: 0rem;
 		background: none;
 		border: none;
-		color: var(--primary);
+		color: var(--text-main);
 		cursor: pointer;
 		padding: 0.5rem 1rem;
 		font-size: 0.9rem;

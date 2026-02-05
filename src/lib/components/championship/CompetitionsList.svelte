@@ -5,7 +5,7 @@
 	import {
 		getAllCompetitionsFromCloud,
 		saveCompetition2Cloud
-	} from '$lib/utils/pocketbase/competition2Cloud';
+	} from '$lib/utils/pocketbase/competitions2Cloud';
 
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
@@ -116,13 +116,24 @@
 	{#if editCompetition[i]}
 		<div class="competition-form">
 			<h3>Modifier la Compétition</h3>
-			<Param label="⛳ Nom de la compétition" type="text" bind:value={competition.name} />
+			<Param
+				label="⛳ Nom de la compétition"
+				type="text"
+				bind:value={competition.name}
+				focus={true}
+				placeholder="Nom de la compétition"
+			/>
 			<DatePicker label="📅 Date de la compétition" bind:value={competition.startDate} />
 			<DatePicker
 				label="📅 Publication des résultats"
 				bind:value={competition.scorePublicationDate}
 			/>
-			<Param label="⛳ Localisation" type="text" bind:value={competition.location} />
+			<Param
+				label="⛳ Localisation"
+				type="text"
+				bind:value={competition.location}
+				placeholder="Localisation"
+			/>
 		</div>
 	{/if}
 {/each}
@@ -136,10 +147,21 @@
 {#if addNewCompetition}
 	<div class="competition-form">
 		<h3>Nouvelle Compétition</h3>
-		<Param label="⛳ Nom de la compétition" type="text" bind:value={competitionName} />
+		<Param
+			label="⛳ Nom de la compétition"
+			type="text"
+			bind:value={competitionName}
+			focus={true}
+			placeholder="Nom de la compétition"
+		/>
 		<DatePicker label="📅 Date de la compétition" bind:value={competitionDate} />
 		<DatePicker label="📅 Publication des résultats" bind:value={publicationDate} />
-		<Param label="⛳ Localisation" type="text" bind:value={competitionLocation} />
+		<Param
+			label="⛳ Localisation"
+			type="text"
+			bind:value={competitionLocation}
+			placeholder="Localisation"
+		/>
 		<button onclick={createCompetition}>Créer</button>
 		<button onclick={() => (addNewCompetition = false)}>Annuler</button>
 	</div>

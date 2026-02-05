@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
+	import photo from '$lib/assets/photo.png';
 
 	import Param from '$lib/ui/Param.svelte';
 
@@ -51,7 +52,10 @@
 <div class="players-list">
 	{#each players as player, i}
 		<div class="player-item">
-			<div role="none" class="player-card">
+			<div
+				style="background-image: url({photo}); background-size: cover; opacity: 0.15;"
+				class="player-card"
+			>
 				<div class="details">
 					{player.name}
 				</div>
@@ -75,9 +79,20 @@
 	{#if editingPlayer[i]}
 		<div class="player-form">
 			<h3>Modifier le joueur 👤</h3>
-			<Param label="Nom du joueur" type="text" bind:value={player.name} />
-			<Param label="Nom de famille" type="text" bind:value={player.surname} />
-			<Param label="Surnom" type="text" bind:value={player.nickname} />
+			<Param
+				label="Nom du joueur"
+				type="text"
+				bind:value={player.name}
+				focus={true}
+				placeholder="Nom du joueur"
+			/>
+			<Param
+				label="Nom de famille"
+				type="text"
+				bind:value={player.surname}
+				placeholder="Nom du famille"
+			/>
+			<Param label="Surnom" type="text" bind:value={player.nickname} placeholder="Surnom" />
 		</div>
 	{/if}
 {/each}
@@ -91,9 +106,20 @@
 {#if creatingNewPlayer}
 	<div class="player-form">
 		<h3>Nouveau joueur</h3>
-		<Param label="Nom du joueur" type="text" bind:value={playerName} />
-		<Param label="Nom de famille" type="text" bind:value={playerSurname} />
-		<Param label="Surnom" type="text" bind:value={playerNickname} />
+		<Param
+			label="Nom du joueur"
+			type="text"
+			bind:value={playerName}
+			focus={true}
+			placeholder="Nom du joueur"
+		/>
+		<Param
+			label="Nom de famille"
+			type="text"
+			bind:value={playerSurname}
+			placeholder="Nom de famille"
+		/>
+		<Param label="Surnom" type="text" bind:value={playerNickname} placeholder="Surnom" />
 		<button onclick={addNewPlayer}>Créer</button>
 		<button onclick={() => (creatingNewPlayer = false)}>Annuler</button>
 	</div>
@@ -135,6 +161,8 @@
 		align-items: center;
 		margin: 0.5rem;
 		gap: 8px;
+		background: rgba(240, 240, 240, 0.99);
+		color: rgb(0, 0, 0);
 	}
 
 	.icon {

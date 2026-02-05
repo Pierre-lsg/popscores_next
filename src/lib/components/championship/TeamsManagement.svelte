@@ -69,7 +69,13 @@
 	{#if editingTeam[i]}
 		<div class="team-form">
 			<h3>Modifier l'équipe 👥</h3>
-			<Param label="Nom du joueur" type="text" bind:value={team.name} />
+			<Param
+				label="Nom du joueur"
+				type="text"
+				bind:value={team.name}
+				focus={true}
+				placeholder="Nom du joueur"
+			/>
 		</div>
 	{/if}
 {/each}
@@ -83,7 +89,13 @@
 {#if creatingNewTeam}
 	<div class="team-form">
 		<h3>Nouvelle équipe 👥</h3>
-		<Param label="Nom de l'équipe" type="text" bind:value={teamName} />
+		<Param
+			label="Nom de l'équipe"
+			type="text"
+			bind:value={teamName}
+			focus={true}
+			placeholder="Nom de l'équipe"
+		/>
 		<button onclick={addNewTeam}>Créer</button>
 		<button onclick={() => (creatingNewTeam = false)}>Annuler</button>
 	</div>

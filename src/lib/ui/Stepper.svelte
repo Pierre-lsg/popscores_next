@@ -116,12 +116,12 @@
 		height: 40px;
 		border-radius: 50%;
 		border: 1px solid var(--primary);
-		background: white;
 		font-size: 1.5rem;
 		color: var(--primary);
 		touch-action: none;
 		-webkit-user-select: none;
 		user-select: none;
+		background-color: var(--bg-ui);
 	}
 	.value-display {
 		font-size: 1.2rem;

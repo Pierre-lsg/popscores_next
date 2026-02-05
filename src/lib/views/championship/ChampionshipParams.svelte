@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
-	import { saveChampionship2Cloud } from '$lib/utils/pocketbase/championship2Cloud';
+	import { saveChampionship2Cloud } from '$lib/utils/pocketbase/championships2Cloud';
 	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
 	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 
@@ -41,9 +41,20 @@
 <div class="settings-page">
 	{#if csStore}
 		<h2>Paramètres du championnat</h2>
-		<Param label="Nom du championnat" type="text" bind:value={csStore.name} />
-		<Param label="Saison" type="text" bind:value={csStore.season} />
-		<Param label="Localisation" type="text" bind:value={csStore.location} />
+		<Param
+			label="Nom du championnat"
+			type="text"
+			bind:value={csStore.name}
+			focus={true}
+			placeholder="Nom du championnat"
+		/>
+		<Param label="Saison" type="text" bind:value={csStore.season} placeholder="Saison" />
+		<Param
+			label="Localisation"
+			type="text"
+			bind:value={csStore.location}
+			placeholder="Localisation"
+		/>
 		<h2>Barèmes de points</h2>
 		<ScaleUpdate bind:scaleId={csStore.collectiveScale} isIndividual={false} />
 		<ScaleUpdate bind:scaleId={csStore.individualScale} isIndividual={true} />

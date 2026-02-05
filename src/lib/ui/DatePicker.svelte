@@ -2,17 +2,12 @@
 	export let value = '';
 	export let label = '';
 	export let icon = '';
-
 </script>
 
 <label for="date-picker">{label}</label>
 <div class="field-container">
 	<span class="icon">{icon}</span>
-	<input 
-		id="date-picker"
-		type="date" 
-		bind:value
-	/>
+	<input id="date-picker" type="date" bind:value />
 </div>
 
 <style>
@@ -38,6 +33,6 @@
 		font-size: 1rem;
 		transition: border-color 0.2s;
 		outline: none;
+		background-color: var(--bg-ui);
 	}
-
 </style>
