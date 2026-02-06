@@ -44,7 +44,7 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 		gap: 1rem;
-		padding: 1rem;
+		padding: 0.5rem;
 	}
 
 	@media (max-width: 768px) {
@@ -67,7 +67,7 @@
 		background: var(--bg-card);
 		border: 2px solid var(--border-color);
 		border-radius: 12px;
-		padding: 1rem;
+		padding: 0.5rem;
 		cursor: pointer;
 		transition: transform 0.2s;
 		font-size: 0.9rem;

@@ -42,9 +42,12 @@
 	.top-bar {
 		display: flex;
 		justify-content: space-between;
+		position: sticky;
+		top: 0;
 		align-items: center;
 		margin-bottom: 1rem;
 		width: 100%;
+		background-color: var(--bg-card);
 	}
 
 	.btn-back {
@@ -64,6 +67,6 @@
 		flex-direction: column;
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 1rem;
+		padding: 0.5rem;
 	}
 </style>

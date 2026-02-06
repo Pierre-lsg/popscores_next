@@ -8,7 +8,7 @@
 		{ id: 'modern', label: 'Sombre', icon: '🌙' },
 		{ id: 'high-contrast', label: 'Soleil', icon: '☀️' },
 		{ id: 'warm', label: 'Warm', icon: '🔥' },
-		{ id: 'beach', label: 'Beach', icon: '🏖️' },
+		{ id: 'beach', label: 'Beach', icon: '🏖️' }
 	];
 </script>
 
@@ -30,7 +30,7 @@
 	.theme-selector {
 		display: flex;
 		gap: 0.5rem;
-		padding: 1rem;
+		padding: 0.5rem;
 	}
 	.theme-btn {
 		background: var(--bg-card);

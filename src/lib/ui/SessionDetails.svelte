@@ -90,7 +90,7 @@
 		border: 1px solid var(--primary);
 		background-color: var(--bg-card);
 		border-radius: 12px;
-		padding: 1rem;
+		padding: 0.5rem;
 		margin-bottom: 20px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}

@@ -73,7 +73,7 @@
 	.scale-container {
 		border: 1px solid #ddd;
 		border-radius: 8px;
-		padding: 1rem;
+		padding: 0.5rem;
 		background: var(--bg-card);
 	}
 

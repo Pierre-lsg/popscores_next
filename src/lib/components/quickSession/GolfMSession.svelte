@@ -46,7 +46,7 @@
 		flex-direction: column;
 		gap: 1rem;
 		background: var(--bg-card);
-		padding: 1rem;
+		padding: 0.5rem;
 		border-radius: 8px;
 	}
 	select {
