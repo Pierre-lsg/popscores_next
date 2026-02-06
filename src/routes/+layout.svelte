@@ -44,6 +44,7 @@
 		justify-content: space-between;
 		position: sticky;
 		top: 0;
+		z-index: 999;
 		align-items: center;
 		margin-bottom: 1rem;
 		width: 100%;

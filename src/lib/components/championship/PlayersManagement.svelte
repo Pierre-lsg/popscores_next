@@ -8,15 +8,15 @@
 	import type { Club } from '$lib/types/clubType';
 	import type { Player } from '$lib/types/playerType';
 
+	const pcs = playersChampionshipStore;
+
 	let { currentClub = $bindable('') } = $props<{
 		currentClub: string;
 	}>();
 
 	let club: Club = clubsStore.list.filter((c) => c.id === currentClub)[0];
 
-	let players = $derived<Player[]>(
-		playersChampionshipStore.list.filter((p) => p.clubId === currentClub)
-	);
+	let players = $derived<Player[]>(pcs.list.filter((p) => p.clubId === currentClub));
 	let numPlayers: number = $derived(players.length);
 
 	let creatingNewPlayer: boolean = $state(false);
@@ -27,17 +27,23 @@
 
 	// Function to add a new player
 	const addNewPlayer = () => {
-		playersChampionshipStore.add(playerName, playerSurname, playerNickname, club.id);
+		const newPlayer: Player = pcs.add(playerName, playerSurname, playerNickname, club.id);
+		if (!club.playersId.includes(newPlayer.id)) {
+			club.playersId.push(newPlayer.id);
+		}
+
+		playerName = playerSurname = playerNickname = '';
 		creatingNewPlayer = false;
 	};
 
 	// Function to remove a player
 	const removePlayer = (playerId: string) => {
 		if (confirm('Voulez-vous vraiment supprimer ce joueur ?')) {
-			playersChampionshipStore.remove(playerId);
+			pcs.remove(playerId);
+			editingPlayer.fill(false);
 		}
 		// Todo : fix this. It should the derived runes which recalculate this
-		players = playersChampionshipStore.list.filter((p) => p.clubId === currentClub);
+		players = pcs.list.filter((p) => p.clubId === currentClub);
 	};
 
 	// Function to toggle editing of a player
@@ -90,7 +96,7 @@
 	<p>Aucun joueur enregistré pour le moment. 🏆</p>
 {/if}
 
-{#if !editingPlayer.some(Boolean)}
+{#if !editingPlayer.some(Boolean) && !creatingNewPlayer}
 	<button onclick={() => (creatingNewPlayer = true)}>Ajouter un nouveau joueur</button>
 {/if}
 

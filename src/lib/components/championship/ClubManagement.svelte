@@ -12,16 +12,31 @@
 	}>();
 
 	let club: Club = clubsStore.list.filter((c) => c.id === currentClub)[0];
+
+	let showPlayers = $state(true);
+	let showTeams = $state(true);
 </script>
 
-<p>Club : {club.name}</p>
+<button onclick={() => (currentClub = '')} class="subnav"> Retour à la liste des clubs </button>
 
-<button onclick={() => (currentClub = '')}> Retour à la liste des clubs </button>
+<h2>Club : {club.name}</h2>
 
-<p>Liste des joueurs</p>
+<p role="none" onclick={() => (showPlayers = !showPlayers)}>Liste des joueurs</p>
 
-<PlayersManagement bind:currentClub />
+{#if showPlayers}
+	<PlayersManagement bind:currentClub />
+{/if}
 
-<p>Liste des équipes</p>
+<p role="none" onclick={() => (showTeams = !showTeams)}>Liste des équipes</p>
 
-<TeamsManagement bind:currentClub />
+{#if showTeams}
+	<TeamsManagement bind:currentClub />
+{/if}
+
+<style>
+	.subnav {
+		position: sticky;
+		top: 50px;
+		z-index: 999;
+	}
+</style>

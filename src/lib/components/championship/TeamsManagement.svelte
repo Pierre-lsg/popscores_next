@@ -64,7 +64,13 @@
 				<div class="details">
 					{team.name}
 				</div>
-				<div class="details">liste des joueurs</div>
+				<div class="details">
+					<ul>
+						{#each clubPlayers.filter((p) => p.teamId === team.id) as player}
+							<li>{player.name}</li>
+						{/each}
+					</ul>
+				</div>
 			</div>
 		</div>
 	{/each}

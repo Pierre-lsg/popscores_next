@@ -3,9 +3,12 @@
 	import type { Club } from '$lib/types/clubType';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
+
 	import Param from '$lib/ui/Param.svelte';
 	import { getAllClubsFromCloud, saveClub2Cloud } from '$lib/utils/pocketbase/clubs2Cloud';
 	import { saveTeam2Cloud } from '$lib/utils/pocketbase/teams2Cloud';
+	import { savePlayer2Cloud } from '$lib/utils/pocketbase/players2Cloud';
 
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
@@ -29,6 +32,7 @@
 
 	function createClub() {
 		clubsStore.add(clubName, clubDescription);
+		((clubName = ''), (clubDescription = ''));
 		addNewClub = false;
 	}
 	function removeClub(id: string) {
@@ -56,6 +60,7 @@
 		else if (status === 'warning') toastStore.show('💾 Club mis à jour ...', status);
 		else if (status === 'failure') toastStore.show('💾 Erreur enregistrement ...', status);
 		savingTeams(aClub?.teamsId || [], id);
+		savingPlayers(aClub?.playersId || [], id);
 	};
 
 	const savingTeams = async (ids: string[], clId: string) => {
@@ -65,6 +70,18 @@
 			if (aTeam) status = await saveTeam2Cloud(aTeam, clId);
 			if (status === 'success') toastStore.show('💾 Equipe sauvegardée ...', status);
 			else if (status === 'warning') toastStore.show('💾 Equipe mise à jour ...', status);
+			else if (status === 'failure') toastStore.show('💾 Erreur enregistrement ...', status);
+		}
+	};
+
+	const savingPlayers = async (ids: string[], clId: string) => {
+		alert('les hobbits s échappent');
+		let status: string = 'failure';
+		for (let id of ids) {
+			let aPlayer = playersChampionshipStore.find(id);
+			if (aPlayer) status = await savePlayer2Cloud(aPlayer, clId);
+			if (status === 'success') toastStore.show('💾 Joueur sauvegardé ...', status);
+			else if (status === 'warning') toastStore.show('💾 joueur mis à jour ...', status);
 			else if (status === 'failure') toastStore.show('💾 Erreur enregistrement ...', status);
 		}
 	};

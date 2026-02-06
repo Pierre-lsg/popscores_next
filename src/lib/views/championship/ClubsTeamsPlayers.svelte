@@ -9,10 +9,6 @@
 </script>
 
 <div class="mobile-wizard">
-	<ul>
-		<li>Lister les joueurs sans club</li>
-	</ul>
-
 	{#if currentClub === ''}
 		<!-- Gestion des clubs -->
 		<ClubsList bind:currentClub csId={csStore.id} />
@@ -20,6 +16,9 @@
 		<!-- Suivi d'un club -->
 		<ClubManagement bind:currentClub csId={csStore.id} />
 	{/if}
+	<ul>
+		<li>Lister les joueurs sans club</li>
+	</ul>
 </div>
 
 <style>

@@ -80,15 +80,18 @@ class PlayersChampionshipStore {
 	 * @param clubId - The ID of the club the player belongs to.
 	 */
 	add(name: string, surname: string, nickname: string, clubId: string) {
-		this.list.push({
+		const aPlayer: Player = {
 			id: crypto.randomUUID(),
 			name,
 			surname,
 			nickname,
 			clubId,
-			teamId: '', // Initialement vide
+			teamId: '',
 			scores: {}
-		});
+		};
+
+		this.list.push(aPlayer);
+		return aPlayer;
 	}
 
 	/**
@@ -128,6 +131,24 @@ class PlayersChampionshipStore {
 				}
 			});
 		});
+	}
+
+	/**
+	 * Loads an external player to the list.
+	 *
+	 * @param aPlayer - Player
+	 */
+	load(aPlayer: Player) {
+		this.list.push(aPlayer);
+	}
+
+	/**
+	 * Find a Player from the list.
+	 *
+	 * @param id - ID of the Player to remove
+	 */
+	find(id: string): Player | undefined {
+		return this.list.find((t) => t.id === id);
 	}
 
 	/**
