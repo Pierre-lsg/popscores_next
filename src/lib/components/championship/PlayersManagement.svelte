@@ -51,25 +51,13 @@
 
 <div class="players-list">
 	{#each players as player, i}
-		<div class="player-item">
-			<div
-				style="background-image: url({photo}); background-size: cover; opacity: 0.15;"
-				class="player-card"
-			>
+		<div role="none" class="player-item" onclick={() => editPlayer(i)}>
+			<div style="background-image: url({photo});" class="player-card">
 				<div class="details">
-					{player.name}
+					<div>{player.name}</div>
+					<div>{player.surname}</div>
+					<div>{player.nickname}</div>
 				</div>
-				<div class="details">
-					{player.surname}
-				</div>
-				<div class="details">
-					{player.nickname}
-				</div>
-				<div class="icon">((photo))</div>
-			</div>
-			<div class="action">
-				<button onclick={() => removePlayer(player.id)}> 🗑️ </button>
-				<button onclick={() => editPlayer(i)}>✏️</button>
 			</div>
 		</div>
 	{/each}
@@ -93,6 +81,7 @@
 				placeholder="Nom du famille"
 			/>
 			<Param label="Surnom" type="text" bind:value={player.nickname} placeholder="Surnom" />
+			<button onclick={() => removePlayer(player.id)}> 🗑️ </button>
 		</div>
 	{/if}
 {/each}
@@ -101,7 +90,9 @@
 	<p>Aucun joueur enregistré pour le moment. 🏆</p>
 {/if}
 
-<button onclick={() => (creatingNewPlayer = true)}>Ajouter un nouveau joueur</button>
+{#if !editingPlayer.some(Boolean)}
+	<button onclick={() => (creatingNewPlayer = true)}>Ajouter un nouveau joueur</button>
+{/if}
 
 {#if creatingNewPlayer}
 	<div class="player-form">
@@ -143,13 +134,16 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: space-around;
 		width: 100%;
+		height: 150px;
 		background-color: var(--bg-card);
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		cursor: pointer;
 		margin: 0 0.5rem 0 0;
+		background-size: contain;
+		background-repeat: no-repeat;
 	}
 
 	.player-card:hover {
@@ -158,25 +152,11 @@
 	}
 
 	.details {
+		font-size: large;
 		align-items: center;
-		margin: 0.5rem;
+		padding: 0.5rem;
 		gap: 8px;
-		background: rgba(240, 240, 240, 0.99);
-		color: rgb(0, 0, 0);
-	}
-
-	.icon {
-		margin: 0.5rem;
-		font-size: 24px;
-		color: #2c3e50;
-	}
-
-	.action {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		width: 100%;
-		gap: 2rem;
-		margin-top: 0.5rem;
+		background-color: rgba(255, 255, 255, 0.8);
+		color: var(--primary);
 	}
 </style>

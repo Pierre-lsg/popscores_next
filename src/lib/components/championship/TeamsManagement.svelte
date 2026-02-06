@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
+	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 
 	import Param from '$lib/ui/Param.svelte';
+	import TeamEditing from './TeamEditing.svelte';
 
 	import type { Club } from '$lib/types/clubType';
+	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
 
 	let { currentClub = $bindable('') } = $props<{
@@ -15,6 +18,10 @@
 
 	let teams = $derived<Team[]>(teamsChampionshipStore.list.filter((t) => t.clubId === currentClub));
 	let numTeams: number = $derived(teams.length);
+
+	let clubPlayers = $derived<Player[]>(
+		playersChampionshipStore.list.filter((p) => p.clubId === currentClub)
+	);
 
 	let creatingNewTeam: boolean = $state(false);
 	let editingTeam: boolean[] = $state([]);
@@ -49,34 +56,25 @@
 	};
 </script>
 
+<!-- Teams's list -->
 <div class="teams-list">
 	{#each teams as team, i}
-		<div class="team-item">
+		<div role="none" class="team-item" onclick={() => editTeam(i)}>
 			<div role="none" class="team-card">
 				<div class="details">
 					{team.name}
 				</div>
-			</div>
-			<div class="action">
-				<button onclick={() => removeTeam(team.id)}> 🗑️ </button>
-				<button onclick={() => editTeam(i)}>✏️</button>
+				<div class="details">liste des joueurs</div>
 			</div>
 		</div>
 	{/each}
 </div>
 
+<!-- Form for team's editing -->
 {#each teams as team, i}
 	{#if editingTeam[i]}
-		<div class="team-form">
-			<h3>Modifier l'équipe 👥</h3>
-			<Param
-				label="Nom du joueur"
-				type="text"
-				bind:value={team.name}
-				focus={true}
-				placeholder="Nom du joueur"
-			/>
-		</div>
+		<TeamEditing {currentClub} {team} {clubPlayers} />
+		<button onclick={() => removeTeam(team.id)}> 🗑️ </button>
 	{/if}
 {/each}
 
@@ -84,7 +82,10 @@
 	<p>Aucune équipe enregistrée pour le moment. 🏆</p>
 {/if}
 
-<button onclick={() => (creatingNewTeam = true)}>Ajouter une nouvelle équipe</button>
+<!-- Adding a new team-->
+{#if !editingTeam.some(Boolean)}
+	<button onclick={() => (creatingNewTeam = true)}>Ajouter une nouvelle équipe</button>
+{/if}
 
 {#if creatingNewTeam}
 	<div class="team-form">
@@ -139,12 +140,15 @@
 		gap: 8px;
 	}
 
-	.action {
+	.team-players {
 		display: flex;
-		flex-direction: row;
-		justify-content: center;
+		justify-content: space-between;
+		align-items: baseline;
 		width: 100%;
-		gap: 2rem;
-		margin-top: 0.5rem;
+	}
+
+	select {
+		padding: 0.5rem;
+		width: 60%;
 	}
 </style>
