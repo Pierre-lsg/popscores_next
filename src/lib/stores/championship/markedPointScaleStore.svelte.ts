@@ -1,6 +1,6 @@
 import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
 
-const STORAGE_KEY = 'golf-markedpointscale-data';
+const STORAGE_KEY = 'cs-markedpointscale-data';
 
 class MarkedPointScaleStore {
 	// List of markedPointScale

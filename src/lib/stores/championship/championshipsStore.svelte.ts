@@ -1,6 +1,6 @@
 import type { Championship } from '$lib/types/championshipType';
 
-const STORAGE_KEY = 'golf-championship-data';
+const STORAGE_KEY = 'championship-data';
 
 class ChampionsStore {
 	// List of championships

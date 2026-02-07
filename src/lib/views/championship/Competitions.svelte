@@ -1,14 +1,15 @@
 <script lang="ts">
-	import CompetitionManagement from '$lib/components/championship/CompetitionManagement.svelte';
+	import CompetitionManagement from '$lib/components/championship/competition/CompetitionManagement.svelte';
 	import CompetitionsList from '$lib/components/championship/CompetitionsList.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+	import type { Competition } from '$lib/types/competitionType';
 
 	let csStore = $state(championshipStore.list[0]);
 
-	let currentCompetition: string = $state('');
+	let currentCompetition: Competition | undefined = $state();
 </script>
 
-{#if currentCompetition === ''}
+{#if currentCompetition === undefined}
 	<!-- Gestion des compétitions -->
 	<CompetitionsList bind:currentCompetition csId={csStore.id} />
 {:else}

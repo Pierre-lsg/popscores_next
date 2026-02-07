@@ -4,4 +4,5 @@ export interface Competition {
 	startDate?: string;
 	scorePublicationDate?: string;
 	location?: string;
+	regulationsId?: string;
 }

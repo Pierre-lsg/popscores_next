@@ -6,6 +6,7 @@
 		getAllCompetitionsFromCloud,
 		saveCompetition2Cloud
 	} from '$lib/utils/pocketbase/competitions2Cloud';
+	import { competitionStatus } from '$lib/stores/championship/competitionStatusStore.svelte';
 
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
@@ -29,8 +30,8 @@
 	let publicationDate: string = $state(new Date().toISOString().split('T')[0]);
 	let competitionLocation: string = $state('');
 
-	let { currentCompetition = $bindable(''), csId } = $props<{
-		currentCompetition: string;
+	let { currentCompetition = $bindable(), csId } = $props<{
+		currentCompetition: Competition | undefined;
 		csId: string;
 	}>();
 
@@ -87,6 +88,11 @@
 		allCompetitions = await getAllCompetitionsFromCloud(csId);
 		loading = false;
 	});
+
+	const loadingCompetition = (competition: Competition) => {
+		currentCompetition = competition;
+		competitionStatus.reset();
+	};
 </script>
 
 <h2>Compétitions</h2>
@@ -94,11 +100,7 @@
 <div class="competitions-list">
 	{#each competitions as competition, i}
 		<div class="competition-item">
-			<div
-				role="none"
-				class="competition-card"
-				onclick={() => (currentCompetition = competition.id)}
-			>
+			<div role="none" class="competition-card" onclick={() => loadingCompetition(competition)}>
 				<div class="details">
 					{competition.name}
 				</div>

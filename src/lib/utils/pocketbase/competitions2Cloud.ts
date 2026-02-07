@@ -89,7 +89,6 @@ export async function getAllCompetitionsFromCloud(csId: string): Promise<Competi
 				perPage: 50,
 				filter: 'championship="' + csId.trim() + '"'
 			});
-			console.log(record);
 			record.forEach((e) => {
 				if (e.data) allCompetitions.push(e.data as Competition);
 			});

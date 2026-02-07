@@ -1,7 +1,7 @@
 import type { Player } from '$lib/types/playerType';
 import { teamsChampionshipStore } from './teamsChampionshipStore.svelte';
 
-const STORAGE_KEY = 'golf-players-championship-data';
+const STORAGE_KEY = 'cs-players-data';
 
 class PlayersChampionshipStore {
 	// État de base (la liste brute)

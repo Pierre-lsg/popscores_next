@@ -1,32 +1,32 @@
 export type CompetitionStatus = 'setup' | 'in_progress' | 'finished';
 export type CompetitionAction =
-	| 'setting'
+	| 'settings'
 	| 'course'
 	| 'players'
 	| 'starting'
 	| 'scoring'
 	| 'following'
 	| 'greeting'
-	| 'idle';
-const KEY_STATUS = 'golf-competition-status';
-const KEY_ACTION = 'golf-competition-action';
-const KEY_TARGET = 'golf-competition-target-index';
+	| 'welcome';
+const KEY_STATUS = 'cs-competition-status';
+const KEY_ACTION = 'cs-competition-action';
+const KEY_TARGET = 'cs-competition-target-index';
 
 class CompetitionStatusStore {
 	// On utilise $state pour les deux valeurs
 	status = $state<CompetitionStatus>('setup');
-	action = $state<CompetitionAction>('idle');
+	action = $state<CompetitionAction>('welcome');
 	currentTargetIndex = $state<number>(0);
 
 	constructor() {
 		if (typeof window !== 'undefined') {
 			// Chargement initial
 			const savedStatus = localStorage.getItem(KEY_STATUS) as CompetitionStatus;
-			const savedTarget = localStorage.getItem(KEY_TARGET);
 			const savedAction = localStorage.getItem(KEY_ACTION) as CompetitionAction;
+			const savedTarget = localStorage.getItem(KEY_TARGET);
 
 			this.status = savedStatus || 'setup';
-			this.action = savedAction || 'idle';
+			this.action = savedAction || 'welcome';
 			this.currentTargetIndex = savedTarget ? parseInt(savedTarget) : 0;
 
 			// Effet racine pour sauvegarder automatiquement les changements
@@ -53,7 +53,7 @@ class CompetitionStatusStore {
 	// Méthode pour réinitialiser le jeu
 	reset() {
 		this.status = 'setup';
-		this.action = 'idle';
+		this.action = 'welcome';
 		this.currentTargetIndex = 0;
 		localStorage.removeItem(KEY_STATUS);
 		localStorage.removeItem(KEY_TARGET);

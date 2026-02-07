@@ -1,6 +1,6 @@
 import type { Club } from '$lib/types/clubType';
 
-const STORAGE_KEY = 'golf-clubs-data';
+const STORAGE_KEY = 'cs-clubs-data';
 
 class ClubsStore {
 	list = $state<Club[]>([]);
