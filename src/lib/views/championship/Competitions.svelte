@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CompetitionManagement from './CompetitionManagement.svelte';
+	import CompetitionManagement from '$lib/components/championship/CompetitionManagement.svelte';
 	import CompetitionsList from '$lib/components/championship/CompetitionsList.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 

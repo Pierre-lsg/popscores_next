@@ -29,7 +29,7 @@
 /* Thème Moderne (Dark Mode) */
 [data-theme='modern'] {
 	/* Couleurs principales */
-	--primary: #0e160f;
+	--primary: #2e7d32;
 	--primary-light: #e8f5e9;
 	--secondary: #546e7a;
 
@@ -385,4 +385,10 @@ td {
 	background: rgba(255, 0, 0, 0.149);
 	color: white;
 	border: red 2px dashed;
+}
+
+.subnav {
+	position: sticky;
+	top: 56px;
+	z-index: 999;
 }

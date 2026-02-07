@@ -24,10 +24,10 @@
 
 	let addNewCompetition: boolean = $state(false);
 
-	let competitionName: string = $state('Compétition');
+	let competitionName: string = $state('');
 	let competitionDate: string = $state(new Date().toISOString().split('T')[0]);
 	let publicationDate: string = $state(new Date().toISOString().split('T')[0]);
-	let competitionLocation: string = $state('Localisation');
+	let competitionLocation: string = $state('');
 
 	let { currentCompetition = $bindable(''), csId } = $props<{
 		currentCompetition: string;
@@ -36,6 +36,8 @@
 
 	const createCompetition = () => {
 		competitionsStore.add(competitionName, competitionDate, publicationDate, competitionLocation);
+		competitionName = competitionLocation = '';
+		competitionDate = publicationDate = new Date().toISOString().split('T')[0];
 		addNewCompetition = false;
 	};
 

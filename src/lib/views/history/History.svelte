@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import { onMount } from 'svelte';
 	import type { SessionArchive } from '$lib/types/sessionType';
 
@@ -8,10 +7,6 @@
 
 	let history = $state<SessionArchive[]>([]);
 	let currentSession: string = $state('');
-
-	let activeTargetIndex = gameStatus.currentTargetIndex || 0;
-
-	gameStatus.currentTargetIndex = activeTargetIndex;
 
 	onMount(() => {
 		const data = localStorage.getItem('golf-history');

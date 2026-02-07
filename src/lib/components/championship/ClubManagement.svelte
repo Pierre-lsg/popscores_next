@@ -32,11 +32,3 @@
 {#if showTeams}
 	<TeamsManagement bind:currentClub />
 {/if}
-
-<style>
-	.subnav {
-		position: sticky;
-		top: 50px;
-		z-index: 999;
-	}
-</style>
