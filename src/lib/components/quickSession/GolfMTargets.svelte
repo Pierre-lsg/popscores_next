@@ -6,6 +6,8 @@
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 
+	import { individualRules, collectiveRules } from '$lib/types/targetsType';
+
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
@@ -17,9 +19,7 @@
 	let newTargetName = $state('');
 
 	// Set rule options based on whether it's a team game or not
-	const ruleOptions = isTeamGame
-		? ['Scramble', 'Greensome', 'Chapman', 'Foursome', 'Bonus', 'Individuel']
-		: ['Individuel', 'Bonus'];
+	const ruleOptions = isTeamGame ? collectiveRules : individualRules;
 	const flipDurationMs = 300;
 
 	// Set the default value of newTargetRule to the first item in ruleOptions

@@ -5,12 +5,14 @@
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
+	import { individualRules } from '$lib/types/targetsType';
+
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import { onMount } from 'svelte';
 	import { getRankedPlayers, getPlayerStats } from '$lib/utils/session/golfScoringFunction.svelte';
 
 	const s = sessionSettingsStore.settings;
-	const ruleOptions = ['Individuel', 'Bonus'];
+	const ruleOptions = individualRules;
 
 	let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
 	let rankedPlayerList = $derived(getRankedPlayers(playersStore.list, targetsStore.list));

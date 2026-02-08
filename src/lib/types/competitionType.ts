@@ -5,4 +5,5 @@ export interface Competition {
 	scorePublicationDate?: string;
 	location?: string;
 	regulationsId?: string;
+	courseId?: string;
 }
