@@ -48,27 +48,6 @@
 			padding: 10px;
 		}
 	}
-
-	.card {
-		display: flex;
-		flex-direction: column;
-		text-decoration: none;
-		color: var(--text-primary);
-		align-items: center;
-		justify-content: center;
-		text-align: center;
-		background: var(--bg-card);
-		border: 2px solid var(--border-color);
-		border-radius: 12px;
-		padding: 0.5rem;
-		cursor: pointer;
-		transition: transform 0.2s;
-		font-size: 0.9rem;
-	}
-	.card:hover {
-		transform: translateY(-5px);
-		border-color: var(--primary);
-	}
 	.icon {
 		font-size: 2.5rem;
 	}

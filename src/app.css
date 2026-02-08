@@ -117,6 +117,7 @@ button {
 	font-weight: 600;
 	cursor: pointer;
 	transition: all 0.2s ease;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
 
 .btn-primary {
@@ -384,11 +385,32 @@ td {
 	margin-top: 1rem;
 	background: rgba(255, 0, 0, 0.149);
 	color: white;
-	border: red 2px dashed;
 }
 
 .subnav {
 	position: sticky;
 	top: 56px;
 	z-index: 999;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	text-decoration: none;
+	color: var(--text-primary);
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background: var(--bg-card);
+	border: 2px solid var(--border-color);
+	border-radius: 12px;
+	padding: 0.5rem;
+	cursor: pointer;
+	transition: transform 0.2s;
+	font-size: 0.9rem;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+.card:hover {
+	transform: translateY(-5px);
+	border-color: var(--primary);
 }

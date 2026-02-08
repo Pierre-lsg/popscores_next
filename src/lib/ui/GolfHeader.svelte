@@ -61,6 +61,7 @@
 		padding: 0.5rem 0;
 		border-radius: 10px;
 		margin-bottom: 1rem;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 	}
 
 	.actions {
@@ -83,6 +84,7 @@
 		color: var(--primary);
 		border-radius: 4px;
 		padding: 4px 8px;
+		margin: 4px 4px 0 0;
 		width: 80px;
 		font-weight: lighter;
 		font-size: 1rem;
