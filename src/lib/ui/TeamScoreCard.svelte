@@ -34,8 +34,8 @@
 <table class="table-container">
 	<thead>
 		<tr class="header">
-			<th rowspan="2" class="fixed-column">Cibles</th>
-			<th rowspan="2" class="vertical-header par-row"><span>Par</span></th>
+			<th rowspan="2" class="fixed-column" style="z-index:999;">Cibles</th>
+			<th rowspan="2" class="vertical-header par-row" style="z-index:999;"><span>Par</span></th>
 			<th rowspan="2" class="vertical-header par-row"><span>RdJ</span></th>
 			{#each rankedTeams as rankedTeam}
 				{@const team = rankedTeam.team}

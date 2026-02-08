@@ -1,4 +1,5 @@
 .table-container {
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 	overflow-x: auto;
 	/* On garde la première colonne visible quand on scrolle à droite */
 	& th:nth-child(1),
@@ -16,6 +17,26 @@
 		z-index: 2;
 		background-color: var(--bg-card);
 	}
+}
+
+.scorecard-target {
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+	overflow-x: auto;
+	background-color: var(--bg-card);
+}
+
+.first-fixed-col {
+	position: sticky;
+	left: 0px;
+	z-index: 3;
+	background-color: var(--bg-card);
+}
+
+.second-fixed-col {
+	position: sticky;
+	left: 80px;
+	z-index: 2;
+	background-color: var(--bg-card);
 }
 
 table {

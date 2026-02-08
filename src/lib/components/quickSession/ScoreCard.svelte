@@ -8,27 +8,50 @@
 
 	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
 	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
+	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
+	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
 
 	const s = sessionSettingsStore.settings;
 
 	let isTeamGame: boolean = s.teamGame;
+	let rotateSCTeam: boolean = false;
+	let rotateSCPlayer: boolean = false;
 	let rankedTeams = getRankedTeams(teamsStore.list, targetsStore.list, playersStore.list, s);
 	let rankedPlayers = getRankedPlayers(playersStore.list, targetsStore.list);
 </script>
 
 {#if isTeamGame}
 	<!-- carte de score en équipe -->
-	<h2>Classement par équipe</h2>
+	<h2>
+		Classement par équipe <span role="none" onclick={() => (rotateSCTeam = !rotateSCTeam)}>🔄</span>
+	</h2>
 
-	<TeamScoreCard
-		{rankedTeams}
-		targets={targetsStore.list}
-		players={playersStore.list}
-		settings={s}
-	/>
+	{#if rotateSCTeam}
+		<TeamScoreCardByTarget
+			{rankedTeams}
+			targets={targetsStore.list}
+			players={playersStore.list}
+			settings={s}
+		/>
+	{:else}
+		<TeamScoreCard
+			{rankedTeams}
+			targets={targetsStore.list}
+			players={playersStore.list}
+			settings={s}
+		/>
+	{/if}
 {/if}
 
 <!-- carte de score en individuel -->
-<h2>Classement individuel</h2>
+<h2>
+	Classement individuel <span role="none" onclick={() => (rotateSCPlayer = !rotateSCPlayer)}
+		>🔄</span
+	>
+</h2>
 
-<PlayerScoreCard {rankedPlayers} targets={targetsStore.list} />
+{#if rotateSCPlayer}
+	<PlayerScoreCard {rankedPlayers} targets={targetsStore.list} />
+{:else}
+	<PlayerScoreCardByTarget {rankedPlayers} targets={targetsStore.list} />
+{/if}
