@@ -22,8 +22,8 @@
 		loading = false;
 	});
 
-	const removeSession = (index: number) => {
-		historyStore.removeGame(index);
+	const removeSession = (id: string) => {
+		historyStore.removeGame(id);
 	};
 
 	const loadSessionfromCloud = (index: number) => {
@@ -47,16 +47,18 @@
 
 <div class="history-list">
 	<h2>{title}</h2>
-
 	{#each historyStore.list as session, i}
 		<button class="session-card" onclick={() => (currentSession = session.id)}>
 			<div class="details">
 				{session.settings.locationName}
 			</div>
+			<div class="details">
+				{#if session.settings.teamGame}👥{:else}👤{/if}
+			</div>
 			<div>{session.settings.sessionBeginning}</div>
 			<div class="icon">📜</div>
 		</button>
-		<button onclick={() => removeSession(i)}> 🗑️ </button>
+		<button onclick={() => removeSession(session.id)}> 🗑️ </button>
 	{:else}
 		<p>Aucune session archivée pour le moment. ⛳</p>
 	{/each}

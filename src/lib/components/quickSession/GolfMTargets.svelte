@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 
 	import { slide, fly } from 'svelte/transition';
@@ -108,15 +109,13 @@
 						</button>
 					{/if}
 					<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
-					<select
+
+					<Selector
 						id="rule{target.id}"
 						bind:value={target.rule}
 						onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
-					>
-						{#each ruleOptions as option}
-							<option value={option}>{option}</option>
-						{/each}
-					</select>
+						options={ruleOptions}
+					/>
 				</div>
 				<div class="handle">☰</div>
 			</div>

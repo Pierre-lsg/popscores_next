@@ -8,6 +8,8 @@
 	import { individualRules } from '$lib/types/targetsType';
 
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
+
 	import { onMount } from 'svelte';
 	import { getRankedPlayers, getPlayerStats } from '$lib/utils/session/golfScoringFunction.svelte';
 
@@ -177,18 +179,13 @@
 	{/if}
 
 	{#if updatingRule}
-		<div class="target-details" style="background-color: var(--bg-card);">
-			Modification de la règle :
-			<select
-				id="rule{currentTarget.id}"
-				bind:value={currentTarget.rule}
-				onchange={() => (currentTarget.par = currentTarget.rule === 'Bonus' ? 0 : 4)}
-			>
-				{#each ruleOptions as option}
-					<option value={option}>{option}</option>
-				{/each}
-			</select>
-		</div>
+		<Selector
+			id="rule{currentTarget.id}"
+			bind:value={currentTarget.rule}
+			label="Modification de la règle :"
+			options={ruleOptions}
+			onchange={() => (currentTarget.par = currentTarget.rule === 'Bonus' ? 0 : 4)}
+		/>
 	{/if}
 
 	<div class="scores-grid">

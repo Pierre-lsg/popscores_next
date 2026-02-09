@@ -6,6 +6,7 @@
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import DatePicker from '$lib/ui/DatePicker.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
 
 	const weatherOptions = ['☀️ Soleil', '☁️ Nuageux', '🌧️ Pluie', '🌬️ Vent', '❄️ Froid'];
 	const s = sessionSettingsStore.settings;
@@ -15,14 +16,12 @@
 	<div class="setup-fields">
 		<DatePicker label="📅 Date de la session" bind:value={s.sessionBeginning} />
 		<Param label="⛳ Nom du Golf" type="text" bind:value={s.locationName} />
-		<div class="weather">
-			<label for="weather">☁️ Météo</label>
-			<select id="weather" bind:value={s.weatherCondition}>
-				{#each weatherOptions as option}
-					<option value={option}>{option}</option>
-				{/each}
-			</select>
-		</div>
+		<Selector
+			id="weather"
+			label="☁️ Météo"
+			bind:value={s.weatherCondition}
+			options={weatherOptions}
+		/>
 
 		<Toggle label="Malus fixe en cas de X" bind:checked={s.hasCrossAFixedPenalty} />
 
@@ -49,25 +48,10 @@
 		padding: 0.5rem;
 		border-radius: 8px;
 	}
-	select {
-		padding: 0.8rem;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-		font-size: 1rem;
-	}
 
 	.step-content {
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
-	}
-
-	select {
-		background-color: var(--bg-ui);
-	}
-	.weather {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
 	}
 </style>

@@ -4,6 +4,8 @@
 	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { shuffle } from '$lib/utils/sharedFunction';
+	import Selector from '$lib/ui/Selector.svelte';
+	import type { Team } from '$lib/types/teamType';
 
 	const s = sessionSettingsStore.settings;
 
@@ -13,15 +15,17 @@
 	let editingId = $state<string | null>(null);
 	let editingTeamId = $state<string | null>(null);
 
-	function addPlayer() {
+	let selectedTeamId: string = $state('');
+
+	const addPlayer = () => {
 		playersStore.add('Joueur #' + (playersStore.list.length + 1));
-	}
+	};
 
-	function addTeam() {
+	const addTeam = () => {
 		teamsStore.add(crypto.randomUUID(), 'Team #' + (teamsStore.list.length + 1), []);
-	}
+	};
 
-	function createTeams() {
+	const createTeams = () => {
 		const nbPlayerPerTeam = s.playersPerTeam;
 		const nbTeams = Math.floor(playersStore.list.length / nbPlayerPerTeam) + 1;
 		const playersSorted = shuffle(playersStore.list);
@@ -49,37 +53,37 @@
 				playersStore.list.find((p) => p.id === playerId)!.teamId = teamId;
 			});
 		}
-	}
+	};
 
-	function settingTeams() {
+	const settingTeams = () => {
 		isSettingTeams = !isSettingTeams;
 		isEditingTeams = false;
-	}
+	};
 
-	function editPlayerName(id: string) {
+	const editPlayerName = (id: string) => {
 		editingId = id;
-	}
+	};
 
-	function saveName(e: Event) {
+	const saveName = (e: Event) => {
 		editingId = null;
-	}
+	};
 
-	function editTeamName(id: string) {
+	const editTeamName = (id: string) => {
 		editingTeamId = id;
-	}
+	};
 
-	function saveTeamName() {
+	const saveTeamName = () => {
 		editingTeamId = null;
-	}
+	};
 
-	function focus(node: HTMLInputElement) {
+	const focus = (node: HTMLInputElement) => {
 		node.focus();
 		node.select();
-	}
+	};
 
 	// playersStore.svelte.ts (ou teamsStore selon ta préférence)
 
-	function movePlayerToTeam(playerId: string, targetTeamId: string) {
+	const movePlayerToTeam = (playerId: string, targetTeamId: string) => {
 		const player = playersStore.list.find((p) => p.id === playerId);
 		if (!player) return;
 
@@ -101,7 +105,7 @@
 				newTeam.playersId.push(playerId);
 			}
 		}
-	}
+	};
 </script>
 
 <div class="step-content" in:slide>
@@ -191,12 +195,13 @@
 						<div class="player-items">
 							<span>{player.name}</span>
 
-							<select onchange={(e) => movePlayerToTeam(player.id, e.currentTarget.value)}>
-								<option value="">Choisir une équipe...</option>
-								{#each teamsStore.list as team}
-									<option value={team.id}>{team.name}</option>
-								{/each}
-							</select>
+							<Selector
+								bind:value={selectedTeamId}
+								unselectedOption="Choisir une équipe..."
+								options={teamsStore.list.map((t: Team) => t.id)}
+								optionsLabel={teamsStore.list.map((t: Team) => t.name)}
+								onchange={() => movePlayerToTeam(player.id, selectedTeamId)}
+							/>
 
 							<div class="handle">
 								<button

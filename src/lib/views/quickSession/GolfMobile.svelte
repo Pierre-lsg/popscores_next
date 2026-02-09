@@ -25,8 +25,9 @@
 	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5, scoreCard: 51 };
 
 	let currentStep: number = $state(1);
-
 	let activeTargetIndex = gameStatus.currentTargetIndex || 0;
+
+	let isSessionHistorised: boolean = $state(false);
 
 	gameStatus.currentTargetIndex = activeTargetIndex;
 
@@ -49,6 +50,8 @@
 				window.history.replaceState({}, '', window.location.pathname);
 			}
 		}*/
+		isSessionHistorised = historyStore.isGameHistorized(sessionSettingsStore.settings.id);
+		console.log(isSessionHistorised);
 
 		if (gameStatus.status === 'setup') nextCard(Step.session);
 		else if (gameStatus.status === 'in_progress') nextCard(Step.scoring);
@@ -89,7 +92,8 @@
 			players: playersStore.list
 		};
 
-		historyStore.archiveGame(newArchive);
+		isSessionHistorised = historyStore.archiveGame(newArchive);
+		if (isSessionHistorised) toastStore.show("Session enregistrée dans l'historique");
 	};
 
 	const showPodium = () => {
@@ -185,8 +189,11 @@
 		<button class="btn btn-primary" onclick={() => nextCard(Step.scoreCard)}>Carte de score</button>
 		<!-- <button onclick={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button> -->
 		<button class="btn btn-primary" onclick={() => resetGameConfirm()}>Nouvelle partie</button>
-		<button class="btn btn-primary" onclick={() => saveGameToHistory()}>Historiser la partie</button
-		>
+		{#if !isSessionHistorised}
+			<button class="btn btn-primary" onclick={() => saveGameToHistory()}
+				>Historiser la partie</button
+			>
+		{/if}
 
 		<!-- Résultat de la Partie : carte de score -->
 	{:else if currentStep === Step.scoreCard}

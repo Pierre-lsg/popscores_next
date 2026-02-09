@@ -6,6 +6,7 @@
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
 
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
@@ -81,18 +82,16 @@
 					focus={true}
 				/>
 				<Stepper label="Par" value={target.par} onchange={(val) => (target.par = val)} />
-				<div class="select-container">
-					Règle :
-					<select
-						id="rule{target.id}"
-						bind:value={target.rule}
-						onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
-					>
-						{#each ruleOptions as option}
-							<option value={option}>{option}</option>
-						{/each}
-					</select>
-				</div>
+				<Selector
+					label="Règle"
+					id="rule{target.id}"
+					bind:value={target.rule}
+					options={ruleOptions}
+					onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+				/>
+				<p class="param-container">
+					Autres params à définir plus tard (départ, arrivée, GPS photos, ...)
+				</p>
 			{/if}
 		{/each}
 	{:else}
@@ -100,10 +99,7 @@
 	{/if}
 
 	<ul>
-		<li>Ajout une cible</li>
 		<li>Autoriser la réorganisation</li>
-		<li>et la suppression</li>
-		<li>Ajout une cible</li>
 		<li>Paramétrage détaillé</li>
 		<li>sauvegarde</li>
 		<li>récupération en cloud de cibles existantes</li>
@@ -112,7 +108,7 @@
 </div>
 
 <style>
-	.select-container {
+	.param-container {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Param from '$lib/ui/Param.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
 
 	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
@@ -55,12 +56,13 @@
 	{#if team.playersId.length < 2}
 		<button onclick={addPlayer}>Ajouter un joueur</button>
 		{#if isSelectVisible}
-			<select bind:value={playerId} onchange={() => selectPlayer()}>
-				<option value="">-- choisir un joueur --</option>
-				{#each playersAvailable as player, i}
-					<option value={player.id}>{player.name}</option>
-				{/each}
-			</select>
+			<Selector
+				bind:value={playerId}
+				options={playersAvailable.map((p: Player) => p.id)}
+				optionsLabel={playersAvailable.map((p: Player) => p.name)}
+				unselectedOption="-- choisir un joueur"
+				onchange={() => selectPlayer()}
+			/>
 		{/if}
 	{/if}
 
@@ -78,10 +80,5 @@
 		justify-content: space-between;
 		align-items: baseline;
 		width: 100%;
-	}
-
-	select {
-		padding: 0.5rem;
-		width: 60%;
 	}
 </style>

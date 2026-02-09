@@ -24,18 +24,26 @@ class HistoryStore {
 	/**
 	 * Archive une nouvelle partie en haut de la liste
 	 */
-	archiveGame(historySession: SessionArchive) {
+	archiveGame(historySession: SessionArchive): boolean {
 		// If the game already exists in the list, remove it first
 		this.list = this.list.filter((a) => a.id !== historySession.id);
 		// Add the new game at the beginning of the list
 		this.list = [historySession, ...this.list];
+		return true;
 	}
 
 	/**
 	 * Supprime une partie de l'historique par son index
 	 */
-	removeGame(index: number) {
-		this.list.splice(index, 1);
+	removeGame(id: string) {
+		this.list = this.list.filter((a) => a.id !== id);
+	}
+
+	/**
+	 * Vérifie si une partie existe dans l'historique
+	 */
+	isGameHistorized(id: string) {
+		return this.list.some((session) => session.id === id);
 	}
 
 	/**

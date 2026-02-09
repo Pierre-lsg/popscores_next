@@ -1,7 +1,7 @@
 import type { Team } from '$lib/types/teamType';
 
 // Constant for storage key
-const STORAGE_KEY = 'cs-teams-championship-data';
+const STORAGE_KEY = 'cs-teams-data';
 
 /**
  * Class to encapsulate the state and methods of the teams championship store.
