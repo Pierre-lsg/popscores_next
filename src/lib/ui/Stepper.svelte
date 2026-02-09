@@ -20,16 +20,19 @@
 	let timer: ReturnType<typeof setInterval> | null = null;
 	let delayTimer: ReturnType<typeof setTimeout> | null = null;
 
-	function update(newValue: number) {
+	let isEditing: boolean = $state(false);
+	let localValue: number = $state(0);
+
+	const update = (newValue: number) => {
 		if (disabled) return;
 		if (newValue >= min && newValue <= max) {
 			value = newValue;
 			onchange?.(value);
 		}
-	}
+	};
 
 	// Gestion de l'appui long
-	function start(e: Event, step: number) {
+	const start = (e: Event, step: number) => {
 		if (e.cancelable) e.preventDefault();
 		stop(); // Sécurité : on nettoie tout timer précédent
 		update(value + step); // Premier clic immédiat
@@ -44,12 +47,18 @@
 				}
 			}, 100); // Vitesse de défilement (10 fois par seconde)
 		}, 500); // Délai avant de commencer à répéter
-	}
+	};
 
-	function stop() {
+	const stop = () => {
 		if (delayTimer) clearTimeout(delayTimer);
 		if (timer) clearInterval(timer);
-	}
+		isEditing = false;
+	};
+
+	const editValue = () => {
+		localValue = value;
+		isEditing = true;
+	};
 </script>
 
 <div class="stepper-container">
@@ -67,7 +76,21 @@
 			><span aria-hidden="true" style="pointer-events: none;">-</span>
 		</button>
 
-		<div class="value-display">{value}</div>
+		{#if isEditing}
+			<input
+				type="number"
+				class="value-input"
+				bind:value={localValue}
+				{min}
+				{max}
+				onblur={() => {
+					update(localValue);
+					isEditing = false;
+				}}
+			/>
+		{:else}
+			<div role="none" class="value-display" onclick={editValue}>{value}</div>
+		{/if}
 
 		<button
 			type="button"

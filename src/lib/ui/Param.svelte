@@ -13,13 +13,16 @@
 		| 'numeric'
 		| 'decimal' = 'text'; // Pour forcer le pavé numérique (ex: "numeric")
 	export let focus = false;
+	export let oneline = false;
 
-	function init(elt: any) {
+	let contentAppearance: string = oneline ? 'param-inline-container' : 'param-container';
+
+	const init = (elt: any) => {
 		if (focus) elt.focus();
-	}
+	};
 </script>
 
-<div class="field-container">
+<div class={contentAppearance}>
 	{#if label}
 		<label for="input-field">{label}</label>
 	{/if}
@@ -38,12 +41,22 @@
 </div>
 
 <style>
-	.field-container {
+	.param-container {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
 		margin-bottom: 1.2rem;
 		width: 100%;
+	}
+
+	.param-inline-container {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.5rem;
+		background: var(--bg-card);
+		border-radius: 8px;
+		margin-bottom: 0.5rem;
 	}
 
 	label {

@@ -3,6 +3,10 @@
 	import { collectiveRules, type Target } from '$lib/types/targetsType';
 	import type { Course } from '$lib/types/courseType';
 
+	import { dndzone } from 'svelte-dnd-action';
+	import { slide, fly } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
@@ -22,6 +26,9 @@
 	let editingTarget: boolean[] = $state([]);
 	let course: Course | undefined = $state();
 
+	const flipDurationMs = 200;
+	let isDragging = $state(false);
+
 	onMount(() => {
 		if (currentCompetition) {
 			let tempCourse = coursesChampionshipStore.find(currentCompetition.courseId);
@@ -31,6 +38,7 @@
 				course = coursesChampionshipStore.new();
 				currentCompetition.courseId = course.id;
 			}
+			targets = course.targets;
 		}
 	});
 
@@ -40,10 +48,30 @@
 
 	const editTarget = (id: number) => {
 		editingTarget[id] = !editingTarget[id];
+		for (let i = 0; i < editingTarget.length; i++) {
+			if (i !== id) editingTarget[i] = false;
+		}
 	};
 
-	const removeTarget = (id: number) => {
-		if (course) course.targets.splice(id, 1);
+	// Drag & drop functions
+	const handleConsider = () => {
+		isDragging = true;
+		editingTarget = editingTarget.map(() => false);
+	};
+
+	const handleFinalize = (e: CustomEvent<{ items: any[] }>) => {
+		targets = e.detail.items;
+		if (course) course.targets = targets;
+		isDragging = false;
+	};
+
+	const handleRemoveDrop = (e: CustomEvent<{ items: any[] }>) => {
+		const removedItem = e.detail.items[0];
+		if (removedItem) {
+			targets = targets.filter((t) => t.id !== removedItem.id);
+			if (course) course.targets = targets;
+		}
+		isDragging = false;
 	};
 </script>
 
@@ -52,26 +80,52 @@
 
 	<h2>Définition du parcours</h2>
 	<h3>Liste des cibles</h3>
-	{#if course && course?.targets.length > 0}
+	{#if course && targets.length > 0}
 		<button onclick={() => addNewTarget()}>Ajouter une cible</button>
 
-		<table>
-			<tbody>
-				{#each course?.targets as target, i}
-					<tr>
-						<td>{target.name || 'Trou #' + i}</td>
-						<td>{target.par}</td>
-						<td>{target.rule}</td>
-						<td>
-							<span role="none" onclick={() => editTarget(i)}>✏️</span>
-							&nbsp;
-							<span role="none" onclick={() => removeTarget(i)}>🗑️</span>
-						</td>
-					</tr>
+		<div class="step-content" in:slide>
+			<div
+				class="targets-list"
+				use:dndzone={{
+					items: targets,
+					flipDurationMs,
+					dropTargetStyle: { outline: '2px dashed var(--primary)', borderRadius: '8px' }
+				}}
+				onconsider={(e) => {
+					handleConsider();
+					targets = e.detail.items;
+				}}
+				onfinalize={handleFinalize}
+			>
+				{#each targets as target (target.id)}
+					<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
+						<div class="content">
+							<span class="target-name">{target.name || 'Trou #'}</span>
+							<span class="target-par">{target.par}</span>
+							<span class="target-rule">{target.rule}</span>
+							<span>
+								<span role="none" onclick={() => editTarget(targets.indexOf(target))}>✏️</span>
+							</span>
+						</div>
+						<div role="none" class="handle">☰</div>
+					</div>
 				{/each}
-			</tbody>
-		</table>
+			</div>
+		</div>
 
+		{#if isDragging}
+			<div
+				transition:fly={{ x: 100, duration: 300 }}
+				class="delete-zone"
+				use:dndzone={{ items: [] }}
+				onfinalize={handleRemoveDrop}
+			>
+				<div class="trash-icon">🗑️</div>
+				<p>Lâcher pour supprimer</p>
+			</div>
+		{/if}
+
+		<div>&nbsp;</div>
 		{#each course?.targets as target, i}
 			{#if editingTarget[i]}
 				<Param
@@ -80,6 +134,7 @@
 					bind:value={target.name}
 					placeholder="Nom de la cible"
 					focus={true}
+					oneline={true}
 				/>
 				<Stepper label="Par" value={target.par} onchange={(val) => (target.par = val)} />
 				<Selector
@@ -99,11 +154,8 @@
 	{/if}
 
 	<ul>
-		<li>Autoriser la réorganisation</li>
-		<li>Paramétrage détaillé</li>
 		<li>sauvegarde</li>
 		<li>récupération en cloud de cibles existantes</li>
-		<li>créer un composant selector comme il existe un stepper</li>
 	</ul>
 </div>
 
@@ -116,5 +168,35 @@
 		background: var(--bg-card);
 		border-radius: 8px;
 		margin-bottom: 0.5rem;
+	}
+
+	.targets-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		min-height: 50px; /* Important pour pouvoir redéposer dans une liste vide */
+	}
+
+	.target-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		background: var(--bg-card);
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		padding: 0.5rem;
+		touch-action: shadow; /* Aide à la gestion tactile */
+	}
+
+	.target-par {
+		width: 5%;
+	}
+
+	.target-name {
+		width: 40%;
+	}
+
+	.target-rule {
+		width: 40%;
 	}
 </style>

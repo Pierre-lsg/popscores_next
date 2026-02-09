@@ -144,15 +144,6 @@
 		font-size: 1.2rem;
 	}
 
-	select {
-		padding: 0.1rem;
-		width: 6.5rem;
-		height: 2rem;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-		font-size: 1rem;
-	}
-
 	.targets-list {
 		display: flex;
 		flex-direction: column;
