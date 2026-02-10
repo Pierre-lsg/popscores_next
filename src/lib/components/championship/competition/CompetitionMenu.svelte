@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 	import { competitionStatus } from '$lib/stores/championship/competitionStatusStore.svelte';
+	import { fade, fly } from 'svelte/transition';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -10,9 +11,9 @@
 </script>
 
 <div>
-	<div role="none" onclick={() => (showMenu = !showMenu)}>☰ Menu ...</div>
+	<div role="none" onclick={() => (showMenu = !showMenu)} class="menu">☰ Menu ...</div>
 	{#if showMenu}
-		<div class="menu">
+		<div class="menu-details" in:fly={{ duration: 200 }} out:fade>
 			{#if competitionStatus.status === 'setup'}
 				<button onclick={() => (competitionStatus.action = 'settings')} class="subnav">
 					Définir les règles
@@ -66,5 +67,22 @@
 	.menu {
 		display: flex;
 		flex-direction: column;
+		position: fixed;
+		font-size: large;
+		top: 56px;
+		left: 0;
+		right: 0;
+		z-index: 9999;
+		background-color: var(--bg-app);
+	}
+
+	.menu-details {
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+		top: 85px;
+		left: 0;
+		right: 0;
+		z-index: 9999;
 	}
 </style>

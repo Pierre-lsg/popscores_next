@@ -45,7 +45,7 @@
 	};
 
 	const addPlayer = () => {
-		// Todo
+		playersChampionshipStore.add(newPlayersName, '', '', newPlayersClub);
 	};
 </script>
 
@@ -99,5 +99,6 @@
 			unselectedOption="sans club"
 		/>
 		<button onclick={addPlayer}>Valider</button>
+		<button onclick={() => (addingPlayer = false)}>Annuler</button>
 	{/if}
 </div>

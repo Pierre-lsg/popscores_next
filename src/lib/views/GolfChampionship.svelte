@@ -5,8 +5,6 @@
 	let csStore = $state(
 		championshipStore.list[0] ? championshipStore.list[0] : championshipStore.new()
 	);
-
-	console.log('csStore', csStore);
 </script>
 
 <h2>Championnat {csStore.name}</h2>

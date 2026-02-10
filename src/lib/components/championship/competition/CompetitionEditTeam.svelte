@@ -6,16 +6,16 @@
 	import type { Team } from '$lib/types/teamType';
 
 	let {
-		currentClub = $bindable(''),
 		team = $bindable(null),
-		clubPlayers = $bindable([])
+		players = $bindable([]),
+		playersPerTeam = 0
 	} = $props<{
-		currentClub: string;
 		team: Team;
-		clubPlayers: Player[];
+		players: Player[];
+		playersPerTeam: number;
 	}>();
 
-	let playersAvailable = $derived<Player[]>(clubPlayers.filter((p: Player) => p.teamId === ''));
+	let playersAvailable = $derived<Player[]>(players.filter((p: Player) => p.teamId === ''));
 	let playerId: string = $state('');
 
 	// Initialize a variable to track whether the selection dropdown should be displayed
@@ -27,14 +27,14 @@
 	};
 
 	const removePlayer = (playerId: string) => {
-		let player = clubPlayers.find((p: Player) => p.id === playerId);
+		let player = players.find((p: Player) => p.id === playerId);
 		if (player) player.teamId = '';
 		team.playersId = team.playersId.filter((p: string) => p !== playerId);
 	};
 
 	// Function to handle selecting a player and adding it to the team
 	const selectPlayer = () => {
-		let player = clubPlayers.find((p: Player) => p.id === playerId);
+		let player = players.find((p: Player) => p.id === playerId);
 		if (player) player.teamId = team.id;
 		team.playersId.push(playerId);
 		isSelectVisible = false;
@@ -42,7 +42,7 @@
 </script>
 
 <div class="team-form">
-	<h3>Modifier l'équipe 👥</h3>
+	<h4>Modifier l'équipe "{team.name}"{playersPerTeam}-{team.playersId.length}</h4>
 	<Param
 		label="Nom de l'équipe"
 		type="text"
@@ -51,7 +51,7 @@
 		placeholder="Nom de l'équipe"
 	/>
 	<!-- Existing player selection code -->
-	{#if playersAvailable.length > 0}
+	{#if playersAvailable.length > 0 && team.playersId.length < playersPerTeam}
 		<button onclick={addPlayer}>Ajouter un joueur</button>
 		{#if isSelectVisible}
 			<Selector
@@ -66,7 +66,7 @@
 
 	{#each team.playersId as playerId (playerId)}
 		<div class="team-players">
-			<div>{clubPlayers.find((p: Player) => p.id === playerId).name}</div>
+			<div>{players.find((p: Player) => p.id === playerId).name}</div>
 			<button onclick={() => removePlayer(playerId)}>X</button>
 		</div>
 	{/each}

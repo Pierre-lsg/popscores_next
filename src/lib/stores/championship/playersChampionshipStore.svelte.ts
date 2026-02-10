@@ -19,7 +19,6 @@ class PlayersChampionshipStore {
 			// Sauvegarde automatique dès que la liste (ou un élément de la liste) change
 			$effect.root(() => {
 				$effect(() => {
-					//console.log('Liste des joueurs', this.list.length);
 					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
 				});
 			});

@@ -426,6 +426,7 @@ select {
 
 .selectable-item {
 	display: flex;
+	width: 85%;
 	align-items: center;
 	justify-content: space-between;
 	background: var(--bg-card);

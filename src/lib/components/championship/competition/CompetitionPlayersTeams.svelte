@@ -1,20 +1,20 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
-	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
+	import type { Regulations } from '$lib/types/regulationsType';
 
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
-	import {
-		getFilteredTeams,
-		getFilteredPlayers
-	} from '$lib/utils/championship/competitionsFunctions.svelte';
-	import { listTeamPlayer } from '$lib/utils/session/golfScoringFunction.svelte';
+	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
+
+	import { getFilteredTeams } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import { onMount } from 'svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import TeamCard from '$lib/ui/TeamCard.svelte';
+	import CompetitionEditTeam from './CompetitionEditTeam.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -22,20 +22,15 @@
 
 	let clubFilter: string = $state('');
 	let nameFilter: string = $state('');
+	let editingCompetingTeam: boolean[] = $state([]);
+	let editingAvailableTeam: boolean[] = $state([]);
+	let addingTeam: boolean = $state(false);
+	let teamName: string = $state('');
+	let newTeamsName: string = $state('');
+	let newTeamsClub: string = $state('');
 
-	let competitionPlayers: Player[] = $derived(
-		playersChampionshipStore.list.filter((player) =>
-			currentCompetition.playersId.includes(player.id)
-		)
-	);
-	let availablePlayers: Player[] = $derived(
-		playersChampionshipStore.list.filter(
-			(player) => !currentCompetition.playersId.includes(player.id)
-		)
-	);
-	let filteredPlayers: Player[] = $derived(
-		getFilteredPlayers(availablePlayers, clubFilter, nameFilter)
-	);
+	let rules: Regulations | undefined = $state();
+
 	let competitionTeams: Team[] = $derived(
 		teamsChampionshipStore.list.filter((team: Team) => currentCompetition.teamsId.includes(team.id))
 	);
@@ -56,7 +51,20 @@
 		);
 	};
 
+	const addTeam = () => {
+		teamsChampionshipStore.add(newTeamsName, newTeamsClub);
+		addingTeam = false;
+	};
+
+	const editCompetingTeam = (editedTeam: Team, index: number) => {
+		editingCompetingTeam[index] = !editingCompetingTeam[index];
+	};
+
 	onMount(() => {
+		if (currentCompetition) {
+			if (currentCompetition.regulationsId !== '')
+				rules = regulationsStore.find(currentCompetition.regulationsId);
+		}
 		// debug
 		// teamsChampionshipStore.list.forEach((t) => (t.playersId = []));
 		// playersChampionshipStore.list.forEach((p) => (p.teamId = ''));
@@ -67,20 +75,30 @@
 	<h3>Equipes engagés ...</h3>
 	{#if competitionTeams.length > 0}
 		{#each competitionTeams as team, i}
-			<div role="none" onclick={() => disengageTeam(i)} class="selectable-item">
-				{team.name} :
-				{#each listTeamPlayer(team, playersChampionshipStore.list) as player, i}
-					{#if i === 0}
-						{player.name}
-					{:else}
-						, {player.name}
-					{/if}
-				{/each}
+			<div style="display: flex">
+				<span role="none" onclick={() => disengageTeam(i)} class="selectable-item">
+					<TeamCard
+						{team}
+						players={playersChampionshipStore.list}
+						playersPerTeam={rules?.playersPerTeam || 2}
+					/>
+				</span>
+				<span class="edit-team" role="none" onclick={() => editCompetingTeam(team, i)}>✏️</span>
 			</div>
 		{/each}
 	{:else}
 		<p>Aucune équipe n'est engagée dans la compétition</p>
 	{/if}
+
+	{#each competitionTeams as team, i}
+		{#if editingCompetingTeam[i]}
+			<CompetitionEditTeam
+				{team}
+				players={playersChampionshipStore.list}
+				playersPerTeam={rules?.playersPerTeam || 2}
+			/>
+		{/if}
+	{/each}
 
 	<h3>Equipes disponibles</h3>
 	<Selector
@@ -91,22 +109,59 @@
 		optionsLabel={clubsStore.list.map((club) => club.name)}
 		unselectedOption="-- Choisis un club --"
 	/>
-	<Param label="Nom" bind:value={nameFilter} focus={true} oneline={true} />
+	<Param label="Nom" bind:value={nameFilter} oneline={true} />
 	{#if filteredTeams.length > 0}
 		{#each filteredTeams as team, i}
-			<div role="none" onclick={() => engageTeam(i)} class="selectable-item">
-				{team.name} :
-				{#each listTeamPlayer(team, playersChampionshipStore.list) as player, i}
-					{#if i === 0}
-						{player.name}
-					{:else}
-						, {player.name}
-					{/if}
-				{/each}
+			<div style="display: flex">
+				<span role="none" onclick={() => engageTeam(i)} class="selectable-item">
+					<TeamCard
+						{team}
+						players={playersChampionshipStore.list}
+						playersPerTeam={rules?.playersPerTeam || 2}
+					/>
+				</span>
+				<span
+					class="edit-team"
+					role="none"
+					onclick={() => (editingAvailableTeam[i] = !editingAvailableTeam[i])}>✏️</span
+				>
 			</div>
 		{/each}
 	{:else}
 		<p>Aucune équipe n'est disponible.</p>
 		<p>Veuillez créer ou définir de nouvelles équipes ou alléger les filtres ...</p>
 	{/if}
+
+	{#each filteredTeams as team, i}
+		{#if editingAvailableTeam[i]}
+			<CompetitionEditTeam
+				{team}
+				players={playersChampionshipStore.list}
+				playersPerTeam={rules?.playersPerTeam || 2}
+			/>
+		{/if}
+	{/each}
+
+	<h3>
+		Ajouter une équipe ... <button onclick={() => (addingTeam = !addingTeam)}>&nbsp;+&nbsp;</button>
+	</h3>
+	{#if addingTeam}
+		<Param label="Nom" bind:value={newTeamsName} />
+		<Selector
+			id="selectClub"
+			bind:value={newTeamsClub}
+			label="Club"
+			options={clubsStore.list.map((club) => club.id)}
+			optionsLabel={clubsStore.list.map((club) => club.name)}
+			unselectedOption="sans club"
+		/>
+		<button onclick={addTeam}>Valider</button>
+		<button onclick={() => (addingTeam = false)}>Annuler</button>
+	{/if}
 </div>
+
+<style>
+	.edit-team {
+		margin-left: auto;
+	}
+</style>

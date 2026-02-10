@@ -51,7 +51,6 @@
 			}
 		}*/
 		isSessionHistorised = historyStore.isGameHistorized(sessionSettingsStore.settings.id);
-		console.log(isSessionHistorised);
 
 		if (gameStatus.status === 'setup') nextCard(Step.session);
 		else if (gameStatus.status === 'in_progress') nextCard(Step.scoring);
@@ -101,7 +100,6 @@
 		let hasAllScoresEntered = true;
 		targetsStore.list.forEach((t) => {
 			const playersScore = playersStore.getPlayersScore(t.id);
-			console.log(playersScore);
 
 			if (playersScore.length === playersStore.list.length) {
 				for (const ps of playersScore) {
