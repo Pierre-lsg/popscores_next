@@ -29,6 +29,9 @@
 			{/if}
 
 			{#if competitionStatus.status === 'in_progress'}
+				<button onclick={() => (competitionStatus.action = 'course')} class="subnav">
+					Modifier le parcours
+				</button>
 				<button onclick={() => (competitionStatus.action = 'scoring')} class="subnav">
 					Saisir les scores
 				</button>

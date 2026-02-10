@@ -14,6 +14,7 @@
 		currentCompetition: Competition | undefined;
 	}>();
 
+	// Chargement du paramétrage de la compétition
 	onMount(() => {
 		if (currentCompetition) {
 			if (currentCompetition.regulationsId !== '')

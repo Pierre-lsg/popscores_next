@@ -423,3 +423,14 @@ select {
 	border-radius: 4px;
 	font-size: 1rem;
 }
+
+.selectable-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: var(--bg-card);
+	border: 1px solid var(--border-color);
+	border-radius: 8px;
+	padding: 0.5rem;
+	touch-action: shadow;
+}

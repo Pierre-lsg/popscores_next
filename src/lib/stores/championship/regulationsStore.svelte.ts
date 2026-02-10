@@ -1,6 +1,6 @@
 import type { Regulations } from '$lib/types/regulationsType';
 
-const STORAGE_KEY = 'golf-regulations-data';
+const STORAGE_KEY = 'cs-regulations-data';
 
 class RegulationsStore {
 	// List of Regulations

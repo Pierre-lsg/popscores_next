@@ -29,6 +29,7 @@
 	const flipDurationMs = 200;
 	let isDragging = $state(false);
 
+	// Chargement du parcours de la compétition
 	onMount(() => {
 		if (currentCompetition) {
 			let tempCourse = coursesChampionshipStore.find(currentCompetition.courseId);
