@@ -81,9 +81,8 @@
 
 	<h2>Définition du parcours</h2>
 	<h3>Liste des cibles</h3>
+	<button onclick={() => addNewTarget()}>Ajouter une cible</button>
 	{#if course && targets.length > 0}
-		<button onclick={() => addNewTarget()}>Ajouter une cible</button>
-
 		<div class="step-content" in:slide>
 			<div
 				class="targets-list"
