@@ -8,5 +8,5 @@ export interface Competition {
 	courseId?: string;
 	teamsId?: string[]; // Une équipe liste des joueurs
 	playersId?: string[];
-	flys?: string[]; // Un fly liste des équipes ou des joueurs suivant le mode de la compétition
+	flysId?: string[]; // Un fly liste des équipes ou des joueurs suivant le mode de la compétition
 }

@@ -4,6 +4,8 @@ export interface Regulations {
 	malusValue: number;
 	malusOverPar: number;
 	playersPerTeam: number;
+	teamsPerFly: number;
+	playersPerFly: number;
 	teamGame: boolean;
 	usePenalizingGhost: boolean;
 }

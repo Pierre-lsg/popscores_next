@@ -43,7 +43,10 @@
 		<Toggle label="Compétitons en équipe" bind:checked={rules.teamGame} />
 		{#if rules.teamGame}
 			<Stepper label="Nombre de joueurs par équipe" bind:value={rules.playersPerTeam} min={2} />
+			<Stepper label="Nombre d'équipe par fly" bind:value={rules.teamsPerFly} min={2} />
 			<Toggle label="Partenaires ghost à 'X'" bind:checked={rules.usePenalizingGhost} />
+		{:else}
+			<Stepper label="Nombre de joueurs par fly" bind:value={rules.playersPerFly} min={2} />
 		{/if}
 	{/if}
 </div>

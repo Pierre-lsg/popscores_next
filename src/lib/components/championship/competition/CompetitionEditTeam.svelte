@@ -42,7 +42,7 @@
 </script>
 
 <div class="team-form">
-	<h4>Modifier l'équipe "{team.name}"{playersPerTeam}-{team.playersId.length}</h4>
+	<h4>Modifier l'équipe "{team.name}"</h4>
 	<Param
 		label="Nom de l'équipe"
 		type="text"

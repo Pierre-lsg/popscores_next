@@ -56,8 +56,18 @@
 		addingTeam = false;
 	};
 
-	const editCompetingTeam = (editedTeam: Team, index: number) => {
+	const editCompetingTeam = (index: number) => {
 		editingCompetingTeam[index] = !editingCompetingTeam[index];
+		for (let i = 0; i < editingCompetingTeam.length; i++) {
+			if (index !== i) editingCompetingTeam[i] = false;
+		}
+	};
+
+	const editAvailableTeam = (index: number) => {
+		editingAvailableTeam[index] = !editingAvailableTeam[index];
+		for (let i = 0; i < editingAvailableTeam.length; i++) {
+			if (index !== i) editingAvailableTeam[i] = false;
+		}
 	};
 
 	onMount(() => {
@@ -83,7 +93,7 @@
 						playersPerTeam={rules?.playersPerTeam || 2}
 					/>
 				</span>
-				<span class="edit-team" role="none" onclick={() => editCompetingTeam(team, i)}>✏️</span>
+				<span class="edit-team" role="none" onclick={() => editCompetingTeam(i)}>✏️</span>
 			</div>
 		{/each}
 	{:else}
@@ -120,11 +130,7 @@
 						playersPerTeam={rules?.playersPerTeam || 2}
 					/>
 				</span>
-				<span
-					class="edit-team"
-					role="none"
-					onclick={() => (editingAvailableTeam[i] = !editingAvailableTeam[i])}>✏️</span
-				>
+				<span class="edit-team" role="none" onclick={() => editAvailableTeam(i)}>✏️</span>
 			</div>
 		{/each}
 	{:else}

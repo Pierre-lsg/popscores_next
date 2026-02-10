@@ -10,9 +10,10 @@
 	}
 
 	let { team, players, playersPerTeam }: Props = $props();
+	let checkTeam: string = playersPerTeam !== team.playersId.length ? 'check-team' : '';
 </script>
 
-<div>
+<div class={checkTeam}>
 	{team.name} :
 	{#each listTeamPlayer(team, players) as player, i}
 		{#if i === 0}
@@ -21,8 +22,10 @@
 			, {player.name}
 		{/if}
 	{/each}
-
-	{#if playersPerTeam !== team.playersId.length}
-		<span>*incomplet</span>
-	{/if}
 </div>
+
+<style>
+	.check-team {
+		background-color: rgba(255, 0, 0, 0.291);
+	}
+</style>

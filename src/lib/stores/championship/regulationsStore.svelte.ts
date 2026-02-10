@@ -32,6 +32,8 @@ class RegulationsStore {
 			malusValue: 10,
 			malusOverPar: 4,
 			playersPerTeam: 2,
+			teamsPerFly: 3,
+			playersPerFly: 6,
 			teamGame: false,
 			usePenalizingGhost: false
 		};
