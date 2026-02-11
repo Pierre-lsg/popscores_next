@@ -91,7 +91,6 @@
 
 	const loadingCompetition = (competition: Competition) => {
 		currentCompetition = competition;
-		competitionStatus.reset();
 	};
 </script>
 

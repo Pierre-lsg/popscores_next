@@ -19,14 +19,19 @@
 	}>();
 
 	let rules: Regulations | undefined = $state();
+	let nbTeamsPerFly: number = $derived(rules?.teamsPerFly || 3);
+	let nbPlayersPerFly: number = $derived(rules?.playersPerFly || 6);
 	let flys: Fly[] = $derived(
 		flysChampionshipStore.list.filter((fly) => currentCompetition.flysId.includes(fly.id))
 	);
 	let newIdFly: string = $state('');
+	let editingFly: boolean[] = $state([]);
 
 	const startCompetition = () => {
-		//competitionStatus.status = 'in_progress';
-		//competitionStatus.action = 'welcome';
+		if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
+			competitionStatus.status = 'in_progress';
+			competitionStatus.action = 'welcome';
+		}
 	};
 
 	const calculateFlys = () => {
@@ -36,13 +41,12 @@
 
 	const calculateFlysSolo = () => {
 		const sortedPlayersId: string[] = shuffle(currentCompetition.playersId);
-		const playersPerFly: number = rules?.playersPerFly || 6;
 		let nbFlys: number = 0;
 		let fly: Fly = {} as Fly;
 
 		purgePreviousFlys();
 		for (let i = 0; i < sortedPlayersId.length; i++) {
-			if (i % playersPerFly === 0) {
+			if (i % nbPlayersPerFly === 0) {
 				nbFlys += 1;
 				fly = flysChampionshipStore.add(nbFlys);
 				fly.playersId.push(sortedPlayersId[i]);
@@ -53,13 +57,12 @@
 
 	const calculateFlysTeam = () => {
 		const sortedTeamsId: string[] = shuffle(currentCompetition.teamsId);
-		const teamsPerFly: number = rules?.teamsPerFly || 6;
 		let nbFlys: number = 0;
 		let fly: Fly = {} as Fly;
 
 		purgePreviousFlys();
 		for (let i = 0; i < sortedTeamsId.length; i++) {
-			if (i % teamsPerFly === 0) {
+			if (i % nbTeamsPerFly === 0) {
 				nbFlys += 1;
 				fly = flysChampionshipStore.add(nbFlys);
 				fly.teamsId.push(sortedTeamsId[i]);
@@ -83,6 +86,32 @@
 			}
 		});
 		f.find(newflyId)?.teamsId.push(teamId);
+	};
+
+	const editTeamFly = (flyIdx: number, teamIdx: number) => {
+		let idx: number = flyIdx * nbTeamsPerFly + teamIdx;
+		for (let i = 0; i < editingFly.length; i++) {
+			if (i !== idx) editingFly[i] = false;
+		}
+		editingFly[idx] = !editingFly[idx];
+	};
+
+	const updatePlayerFly = (flyId: string, newflyId: string, playerId: string) => {
+		const f = flysChampionshipStore;
+		f.list.forEach((fly) => {
+			if (fly.playersId.includes(playerId)) {
+				fly.playersId = fly.playersId.filter((id) => id !== playerId);
+			}
+		});
+		f.find(newflyId)?.playersId.push(playerId);
+	};
+
+	const editPlayerFly = (flyIdx: number, playerIdx: number) => {
+		let idx: number = flyIdx * nbPlayersPerFly + playerIdx;
+		for (let i = 0; i < editingFly.length; i++) {
+			if (i !== idx) editingFly[i] = false;
+		}
+		editingFly[idx] = !editingFly[idx];
 	};
 
 	onMount(() => {
@@ -111,33 +140,47 @@
 			<!-- Compétition par équipe -->
 			{@const flysId = flys.map((f) => f.id)}
 			{@const flysOrder = flys.map((f) => 'Fly #' + f.order)}
-			{#each flys as fly}
+			{#each flys as fly, i}
 				<div class="fly">
 					{fly.order}
-					{#each fly.teamsId as teamId}
+					{#each fly.teamsId as teamId, j}
 						{@const teamFly = teamsChampionshipStore.find(teamId)}
-						<span class="team-in-fly">
+						<div class="team-in-fly">
 							{teamFly?.name}
-						</span>
-						<Selector
-							bind:value={newIdFly}
-							options={flysId}
-							optionsLabel={flysOrder}
-							onchange={() => updateTeamFly(fly.id, newIdFly, teamId)}
-						/>
+							<span class="edit-fly" role="none" onclick={() => editTeamFly(i, j)}>✏️</span>
+							{#if editingFly[i * nbTeamsPerFly + j]}
+								<Selector
+									bind:value={newIdFly}
+									options={flysId}
+									optionsLabel={flysOrder}
+									onchange={() => updateTeamFly(fly.id, newIdFly, teamId)}
+								/>
+							{/if}
+						</div>
 					{/each}
 				</div>
 			{/each}
 			<button onclick={() => calculateFlys()}>Recalculer les flys</button>
 		{:else}
 			<!-- Compétition individuelle -->
-			{#each flys as fly}
+			{#each flys as fly, i}
+				{@const flysId = flys.map((f) => f.id)}
+				{@const flysOrder = flys.map((f) => 'Fly #' + f.order)}
 				<div class="fly">
 					{fly.order}
-					{#each fly.playersId as playerId}
+					{#each fly.playersId as playerId, j}
 						{@const playerFly = playersChampionshipStore.find(playerId)}
 						<div class="player-in-fly">
 							{playerFly?.name}
+							<span class="edit-fly" role="none" onclick={() => editPlayerFly(i, j)}>✏️</span>
+							{#if editingFly[i * nbPlayersPerFly + j]}
+								<Selector
+									bind:value={newIdFly}
+									options={flysId}
+									optionsLabel={flysOrder}
+									onchange={() => updatePlayerFly(fly.id, newIdFly, playerId)}
+								/>
+							{/if}
 						</div>
 					{/each}
 				</div>
@@ -148,10 +191,11 @@
 		<p>Les flys ne sont pas définis</p>
 		<button onclick={() => calculateFlys()}>Calculer les flys</button>
 	{/if}
-	<h3>Autoriser les modifications de fly</h3>
-	<h3>Si les flys sont OK, lancer la compétition</h3>
 
-	<button onclick={startCompetition} class="subnav"> Lancer la compétition </button>
+	{#if flys.length > 0}
+		<button onclick={startCompetition} class="subnav"> Lancer la compétition </button>
+	{/if}
+
 	<p>Une fois la compétition lancée les flys ne peuvent etre modifié</p>
 	<p>
 		Au mieux des joueurs et équipes 'sans club' seront ajoutables par le responsable de la carte de
@@ -167,6 +211,16 @@
 	}
 
 	.player-in-fly {
+		display: flex;
 		font-weight: bold;
+	}
+
+	.team-in-fly {
+		display: flex;
+		font-weight: bold;
+	}
+
+	.edit-fly {
+		margin-left: auto;
 	}
 </style>

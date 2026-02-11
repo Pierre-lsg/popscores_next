@@ -22,6 +22,17 @@
 		<CompetitionMenu bind:currentCompetition />
 		<h2>Suivi d'une compétition</h2>
 		<p>Gestion de la compétition sélectionnée : {currentCompetition.name}</p>
+		{#if competitionStatus.status === 'setup'}
+			Veuillez définir les paramètres de la compétition
+		{/if}
+		{#if competitionStatus.status === 'in_progress'}
+			Compétition en cours. Vous pouvez saisir les scores, observer le déroulement ou récupérer les
+			cartes de score.
+		{/if}
+		{#if competitionStatus.status === 'finished'}
+			Compétition en terminé. Calculons le podium
+		{/if}
+
 		<p>Que voulez-vous faire ?</p>
 	{/if}
 
@@ -41,6 +52,9 @@
 	{/if}
 
 	{#if competitionStatus.status === 'in_progress'}
+		{#if competitionStatus.action === 'course'}
+			<CompetitionCourse bind:currentCompetition />
+		{/if}
 		{#if competitionStatus.action === 'scoring'}
 			<CompetitionScoring bind:currentCompetition />
 		{/if}
