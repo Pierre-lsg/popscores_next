@@ -1,4 +1,5 @@
 import type { Competition } from '$lib/types/competitionType';
+import type { CompetitionStatus, CompetitionStep } from '$lib/types/competitionType';
 
 const STORAGE_KEY = 'cs-competitions-data';
 
@@ -28,13 +29,25 @@ class CompetitionsStore {
 	 * @param scorePublicationDate - Date when scores will be published (optional)
 	 * @param location - Location of the competition (optional)
 	 */
-	add(name: string, startDate?: string, scorePublicationDate?: string, location?: string) {
+	add(
+		name: string,
+		status: CompetitionStatus,
+		step: CompetitionStep,
+		startDate?: string,
+		scorePublicationDate?: string,
+		location?: string
+	) {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
+			status,
+			step,
 			startDate,
 			scorePublicationDate,
-			location
+			location,
+			teamsId: [],
+			playersId: [],
+			flysId: []
 		});
 	}
 

@@ -4,7 +4,6 @@
 	import type { Regulations } from '$lib/types/regulationsType';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
-	import { competitionStatus } from '$lib/stores/championship/competitionStatusStore.svelte';
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import { onMount } from 'svelte';
@@ -21,8 +20,8 @@
 	);
 
 	const validating = () => {
-		// competitionStatus.status = 'finished';
-		// competitionStatus.action = 'welcome';
+		// currentCompetition.status = 'finished';
+		// currentCompetition.step = 'welcome';
 	};
 
 	const loadingFly = (fly: Fly) => {

@@ -7,9 +7,7 @@
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import { onMount } from 'svelte';
-	import { competitionStatus } from '$lib/stores/championship/competitionStatusStore.svelte';
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
-	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
@@ -29,8 +27,8 @@
 
 	const startCompetition = () => {
 		if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
-			competitionStatus.status = 'in_progress';
-			competitionStatus.action = 'welcome';
+			currentCompetition.status = 'in_progress';
+			currentCompetition.step = 'welcome';
 		}
 	};
 

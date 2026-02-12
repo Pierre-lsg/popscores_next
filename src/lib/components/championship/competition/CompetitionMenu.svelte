@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
-	import { competitionStatus } from '$lib/stores/championship/competitionStatusStore.svelte';
 	import { fade, fly } from 'svelte/transition';
 
 	let { currentCompetition = $bindable() } = $props<{
@@ -14,44 +13,44 @@
 	<div role="none" onclick={() => (showMenu = !showMenu)} class="menu">☰ Menu ...</div>
 	{#if showMenu}
 		<div class="menu-details" in:fly={{ duration: 200 }} out:fade>
-			{#if competitionStatus.status === 'setup'}
-				<button onclick={() => (competitionStatus.action = 'settings')} class="subnav">
+			{#if currentCompetition.status === 'setup'}
+				<button onclick={() => (currentCompetition.step = 'settings')} class="subnav">
 					Définir les règles
 				</button>
-				<button onclick={() => (competitionStatus.action = 'course')} class="subnav">
+				<button onclick={() => (currentCompetition.step = 'course')} class="subnav">
 					Définir le parcours
 				</button>
-				<button onclick={() => (competitionStatus.action = 'players')} class="subnav">
+				<button onclick={() => (currentCompetition.step = 'players')} class="subnav">
 					Lister les participants
 				</button>
-				<button onclick={() => (competitionStatus.action = 'starting')} class="subnav">
+				<button onclick={() => (currentCompetition.step = 'starting')} class="subnav">
 					Démarrer la compétition
 				</button>
 			{/if}
 
-			{#if competitionStatus.status === 'in_progress'}
-				<button onclick={() => (competitionStatus.action = 'course')} class="subnav">
+			{#if currentCompetition.status === 'in_progress'}
+				<button onclick={() => (currentCompetition.step = 'course')} class="subnav">
 					Modifier le parcours
 				</button>
-				<button onclick={() => (competitionStatus.action = 'scoring')} class="subnav">
+				<button onclick={() => (currentCompetition.step = 'scoring')} class="subnav">
 					Saisir les scores
 				</button>
-				<button onclick={() => (competitionStatus.action = 'following')} class="subnav">
+				<button onclick={() => (currentCompetition.step = 'following')} class="subnav">
 					Suivre la compétition
 				</button>
 			{/if}
 
-			{#if competitionStatus.status === 'finished'}
-				<button onclick={() => (competitionStatus.action = 'greeting')} class="subnav">
+			{#if currentCompetition.status === 'finished'}
+				<button onclick={() => (currentCompetition.step = 'greeting')} class="subnav">
 					Calculer le podium
 				</button>
-				<button onclick={() => (competitionStatus.action = 'welcome')} class="subnav">
+				<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav">
 					Boire une bière
 				</button>
 			{/if}
 
-			{#if competitionStatus.action !== 'welcome'}
-				<button onclick={() => (competitionStatus.action = 'welcome')} class="subnav">
+			{#if currentCompetition.step !== 'welcome'}
+				<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav">
 					Retour à l'accueil de la compétition
 				</button>
 			{:else}

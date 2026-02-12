@@ -6,7 +6,6 @@
 		getAllCompetitionsFromCloud,
 		saveCompetition2Cloud
 	} from '$lib/utils/pocketbase/competitions2Cloud';
-	import { competitionStatus } from '$lib/stores/championship/competitionStatusStore.svelte';
 
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
@@ -36,7 +35,14 @@
 	}>();
 
 	const createCompetition = () => {
-		competitionsStore.add(competitionName, competitionDate, publicationDate, competitionLocation);
+		competitionsStore.add(
+			competitionName,
+			'setup',
+			'welcome',
+			competitionDate,
+			publicationDate,
+			competitionLocation
+		);
 		competitionName = competitionLocation = '';
 		competitionDate = publicationDate = new Date().toISOString().split('T')[0];
 		addNewCompetition = false;
@@ -70,12 +76,17 @@
 		const aCompet = competitionsStore.list.filter((c) => c.id === filteredCompetitions[index].id);
 		if (aCompet.length == 0) {
 			if (confirm('Voulez-vous importer la compétition ?')) {
-				const newCompetition = {
+				const newCompetition: Competition = {
 					id: filteredCompetitions[index].id,
+					status: 'setup',
+					step: 'welcome',
 					name: filteredCompetitions[index].name,
 					startDate: filteredCompetitions[index].startDate,
-					scorePulicationDate: filteredCompetitions[index].scorePublicationDate,
-					location: filteredCompetitions[index].location
+					scorePublicationDate: filteredCompetitions[index].scorePublicationDate,
+					location: filteredCompetitions[index].location,
+					teamsId: [],
+					playersId: [],
+					flysId: []
 				};
 				// Load session to the local Store
 				competitionsStore.load(newCompetition);

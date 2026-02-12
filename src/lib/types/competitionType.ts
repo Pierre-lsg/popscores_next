@@ -1,3 +1,14 @@
+export type CompetitionStatus = 'setup' | 'in_progress' | 'finished';
+export type CompetitionStep =
+	| 'settings'
+	| 'course'
+	| 'players'
+	| 'starting'
+	| 'scoring'
+	| 'following'
+	| 'greeting'
+	| 'welcome';
+
 export interface Competition {
 	id: string;
 	name: string;
@@ -6,7 +17,9 @@ export interface Competition {
 	location?: string;
 	regulationsId?: string;
 	courseId?: string;
-	teamsId?: string[]; // Une équipe liste des joueurs
-	playersId?: string[];
-	flysId?: string[]; // Un fly liste des équipes ou des joueurs suivant le mode de la compétition
+	teamsId: string[];
+	playersId: string[];
+	flysId?: string[];
+	status: CompetitionStatus;
+	step: CompetitionStep;
 }
