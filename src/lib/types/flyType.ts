@@ -3,4 +3,5 @@ export interface Fly {
 	order: number;
 	playersId: string[];
 	teamsId: string[];
+	status?: string;
 }
