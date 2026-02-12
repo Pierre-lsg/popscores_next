@@ -1,6 +1,7 @@
 .table-container {
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-	overflow-x: auto;
+	background: var(--bg-card);
+	border-radius: 12px;
 	/* On garde la première colonne visible quand on scrolle à droite */
 	& th:nth-child(1),
 	& td:nth-child(1) {
@@ -19,10 +20,16 @@
 	}
 }
 
+.scorecard {
+	overflow-x: scroll;
+}
+
 .scorecard-target {
+	width: 100%;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-	overflow-x: auto;
+	border-radius: 12px;
 	background-color: var(--bg-card);
+	--webkit-overflow-scrolling: touch;
 }
 
 .first-fixed-col {

@@ -94,6 +94,8 @@ body {
 		color 0.3s ease;
 	font-family: 'Segoe UI', system-ui, sans-serif;
 	margin: 0;
+	max-width: 100vw;
+	overflow-x: hidden;
 }
 
 button {
@@ -183,14 +185,6 @@ input:disabled {
 	color: #9e9e9e;
 	border-color: #e0e0e0;
 	cursor: not-allowed;
-}
-
-/* Tableau des scores */
-.table-container {
-	overflow-x: auto;
-	background: var(--bg-card);
-	border-radius: 12px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 table {
