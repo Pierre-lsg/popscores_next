@@ -9,11 +9,16 @@
 	import CompetitionGreetings from './competition/CompetitionGreetings.svelte';
 
 	import CompetitionMenu from './competition/CompetitionMenu.svelte';
+	import { onMount } from 'svelte';
 
 	let { currentCompetition = $bindable(), csId } = $props<{
 		currentCompetition: Competition | undefined;
 		csId: string;
 	}>();
+
+	onMount(() => {
+		// for debug
+	});
 </script>
 
 <div>
