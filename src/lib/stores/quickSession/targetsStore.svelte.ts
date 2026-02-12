@@ -65,8 +65,8 @@ class TargetsStore {
 	addTarget() {
 		this.list.push({
 			id: crypto.randomUUID(), // Identifiant unique stable
-			par: 3,
-			rule: 'Greensome'
+			par: 4,
+			rule: 'Individuel'
 		});
 	}
 
@@ -83,7 +83,7 @@ class TargetsStore {
 	 * Resets the list to contain only one target with default values.
 	 */
 	reset() {
-		this.list = [{ id: crypto.randomUUID(), par: 4 }];
+		this.list = [];
 	}
 }
 
