@@ -8,7 +8,7 @@ let pb: PocketBase = await connect2PB();
  * Saves a session object to the cloud database.
  * @param mySession - The session to save.
  */
-export async function saveSession2Cloud(mySession: SessionArchive): Promise<string> {
+export const saveSession2Cloud = async (mySession: SessionArchive): Promise<string> => {
 	let status: string = 'warning';
 	if (pb.authStore.isValid) {
 		/* Checking if the session doesn't exist */
@@ -39,12 +39,12 @@ export async function saveSession2Cloud(mySession: SessionArchive): Promise<stri
 		pb = await connect2PB();
 	}
 	return status;
-}
+};
 
 /**
  * Retrieves all sessions from Pocket Base.
  */
-export async function getAllSessionsFromCloud(): Promise<SessionArchive[]> {
+export const getAllSessionsFromCloud = async (): Promise<SessionArchive[]> => {
 	let allSessions: SessionArchive[] = [];
 
 	if (pb.authStore.isValid) {
@@ -64,7 +64,7 @@ export async function getAllSessionsFromCloud(): Promise<SessionArchive[]> {
 	}
 
 	return allSessions;
-}
+};
 
 // Todo :
 // Export pocket base configs param

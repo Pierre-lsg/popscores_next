@@ -5,7 +5,6 @@
 	import type { Target } from '$lib/types/targetsType';
 	import type { Team } from '$lib/types/teamType';
 	import type { Player } from '$lib/types/playerType';
-	import type { RankedPlayer } from '$lib/types/playerType';
 	import type { Regulations } from '$lib/types/regulationsType';
 	import type { SessionSettings } from '$lib/types/gameSessionType';
 	import { individualRules } from '$lib/types/targetsType';
@@ -15,6 +14,7 @@
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 
+	import { swipe } from '$lib/utils/swipe';
 	import { slide } from 'svelte/transition';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
@@ -69,40 +69,6 @@
 	);
 	let isCourseEnded: boolean = $state(false);
 
-	// Swipe mécanism params
-	let prevTargetBtn: HTMLButtonElement;
-	let nextTargetBtn: HTMLButtonElement;
-	let touchStartX = 0;
-	let touchEndX = 0;
-	const SWIPE_THRESHOLD = 50;
-
-	// Swipe mecanism functions
-	const prevTargetClick = () => {
-		prevTargetBtn?.click();
-	};
-
-	const nextTargetClick = () => {
-		nextTargetBtn?.click();
-	};
-
-	const handleTouchStart = (e: TouchEvent) => {
-		touchStartX = e.changedTouches[0].screenX;
-	};
-
-	const handleTouchEnd = (e: TouchEvent) => {
-		touchEndX = e.changedTouches[0].screenX;
-		checkSwipe();
-	};
-
-	const checkSwipe = () => {
-		const distance = touchEndX - touchStartX;
-
-		if (Math.abs(distance) > SWIPE_THRESHOLD) {
-			if (distance > 0) nextTargetClick();
-			else prevTargetClick();
-		}
-	};
-
 	const showNextTarget = () => {
 		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
 			currentFly.status = 'in_progress';
@@ -139,14 +105,14 @@
 		});
 	};
 
-	function updateScoreTeam(team: Team, targetId: string, score: number) {
+	const updateScoreTeam = (team: Team, targetId: string, score: number) => {
 		team.playersId.forEach((playerId) => {
 			if (players) {
 				const player = players.find((p) => p.id === playerId);
 				if (player) player.scores[targetId] = score;
 			}
 		});
-	}
+	};
 
 	const validateFly = () => {
 		currentFly.status = 'validated';
@@ -174,12 +140,9 @@
 			<header
 				role="none"
 				class="target-header"
-				ontouchstart={handleTouchStart}
-				ontouchend={handleTouchEnd}
+				use:swipe={{ onRight: showNextTarget, onLeft: showPrevTarget }}
 			>
-				<button bind:this={prevTargetBtn} onclick={() => showPrevTarget()} disabled={isFirstTarget}
-					>◀</button
-				>
+				<button onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
 				<div class="target-info">
 					<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
 					<div class="target-details">
@@ -189,9 +152,7 @@
 						{/if}
 					</div>
 				</div>
-				<button bind:this={nextTargetBtn} onclick={() => showNextTarget()} disabled={isLastTarget}
-					>▶</button
-				>
+				<button onclick={() => showNextTarget()} disabled={isLastTarget}>▶</button>
 			</header>
 
 			<div class="scores-grid">
@@ -266,6 +227,3 @@
 	<!-- Affichage de la carte de score -->
 	<TeamScoreCardByTarget {rankedTeams} {targets} {players} {settings} />
 </div>
-
-<style>
-</style>

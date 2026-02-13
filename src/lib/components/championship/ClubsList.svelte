@@ -30,27 +30,27 @@
 		csId: string;
 	}>();
 
-	function createClub() {
+	const createClub = () => {
 		clubsStore.add(clubName, clubDescription);
 		((clubName = ''), (clubDescription = ''));
 		addNewClub = false;
-	}
-	function removeClub(id: string) {
+	};
+	const removeClub = (id: string) => {
 		if (confirm('Voulez-vous vraiment supprimer ce club ?')) {
 			clubsStore.remove(id);
 		}
 		clubs = clubsStore.list;
-	}
-	function editingClub(index: number) {
+	};
+	const editingClub = (index: number) => {
 		for (let i = 0; i < clubs.length; i++) {
 			if (i !== index) editClub[i] = false;
 		}
 		editClub[index] = !editClub[index];
-	}
+	};
 
-	function quickViewTeams(index: number) {
+	const quickViewTeams = (index: number) => {
 		alert(`Affichage rapide des équipes du club : ${clubs[index].name}`);
-	}
+	};
 
 	const savingClub = async (id: string) => {
 		let status: string = 'failure';
@@ -222,7 +222,7 @@
 
 	.club-card:hover {
 		transform: translateY(-5px);
-		border-color: var(--primary);
+		border-color: var(--border-color);
 	}
 
 	.details {

@@ -33,7 +33,7 @@
 .podium-score {
 	font-size: 1.2rem;
 	font-weight: 800;
-	color: var(--primary);
+	color: var(--primary-ligth);
 }
 
 /* Hauteurs différentes pour l'effet escalier */

@@ -9,11 +9,11 @@ let pb: PocketBase = await connect2PB();
  * Save a championship object to the cloud database.
  * @param aChampionship - The session to save.
  */
-export async function saveChampionship2Cloud(
+export const saveChampionship2Cloud = async (
 	aChampionship: Championship,
 	idvScale: MarkedPointScale,
 	cltScale: MarkedPointScale
-): Promise<string> {
+): Promise<string> => {
 	let status: string = 'warning';
 	let noChampionShipFound = false;
 	let cloudChamp: CloudChampionship;
@@ -55,9 +55,9 @@ export async function saveChampionship2Cloud(
 	}
 
 	return status;
-}
+};
 
-async function saveNewChampionship(cloudChamp: CloudChampionship) {
+const saveNewChampionship = async (cloudChamp: CloudChampionship) => {
 	const dataToSave = {
 		id: cloudChamp.id,
 		name: cloudChamp.name, // Corrected the field name from 'location' to 'name'
@@ -70,9 +70,9 @@ async function saveNewChampionship(cloudChamp: CloudChampionship) {
 	} catch (err) {
 		throw err;
 	}
-}
+};
 
-async function updateChampionship(cloudChamp: CloudChampionship) {
+const updateChampionship = async (cloudChamp: CloudChampionship) => {
 	const dataToSave = {
 		name: cloudChamp.name,
 		owner: pb.authStore.record?.id,
@@ -84,12 +84,12 @@ async function updateChampionship(cloudChamp: CloudChampionship) {
 	} catch (err) {
 		throw err;
 	}
-}
+};
 
 /**
  * Retrieves all championships from Pocket Base.
  */
-export async function getAllChampionshipsFromCloud(): Promise<Championship[]> {
+export const getAllChampionshipsFromCloud = async (): Promise<Championship[]> => {
 	let allChampionships: Championship[] = [];
 
 	if (pb.authStore.isValid) {
@@ -109,4 +109,4 @@ export async function getAllChampionshipsFromCloud(): Promise<Championship[]> {
 	}
 
 	return allChampionships;
-}
+};

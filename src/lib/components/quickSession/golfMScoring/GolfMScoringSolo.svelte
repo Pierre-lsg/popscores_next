@@ -7,6 +7,7 @@
 
 	import { individualRules } from '$lib/types/targetsType';
 
+	import { swipe } from '$lib/utils/swipe';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 
@@ -34,53 +35,20 @@
 				: currentTarget.par + s.malusOverPar
 	);
 
-	let prevTargetBtn: HTMLButtonElement;
-	let nextTargetBtn: HTMLButtonElement;
-
-	let touchStartX = 0;
-	let touchEndX = 0;
-
 	let showRanking: boolean = $state(false);
-
-	const SWIPE_THRESHOLD = 50;
-
-	const prevTargetClick = () => {
-		prevTargetBtn?.click();
-	};
-
-	const nextTargetClick = () => {
-		nextTargetBtn?.click();
-	};
-
-	const handleTouchStart = (e: TouchEvent) => {
-		touchStartX = e.changedTouches[0].screenX;
-	};
-
-	const handleTouchEnd = (e: TouchEvent) => {
-		touchEndX = e.changedTouches[0].screenX;
-		checkSwipe();
-	};
-
-	const checkSwipe = () => {
-		const distance = touchEndX - touchStartX;
-
-		if (Math.abs(distance) > SWIPE_THRESHOLD) {
-			if (distance > 0) nextTargetClick();
-			else prevTargetClick();
-		}
-	};
 
 	const showNextTarget = () => {
 		updatingPar = false;
 		updatingRule = false;
-		activeTargetIndex++;
+		if (activeTargetIndex < targetsStore.list.length) activeTargetIndex++;
+		else alert("Il n'y a pas d'autres cibles");
 		initScoresPlayerOnTarget();
 	};
 
 	const showPrevTarget = () => {
 		updatingPar = false;
 		updatingRule = false;
-		activeTargetIndex--;
+		if (activeTargetIndex > 0) activeTargetIndex--;
 	};
 
 	const initScoresPlayerOnTarget = () => {
@@ -147,12 +115,9 @@
 	<header
 		role="none"
 		class="target-header"
-		ontouchstart={handleTouchStart}
-		ontouchend={handleTouchEnd}
+		use:swipe={{ onRight: showNextTarget, onLeft: showPrevTarget }}
 	>
-		<button bind:this={prevTargetBtn} onclick={() => showPrevTarget()} disabled={isFirstTarget}
-			>◀</button
-		>
+		<button onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
 		<div class="target-info">
 			<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
 			<div class="target-details">
@@ -164,9 +129,7 @@
 				{/if}
 			</div>
 		</div>
-		<button bind:this={nextTargetBtn} onclick={() => showNextTarget()} disabled={isLastTarget}
-			>▶</button
-		>
+		<button onclick={() => showNextTarget()} disabled={isLastTarget}>▶</button>
 	</header>
 
 	{#if updatingPar}

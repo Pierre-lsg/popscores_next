@@ -1,19 +1,23 @@
-<script>
-	export let checked = false;
-	export let label = '';
+<script lang="ts">
+	interface Props {
+		checked: boolean;
+		label: string;
+	}
 
-	function handleToggle() {
+	let { checked = $bindable(false), label = '' }: Props = $props();
+
+	const handleToggle = () => {
 		// Une vibration très courte (10ms) pour simuler un clic physique
 		if (typeof navigator !== 'undefined' && navigator.vibrate) {
 			navigator.vibrate(100);
 		}
-	}
+	};
 </script>
 
 <div class="row">
 	<span>{label}</span>
 	<label class="switch">
-		<input type="checkbox" bind:checked on:change={handleToggle} />
+		<input type="checkbox" bind:checked onchange={handleToggle} />
 		<span class="slider"></span>
 	</label>
 </div>
@@ -65,7 +69,7 @@
 
 	/* Couleur quand c'est coché (ton vert golf) */
 	input:checked + .slider {
-		background-color: #2e7d32;
+		background-color: var(--primary);
 	}
 
 	/* Mouvement du rond quand c'est coché */

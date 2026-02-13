@@ -221,19 +221,6 @@
 </div>
 
 <style>
-	select {
-		padding: 0.1rem;
-		width: 6.5rem;
-		height: 2rem;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-		font-size: 1rem;
-	}
-
-	.invisible-button {
-		text-align: left;
-	}
-
 	.player-items {
 		display: flex;
 		align-items: center;

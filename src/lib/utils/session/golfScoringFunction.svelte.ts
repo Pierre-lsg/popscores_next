@@ -8,9 +8,9 @@ import type { SessionSettings } from '$lib/types/gameSessionType';
 //                      //
 
 // Retourne le Par total du parcours
-export function getTotalPar(targets: Target[]) {
+export const getTotalPar = (targets: Target[]) => {
 	return targets.reduce((sum, t) => sum + t.par, 0);
-}
+};
 
 //                      //
 // --    Joueurs     -- //
@@ -60,13 +60,13 @@ export const getRankedPlayers = (players: Player[], targets: Target[]): RankedPl
 
 // Retourne pour le score d'un joueur
 // son score brut et son écart par rapport au Par du parcours
-export function getPlayerStats(player: Player, targets: Target[]) {
+export const getPlayerStats = (player: Player, targets: Target[]) => {
 	const gross = calculatePlayerScore(player, targets);
 	const diff = gross - getTotalPar(targets);
 	const diffText = diff > 0 ? `(+${diff})` : diff < 0 ? `(${diff})` : '(E)';
 
 	return { gross, diffText, diff };
-}
+};
 
 // Retourne la liste des joueurs pour le podium
 export const getTop3Players = (rankedPlayers: RankedPlayer[]) => {
@@ -148,18 +148,18 @@ export const formatPlayerList = (players: Player[], settings: SessionSettings) =
 
 // Retourne pour le score d'une équipe
 // son score brut et son écart par rapport au Par du parcours
-export function getTeamStats(
+export const getTeamStats = (
 	team: Team,
 	targets: Target[],
 	players: Player[],
 	settings: SessionSettings
-) {
+) => {
 	const gross = calculateTeamScore(team, targets, players, settings);
 	const diff = gross - getTotalPar(targets) * settings.playersPerTeam;
 	const diffText = diff > 0 ? `(+${diff})` : diff < 0 ? `(${diff})` : '(E)';
 
 	return { gross, diffText, diff };
-}
+};
 
 export const getRankedTeams = (
 	teams: Team[],
@@ -215,10 +215,11 @@ export const getScoreClass = (score: number, target: Target) => {
 
 	const diff = score - target.par;
 
-	if (diff < 0) return 'score-birdie'; // En dessous du par
-	if (diff === 0) return 'score-par'; // Pile le par
-	if (diff === 1) return 'score-bogey'; // +1
-	return 'score-double-bogey'; // +2 ou plus
+	if (diff < -1) return 'score-eagle';
+	if (diff === -1) return 'score-birdie';
+	if (diff === 0) return 'score-par';
+	if (diff === 1) return 'score-bogey';
+	return 'score-double-bogey';
 };
 
 // Partage des résultats des joueurs via l'API native de partage

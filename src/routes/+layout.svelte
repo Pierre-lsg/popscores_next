@@ -51,17 +51,6 @@
 		background-color: var(--bg-card);
 	}
 
-	.btn-back {
-		text-decoration: none;
-		margin: 0rem;
-		background: none;
-		border: none;
-		color: var(--text-main);
-		cursor: pointer;
-		padding: 0.5rem 1rem;
-		font-size: 0.9rem;
-		font-weight: bold;
-	}
 	.wrapper {
 		min-height: 100vh;
 		display: flex;

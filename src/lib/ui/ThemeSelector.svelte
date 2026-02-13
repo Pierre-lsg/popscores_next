@@ -46,7 +46,7 @@
 		transition: all 0.2s;
 	}
 	.theme-btn.active {
-		border-color: var(--primary);
+		border-color: var(--border-color);
 		transform: scale(1.1);
 		box-shadow: 0 0 8px var(--primary);
 	}

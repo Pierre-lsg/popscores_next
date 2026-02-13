@@ -201,30 +201,3 @@
 		<Toast />
 	{/if}
 </div>
-
-<style>
-	.mobile-wizard {
-		padding: 0.5rem;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.progress-bar {
-		height: 4px;
-		background: #eee;
-		border-radius: 2px;
-	}
-
-	.fill {
-		height: 100%;
-		background: var(--primary);
-		transition: width 0.3s;
-	}
-
-	.btn {
-		width: 100%;
-		-webkit-tap-highlight-color: transparent;
-		user-select: none;
-	}
-</style>

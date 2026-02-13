@@ -20,12 +20,3 @@
 		<li>Lister les joueurs sans club</li>
 	</ul>
 </div>
-
-<style>
-	.mobile-wizard {
-		padding: 0.5rem;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-</style>

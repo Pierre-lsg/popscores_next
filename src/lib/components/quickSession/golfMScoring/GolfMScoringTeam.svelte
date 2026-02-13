@@ -7,6 +7,7 @@
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import type { Team } from '$lib/types/teamType';
 
+	import { swipe } from '$lib/utils/swipe';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import { onMount } from 'svelte';
 
@@ -31,66 +32,33 @@
 
 	let hasCrossAFixedPenalty = s.hasCrossAFixedPenalty;
 
-	let prevTargetBtn: HTMLButtonElement;
-	let nextTargetBtn: HTMLButtonElement;
-
-	function prevTargetClick() {
-		prevTargetBtn?.click();
-	}
-
-	function nextTargetClick() {
-		nextTargetBtn?.click();
-	}
-
 	// --
 	// Code pour gestion du Swipe
 	// Todo: à refactoriser car utilisé ailleurs
-	let touchStartX = 0;
-	let touchEndX = 0;
 
-	// Seuil minimal pour éviter de changer d'écran par erreur (en pixels)
-	const SWIPE_THRESHOLD = 50;
-
-	function handleTouchStart(e: TouchEvent) {
-		touchStartX = e.changedTouches[0].screenX;
-	}
-
-	function handleTouchEnd(e: TouchEvent) {
-		touchEndX = e.changedTouches[0].screenX;
-		checkSwipe();
-	}
-
-	function checkSwipe() {
-		const distance = touchEndX - touchStartX;
-
-		if (Math.abs(distance) > SWIPE_THRESHOLD) {
-			if (distance > 0) nextTargetClick();
-			else prevTargetClick();
-		}
-	}
-
-	function showNextTarget() {
-		activeTargetIndex++;
+	const showNextTarget = () => {
+		if (activeTargetIndex < targetsStore.list.length) activeTargetIndex++;
+		else alert("Il n'y a pas d'autres cibles");
 		initScoresPlayerOnTarget();
-	}
+	};
 
-	function showPrevTarget() {
-		activeTargetIndex--;
-	}
+	const showPrevTarget = () => {
+		if (activeTargetIndex > 0) activeTargetIndex--;
+	};
 
-	function initScoresPlayerOnTarget() {
+	const initScoresPlayerOnTarget = () => {
 		playersStore.list.forEach((player) => {
 			if (player.scores[currentTarget.id] === undefined) {
 				player.scores[currentTarget.id] = currentTarget.par;
 			}
 		});
-	}
+	};
 
-	function updateScoreTeam(team: Team, targetId: string, score: number) {
+	const updateScoreTeam = (team: Team, targetId: string, score: number) => {
 		team.playersId.forEach((playerId) => {
 			playersStore.updateScore(playerId, targetId, score);
 		});
-	}
+	};
 
 	onMount(() => {
 		initScoresPlayerOnTarget();
@@ -108,12 +76,9 @@
 	<header
 		role="none"
 		class="target-header"
-		ontouchstart={handleTouchStart}
-		ontouchend={handleTouchEnd}
+		use:swipe={{ onRight: showNextTarget, onLeft: showPrevTarget }}
 	>
-		<button bind:this={prevTargetBtn} onclick={() => showPrevTarget()} disabled={isFirstTarget}
-			>◀</button
-		>
+		<button onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
 		<div class="target-info">
 			<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
 			<div class="target-details">
@@ -123,9 +88,7 @@
 				{/if}
 			</div>
 		</div>
-		<button bind:this={nextTargetBtn} onclick={() => showNextTarget()} disabled={isLastTarget}
-			>▶</button
-		>
+		<button onclick={() => showNextTarget()} disabled={isLastTarget}>▶</button>
 	</header>
 
 	<div class="scores-grid">

@@ -222,7 +222,7 @@
 
 	.competition-card:hover {
 		transform: translateY(-5px);
-		border-color: var(--primary);
+		border-color: var(--border-color);
 	}
 
 	.details {

@@ -114,29 +114,29 @@ th.vertical-header span {
 
 /* Birdie : Un cercle */
 .score-birdie .shape {
-	border: 2px solid #333; /* Ou une couleur comme #4caf50 */
+	border: 2px solid var(--text-main); /* Ou une couleur comme #4caf50 */
 	border-radius: 50%;
 }
 
 /* Eagle (encore plus bas que Birdie) : Double cercle */
 .score-eagle .shape {
-	border: 2px solid #333;
+	border: 2px solid var(--text-main);
 	border-radius: 50%;
 	box-shadow:
-		0 0 0 2px white,
-		0 0 0 4px #333; /* Effet double contour */
+		0 0 0 2px var(--bg-card),
+		0 0 0 4px var(--text-main); /* Effet double contour */
 }
 
 /* Bogey : Un carré */
 .score-bogey .shape {
-	border: 2px solid #333; /* Ou une couleur comme #ff9800 */
+	border: 2px solid var(--text-main); /* Ou une couleur comme #ff9800 */
 	border-radius: 0; /* Carré parfait */
 }
 
 /* Double Bogey ou pire : Double carré */
 .score-double-bogey .shape {
-	border: 2px solid #333;
-	outline: 2px solid #333;
+	border: 2px solid var(--text-main);
+	outline: 2px solid var(--text-main);
 	outline-offset: 2px;
 }
 

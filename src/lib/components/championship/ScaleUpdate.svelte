@@ -10,7 +10,7 @@
 	let qtyToAdd = $state(1); // Quantité de rangs à ajouter d'un coup
 	let step = $state(1);
 
-	function addRanks() {
+	const addRanks = () => {
 		let newPoints = [...scale.points];
 		for (let i = 0; i < qtyToAdd; i++) {
 			const lastScore = newPoints[newPoints.length - 1] || 0;
@@ -19,13 +19,13 @@
 			newPoints.push(nextScore);
 		}
 		scale.points = newPoints;
-	}
+	};
 
-	function removeLastRank() {
+	const removeLastRank = () => {
 		if (scale.points.length > 0) {
 			scale.points = scale.points.slice(0, -1);
 		}
-	}
+	};
 
 	onMount(() => {
 		let scaleTemp = mpsStore.list.find((scale) => scale.id === scaleId);

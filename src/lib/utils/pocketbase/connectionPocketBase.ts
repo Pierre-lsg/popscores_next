@@ -8,7 +8,7 @@ const pb = new PocketBase(appSettings.values.cloudUrl);
  * Check if a connection is established
  * If not create it
  */
-export async function connect2PB(): Promise<PocketBase> {
+export const connect2PB = async (): Promise<PocketBase> => {
 	if (!pb.authStore.isValid) {
 		try {
 			const authData = await pb
@@ -22,4 +22,4 @@ export async function connect2PB(): Promise<PocketBase> {
 		}
 	}
 	return pb;
-}
+};

@@ -33,7 +33,7 @@
 	};
 
 	// Function to handle the removal of a target from dndzone
-	function handleRemoveDrop(e: CustomEvent<{ items: any[] }>) {
+	const handleRemoveDrop = (e: CustomEvent<{ items: any[] }>) => {
 		const removedItem = e.detail.items[0];
 		if (removedItem) {
 			targetsStore.list = targetsStore.list.filter((h) => h.id !== removedItem.id);
@@ -41,34 +41,34 @@
 		playersStore.cleanOrphanScores(targetsStore.list.map((h) => h.id));
 		gameStatus.currentTargetIndex = 0;
 		isDragging = false;
-	}
+	};
 
 	// Function to handle the consideration of a target in dndzone
-	function handleConsider() {
+	const handleConsider = () => {
 		isDragging = true;
-	}
+	};
 
 	// Function to finalize the reordering of targets in dndzone
-	function handleFinalize(e: CustomEvent<{ items: any[] }>) {
+	const handleFinalize = (e: CustomEvent<{ items: any[] }>) => {
 		targetsStore.list = e.detail.items;
 		isDragging = false;
-	}
+	};
 
 	// Function to set editingId to the specified target id for editing its name
-	function editTargetName(id: string) {
+	const editTargetName = (id: string) => {
 		editingId = id;
-	}
+	};
 
 	// Function to save the edited name of a target and reset editingId to null
-	function saveName(e: Event) {
+	const saveName = (e: Event) => {
 		editingId = null;
-	}
+	};
 
 	// Focus function for input element to set focus on it and select its text
-	function focus(node: HTMLInputElement) {
+	const focus = (node: HTMLInputElement) => {
 		node.focus();
 		node.select();
-	}
+	};
 </script>
 
 <div class="step-content" in:slide>

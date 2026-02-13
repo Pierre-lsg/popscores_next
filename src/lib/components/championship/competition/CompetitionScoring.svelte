@@ -7,7 +7,7 @@
 	import CompetitionScoringEditSolo from './CompetitionScoringEditSolo.svelte';
 	import CompetitionScoringEditTeams from './CompetitionScoringEditTeams.svelte';
 	import { onMount } from 'svelte';
-	import '$lib/styles/golfMScoring.css';
+	import '$lib/styles/golfScoring.css';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;

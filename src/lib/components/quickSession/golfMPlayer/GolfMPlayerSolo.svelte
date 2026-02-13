@@ -14,42 +14,42 @@
 
 	let editingId = $state<string | null>(null);
 
-	function addPlayer() {
+	const addPlayer = () => {
 		playersStore.add('Joueur #' + (playersStore.list.length + 1));
-	}
+	};
 
-	function handleRemoveDrop(e: CustomEvent<{ items: any[] }>) {
+	const handleRemoveDrop = (e: CustomEvent<{ items: any[] }>) => {
 		const removedItem = e.detail.items[0];
 		if (removedItem) {
 			playersStore.list = playersStore.list.filter((h) => h.id !== removedItem.id);
 		}
 		isDragging = false;
-	}
+	};
 
-	function handleConsider() {
+	const handleConsider = () => {
 		isDragging = true;
-	}
-	function handleFinalize(e: CustomEvent<{ items: any[] }>) {
+	};
+	const handleFinalize = (e: CustomEvent<{ items: any[] }>) => {
 		playersStore.list = e.detail.items;
 		isDragging = false;
-	}
+	};
 
-	function sortPlayersByPlayer() {
+	const sortPlayersByPlayer = () => {
 		playersStore.list = smartSort(playersStore.list, 'name', isSortPlayerAsc);
 		isSortPlayerAsc = !isSortPlayerAsc;
-	}
+	};
 
-	function editPlayerName(id: string) {
+	const editPlayerName = (id: string) => {
 		editingId = id;
-	}
+	};
 
-	function saveName(e: Event) {
+	const saveName = (e: Event) => {
 		editingId = null;
-	}
-	function focus(node: HTMLInputElement) {
+	};
+	const focus = (node: HTMLInputElement) => {
 		node.focus();
 		node.select();
-	}
+	};
 </script>
 
 <div class="step-content" in:slide>

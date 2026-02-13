@@ -8,7 +8,7 @@ let pb: PocketBase = await connect2PB();
  * Save a player object to the cloud database.
  * @param aPlayer - The session to save.
  */
-export async function savePlayer2Cloud(aPlayer: Player, clubId: string): Promise<string> {
+export const savePlayer2Cloud = async (aPlayer: Player, clubId: string): Promise<string> => {
 	let status: string = 'warning';
 	let noPlayerFound = false;
 	// Check if the connection is valid
@@ -38,9 +38,9 @@ export async function savePlayer2Cloud(aPlayer: Player, clubId: string): Promise
 	}
 
 	return status;
-}
+};
 
-async function saveNewPlayer(cloudPlayer: Player, clId: string) {
+const saveNewPlayer = async (cloudPlayer: Player, clId: string) => {
 	const dataToSave = {
 		id: cloudPlayer.id,
 		name: cloudPlayer.name,
@@ -53,9 +53,9 @@ async function saveNewPlayer(cloudPlayer: Player, clId: string) {
 	} catch (err) {
 		throw err;
 	}
-}
+};
 
-async function updatePlayer(cloudPlayer: Player, csId: string) {
+const updatePlayer = async (cloudPlayer: Player, csId: string) => {
 	const dataToSave = {
 		name: cloudPlayer.name,
 		owner: pb.authStore.record?.id,
@@ -68,12 +68,12 @@ async function updatePlayer(cloudPlayer: Player, csId: string) {
 	} catch (err) {
 		throw err;
 	}
-}
+};
 
 /**
  * Retrieves all players from Pocket Base.
  */
-export async function getAllPlayersFromCloud(clId: string): Promise<Player[]> {
+export const getAllPlayersFromCloud = async (clId: string): Promise<Player[]> => {
 	let allPlayers: Player[] = [];
 
 	if (pb.authStore.isValid) {
@@ -93,4 +93,4 @@ export async function getAllPlayersFromCloud(clId: string): Promise<Player[]> {
 	}
 
 	return allPlayers;
-}
+};

@@ -1,17 +1,21 @@
-<script>
-	export let label = 'Mot de passe';
-	export let value = '';
-	export let placeholder = '••••••••';
+<script lang="ts">
+	interface Props {
+		label: string;
+		value: string;
+		placeholder: string;
+	}
+
+	let { label = '', value = $bindable(''), placeholder = '' }: Props = $props();
 
 	// État interne pour basculer entre 'password' et 'text'
-	let isVisible = false;
+	let isVisible = $state(false);
 
 	function toggleVisibility() {
 		isVisible = !isVisible;
 	}
 
 	// Le type change dynamiquement selon l'état isVisible
-	$: inputType = isVisible ? 'text' : 'password';
+	let inputType = $derived(isVisible ? 'text' : 'password');
 </script>
 
 <div class="field-container">
@@ -20,12 +24,12 @@
 	{/if}
 
 	<div class="input-wrapper">
-		<input id="password-field" type={inputType} {placeholder} bind:value on:input on:keydown />
+		<input id="password-field" type={inputType} {placeholder} bind:value />
 
 		<button
 			type="button"
 			class="toggle-btn"
-			on:click={toggleVisibility}
+			onclick={toggleVisibility}
 			tabindex="-1"
 			aria-label={isVisible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
 		>
@@ -64,8 +68,6 @@
 			{/if}
 		</button>
 	</div>
-
-	<slot />
 </div>
 
 <style>

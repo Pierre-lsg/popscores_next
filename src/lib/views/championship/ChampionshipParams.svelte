@@ -11,7 +11,7 @@
 
 	let csStore = $state(championshipStore.list[0]);
 
-	async function saveChampionshipToCloud() {
+	const saveChampionshipToCloud = async () => {
 		let status: string = 'failure';
 		let idvScale: MarkedPointScale = mpsStore.list.filter(
 			(m) => (m.id = csStore.individualScale)
@@ -23,7 +23,7 @@
 		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
 		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
 		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
-	}
+	};
 
 	const showAvailableChampionship = () => {
 		alert('A faire : récupérer et afficher les championnats disponibles');
@@ -62,18 +62,6 @@
 </div>
 
 <style>
-	h2 {
-		margin-bottom: 1rem;
-		color: var(--primary);
-		text-align: center;
-	}
-
-	h2:not(:first-child) {
-		border-top: var(--primary) 2px solid;
-		padding-top: 1rem;
-		margin-top: 2rem;
-	}
-
 	.settings-page {
 		min-height: 100vh;
 		display: flex;

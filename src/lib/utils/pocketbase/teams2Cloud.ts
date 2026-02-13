@@ -8,7 +8,7 @@ let pb: PocketBase = await connect2PB();
  * Save a team object to the cloud database.
  * @param aTeam - The session to save.
  */
-export async function saveTeam2Cloud(aTeam: Team, clubId: string): Promise<string> {
+export const saveTeam2Cloud = async (aTeam: Team, clubId: string): Promise<string> => {
 	let status: string = 'warning';
 	let noTeamFound = false;
 	// Check if the connection is valid
@@ -38,9 +38,9 @@ export async function saveTeam2Cloud(aTeam: Team, clubId: string): Promise<strin
 	}
 
 	return status;
-}
+};
 
-async function saveNewteam(cloudTeam: Team, clId: string) {
+const saveNewteam = async (cloudTeam: Team, clId: string) => {
 	const dataToSave = {
 		id: cloudTeam.id,
 		name: cloudTeam.name,
@@ -53,9 +53,9 @@ async function saveNewteam(cloudTeam: Team, clId: string) {
 	} catch (err) {
 		throw err;
 	}
-}
+};
 
-async function updateteam(cloudTeam: Team, csId: string) {
+const updateteam = async (cloudTeam: Team, csId: string) => {
 	const dataToSave = {
 		name: cloudTeam.name,
 		owner: pb.authStore.record?.id,
@@ -68,12 +68,12 @@ async function updateteam(cloudTeam: Team, csId: string) {
 	} catch (err) {
 		throw err;
 	}
-}
+};
 
 /**
  * Retrieves all teams from Pocket Base.
  */
-export async function getAllTeamsFromCloud(clId: string): Promise<Team[]> {
+export const getAllTeamsFromCloud = async (clId: string): Promise<Team[]> => {
 	let allTeams: Team[] = [];
 
 	if (pb.authStore.isValid) {
@@ -93,4 +93,4 @@ export async function getAllTeamsFromCloud(clId: string): Promise<Team[]> {
 	}
 
 	return allTeams;
-}
+};

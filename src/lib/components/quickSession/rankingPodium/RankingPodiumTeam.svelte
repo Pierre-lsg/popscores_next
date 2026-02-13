@@ -31,29 +31,29 @@
 	let othersRankedTeams = getOthersRankedTeams(rankedTeams);
 	let viewedTeam: RankedTeam[] = $state([]);
 
-	function viewTeamScoreCard(team: RankedTeam) {
+	const viewTeamScoreCard = (team: RankedTeam) => {
 		if (viewedTeam.length === 0 || viewedTeam[0].team.id !== team.team.id) {
 			viewedTeam = [team];
 		} else {
 			viewedTeam = [];
 		}
-	}
+	};
 
-	function handlePhotoTaken(e: Event) {
+	const handlePhotoTaken = (e: Event) => {
 		const file = (e.target as HTMLInputElement).files?.[0];
 		if (file) {
 			if (previewUrl) URL.revokeObjectURL(previewUrl);
 			previewUrl = URL.createObjectURL(file);
 		}
-	}
+	};
 
-	function catchNewPhoto() {
+	const catchNewPhoto = () => {
 		if (previewUrl) URL.revokeObjectURL(previewUrl);
 		previewUrl = '';
 		if (fileInput) {
 			fileInput.value = '';
 		}
-	}
+	};
 
 	onDestroy(() => {
 		if (previewUrl) URL.revokeObjectURL(previewUrl);

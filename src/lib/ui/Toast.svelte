@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { toastStore } from '$lib/stores/toastStore.svelte';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 </script>
 
 {#if toastStore.message}
@@ -14,7 +14,6 @@
 
 <style>
 	.toast-button {
-		/* On annule le style par défaut du bouton */
 		border: none;
 		position: fixed;
 		top: 0;
@@ -39,19 +38,4 @@
 	.warning {
 		background: #ff7f30;
 	}
-
-	/*
-	.toast-button {
-		background: var(--primary);
-		color: white;
-		border: none;
-		padding: 0.8rem 1.5rem;
-		border-radius: 8px;
-		cursor: pointer;
-		position: fixed;
-		bottom: 2rem;
-		left: 50%;
-		transform: translateX(-50%);
-	}
-*/
 </style>

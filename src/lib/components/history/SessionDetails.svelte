@@ -10,7 +10,7 @@
 	import type { Team } from '$lib/types/teamType';
 	import type { Target } from '$lib/types/targetsType';
 
-	import SessionDetails from '$lib/ui/SessionDetails.svelte';
+	import SessionDetails from '$lib/components/quickSession/SessionDetails.svelte';
 	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
 	import PlayerScoreOrder from '$lib/ui/PlayerScoreOrder.svelte';
 	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
@@ -35,17 +35,17 @@
 	let rankedPlayers = $derived(getRankedPlayers(players || [], targets || []));
 	let rankedTeams = $derived(getRankedTeams(teams || [], targets || [], players || [], settings));
 
-	function retourHistorique() {
+	const retourHistorique = () => {
 		currentSession = '';
-	}
+	};
 
-	async function saveSessionToCloud() {
+	const saveSessionToCloud = async () => {
 		let status: string = 'failure';
 		if (session) status = await saveSession2Cloud(session);
 		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
 		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
 		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
-	}
+	};
 </script>
 
 <div>

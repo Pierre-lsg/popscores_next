@@ -4,7 +4,7 @@
  * @param key La clé de l'objet (ex: 'name', 'team')
  * @param ascending Ordre croissant (true) ou décroissant (false)
  */
-export function smartSort<T>(array: T[], key: keyof T, ascending = true): T[] {
+export const smartSort = <T>(array: T[], key: keyof T, ascending = true): T[] => {
 	return [...array].sort((a, b) => {
 		const valA = a[key];
 		const valB = b[key];
@@ -31,13 +31,13 @@ export function smartSort<T>(array: T[], key: keyof T, ascending = true): T[] {
 
 		return ascending ? comparison : -comparison;
 	});
-}
+};
 
 /**
  * Mélange un tableau d'objets
  * @param array Le tableau à trier
  */
-export function shuffle<T>(array: T[]): T[] {
+export const shuffle = <T>(array: T[]): T[] => {
 	const newArray = [...array];
 
 	for (let i = newArray.length - 1; i > 0; i--) {
@@ -46,4 +46,4 @@ export function shuffle<T>(array: T[]): T[] {
 	}
 
 	return newArray;
-}
+};

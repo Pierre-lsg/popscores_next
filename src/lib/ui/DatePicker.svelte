@@ -1,7 +1,11 @@
-<script>
-	export let value = '';
-	export let label = '';
-	export let icon = '';
+<script lang="ts">
+	interface Props {
+		value: string;
+		label: string;
+		icon: string;
+	}
+
+	let { value = $bindable(''), label = '', icon = '' }: Props = $props();
 </script>
 
 <label for="date-picker">{label}</label>

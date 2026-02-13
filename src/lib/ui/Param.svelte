@@ -77,13 +77,13 @@
 	}
 
 	input:focus {
-		border-color: #2e7d32; /* Ton vert golf */
+		border-color: var(--border-color);
 	}
 
 	/* Style spécifique pour le mode sombre si tu l'utilises */
 	:global(.dark-mode) input {
 		background: #222;
 		color: white;
-		border-color: #444;
+		border-color: var(--border-color);
 	}
 </style>

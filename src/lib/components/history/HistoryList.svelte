@@ -105,7 +105,7 @@
 	.session-card:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		border-color: #2c3e50;
+		border-color: var(--border-color);
 	}
 
 	.session-card:active {

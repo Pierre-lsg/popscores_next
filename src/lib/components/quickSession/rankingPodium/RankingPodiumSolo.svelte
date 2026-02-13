@@ -25,29 +25,29 @@
 	let othersRankedPlayers = getOthersRankedPlayers(rankedPlayers);
 	let viewedPlayer: RankedPlayer[] = $state([]);
 
-	function viewPlayerScoreCard(player: RankedPlayer) {
+	const viewPlayerScoreCard = (player: RankedPlayer) => {
 		if (viewedPlayer.length === 0 || viewedPlayer[0].player.id !== player.player.id) {
 			viewedPlayer = [player];
 		} else {
 			viewedPlayer = [];
 		}
-	}
+	};
 
-	function handlePhotoTaken(e: Event) {
+	const handlePhotoTaken = (e: Event) => {
 		const file = (e.target as HTMLInputElement).files?.[0];
 		if (file) {
 			if (previewUrl) URL.revokeObjectURL(previewUrl);
 			previewUrl = URL.createObjectURL(file);
 		}
-	}
+	};
 
-	function catchNewPhoto() {
+	const catchNewPhoto = () => {
 		if (previewUrl) URL.revokeObjectURL(previewUrl);
 		previewUrl = '';
 		if (fileInput) {
 			fileInput.value = '';
 		}
-	}
+	};
 
 	onDestroy(() => {
 		if (previewUrl) URL.revokeObjectURL(previewUrl);
