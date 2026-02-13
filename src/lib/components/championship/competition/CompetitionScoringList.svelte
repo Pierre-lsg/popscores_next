@@ -14,14 +14,14 @@
 	}>();
 
 	let rules: Regulations | undefined = $state();
-
 	let flys: Fly[] = $derived(
 		flysChampionshipStore.list.filter((fly) => currentCompetition.flysId.includes(fly.id))
 	);
+	let allFlysCompleted: boolean = $state(false);
 
 	const validating = () => {
-		// currentCompetition.status = 'finished';
-		// currentCompetition.step = 'welcome';
+		currentCompetition.status = 'finished';
+		currentCompetition.step = 'welcome';
 	};
 
 	const loadingFly = (fly: Fly) => {
@@ -40,6 +40,9 @@
 		if (!currentCompetition.playersId) currentCompetition.playersId = [];
 		if (!currentCompetition.teamsId) currentCompetition.teamsId = [];
 		if (!currentCompetition.flysId) currentCompetition.flysId = [];
+
+		// check all flys
+		allFlysCompleted = flys.every((fly) => fly.status === 'validated');
 	});
 </script>
 
@@ -67,7 +70,9 @@
 	<p>Si toutes les cartes validées par les responsables de fly</p>
 	<p>--> Validation de la compétition</p>
 
-	<button onclick={validating} class="subnav"> Valider l'ensemble des cartes </button>
+	{#if allFlysCompleted}
+		<button onclick={validating} class="subnav"> Valider l'ensemble des cartes </button>
+	{/if}
 </div>
 
 <style>

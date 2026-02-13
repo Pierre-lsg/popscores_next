@@ -31,7 +31,8 @@ class FlysChampionshipStore {
 			id: crypto.randomUUID(),
 			order,
 			playersId: [],
-			teamsId: []
+			teamsId: [],
+			status: 'not_started'
 		};
 
 		this.list.push(aFly);

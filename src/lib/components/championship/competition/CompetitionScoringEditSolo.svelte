@@ -11,7 +11,7 @@
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 
-	import { slide } from 'svelte/transition';
+	import { fly, slide } from 'svelte/transition';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
 	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
@@ -43,6 +43,7 @@
 				? rules?.malusValue
 				: currentTarget.par + (rules?.malusOverPar || 4)
 	);
+	let isCourseEnded: boolean = $state(false);
 
 	// Swipe mécanism params
 	let prevTargetBtn: HTMLButtonElement;
@@ -81,8 +82,26 @@
 	// Swipe mecanism functions end
 
 	const showNextTarget = () => {
-		activeTargetIndex++;
-		initScoresPlayerOnTarget();
+		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
+			currentFly.status = 'in_progress';
+			if (activeTargetIndex < targets.length) activeTargetIndex++;
+			else activeTargetIndex = 0;
+			initScoresPlayerOnTarget();
+		}
+		if (checkAllTargetsValidated()) {
+			isCourseEnded = true;
+		}
+	};
+
+	const checkAllTargetsValidated = (): boolean => {
+		// Pour chaque cible du parcours, chaque joueur du fly, un score est-il inscrit ?
+		let allTargetsValidated: boolean = true;
+		targets.forEach((t) => {
+			players.forEach((p) => {
+				if (p.scores[t.id] === undefined) allTargetsValidated = false;
+			});
+		});
+		return allTargetsValidated;
 	};
 
 	const showPrevTarget = () => {
@@ -96,6 +115,10 @@
 					player.scores[currentTarget.id] = currentTarget.par;
 				}
 		});
+	};
+
+	const validateFly = () => {
+		currentFly.status = 'validated';
 	};
 
 	onMount(() => {
@@ -112,65 +135,69 @@
 
 <div>
 	<button onclick={() => (currentFly = undefined)}>Retour</button>
-	<!-- Saisie des résultats d'une cible pour un fly -->
-	<div class="step-content" in:slide>
-		<header
-			role="none"
-			class="target-header"
-			ontouchstart={handleTouchStart}
-			ontouchend={handleTouchEnd}
-		>
-			<button bind:this={prevTargetBtn} onclick={() => showPrevTarget()} disabled={isFirstTarget}
-				>◀</button
+	{#if isCourseEnded}
+		<button onclick={() => validateFly()}>Valider le fly</button>
+	{:else}
+		<!-- Saisie des résultats d'une cible pour un fly -->
+		<div class="step-content" in:slide>
+			<header
+				role="none"
+				class="target-header"
+				ontouchstart={handleTouchStart}
+				ontouchend={handleTouchEnd}
 			>
-			<div class="target-info">
-				<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
-				<div class="target-details">
-					<span>{currentTarget.rule}</span>
-					{#if currentTarget.rule !== 'Bonus'}
-						<span>PAR {currentTarget.par}</span>
-					{/if}
+				<button bind:this={prevTargetBtn} onclick={() => showPrevTarget()} disabled={isFirstTarget}
+					>◀</button
+				>
+				<div class="target-info">
+					<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
+					<div class="target-details">
+						<span>{currentTarget.rule}</span>
+						{#if currentTarget.rule !== 'Bonus'}
+							<span>PAR {currentTarget.par}</span>
+						{/if}
+					</div>
 				</div>
-			</div>
-			<button bind:this={nextTargetBtn} onclick={() => showNextTarget()} disabled={isLastTarget}
-				>▶</button
-			>
-		</header>
+				<button bind:this={nextTargetBtn} onclick={() => showNextTarget()} disabled={isLastTarget}
+					>▶</button
+				>
+			</header>
 
-		<div class="scores-grid">
-			<table>
-				<tbody>
-					{#each players as player}
-						<tr>
-							<td>
-								<span class="player-name">{player.name}</span>
-							</td>
-							<td>
-								<Stepper
-									value={player.scores[currentTarget.id] ?? 0}
-									min={minTrys}
-									max={maxTrys}
-									onchange={(val) => (player.scores[currentTarget.id] = val)}
-								/>
-							</td>
-							<td class="btn-actions">
-								<button
-									class="btn-par"
-									onclick={() => (player.scores[currentTarget.id] = currentTarget.par)}
-									title="Par">=</button
-								>
-								<button
-									class="btn-delete"
-									onclick={() => (player.scores[currentTarget.id] = maxTrys)}
-									title="Echec">X</button
-								>
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+			<div class="scores-grid">
+				<table>
+					<tbody>
+						{#each players as player}
+							<tr>
+								<td>
+									<span class="player-name">{player.name}</span>
+								</td>
+								<td>
+									<Stepper
+										value={player.scores[currentTarget.id] ?? 0}
+										min={minTrys}
+										max={maxTrys}
+										onchange={(val) => (player.scores[currentTarget.id] = val)}
+									/>
+								</td>
+								<td class="btn-actions">
+									<button
+										class="btn-par"
+										onclick={() => (player.scores[currentTarget.id] = currentTarget.par)}
+										title="Par">=</button
+									>
+									<button
+										class="btn-delete"
+										onclick={() => (player.scores[currentTarget.id] = maxTrys)}
+										title="Echec">X</button
+									>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	<!-- Affichage de la carte de score -->
 	<PlayerScoreCardByTarget {rankedPlayers} {targets} />

@@ -31,9 +31,6 @@
 	}>();
 </script>
 
-{#each targets as target, i}
-	{target.name}
-{/each}
 <div class="scorecard">
 	<table class="scorecard-target">
 		<thead>
