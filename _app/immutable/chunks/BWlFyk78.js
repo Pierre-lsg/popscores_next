@@ -10,4 +10,4 @@ La session du jour ⛳`,r)if(navigator.canShare&&navigator.canShare({files:[r]})
 `}),t+=`
 Joué avec PopScores ⛳`,o&&navigator.canShare&&navigator.canShare({files:[o]}))try{await navigator.share({files:[o],title:"Résultat de la partie",text:t}),l=!0}catch(n){console.log("Echec de l'envoi avec photo : ",n)}if(navigator.share&&!l)try{await navigator.share({title:"Résultat de la partie",text:t})}catch(n){console.log("Partage annulé ou erreur:",n)}else alert(`Le partage n'est pas supporté sur ce navigateur. Voici les résultats :
 
-`+t)};export{f as a,g as b,p as c,h as d,m as e,d as f,b as g,y as h,S as i,v as j,R as k,T as l,$ as m,P as n,w as o,k as s};
+`+t)};export{f as a,h as b,p as c,g as d,m as e,d as f,b as g,y as h,S as i,v as j,R as k,T as l,$ as m,P as n,w as o,k as s};
