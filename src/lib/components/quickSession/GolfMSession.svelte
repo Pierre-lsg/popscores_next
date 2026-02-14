@@ -23,18 +23,22 @@
 			options={weatherOptions}
 		/>
 
-		<Toggle label="Malus fixe en cas de X" bind:checked={s.hasCrossAFixedPenalty} />
+		<Toggle label="Malus fixe en cas de X" bind:checked={s.regulation.hasCrossAFixedPenalty} />
 
-		{#if s.hasCrossAFixedPenalty}
-			<Stepper label="Malus fixe" bind:value={s.malusValue} min={7} />
+		{#if s.regulation.hasCrossAFixedPenalty}
+			<Stepper label="Malus fixe" bind:value={s.regulation.malusValue} min={7} />
 		{:else}
-			<Stepper label="Malus ajouté au Par" bind:value={s.malusOverPar} min={3} />
+			<Stepper label="Malus ajouté au Par" bind:value={s.regulation.malusOverPar} min={3} />
 		{/if}
 
-		<Toggle label="Partie en équipe" bind:checked={s.teamGame} />
-		{#if s.teamGame}
-			<Stepper label="Nombre de joueurs par équipe" bind:value={s.playersPerTeam} min={2} />
-			<Toggle label="Partenaires ghost à 'X'" bind:checked={s.usePenalizingGhost} />
+		<Toggle label="Partie en équipe" bind:checked={s.regulation.teamGame} />
+		{#if s.regulation.teamGame}
+			<Stepper
+				label="Nombre de joueurs par équipe"
+				bind:value={s.regulation.playersPerTeam}
+				min={2}
+			/>
+			<Toggle label="Partenaires ghost à 'X'" bind:checked={s.regulation.usePenalizingGhost} />
 		{/if}
 	</div>
 </div>

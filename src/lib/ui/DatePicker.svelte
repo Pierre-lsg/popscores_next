@@ -2,7 +2,7 @@
 	interface Props {
 		value: string;
 		label: string;
-		icon: string;
+		icon?: string;
 	}
 
 	let { value = $bindable(''), label = '', icon = '' }: Props = $props();

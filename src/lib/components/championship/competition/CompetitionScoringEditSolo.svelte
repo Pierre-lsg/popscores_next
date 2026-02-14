@@ -40,9 +40,9 @@
 	let maxTrys = $derived(
 		currentTarget?.rule === 'Bonus'
 			? 0
-			: rules?.hasCrossAFixedPenalty
-				? rules?.malusValue
-				: currentTarget.par + (rules?.malusOverPar || 4)
+			: rules?.regulation.hasCrossAFixedPenalty
+				? rules?.regulation.malusValue
+				: currentTarget.par + (rules?.regulation.malusOverPar || 4)
 	);
 	let isCourseEnded: boolean = $state(false);
 

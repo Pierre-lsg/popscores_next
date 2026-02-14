@@ -6,7 +6,7 @@
 
 	const s = sessionSettingsStore.settings;
 
-	let isTeamGame: boolean = s.teamGame;
+	let isTeamGame: boolean = s.regulation.teamGame;
 </script>
 
 {#if isTeamGame}

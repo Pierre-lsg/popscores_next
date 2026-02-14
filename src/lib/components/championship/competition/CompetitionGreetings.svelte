@@ -1,28 +1,13 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
-	import type { Regulations } from '$lib/types/regulationsType';
-	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import CompetitionGreetingsSolo from './CompetitionGreetingsSolo.svelte';
 	import CompetitionGreetingsTeams from './CompetitionGreetingsTeams.svelte';
 	import CompetitionMenu from './CompetitionMenu.svelte';
-	import { onMount } from 'svelte';
+	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 	}>();
-
-	let rules: Regulations | undefined = $state();
-
-	onMount(() => {
-		if (currentCompetition) {
-			if (currentCompetition.regulationsId !== '')
-				rules = regulationsStore.find(currentCompetition.regulationsId);
-			if (!rules) {
-				rules = regulationsStore.new();
-				currentCompetition.regulationsId = rules.id;
-			}
-		}
-	});
 </script>
 
 <div>
@@ -33,7 +18,7 @@
 	<p>En cas d'égalité sur les 3 premières places, ajouter une cible pour départager</p>
 	<p>Calculer le classement du championnat</p>
 
-	{#if rules?.teamGame}
+	{#if isCompetitionTeam(currentCompetition)}
 		<!-- Compétition en équipe -->
 		<CompetitionGreetingsTeams {currentCompetition} />
 	{:else}

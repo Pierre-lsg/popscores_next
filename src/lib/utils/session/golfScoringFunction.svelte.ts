@@ -1,7 +1,7 @@
 import type { Player, RankedPlayer } from '$lib/types/playerType';
 import type { Team, RankedTeam } from '$lib/types/teamType';
 import type { Target } from '$lib/types/targetsType';
-import type { SessionSettings } from '$lib/types/gameSessionType';
+import type { Regulation } from '$lib/types/regulationsType';
 
 //                      //
 // --    Parcours    -- //
@@ -85,7 +85,7 @@ export const calculateTeamScore = (
 	team: Team,
 	targets: Target[],
 	players: Player[],
-	settings: SessionSettings
+	settings: Regulation
 ) => {
 	// Pour toutes les cibles du parcours
 	return targets.reduce((sum, target) => {
@@ -133,7 +133,7 @@ export const listTeamPlayer = (team: Team, players: Player[]) => {
 };
 
 // Retourne la liste formattée des noms des joueurs de l'équipe
-export const formatPlayerList = (players: Player[], settings: SessionSettings) => {
+export const formatPlayerList = (players: Player[], settings: Regulation) => {
 	let names = players.map((p) => p.name);
 	if (names.length < settings.playersPerTeam) names.push('👻');
 
@@ -152,7 +152,7 @@ export const getTeamStats = (
 	team: Team,
 	targets: Target[],
 	players: Player[],
-	settings: SessionSettings
+	settings: Regulation
 ) => {
 	const gross = calculateTeamScore(team, targets, players, settings);
 	const diff = gross - getTotalPar(targets) * settings.playersPerTeam;
@@ -165,7 +165,7 @@ export const getRankedTeams = (
 	teams: Team[],
 	targets: Target[],
 	players: Player[],
-	settings: SessionSettings
+	settings: Regulation
 ): RankedTeam[] => {
 	// 1. On calcule les scores totaux et on trie
 	const sorted = [...teams]
@@ -275,7 +275,7 @@ export const shareResultsTeams =
 		rankedTeams: RankedTeam[],
 		targets: Target[],
 		players: Player[],
-		settings: SessionSettings,
+		settings: Regulation,
 		photo?: any
 	) =>
 	async () => {

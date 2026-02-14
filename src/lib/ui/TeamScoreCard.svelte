@@ -4,7 +4,7 @@
 	import type { RankedTeam } from '$lib/types/teamType';
 	import type { Target } from '$lib/types/targetsType';
 	import type { Player } from '$lib/types/playerType';
-	import type { SessionSettings } from '$lib/types/gameSessionType';
+	import type { Regulation } from '$lib/types/regulationsType';
 
 	import {
 		listTeamPlayer,
@@ -22,12 +22,12 @@
 		rankedTeams: RankedTeam[];
 		targets: Target[];
 		players: Player[];
-		settings: SessionSettings;
+		settings: Regulation;
 	} = $props<{
 		rankedTeams: RankedTeam[];
 		targets: Target[];
 		players: Player[];
-		settings: SessionSettings;
+		settings: Regulation;
 	}>();
 </script>
 

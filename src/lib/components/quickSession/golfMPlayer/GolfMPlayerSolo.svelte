@@ -2,11 +2,9 @@
 	import { slide, fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
-	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { smartSort } from '$lib/utils/sharedFunction';
 	import { dndzone } from 'svelte-dnd-action';
 
-	const s = sessionSettingsStore.settings;
 	const flipDurationMs = 300;
 
 	let isDragging: boolean = $state(false);

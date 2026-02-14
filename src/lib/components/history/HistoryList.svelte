@@ -53,7 +53,7 @@
 				{session.settings.locationName}
 			</div>
 			<div class="details">
-				{#if session.settings.teamGame}👥{:else}👤{/if}
+				{#if session.settings.regulation.teamGame}👥{:else}👤{/if}
 			</div>
 			<div>{session.settings.sessionBeginning}</div>
 			<div class="icon">📜</div>

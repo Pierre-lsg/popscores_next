@@ -18,7 +18,7 @@
 	} from '$lib/utils/session/golfScoringFunction.svelte';
 	import type { RankedTeam } from '$lib/types/teamType';
 
-	const s = sessionSettingsStore.settings;
+	const s = sessionSettingsStore.settings.regulation;
 	const t = targetsStore.list;
 	const p = playersStore.list;
 

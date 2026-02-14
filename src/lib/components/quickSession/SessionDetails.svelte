@@ -37,27 +37,27 @@
 		</div>
 		<div class="item-card">
 			<strong>Jeu en équipe :</strong>
-			{settings.teamGame ? 'Oui' : 'Non'}
+			{settings.regulation.teamGame ? 'Oui' : 'Non'}
 		</div>
-		{#if settings.teamGame}
+		{#if settings.regulation.teamGame}
 			<div class="item-card">
 				<strong>Nombre de joueurs par équipe :</strong>
-				{settings.playersPerTeam}
+				{settings.regulation.playersPerTeam}
 			</div>
 		{/if}
 		<div class="item-card">
 			<strong>Règles - valeur de la 'X' :</strong>
 		</div>
 		<div>
-			{#if settings.hasCrossAFixedPenalty}
+			{#if settings.regulation.hasCrossAFixedPenalty}
 				<div class="item-card">
 					<span>Fixe :</span>
-					{settings.malusValue}
+					{settings.regulation.malusValue}
 				</div>
 			{:else}
 				<div class="item-card">
 					<span>Malus sur le Par :</span>
-					{settings.malusOverPar}
+					{settings.regulation.malusOverPar}
 				</div>
 			{/if}
 		</div>

@@ -6,40 +6,49 @@
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import type { Team } from '$lib/types/teamType';
+	import TeamScoreOrder from '$lib/ui/TeamScoreOrder.svelte';
 
 	import { swipe } from '$lib/utils/swipe';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import { onMount } from 'svelte';
+	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 
-	const s = sessionSettingsStore.settings;
+	const settings = sessionSettingsStore.settings;
 	const scoringForAllPlayersRules = ['Bonus', 'Individuel'];
+
+	let targets = $derived(targetsStore.list);
+	let teams = $derived(teamsStore.list);
+	let players = $derived(
+		playersStore.list.filter((player) => teams.map((t) => t.playersId.includes(player.id)).flat())
+	);
+	let rankedTeams = $derived(getRankedTeams(teams, targets, players, settings.regulation));
 
 	let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
 
-	let currentTarget = $derived(targetsStore.list[activeTargetIndex]);
+	let currentTarget = $derived(targets[activeTargetIndex]);
 	let isFirstTarget = $derived(activeTargetIndex === 0);
-	let isLastTarget = $derived(activeTargetIndex === targetsStore.list.length - 1);
+	let isLastTarget = $derived(activeTargetIndex === targets.length - 1);
+	let updatingPar: boolean = $state(false);
+	let updatingRule: boolean = $state(false);
 
 	let minTrys = $derived(currentTarget?.rule === 'Bonus' ? -3 : 0);
-
 	let maxTrys = $derived(
 		currentTarget?.rule === 'Bonus'
 			? 0
-			: s.hasCrossAFixedPenalty
-				? s.malusValue
-				: currentTarget.par + s.malusOverPar
+			: settings.regulation.hasCrossAFixedPenalty
+				? settings.regulation.malusValue
+				: currentTarget.par + settings.regulation.malusOverPar
 	);
 
-	let hasCrossAFixedPenalty = s.hasCrossAFixedPenalty;
-
-	// --
-	// Code pour gestion du Swipe
-	// Todo: à refactoriser car utilisé ailleurs
+	let showRanking: boolean = $state(false);
 
 	const showNextTarget = () => {
-		if (activeTargetIndex < targetsStore.list.length) activeTargetIndex++;
-		else alert("Il n'y a pas d'autres cibles");
-		initScoresPlayerOnTarget();
+		if (activeTargetIndex < targets.length - 1) {
+			activeTargetIndex++;
+			initScoresPlayerOnTarget();
+		} else {
+			alert("Il n'y a pas d'autres cibles");
+		}
 	};
 
 	const showPrevTarget = () => {
@@ -60,16 +69,38 @@
 		});
 	};
 
+	const modifyPar = () => {
+		updatingRule = false;
+		updatingPar = !updatingPar;
+	};
+
+	const modifyRule = () => {
+		updatingPar = false;
+		updatingRule = !updatingRule;
+	};
+
 	onMount(() => {
 		initScoresPlayerOnTarget();
 	});
 </script>
 
-<div class="progress-bar">
+<div class="step-content unselectable">
 	<div
-		class="fill"
-		style="width: {(100 * (activeTargetIndex + 1)) / targetsStore.list.length}%"
-	></div>
+		role="none"
+		onpointerdown={() => (showRanking = true)}
+		onpointerup={() => (showRanking = false)}
+		onpointerleave={() => (showRanking = false)}
+		ontouchend={() => (showRanking = false)}
+	>
+		🔥 Provisoire
+	</div>
+	{#if showRanking}
+		<TeamScoreOrder {rankedTeams} {targets} {players} settings={settings.regulation} />
+	{/if}
+</div>
+
+<div class="progress-bar">
+	<div class="fill" style="width: {(100 * (activeTargetIndex + 1)) / targets.length}%"></div>
 </div>
 
 <div class="step-content" in:slide>
@@ -95,8 +126,8 @@
 		<table>
 			<tbody>
 				{#if !scoringForAllPlayersRules.includes(currentTarget.rule || '')}
-					{#each teamsStore.list as team}
-						{@const player = playersStore.list.find((p) => p.id === team.playersId[0]) || {
+					{#each teams as team}
+						{@const player = players.find((p) => p.id === team.playersId[0]) || {
 							id: '',
 							name: '',
 							teamId: '',
@@ -130,7 +161,7 @@
 						</tr>
 					{/each}
 				{:else}
-					{#each playersStore.list as player}
+					{#each players as player}
 						<tr class="score">
 							<td class="player-name">
 								{player.name}

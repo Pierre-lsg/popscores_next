@@ -33,7 +33,9 @@
 	let teams: Team[] = $derived(session?.teams || []);
 
 	let rankedPlayers = $derived(getRankedPlayers(players || [], targets || []));
-	let rankedTeams = $derived(getRankedTeams(teams || [], targets || [], players || [], settings));
+	let rankedTeams = $derived(
+		getRankedTeams(teams || [], targets || [], players || [], settings.regulation)
+	);
 
 	const retourHistorique = () => {
 		currentSession = '';
@@ -57,20 +59,20 @@
 			<!-- Détails de la session -->
 			<SessionDetails {players} {targets} {teams} {settings} />
 
-			{#if settings.teamGame}
+			{#if settings.regulation.teamGame}
 				<!-- Affichage du résultat par équipe -->
 				<h3>Carte de score par équipe</h3>
-				<TeamScoreOrder {rankedTeams} {targets} {players} {settings} />
+				<TeamScoreOrder {rankedTeams} {targets} {players} settings={settings.regulation} />
 			{/if}
 
 			<!-- Affichage du résultat par joueur-->
 			<h3>Résultat individuels</h3>
 			<PlayerScoreOrder {rankedPlayers} {targets} />
 
-			{#if settings.teamGame}
+			{#if settings.regulation.teamGame}
 				<!-- Carte des scores par équipe -->
 				<h3>Carte de score par équipe</h3>
-				<TeamScoreCard {rankedTeams} {targets} {players} {settings} />
+				<TeamScoreCard {rankedTeams} {targets} {players} settings={settings.regulation} />
 			{/if}
 
 			<!-- Carte des scores par joueur -->

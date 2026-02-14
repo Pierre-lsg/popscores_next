@@ -145,16 +145,4 @@
 		margin: 0.5rem;
 		gap: 8px;
 	}
-
-	.team-players {
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-		width: 100%;
-	}
-
-	select {
-		padding: 0.5rem;
-		width: 60%;
-	}
 </style>

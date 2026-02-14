@@ -4,69 +4,107 @@
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
+	import PlayerScoreOrder from '$lib/ui/PlayerScoreOrder.svelte';
 
 	import { individualRules } from '$lib/types/targetsType';
 
-	import { swipe } from '$lib/utils/swipe';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import Param from '$lib/ui/Param.svelte';
 
+	import { swipe } from '$lib/utils/swipe';
 	import { onMount } from 'svelte';
 	import { getRankedPlayers, getPlayerStats } from '$lib/utils/session/golfScoringFunction.svelte';
 
-	const s = sessionSettingsStore.settings;
+	const settings = sessionSettingsStore.settings;
 	const ruleOptions = individualRules;
+	let targets = $derived(targetsStore.list);
+	let players = $derived(playersStore.list);
 
 	let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
-	let rankedPlayerList = $derived(getRankedPlayers(playersStore.list, targetsStore.list));
+	let rankedPlayers = $derived(getRankedPlayers(players, targets));
 
-	let currentTarget = $derived(targetsStore.list[activeTargetIndex]);
+	let currentTarget = $derived(targets[activeTargetIndex]);
 	let isFirstTarget = $derived(activeTargetIndex === 0);
-	let isLastTarget = $derived(activeTargetIndex === targetsStore.list.length - 1);
+	let isLastTarget = $derived(activeTargetIndex === targets.length - 1);
 	let updatingPar: boolean = $state(false);
 	let updatingRule: boolean = $state(false);
+	let updatingName: boolean = $state(false);
 
 	let minTrys = $derived(currentTarget?.rule === 'Bonus' ? -3 : 0);
 	let maxTrys = $derived(
 		currentTarget?.rule === 'Bonus'
 			? 0
-			: s.hasCrossAFixedPenalty
-				? s.malusValue
-				: currentTarget.par + s.malusOverPar
+			: settings.regulation.hasCrossAFixedPenalty
+				? settings.regulation.malusValue
+				: currentTarget.par + settings.regulation.malusOverPar
 	);
 
 	let showRanking: boolean = $state(false);
 
-	const showNextTarget = () => {
-		updatingPar = false;
-		updatingRule = false;
-		if (activeTargetIndex < targetsStore.list.length) activeTargetIndex++;
-		else alert("Il n'y a pas d'autres cibles");
-		initScoresPlayerOnTarget();
-	};
-
-	const showPrevTarget = () => {
-		updatingPar = false;
-		updatingRule = false;
-		if (activeTargetIndex > 0) activeTargetIndex--;
-	};
-
 	const initScoresPlayerOnTarget = () => {
-		playersStore.list.forEach((player) => {
+		players.forEach((player) => {
 			if (player.scores[currentTarget.id] === undefined) {
 				playersStore.updateScore(player.id, currentTarget.id, currentTarget.par);
 			}
 		});
 	};
 
+	const showNextTarget = () => {
+		updatingPar = false;
+		updatingRule = false;
+		updatingName = false;
+
+		if (activeTargetIndex < targets.length - 1) {
+			activeTargetIndex++;
+			initScoresPlayerOnTarget();
+		} else {
+			if (confirm('Voulez-vous ajouter une autre cible ?')) {
+				//
+				targetsStore.addTarget();
+				activeTargetIndex++;
+				initScoresPlayerOnTarget();
+			}
+		}
+	};
+
+	const showPrevTarget = () => {
+		updatingPar = false;
+		updatingRule = false;
+		updatingName = false;
+
+		if (activeTargetIndex > 0) activeTargetIndex--;
+	};
+
 	const modifyPar = () => {
 		updatingRule = false;
+		updatingName = false;
 		updatingPar = !updatingPar;
 	};
 
 	const modifyRule = () => {
 		updatingPar = false;
+		updatingName = false;
 		updatingRule = !updatingRule;
+	};
+
+	const modifyTargetName = () => {
+		updatingRule = false;
+		updatingPar = false;
+		updatingName = !updatingName;
+	};
+
+	const updateTargetRule = () => {
+		if (
+			!confirm("La règle 'Bonus' nécessite de réinitialiser les scores.\n Voulez-vous continuer ?")
+		) {
+			currentTarget.rule = 'Individuel';
+			return;
+		}
+		currentTarget.par = currentTarget.rule === 'Bonus' ? 0 : 4;
+		players.forEach((player) => {
+			playersStore.updateScore(player.id, currentTarget.id, currentTarget.par);
+		});
 	};
 
 	onMount(() => {
@@ -74,7 +112,7 @@
 	});
 </script>
 
-<div class="step-content">
+<div class="step-content unselectable">
 	<div
 		role="none"
 		onpointerdown={() => (showRanking = true)}
@@ -85,30 +123,12 @@
 		🔥 Provisoire
 	</div>
 	{#if showRanking}
-		<div class="others-list">
-			{#each rankedPlayerList as player, i}
-				{@const p = player.player}
-				{@const stats = getPlayerStats(p, targetsStore.list)}
-				<div class="other-item">
-					<span class="rank"
-						>{player.rank}
-						{#if player.isTie}
-							*
-						{/if}
-					</span>
-					<span class="podium-name">{p.name}</span>
-					<span class="podium-score">{stats.gross} ({stats.diff})</span>
-				</div>
-			{/each}
-		</div>
+		<PlayerScoreOrder {rankedPlayers} {targets} />
 	{/if}
 </div>
 
 <div class="progress-bar">
-	<div
-		class="fill"
-		style="width: {(100 * (activeTargetIndex + 1)) / targetsStore.list.length}%"
-	></div>
+	<div class="fill" style="width: {(100 * (activeTargetIndex + 1)) / targets.length}%"></div>
 </div>
 
 <div class="step-content" in:slide>
@@ -119,7 +139,9 @@
 	>
 		<button class="btn-target" onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
 		<div class="target-info">
-			<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
+			<h3 role="none" onclick={() => modifyTargetName()}>
+				{currentTarget.name} (# {activeTargetIndex + 1})
+			</h3>
 			<div class="target-details">
 				<span role="none" class="par-badge" onclick={() => modifyRule()}>{currentTarget.rule}</span>
 				{#if currentTarget.rule !== 'Bonus'}
@@ -141,20 +163,24 @@
 		/>
 	{/if}
 
+	{#if updatingName}
+		<Param label="Nom de la cible" bind:value={currentTarget.name} oneline={true} focus={true} />
+	{/if}
+
 	{#if updatingRule}
 		<Selector
 			id="rule{currentTarget.id}"
 			bind:value={currentTarget.rule}
 			label="Modification de la règle :"
 			options={ruleOptions}
-			onchange={() => (currentTarget.par = currentTarget.rule === 'Bonus' ? 0 : 4)}
+			onchange={() => updateTargetRule()}
 		/>
 	{/if}
 
 	<div class="scores-grid">
 		<table>
 			<tbody>
-				{#each playersStore.list as player}
+				{#each players as player}
 					<tr class="score">
 						<td class="player-name">
 							{player.name}

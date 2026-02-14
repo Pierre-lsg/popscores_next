@@ -90,7 +90,7 @@
 					<TeamCard
 						{team}
 						players={playersChampionshipStore.list}
-						playersPerTeam={rules?.playersPerTeam || 2}
+						playersPerTeam={rules?.regulation.playersPerTeam || 2}
 					/>
 				</span>
 				<span class="edit-team" role="none" onclick={() => editCompetingTeam(i)}>✏️</span>
@@ -105,7 +105,7 @@
 			<CompetitionEditTeam
 				{team}
 				players={playersChampionshipStore.list}
-				playersPerTeam={rules?.playersPerTeam || 2}
+				playersPerTeam={rules?.regulation.playersPerTeam || 2}
 			/>
 		{/if}
 	{/each}
@@ -127,7 +127,7 @@
 					<TeamCard
 						{team}
 						players={playersChampionshipStore.list}
-						playersPerTeam={rules?.playersPerTeam || 2}
+						playersPerTeam={rules?.regulation.playersPerTeam || 2}
 					/>
 				</span>
 				<span class="edit-team" role="none" onclick={() => editAvailableTeam(i)}>✏️</span>
@@ -143,7 +143,7 @@
 			<CompetitionEditTeam
 				{team}
 				players={playersChampionshipStore.list}
-				playersPerTeam={rules?.playersPerTeam || 2}
+				playersPerTeam={rules?.regulation.playersPerTeam || 2}
 			/>
 		{/if}
 	{/each}

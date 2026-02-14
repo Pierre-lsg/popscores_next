@@ -4,7 +4,7 @@
 	import type { Target } from '$lib/types/targetsType';
 	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
-	import type { SessionSettings } from '$lib/types/gameSessionType';
+	import type { Regulation } from '$lib/types/regulationsType';
 
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
@@ -30,10 +30,7 @@
 				.includes(p.id)
 		)
 	);
-	let settings: SessionSettings = {
-		locationName: '',
-		weatherCondition: '',
-		sessionBeginning: '',
+	let settings: Regulation = {
 		hasCrossAFixedPenalty: true,
 		malusOverPar: 4,
 		malusValue: 10,

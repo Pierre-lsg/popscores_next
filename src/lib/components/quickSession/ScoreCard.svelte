@@ -13,10 +13,15 @@
 
 	const s = sessionSettingsStore.settings;
 
-	let isTeamGame: boolean = s.teamGame;
+	let isTeamGame: boolean = s.regulation.teamGame;
 	let rotateSCTeam: boolean = false;
 	let rotateSCPlayer: boolean = false;
-	let rankedTeams = getRankedTeams(teamsStore.list, targetsStore.list, playersStore.list, s);
+	let rankedTeams = getRankedTeams(
+		teamsStore.list,
+		targetsStore.list,
+		playersStore.list,
+		s.regulation
+	);
 	let rankedPlayers = getRankedPlayers(playersStore.list, targetsStore.list);
 </script>
 
@@ -31,14 +36,14 @@
 			{rankedTeams}
 			targets={targetsStore.list}
 			players={playersStore.list}
-			settings={s}
+			settings={s.regulation}
 		/>
 	{:else}
 		<TeamScoreCard
 			{rankedTeams}
 			targets={targetsStore.list}
 			players={playersStore.list}
-			settings={s}
+			settings={s.regulation}
 		/>
 	{/if}
 {/if}

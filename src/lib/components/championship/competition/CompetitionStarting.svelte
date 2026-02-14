@@ -33,7 +33,7 @@
 	};
 
 	const calculateFlys = () => {
-		if (rules?.teamGame) calculateFlysTeam();
+		if (rules?.regulation.teamGame) calculateFlysTeam();
 		else calculateFlysSolo();
 	};
 
@@ -134,7 +134,7 @@
 	<h3>Liste des flys</h3>
 
 	{#if flys.length > 0}
-		{#if rules?.teamGame}
+		{#if rules?.regulation.teamGame}
 			<!-- Compétition par équipe -->
 			{@const flysId = flys.map((f) => f.id)}
 			{@const flysOrder = flys.map((f) => 'Fly #' + f.order)}

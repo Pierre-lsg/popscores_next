@@ -5,7 +5,6 @@
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
-	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import { onMount } from 'svelte';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
@@ -13,7 +12,6 @@
 		currentFly: Fly | undefined;
 	}>();
 
-	let rules: Regulations | undefined = $state();
 	let flys: Fly[] = $derived(
 		flysChampionshipStore.list.filter((fly) => currentCompetition.flysId.includes(fly.id))
 	);
@@ -29,14 +27,6 @@
 	};
 
 	onMount(() => {
-		if (currentCompetition) {
-			if (currentCompetition.regulationsId !== '')
-				rules = regulationsStore.find(currentCompetition.regulationsId);
-			if (!rules) {
-				rules = regulationsStore.new();
-				currentCompetition.regulationsId = rules.id;
-			}
-		}
 		if (!currentCompetition.playersId) currentCompetition.playersId = [];
 		if (!currentCompetition.teamsId) currentCompetition.teamsId = [];
 		if (!currentCompetition.flysId) currentCompetition.flysId = [];

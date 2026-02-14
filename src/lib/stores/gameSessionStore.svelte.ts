@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import type { Regulation } from '$lib/types/regulationsType';
 
 // On définit l'interface pour le typage TypeScript
 export interface SessionSettings {
@@ -6,27 +7,26 @@ export interface SessionSettings {
 	locationName: string;
 	weatherCondition: string;
 	sessionBeginning: string;
-	hasCrossAFixedPenalty: boolean;
-	malusOverPar: number;
-	malusValue: number;
-	teamGame: boolean;
-	playersPerTeam: number;
-	usePenalizingGhost: boolean;
+	regulation: Regulation;
 }
 
 const STORAGE_KEY = 'golf-session_settings';
 
-const defaultSettings: SessionSettings = {
-	id: crypto.randomUUID(),
-	locationName: 'La Doua',
-	weatherCondition: 'Soleil',
-	sessionBeginning: new Date().toISOString().split('T')[0],
+const regulation: Regulation = {
 	hasCrossAFixedPenalty: false,
 	malusOverPar: 4,
 	malusValue: 10,
 	teamGame: false,
 	playersPerTeam: 2,
 	usePenalizingGhost: false
+};
+
+const defaultSettings: SessionSettings = {
+	id: crypto.randomUUID(),
+	locationName: 'La Doua',
+	weatherCondition: 'Soleil',
+	sessionBeginning: new Date().toISOString().split('T')[0],
+	regulation: regulation
 };
 
 class GameSessionStore {
@@ -56,6 +56,7 @@ class GameSessionStore {
 	 */
 	reset() {
 		this.settings = { ...defaultSettings };
+		this.settings.id = crypto.randomUUID();
 	}
 }
 

@@ -26,7 +26,7 @@
 	};
 
 	const createTeams = () => {
-		const nbPlayerPerTeam = s.playersPerTeam;
+		const nbPlayerPerTeam = s.regulation.playersPerTeam;
 		const nbTeams = Math.floor(playersStore.list.length / nbPlayerPerTeam) + 1;
 		const playersSorted = shuffle(playersStore.list);
 

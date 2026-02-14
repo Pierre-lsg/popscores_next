@@ -32,19 +32,23 @@
 	<h2>Définir les règles</h2>
 
 	{#if rules}
-		<Toggle label="Malus fixe en cas de X" bind:checked={rules.hasCrossAFixedPenalty} />
+		<Toggle label="Malus fixe en cas de X" bind:checked={rules.regulation.hasCrossAFixedPenalty} />
 
-		{#if rules.hasCrossAFixedPenalty}
-			<Stepper label="Malus fixe" bind:value={rules.malusValue} min={7} />
+		{#if rules.regulation.hasCrossAFixedPenalty}
+			<Stepper label="Malus fixe" bind:value={rules.regulation.malusValue} min={7} />
 		{:else}
-			<Stepper label="Malus ajouté au Par" bind:value={rules.malusOverPar} min={3} />
+			<Stepper label="Malus ajouté au Par" bind:value={rules.regulation.malusOverPar} min={3} />
 		{/if}
 
-		<Toggle label="Compétitons en équipe" bind:checked={rules.teamGame} />
-		{#if rules.teamGame}
-			<Stepper label="Nombre de joueurs par équipe" bind:value={rules.playersPerTeam} min={2} />
+		<Toggle label="Compétitons en équipe" bind:checked={rules.regulation.teamGame} />
+		{#if rules.regulation.teamGame}
+			<Stepper
+				label="Nombre de joueurs par équipe"
+				bind:value={rules.regulation.playersPerTeam}
+				min={2}
+			/>
 			<Stepper label="Nombre d'équipe par fly" bind:value={rules.teamsPerFly} min={2} />
-			<Toggle label="Partenaires ghost à 'X'" bind:checked={rules.usePenalizingGhost} />
+			<Toggle label="Partenaires ghost à 'X'" bind:checked={rules.regulation.usePenalizingGhost} />
 		{:else}
 			<Stepper label="Nombre de joueurs par fly" bind:value={rules.playersPerFly} min={2} />
 		{/if}

@@ -13,7 +13,7 @@
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 
-	let isTeamGame: boolean = sessionSettingsStore.settings.teamGame;
+	let isTeamGame: boolean = sessionSettingsStore.settings.regulation.teamGame;
 
 	let editingId = $state<string | null>(null);
 	let isDragging = $state(false);

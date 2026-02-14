@@ -1,4 +1,4 @@
-import type { Regulations } from '$lib/types/regulationsType';
+import type { Regulations, Regulation } from '$lib/types/regulationsType';
 
 const STORAGE_KEY = 'cs-regulations-data';
 
@@ -26,16 +26,20 @@ class RegulationsStore {
 	 * @param aRegulation - Regulation
 	 */
 	new(): Regulations {
-		let aRegulation: Regulations = {
-			id: crypto.randomUUID(),
+		let regulation: Regulation = {
 			hasCrossAFixedPenalty: false,
 			malusValue: 10,
 			malusOverPar: 4,
-			playersPerTeam: 2,
+			teamGame: false,
+			usePenalizingGhost: false,
+			playersPerTeam: 2
+		};
+
+		let aRegulation: Regulations = {
+			id: crypto.randomUUID(),
 			teamsPerFly: 3,
 			playersPerFly: 6,
-			teamGame: false,
-			usePenalizingGhost: false
+			regulation: regulation
 		};
 		this.list.push(aRegulation);
 		return aRegulation;

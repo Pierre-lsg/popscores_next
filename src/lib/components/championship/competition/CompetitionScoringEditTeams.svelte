@@ -5,8 +5,7 @@
 	import type { Target } from '$lib/types/targetsType';
 	import type { Team } from '$lib/types/teamType';
 	import type { Player } from '$lib/types/playerType';
-	import type { Regulations } from '$lib/types/regulationsType';
-	import type { SessionSettings } from '$lib/types/gameSessionType';
+	import type { Regulations, Regulation } from '$lib/types/regulationsType';
 	import { individualRules } from '$lib/types/targetsType';
 
 	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
@@ -41,10 +40,7 @@
 				.includes(p.id)
 		)
 	);
-	let settings: SessionSettings = {
-		locationName: '',
-		weatherCondition: '',
-		sessionBeginning: '',
+	let regulation: Regulation = {
 		hasCrossAFixedPenalty: true,
 		malusOverPar: 4,
 		malusValue: 10,
@@ -53,7 +49,7 @@
 		usePenalizingGhost: false
 	};
 	let targets: Target[] = $derived(course?.targets || []);
-	let rankedTeams = $derived(getRankedTeams(teams, targets, players, settings));
+	let rankedTeams = $derived(getRankedTeams(teams, targets, players, regulation));
 
 	let activeTargetIndex: number = $state(0);
 	let currentTarget: Target | undefined = $derived(targets[activeTargetIndex]);
@@ -63,9 +59,9 @@
 	let maxTrys = $derived(
 		currentTarget?.rule === 'Bonus'
 			? 0
-			: rules?.hasCrossAFixedPenalty
-				? rules?.malusValue
-				: currentTarget.par + (rules?.malusOverPar || 4)
+			: rules?.regulation.hasCrossAFixedPenalty
+				? rules?.regulation.malusValue
+				: currentTarget.par + (rules?.regulation.malusOverPar || 4)
 	);
 	let isCourseEnded: boolean = $state(false);
 
@@ -225,5 +221,5 @@
 	{/if}
 
 	<!-- Affichage de la carte de score -->
-	<TeamScoreCardByTarget {rankedTeams} {targets} {players} {settings} />
+	<TeamScoreCardByTarget {rankedTeams} {targets} {players} settings={regulation} />
 </div>
