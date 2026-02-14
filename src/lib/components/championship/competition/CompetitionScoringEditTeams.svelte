@@ -142,7 +142,9 @@
 				class="target-header"
 				use:swipe={{ onRight: showNextTarget, onLeft: showPrevTarget }}
 			>
-				<button onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
+				<button class="btn-target" onclick={() => showPrevTarget()} disabled={isFirstTarget}
+					>◀</button
+				>
 				<div class="target-info">
 					<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
 					<div class="target-details">
@@ -152,7 +154,9 @@
 						{/if}
 					</div>
 				</div>
-				<button onclick={() => showNextTarget()} disabled={isLastTarget}>▶</button>
+				<button class="btn-target" onclick={() => showNextTarget()} disabled={isLastTarget}
+					>▶</button
+				>
 			</header>
 
 			<div class="scores-grid">
@@ -162,10 +166,8 @@
 							{#each teams as team}
 								{@const player = players.find((p) => p.id === team.playersId[0])}
 								{#if player}
-									<tr>
-										<td>
-											<span class="player-name">{team.name}</span>
-										</td>
+									<tr class="score">
+										<td class="player-name">{team.name}</td>
 										<td>
 											<Stepper
 												value={player.scores[currentTarget.id] ?? 0}
@@ -183,7 +185,7 @@
 											<button
 												class="btn-delete"
 												onclick={() => updateScoreTeam(team, currentTarget.id, maxTrys)}
-												title="Echec">X</button
+												title="Echec">x</button
 											>
 										</td>
 									</tr>
@@ -191,10 +193,8 @@
 							{/each}
 						{:else}
 							{#each players as player}
-								<tr>
-									<td>
-										<span class="player-name">{player.name}</span>
-									</td>
+								<tr class="score">
+									<td class="player-name">{player.name}</td>
 									<td>
 										<Stepper
 											value={player.scores[currentTarget.id] ?? 0}
@@ -212,7 +212,7 @@
 										<button
 											class="btn-delete"
 											onclick={() => (player.scores[currentTarget.id] = maxTrys)}
-											title="Echec">X</button
+											title="Echec">x</button
 										>
 									</td>
 								</tr>

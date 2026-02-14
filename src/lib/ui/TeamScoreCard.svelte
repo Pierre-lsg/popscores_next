@@ -61,7 +61,7 @@
 		<tbody>
 			{#each targets as target, i}
 				<tr>
-					<td class="fixed-column">{target.name || 'Trou ' + (i + 1)}</td>
+					<td class="fixed-column">{target.name || 'Cible ' + (i + 1)}</td>
 					<td class="par-row">{target.par}</td>
 					<td class="par-row">{target.rule?.slice(0, 3) || ''}</td>
 					{#each rankedTeams as rankedTeam}

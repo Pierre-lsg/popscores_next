@@ -161,7 +161,7 @@
 		/>
 		<GolfMPlayer />
 
-		<!-- Saisie du parcours : trous, par, ... -->
+		<!-- Saisie du parcours : cibles, par, ... -->
 	{:else if currentStep === Step.targets}
 		<GolfHeader
 			title="⛳ Saisie du parcours"

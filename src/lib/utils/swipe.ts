@@ -17,8 +17,9 @@ export const swipe = (node: HTMLElement, options: SwipeOptions) => {
 		const distance = touchEndX - touchStartX;
 
 		if (Math.abs(distance) > threshold) {
-			if (distance > 0) options.onRight();
-			else options.onLeft();
+			if (distance > 0) {
+				if (typeof options.onRight === 'function') options.onRight();
+			} else if (typeof options.onLeft === 'function') options.onLeft();
 		}
 	};
 

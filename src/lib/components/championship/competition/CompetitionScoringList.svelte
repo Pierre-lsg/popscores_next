@@ -58,7 +58,7 @@
 
 	<h3>Sélection par fly</h3>
 	<p>Accès externe à cette fonctionnalité. Dans ce cas aucun menu et cadre limité</p>
-	<p>Pour chaque trou du parcours</p>
+	<p>Pour chaque cible du parcours</p>
 	<p>Consultation à tout moment de la carte de score</p>
 	<p>Un fly est comparé à une session du mode 'partie rapide'</p>
 	<p>Si tout est saisi, demande de valider la carte avant de la transmettre</p>

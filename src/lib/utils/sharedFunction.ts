@@ -25,7 +25,7 @@ export const smartSort = <T>(array: T[], key: keyof T, ascending = true): T[] =>
 			const strB = String(valB || '');
 			comparison = strA.localeCompare(strB, 'fr', {
 				sensitivity: 'base',
-				numeric: true // Pratique : trie "Trou 2" avant "Trou 10"
+				numeric: true // Pratique : trie "Cible 2" avant "Cible 10"
 			});
 		}
 

@@ -194,15 +194,31 @@ h2:not(:first-child) {
 	cursor: pointer;
 }
 
+.btn-par {
+	background: #cdcdff;
+	color: #2855c6;
+	border: none;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	font-weight: bold;
+	font-size: 1.5rem;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.2s;
+}
+
 .btn-delete {
 	background: #ffcdd2;
 	color: #c62828;
 	border: none;
 	border-radius: 50%;
-	width: 30px;
-	height: 30px;
+	width: 40px;
+	height: 40px;
 	font-weight: bold;
-	font-size: 1.2rem;
+	font-size: 1.5rem;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -321,8 +337,10 @@ h2:not(:first-child) {
 
 .progress-bar {
 	height: 4px;
-	background: var(--secondary);
+	color: var(--primary);
+	background-color: white;
 	border-radius: 2px;
+	border: 1px solid var(--primary);
 }
 
 .fill {

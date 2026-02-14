@@ -100,7 +100,7 @@
 				{#each targets as target (target.id)}
 					<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
 						<div class="content">
-							<span class="target-name">{target.name || 'Trou #'}</span>
+							<span class="target-name">{target.name || 'Cible #'}</span>
 							<span class="target-par">{target.par}</span>
 							<span class="target-rule">{target.rule}</span>
 							<span>

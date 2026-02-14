@@ -23,7 +23,7 @@
 				<th class="first-fixed-col">Cibles</th>
 				{#each targets as target, i}
 					<th class="vertical-header">
-						<span>{target.name || 'Trou ' + (i + 1)}</span>
+						<span>{target.name || 'Cible ' + (i + 1)}</span>
 					</th>
 				{/each}
 				<th class="vertical-header"><span>Total</span></th>

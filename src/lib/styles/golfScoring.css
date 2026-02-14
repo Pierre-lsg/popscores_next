@@ -30,35 +30,36 @@
 .par-badge {
 	background: var(--primary-light);
 	color: var(--primary);
-	padding: 2px 8px;
+	padding: 0.5rem;
 	border-radius: 4px;
 	font-weight: bold;
+}
+
+.score {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.player-name {
+	font-weight: 600;
+	font-size: 1.1rem;
+	width: 40%;
 }
 
 .btn-actions {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	padding: 0.5rem;
 	background: var(--bg-card);
+	border-radius: 8px;
+	margin-bottom: 0.5rem;
+	width: 25%;
 }
 
-.player-name {
-	font-weight: 600;
-	font-size: 1.1rem;
-}
-
-.btn-par {
-	background: #cdcdff;
-	color: #2855c6;
-	border: none;
+.btn-target {
 	border-radius: 50%;
-	width: 30px;
-	height: 30px;
-	font-weight: bold;
-	font-size: 1.2rem;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: background 0.2s;
+	width: 40px;
+	height: 40px;
 }
