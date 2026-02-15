@@ -4,6 +4,7 @@
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Password from '$lib/ui/Password.svelte';
+	import { pb } from '$lib/utils/pocketbase/pocketBase';
 
 	const localReset = () => {
 		localStorage.clear();

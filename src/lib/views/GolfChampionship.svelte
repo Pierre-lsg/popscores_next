@@ -27,6 +27,12 @@
 			<h3>Paramétrages</h3>
 			<p>Configuration du championnat</p>
 		</a>
+
+		<a class="card" href={base + '/'}>
+			<span class="icon">🏠</span>
+			<h3>Retour Accueil</h3>
+			<p></p>
+		</a>
 	</div>
 </div>
 

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 	import type { SessionArchive } from '$lib/types/sessionType';
-	import { getAllSessionsFromCloud } from '$lib/utils/pocketbase/sessions2Cloud';
+	import { historyService } from '$lib/utils/pocketbase/history2Cloud';
+	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { onMount } from 'svelte';
 
 	let allSessions: SessionArchive[] = $state([]);
@@ -17,9 +18,15 @@
 	}>();
 
 	onMount(async () => {
-		// Retrieve all sessions known in the Cloud
-		allSessions = await getAllSessionsFromCloud();
-		loading = false;
+		let cloudHistory: any;
+		if ($user) {
+			// Retrieve all sessions known in the Cloud
+			cloudHistory = await historyService.getAll();
+			if (Array.isArray(cloudHistory)) {
+				cloudHistory.forEach((hist) => allSessions.push(hist.data));
+			}
+			loading = false;
+		}
 	});
 
 	const removeSession = (id: string) => {
@@ -63,16 +70,18 @@
 		<p>Aucune session archivée pour le moment. ⛳</p>
 	{/each}
 
-	<h3>Sessions disponibles sur le Cloud</h3>
+	{#if $user}
+		<h3>Sessions disponibles sur le Cloud</h3>
 
-	{#if loading}
-		<p>Chargement ...</p>
-	{:else}
-		{#each filteredSessions as session, i}
-			<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
-				<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
-			</button>
-		{/each}
+		{#if loading}
+			<p>Chargement ...</p>
+		{:else}
+			{#each filteredSessions as session, i}
+				<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
+					<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
+				</button>
+			{/each}
+		{/if}
 	{/if}
 </div>
 

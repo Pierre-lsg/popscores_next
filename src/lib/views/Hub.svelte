@@ -1,6 +1,22 @@
 <script lang="ts">
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
+	import { user, pb } from '$lib/utils/pocketbase/pocketBase';
 	import { base } from '$app/paths';
+
+	const login = async () => {
+		try {
+			const authData = await pb
+				.collection('users')
+				.authWithPassword(appSettings.values.cloudLogin, appSettings.values.cloudPassword);
+			console.log('Connecté en tant que : ', pb.authStore.record?.email);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const logout = () => {
+		pb.authStore.clear();
+	};
 </script>
 
 <h1>Bienvenue au {appSettings.values.clubName}</h1>
@@ -13,11 +29,19 @@
 			<p>Suivi de partie entre amis</p>
 		</a>
 
-		<a class="card" href={base + '/championship'}>
-			<span class="icon">👑</span>
-			<h3>Championnat</h3>
-			<p>Suivi des compétitions</p>
-		</a>
+		{#if $user}
+			<a class="card" href={base + '/championship'}>
+				<span class="icon">👑</span>
+				<h3>Championnat</h3>
+				<p>Suivi des compétitions</p>
+			</a>
+		{:else}
+			<a class="card disabled" href="#">
+				<span class="icon">👑</span>
+				<h3>Championnat</h3>
+				<p>Suivi des compétitions</p>
+			</a>
+		{/if}
 
 		<a class="card" href={base + '/history'}>
 			<span class="icon">📜</span>
@@ -36,6 +60,20 @@
 			<h3>Paramétrages</h3>
 			<p>Configuration de l'application</p>
 		</a>
+
+		{#if $user}
+			<div role="none" class="card" onclick={() => logout()}>
+				<span class="icon">👋</span>
+				<h3>Déconnexion</h3>
+				<p>Arrivederci ...</p>
+			</div>
+		{:else}
+			<div role="none" class="card" onclick={() => login()}>
+				<span class="icon">🔗</span>
+				<h3>Connexion</h3>
+				<p>Accès aux services et applications en ligne</p>
+			</div>
+		{/if}
 	</div>
 </div>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
-	import { saveChampionship2Cloud } from '$lib/utils/pocketbase/championships2Cloud';
+	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
 	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
 	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 
@@ -12,17 +12,29 @@
 	let csStore = $state(championshipStore.list[0]);
 
 	const saveChampionshipToCloud = async () => {
-		let status: string = 'failure';
 		let idvScale: MarkedPointScale = mpsStore.list.filter(
 			(m) => (m.id = csStore.individualScale)
 		)[0];
 		let cltScale: MarkedPointScale = mpsStore.list.filter(
 			(m) => (m.id = csStore.collectiveScale)
 		)[0];
-		if (csStore) status = await saveChampionship2Cloud(csStore, idvScale, cltScale);
-		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
-		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
-		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
+
+		let tmpChamp: any = await championshipService.getByChampionshipId(csStore.id);
+		if (tmpChamp) {
+			try {
+				championshipService.updateChampionship(csStore, idvScale, cltScale);
+				toastStore.show('💾 Mise à jour effectuée ...', 'success');
+			} catch (err) {
+				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+			}
+		} else {
+			try {
+				championshipService.createChampionship(csStore, idvScale, cltScale);
+				toastStore.show('💾 Sauvegarde effectuée ...', 'success');
+			} catch (err) {
+				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+			}
+		}
 	};
 
 	const showAvailableChampionship = () => {

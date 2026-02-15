@@ -2,14 +2,11 @@
 	import { onMount } from 'svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
-	import {
-		getAllCompetitionsFromCloud,
-		saveCompetition2Cloud
-	} from '$lib/utils/pocketbase/competitions2Cloud';
-
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
+	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 
 	let competitions = $state<Competition[]>(competitionsStore.list);
 	let editCompetition: boolean[] = $state([]);
@@ -63,12 +60,26 @@
 	};
 
 	const savingCompetition = async (id: string) => {
-		let status: string = 'failure';
 		let aCompetition = competitionsStore.find(id);
-		if (aCompetition) status = await saveCompetition2Cloud(aCompetition, csId);
-		if (status === 'success') toastStore.show('💾 Sauvegarde effectuée ...', status);
-		else if (status === 'warning') toastStore.show('💾 Session déjà enregistrée ...', status);
-		else if (status === 'failure') toastStore.show("💾 Echec à l'enregistrement ...", status);
+		let tmpComp: any = await competitionService.getById(id);
+
+		if (aCompetition) {
+			if (tmpComp && tmpComp.length > 0) {
+				try {
+					competitionService.updateCompetition(aCompetition, csId);
+					toastStore.show('💾 Mise à jour effectuée ...', 'success');
+				} catch (err) {
+					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+				}
+			} else {
+				try {
+					competitionService.createCompetition(aCompetition, csId);
+					toastStore.show('💾 Sauvegarde effectuée ...', 'success');
+				} catch (err) {
+					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+				}
+			}
+		}
 	};
 
 	const loadCompetitionfromCloud = (index: number) => {
@@ -96,7 +107,10 @@
 
 	onMount(async () => {
 		// Retrieve all competitions known in the Cloud
-		allCompetitions = await getAllCompetitionsFromCloud(csId);
+		let cloudCompetition: any = await competitionService.getByChampionshipId(csId);
+		if (Array.isArray(cloudCompetition)) {
+			cloudCompetition.forEach((comp) => allCompetitions.push(comp.data));
+		}
 		loading = false;
 	});
 

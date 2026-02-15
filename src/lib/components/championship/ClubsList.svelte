@@ -4,11 +4,11 @@
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
+	import { clubService } from '$lib/utils/pocketbase/clubs2Cloud';
+	import { teamService } from '$lib/utils/pocketbase/teams2Cloud';
+	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
 
 	import Param from '$lib/ui/Param.svelte';
-	import { getAllClubsFromCloud, saveClub2Cloud } from '$lib/utils/pocketbase/clubs2Cloud';
-	import { saveTeam2Cloud } from '$lib/utils/pocketbase/teams2Cloud';
-	import { savePlayer2Cloud } from '$lib/utils/pocketbase/players2Cloud';
 
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
@@ -53,36 +53,77 @@
 	};
 
 	const savingClub = async (id: string) => {
-		let status: string = 'failure';
 		let aClub = clubsStore.find(id);
-		if (aClub) status = await saveClub2Cloud(aClub, csId);
-		if (status === 'success') toastStore.show('💾 Club sauvegardé ...', status);
-		else if (status === 'warning') toastStore.show('💾 Club mis à jour ...', status);
-		else if (status === 'failure') toastStore.show('💾 Erreur enregistrement ...', status);
+		let tmpClub: any = await clubService.getById(id);
+
+		if (aClub) {
+			if (tmpClub && tmpClub.length > 0) {
+				try {
+					clubService.updateClub(aClub);
+					toastStore.show('💾 Mise à jour effectuée ...', 'success');
+				} catch (err) {
+					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+				}
+			} else {
+				try {
+					clubService.createClub(aClub);
+					toastStore.show('💾 Sauvegarde effectuée ...', 'success');
+				} catch (err) {
+					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+				}
+			}
+		}
 		savingTeams(aClub?.teamsId || [], id);
 		savingPlayers(aClub?.playersId || [], id);
 	};
 
 	const savingTeams = async (ids: string[], clId: string) => {
-		let status: string = 'failure';
 		for (let id of ids) {
 			let aTeam = teamsChampionshipStore.find(id);
-			if (aTeam) status = await saveTeam2Cloud(aTeam, clId);
-			if (status === 'success') toastStore.show('💾 Equipe sauvegardée ...', status);
-			else if (status === 'warning') toastStore.show('💾 Equipe mise à jour ...', status);
-			else if (status === 'failure') toastStore.show('💾 Erreur enregistrement ...', status);
+			let tmpTeam: any = await teamService.getById(id);
+
+			if (aTeam) {
+				if (tmpTeam && tmpTeam.length > 0) {
+					try {
+						teamService.updateTeam(aTeam);
+						toastStore.show('💾 Mise à jour effectuée ...', 'success');
+					} catch (err) {
+						toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+					}
+				} else {
+					try {
+						teamService.createTeam(aTeam);
+						toastStore.show('💾 Sauvegarde effectuée ...', 'success');
+					} catch (err) {
+						toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+					}
+				}
+			}
 		}
 	};
 
 	const savingPlayers = async (ids: string[], clId: string) => {
-		alert('les hobbits s échappent');
-		let status: string = 'failure';
 		for (let id of ids) {
 			let aPlayer = playersChampionshipStore.find(id);
-			if (aPlayer) status = await savePlayer2Cloud(aPlayer, clId);
-			if (status === 'success') toastStore.show('💾 Joueur sauvegardé ...', status);
-			else if (status === 'warning') toastStore.show('💾 joueur mis à jour ...', status);
-			else if (status === 'failure') toastStore.show('💾 Erreur enregistrement ...', status);
+			let tmpPlayer: any = await playerService.getById(id);
+
+			if (aPlayer) {
+				if (tmpPlayer && tmpPlayer.length > 0) {
+					try {
+						playerService.updatePlayer(aPlayer);
+						toastStore.show('💾 Mise à jour effectuée ...', 'success');
+					} catch (err) {
+						toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+					}
+				} else {
+					try {
+						playerService.createPlayer(aPlayer);
+						toastStore.show('💾 Sauvegarde effectuée ...', 'success');
+					} catch (err) {
+						toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+					}
+				}
+			}
 		}
 	};
 
@@ -106,7 +147,10 @@
 
 	onMount(async () => {
 		// Retrieve all clubs known in the Cloud
-		allClubs = await getAllClubsFromCloud(csId);
+		let cloudClub: any = await clubService.getAll();
+		if (Array.isArray(cloudClub)) {
+			cloudClub.forEach((club) => allClubs.push(club.data));
+		}
 		loading = false;
 	});
 </script>
