@@ -51,9 +51,7 @@
 	};
 
 	const showNextTarget = () => {
-		updatingPar = false;
-		updatingRule = false;
-		updatingName = false;
+		modifyUpdatingBools('');
 
 		if (activeTargetIndex < targets.length - 1) {
 			activeTargetIndex++;
@@ -69,29 +67,14 @@
 	};
 
 	const showPrevTarget = () => {
-		updatingPar = false;
-		updatingRule = false;
-		updatingName = false;
-
+		modifyUpdatingBools('');
 		if (activeTargetIndex > 0) activeTargetIndex--;
 	};
 
-	const modifyPar = () => {
-		updatingRule = false;
-		updatingName = false;
-		updatingPar = !updatingPar;
-	};
-
-	const modifyRule = () => {
-		updatingPar = false;
-		updatingName = false;
-		updatingRule = !updatingRule;
-	};
-
-	const modifyTargetName = () => {
-		updatingRule = false;
-		updatingPar = false;
-		updatingName = !updatingName;
+	const modifyUpdatingBools = (updatedField: string) => {
+		updatingPar = updatedField === 'par' ? !updatingPar : false;
+		updatingRule = updatedField === 'rule' ? !updatingRule : false;
+		updatingName = updatedField === 'name' ? !updatingName : false;
 	};
 
 	const updateTargetRule = () => {
@@ -139,13 +122,15 @@
 	>
 		<button class="btn-target" onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
 		<div class="target-info">
-			<h3 role="none" onclick={() => modifyTargetName()}>
+			<h3 role="none" onclick={() => modifyUpdatingBools('name')}>
 				{currentTarget.name} (# {activeTargetIndex + 1})
 			</h3>
 			<div class="target-details">
-				<span role="none" class="par-badge" onclick={() => modifyRule()}>{currentTarget.rule}</span>
+				<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('rule')}
+					>{currentTarget.rule}</span
+				>
 				{#if currentTarget.rule !== 'Bonus'}
-					<span role="none" class="par-badge" onclick={() => modifyPar()}
+					<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('par')}
 						>PAR {currentTarget.par}</span
 					>
 				{/if}

@@ -10,11 +10,15 @@
 
 	import { swipe } from '$lib/utils/swipe';
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import Param from '$lib/ui/Param.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
 	import { onMount } from 'svelte';
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
+	import { collectiveRules } from '$lib/types/targetsType';
 
 	const settings = sessionSettingsStore.settings;
 	const scoringForAllPlayersRules = ['Bonus', 'Individuel'];
+	const ruleOptions = collectiveRules;
 
 	let targets = $derived(targetsStore.list);
 	let teams = $derived(teamsStore.list);
@@ -30,6 +34,7 @@
 	let isLastTarget = $derived(activeTargetIndex === targets.length - 1);
 	let updatingPar: boolean = $state(false);
 	let updatingRule: boolean = $state(false);
+	let updatingName: boolean = $state(false);
 
 	let minTrys = $derived(currentTarget?.rule === 'Bonus' ? -3 : 0);
 	let maxTrys = $derived(
@@ -42,19 +47,6 @@
 
 	let showRanking: boolean = $state(false);
 
-	const showNextTarget = () => {
-		if (activeTargetIndex < targets.length - 1) {
-			activeTargetIndex++;
-			initScoresPlayerOnTarget();
-		} else {
-			alert("Il n'y a pas d'autres cibles");
-		}
-	};
-
-	const showPrevTarget = () => {
-		if (activeTargetIndex > 0) activeTargetIndex--;
-	};
-
 	const initScoresPlayerOnTarget = () => {
 		playersStore.list.forEach((player) => {
 			if (player.scores[currentTarget.id] === undefined) {
@@ -63,20 +55,50 @@
 		});
 	};
 
+	const showNextTarget = () => {
+		modifyUpdatingBools('');
+
+		if (activeTargetIndex < targets.length - 1) {
+			activeTargetIndex++;
+			initScoresPlayerOnTarget();
+		} else {
+			if (confirm('Voulez-vous ajouter une autre cible ?')) {
+				//
+				targetsStore.addTarget();
+				activeTargetIndex++;
+				initScoresPlayerOnTarget();
+			}
+		}
+	};
+
+	const showPrevTarget = () => {
+		modifyUpdatingBools('');
+		if (activeTargetIndex > 0) activeTargetIndex--;
+	};
+
 	const updateScoreTeam = (team: Team, targetId: string, score: number) => {
 		team.playersId.forEach((playerId) => {
 			playersStore.updateScore(playerId, targetId, score);
 		});
 	};
 
-	const modifyPar = () => {
-		updatingRule = false;
-		updatingPar = !updatingPar;
+	const modifyUpdatingBools = (updatedField: string) => {
+		updatingPar = updatedField === 'par' ? !updatingPar : false;
+		updatingRule = updatedField === 'rule' ? !updatingRule : false;
+		updatingName = updatedField === 'name' ? !updatingName : false;
 	};
 
-	const modifyRule = () => {
-		updatingPar = false;
-		updatingRule = !updatingRule;
+	const updateTargetRule = () => {
+		if (
+			!confirm("La règle 'Bonus' nécessite de réinitialiser les scores.\n Voulez-vous continuer ?")
+		) {
+			currentTarget.rule = 'Individuel';
+			return;
+		}
+		currentTarget.par = currentTarget.rule === 'Bonus' ? 0 : 4;
+		players.forEach((player) => {
+			playersStore.updateScore(player.id, currentTarget.id, currentTarget.par);
+		});
 	};
 
 	onMount(() => {
@@ -111,16 +133,45 @@
 	>
 		<button class="btn-target" onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
 		<div class="target-info">
-			<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
+			<h3 role="none" onclick={() => modifyUpdatingBools('name')}>
+				{currentTarget.name} (# {activeTargetIndex + 1})
+			</h3>
 			<div class="target-details">
-				<span class="par-badge">{currentTarget.rule}</span>
-				{#if !scoringForAllPlayersRules.includes(currentTarget.rule || '')}
-					<span class="par-badge">PAR {currentTarget.par}</span>
+				<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('rule')}
+					>{currentTarget.rule}</span
+				>
+				{#if currentTarget.rule !== 'Bonus'}
+					<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('par')}
+						>PAR {currentTarget.par}</span
+					>
 				{/if}
 			</div>
 		</div>
 		<button class="btn-target" onclick={() => showNextTarget()} disabled={isLastTarget}>▶</button>
 	</header>
+
+	{#if updatingPar}
+		<Stepper
+			label="Modification du Par : "
+			bind:value={currentTarget.par}
+			min={0}
+			disabled={currentTarget.rule === 'Bonus'}
+		/>
+	{/if}
+
+	{#if updatingName}
+		<Param label="Nom de la cible" bind:value={currentTarget.name} oneline={true} focus={true} />
+	{/if}
+
+	{#if updatingRule}
+		<Selector
+			id="rule{currentTarget.id}"
+			bind:value={currentTarget.rule}
+			label="Modification de la règle :"
+			options={ruleOptions}
+			onchange={() => updateTargetRule()}
+		/>
+	{/if}
 
 	<div class="scores-grid">
 		<table>

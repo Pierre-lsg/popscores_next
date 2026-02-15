@@ -4,6 +4,28 @@
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Password from '$lib/ui/Password.svelte';
+
+	const localReset = () => {
+		localStorage.clear();
+	};
+
+	const deepReset = async () => {
+		// vide le localStorage
+		localStorage.clear();
+
+		// Désincrit le Service Worker
+		const registrations = await navigator.serviceWorker.getRegistrations();
+		for (let registration of registrations) {
+			await registration.unregister();
+		}
+
+		// Vide les caches de fichiers
+		const cacheNames = await caches.keys();
+		await Promise.all(cacheNames.map((name) => caches.delete(name)));
+
+		alert('Application réinitialisée. Redémarrage de Popscores');
+		window.location.reload();
+	};
 </script>
 
 <div class="settings-page">
@@ -44,6 +66,10 @@
 		placeholder="Identifiant"
 	/>
 	<Password label="Mot de passe" bind:value={appSettings.values.cloudPassword} />
+
+	<h2>Réinitialisation</h2>
+	<button onclick={() => localReset()}>Réinitialisation des données</button>
+	<button onclick={() => deepReset()}>Réinitialisation totale</button>
 </div>
 
 <style>
