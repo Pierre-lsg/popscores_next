@@ -6,10 +6,20 @@
 	import ThemeSelector from '$lib/ui/ThemeSelector.svelte';
 	import NetworkBanner from '$lib/ui/NetworkBanner.svelte';
 	import Toast from '$lib/ui/Toast.svelte';
+	import { checkDataVersion, CURRENT_VERSION } from '$lib/utils/migration';
+	import { onMount } from 'svelte';
 
 	let { children } = $props();
 
 	let webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '';
+
+	onMount(() => {
+		const hasMigrated = checkDataVersion();
+		if (hasMigrated) {
+			alert('Application mise à jour');
+			window.location.reload();
+		}
+	});
 </script>
 
 <svelte:head>
@@ -29,7 +39,6 @@
 				<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 			{/if}
 		</div>
-
 		<ThemeSelector />
 	</div>
 
@@ -37,6 +46,10 @@
 		{@render children()}
 	</div>
 </main>
+
+<footer>
+	Popscores v.{CURRENT_VERSION}
+</footer>
 
 <style>
 	.top-bar {
