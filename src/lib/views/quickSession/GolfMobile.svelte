@@ -79,6 +79,7 @@
 		sessionSettingsStore.reset();
 		gameStatus.reset();
 		activeTargetIndex = 0;
+		isSessionHistorised = false;
 		nextCard(Step.session);
 	};
 

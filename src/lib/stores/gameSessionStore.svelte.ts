@@ -24,7 +24,7 @@ const regulation: Regulation = {
 const defaultSettings: SessionSettings = {
 	id: crypto.randomUUID(),
 	locationName: 'La Doua',
-	weatherCondition: 'Soleil',
+	weatherCondition: '☀️ Soleil',
 	sessionBeginning: new Date().toISOString().split('T')[0],
 	regulation: regulation
 };
