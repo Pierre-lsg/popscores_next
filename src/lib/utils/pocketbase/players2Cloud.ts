@@ -6,6 +6,17 @@ export const playerService = {
 
 	getById: (id: string) => db.getOne('players', id, {}),
 
+	savePlayer: (aPlayer: Player) => {
+		const playerToSave = {
+			id: aPlayer.id,
+			name: aPlayer.name,
+			club: aPlayer.clubId,
+			owner: pb.authStore.record?.id,
+			data: aPlayer
+		};
+		db.save('players', playerToSave);
+	},
+
 	createPlayer: (aPlayer: Player) => {
 		const playerToSave = {
 			id: aPlayer.id,

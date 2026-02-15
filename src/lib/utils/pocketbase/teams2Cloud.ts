@@ -6,6 +6,17 @@ export const teamService = {
 
 	getById: (id: string) => db.getOne('teams', id, {}),
 
+	saveTeam: (aTeam: Team) => {
+		const teamToSave = {
+			id: aTeam.id,
+			name: aTeam.name,
+			club: aTeam.clubId,
+			owner: pb.authStore.record?.id,
+			data: aTeam
+		};
+		db.save('teams', teamToSave);
+	},
+
 	createTeam: (aTeam: Team) => {
 		const teamToSave = {
 			id: aTeam.id,

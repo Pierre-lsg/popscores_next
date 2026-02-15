@@ -53,5 +53,33 @@ export const db = {
 			console.error(`Erreur update sur ${collectionName} :`, err);
 			throw err;
 		}
+	},
+
+	async save(collectionName: string, data: any) {
+		// On part du principe que data.id contient l'ID calculé par ton app
+		if (!data.id) {
+			throw new Error("L'ID doit être fourni par l'application.");
+		}
+
+		try {
+			// 1. On tente de récupérer l'enregistrement existant
+			let existing = null;
+			try {
+				existing = await pb.collection(collectionName).getOne(data.id);
+			} catch (e) {
+				// Si getOne échoue, c'est généralement un 404 (n'existe pas)
+				existing = null;
+			}
+
+			// 2. Décision : Update si présent, Create si absent
+			if (existing) {
+				return await pb.collection(collectionName).update(data.id, data);
+			} else {
+				return await pb.collection(collectionName).create(data);
+			}
+		} catch (error) {
+			console.error(`Erreur lors de l'upsert sur ${collectionName}:`, error);
+			throw error;
+		}
 	}
 };

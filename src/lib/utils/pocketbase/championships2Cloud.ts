@@ -7,7 +7,7 @@ export const championshipService = {
 
 	getByChampionshipId: (id: string) => db.getOne('championships', id, {}),
 
-	createChampionship: (
+	saveChampionship: (
 		aChampionShip: Championship,
 		idvScale: MarkedPointScale,
 		cltScale: MarkedPointScale
@@ -27,6 +27,28 @@ export const championshipService = {
 			data: data
 		};
 		db.save('championships', championshipToSave);
+	},
+
+	createChampionship: (
+		aChampionShip: Championship,
+		idvScale: MarkedPointScale,
+		cltScale: MarkedPointScale
+	) => {
+		const data = {
+			id: aChampionShip.id,
+			name: aChampionShip.name,
+			season: aChampionShip.season,
+			location: aChampionShip.location,
+			individualScale: idvScale,
+			collectiveScale: cltScale
+		};
+		const championshipToSave = {
+			id: aChampionShip.id,
+			name: aChampionShip.name,
+			owner: pb.authStore.record?.id,
+			data: data
+		};
+		db.create('championships', championshipToSave);
 	},
 
 	updateChampionship: (

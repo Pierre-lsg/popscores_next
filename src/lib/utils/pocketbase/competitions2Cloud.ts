@@ -22,13 +22,9 @@ export const competitionService = {
 			owner: pb.authStore.record?.id,
 			data: aCompetition
 		};
-
-		try {
-			db.update('competitions', competitionToSave);
-		} catch (err) {
-			db.create('competitions', competitionToSave);
-		}
+		db.save('competitions', competitionToSave);
 	},
+
 	createCompetition: (aCompetition: Competition, championshipId: string) => {
 		const competitionToSave = {
 			id: aCompetition.id,

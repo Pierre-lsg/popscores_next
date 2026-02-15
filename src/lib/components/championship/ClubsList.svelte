@@ -54,23 +54,13 @@
 
 	const savingClub = async (id: string) => {
 		let aClub = clubsStore.find(id);
-		let tmpClub: any = await clubService.getById(id);
 
 		if (aClub) {
-			if (tmpClub && tmpClub.length > 0) {
-				try {
-					clubService.updateClub(aClub);
-					toastStore.show('💾 Mise à jour effectuée ...', 'success');
-				} catch (err) {
-					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-				}
-			} else {
-				try {
-					clubService.createClub(aClub);
-					toastStore.show('💾 Sauvegarde effectuée ...', 'success');
-				} catch (err) {
-					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-				}
+			try {
+				clubService.saveClub(aClub);
+				toastStore.show('💾 Enregistrement effectué ...', 'success');
+			} catch (err) {
+				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
 			}
 		}
 		savingTeams(aClub?.teamsId || [], id);
@@ -80,23 +70,13 @@
 	const savingTeams = async (ids: string[], clId: string) => {
 		for (let id of ids) {
 			let aTeam = teamsChampionshipStore.find(id);
-			let tmpTeam: any = await teamService.getById(id);
 
 			if (aTeam) {
-				if (tmpTeam && tmpTeam.length > 0) {
-					try {
-						teamService.updateTeam(aTeam);
-						toastStore.show('💾 Mise à jour effectuée ...', 'success');
-					} catch (err) {
-						toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-					}
-				} else {
-					try {
-						teamService.createTeam(aTeam);
-						toastStore.show('💾 Sauvegarde effectuée ...', 'success');
-					} catch (err) {
-						toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-					}
+				try {
+					teamService.saveTeam(aTeam);
+					toastStore.show('💾 Enregistrement effectué ...', 'success');
+				} catch (err) {
+					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
 				}
 			}
 		}
@@ -105,23 +85,13 @@
 	const savingPlayers = async (ids: string[], clId: string) => {
 		for (let id of ids) {
 			let aPlayer = playersChampionshipStore.find(id);
-			let tmpPlayer: any = await playerService.getById(id);
 
 			if (aPlayer) {
-				if (tmpPlayer && tmpPlayer.length > 0) {
-					try {
-						playerService.updatePlayer(aPlayer);
-						toastStore.show('💾 Mise à jour effectuée ...', 'success');
-					} catch (err) {
-						toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-					}
-				} else {
-					try {
-						playerService.createPlayer(aPlayer);
-						toastStore.show('💾 Sauvegarde effectuée ...', 'success');
-					} catch (err) {
-						toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-					}
+				try {
+					playerService.savePlayer(aPlayer);
+					toastStore.show('💾 Enregistrement effectué ...', 'success');
+				} catch (err) {
+					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
 				}
 			}
 		}

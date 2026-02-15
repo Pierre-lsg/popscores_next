@@ -65,8 +65,8 @@
 		if (aCompetition) {
 			try {
 				competitionService.saveCompetition(aCompetition, csId);
-				toastStore.show('💾 Mise à jour effectuée ...', 'success');
-			} catch (err) {
+				toastStore.show('💾 Enregistrement effectué ...', 'success');
+			} catch (e) {
 				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
 			}
 		}

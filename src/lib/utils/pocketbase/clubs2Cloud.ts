@@ -6,6 +6,16 @@ export const clubService = {
 
 	getById: (id: string) => db.getOne('clubs', id, {}),
 
+	saveClub: (aClub: Club) => {
+		const clubToSave = {
+			id: aClub.id,
+			name: aClub.name,
+			owner: pb.authStore.record?.id,
+			data: aClub
+		};
+		db.save('clubs', clubToSave);
+	},
+
 	createClub: (aClub: Club) => {
 		const clubToSave = {
 			id: aClub.id,
