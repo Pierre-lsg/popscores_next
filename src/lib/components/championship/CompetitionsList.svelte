@@ -61,23 +61,13 @@
 
 	const savingCompetition = async (id: string) => {
 		let aCompetition = competitionsStore.find(id);
-		let tmpComp: any = await competitionService.getById(id);
 
 		if (aCompetition) {
-			if (tmpComp && tmpComp.length > 0) {
-				try {
-					competitionService.updateCompetition(aCompetition, csId);
-					toastStore.show('💾 Mise à jour effectuée ...', 'success');
-				} catch (err) {
-					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-				}
-			} else {
-				try {
-					competitionService.createCompetition(aCompetition, csId);
-					toastStore.show('💾 Sauvegarde effectuée ...', 'success');
-				} catch (err) {
-					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-				}
+			try {
+				competitionService.saveCompetition(aCompetition, csId);
+				toastStore.show('💾 Mise à jour effectuée ...', 'success');
+			} catch (err) {
+				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
 			}
 		}
 	};

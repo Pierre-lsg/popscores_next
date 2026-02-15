@@ -14,7 +14,7 @@ export const teamService = {
 			owner: pb.authStore.record?.id,
 			data: aTeam
 		};
-		db.save('teams', teamToSave);
+		db.create('teams', teamToSave);
 	},
 
 	updateTeam: (aTeam: Team) => {

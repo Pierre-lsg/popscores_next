@@ -14,6 +14,21 @@ export const competitionService = {
 			filter: `id ~ "${id}"`
 		}),
 
+	saveCompetition: (aCompetition: Competition, championshipId: string) => {
+		const competitionToSave = {
+			id: aCompetition.id,
+			name: aCompetition.name,
+			championship: championshipId,
+			owner: pb.authStore.record?.id,
+			data: aCompetition
+		};
+
+		try {
+			db.update('competitions', competitionToSave);
+		} catch (err) {
+			db.create('competitions', competitionToSave);
+		}
+	},
 	createCompetition: (aCompetition: Competition, championshipId: string) => {
 		const competitionToSave = {
 			id: aCompetition.id,
@@ -22,7 +37,7 @@ export const competitionService = {
 			owner: pb.authStore.record?.id,
 			data: aCompetition
 		};
-		db.save('competitions', competitionToSave);
+		db.create('competitions', competitionToSave);
 	},
 
 	updateCompetition: (aCompetition: Competition, championshipId: string) => {

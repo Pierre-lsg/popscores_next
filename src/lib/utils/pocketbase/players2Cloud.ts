@@ -14,7 +14,7 @@ export const playerService = {
 			owner: pb.authStore.record?.id,
 			data: aPlayer
 		};
-		db.save('players', playerToSave);
+		db.create('players', playerToSave);
 	},
 
 	updatePlayer: (aPlayer: Player) => {

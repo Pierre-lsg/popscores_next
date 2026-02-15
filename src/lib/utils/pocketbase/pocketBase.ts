@@ -36,7 +36,7 @@ export const db = {
 	},
 
 	// Créer un record
-	async save(collectionName: string, data: any) {
+	async create(collectionName: string, data: any) {
 		try {
 			return await pb.collection(collectionName).create(data);
 		} catch (err) {

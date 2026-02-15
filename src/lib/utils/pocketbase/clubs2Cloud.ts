@@ -13,7 +13,7 @@ export const clubService = {
 			owner: pb.authStore.record?.id,
 			data: aClub
 		};
-		db.save('clubs', clubToSave);
+		db.create('clubs', clubToSave);
 	},
 
 	updateClub: (aClub: Club) => {
