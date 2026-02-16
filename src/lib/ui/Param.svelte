@@ -1,21 +1,27 @@
 <script lang="ts">
-	export let label = ''; // Le titre du champ
-	export let value = ''; // La valeur liée (bind)
-	export let type = 'text'; // text, number, etc.
-	export let placeholder = ''; // Texte d'aide
-	export let inputmode:
-		| 'text'
-		| 'search'
-		| 'none'
-		| 'tel'
-		| 'url'
-		| 'email'
-		| 'numeric'
-		| 'decimal' = 'text'; // Pour forcer le pavé numérique (ex: "numeric")
-	export let focus = false;
-	export let oneline = false;
+	interface Props {
+		label?: string;
+		value: string;
+		type?: 'text' | 'number';
+		placeholder?: string;
+		inputmode?: 'text' | 'search' | 'none' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal';
+		focus?: boolean;
+		oneline?: boolean;
+		onchange?: () => void;
+	}
 
-	let contentAppearance: string = oneline ? 'param-inline-container' : 'param-container';
+	let {
+		label = '',
+		value = $bindable(''),
+		type = 'text',
+		placeholder = '',
+		inputmode = 'text',
+		focus = false,
+		oneline = false,
+		onchange
+	}: Props = $props();
+
+	let contentAppearance = $derived(oneline ? 'param-inline-container' : 'param-container');
 
 	const init = (elt: any) => {
 		if (focus) elt.focus();
@@ -27,17 +33,7 @@
 		<label for="input-field">{label}</label>
 	{/if}
 
-	<input
-		id="input-field"
-		{type}
-		{placeholder}
-		{inputmode}
-		bind:value
-		on:input
-		on:keydown
-		use:init
-	/>
-	<slot />
+	<input id="input-field" {type} {placeholder} {inputmode} bind:value use:init {onchange} />
 </div>
 
 <style>

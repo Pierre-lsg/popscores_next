@@ -178,38 +178,35 @@
 			<tbody>
 				{#if !scoringForAllPlayersRules.includes(currentTarget.rule || '')}
 					{#each teams as team}
-						{@const player = players.find((p) => p.id === team.playersId[0]) || {
-							id: '',
-							name: '',
-							teamId: '',
-							scores: {}
-						}}
-						<tr class="score">
-							<td class="player-name">
-								{team.name}
-							</td>
-							<td>
-								<Stepper
-									value={player.scores[currentTarget.id] ?? 0}
-									min={minTrys}
-									max={maxTrys}
-									onchange={(val) => updateScoreTeam(team, currentTarget.id, val)}
-								/>
-							</td>
-							<td class="btn-actions">
-								<button
-									class="btn-par"
-									onclick={() => updateScoreTeam(team, currentTarget.id, currentTarget.par)}
-									title="Par">=</button
-								>
-								&nbsp;&nbsp;
-								<button
-									class="btn-delete"
-									onclick={() => updateScoreTeam(team, currentTarget.id, maxTrys)}
-									title="Echec">x</button
-								>
-							</td>
-						</tr>
+						{@const player = players.find((p) => p.id === team.playersId[0])}
+						{#if player}
+							<tr class="score">
+								<td class="player-name">
+									{team.name}
+								</td>
+								<td>
+									<Stepper
+										value={player.scores[currentTarget.id]}
+										min={minTrys}
+										max={maxTrys}
+										onchange={(val) => updateScoreTeam(team, currentTarget.id, val)}
+									/>
+								</td>
+								<td class="btn-actions">
+									<button
+										class="btn-par"
+										onclick={() => updateScoreTeam(team, currentTarget.id, currentTarget.par)}
+										title="Par">=</button
+									>
+									&nbsp;&nbsp;
+									<button
+										class="btn-delete"
+										onclick={() => updateScoreTeam(team, currentTarget.id, maxTrys)}
+										title="Echec">x</button
+									>
+								</td>
+							</tr>
+						{/if}
 					{/each}
 				{:else}
 					{#each players as player}

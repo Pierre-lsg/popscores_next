@@ -3,7 +3,6 @@ import { appSettings } from '$lib/stores/settingsStore.svelte';
 import { writable } from 'svelte/store';
 
 export const pb = new PocketBase(appSettings.values.cloudUrl);
-
 export const user = writable(pb.authStore.record);
 
 pb.authStore.onChange((auth) => {
@@ -37,8 +36,9 @@ export const db = {
 
 	// Créer un record
 	async create(collectionName: string, data: any) {
+		const options = { requestKey: null };
 		try {
-			return await pb.collection(collectionName).create(data);
+			return await pb.collection(collectionName).create(data, options);
 		} catch (err) {
 			console.error(`Erreur save sur ${collectionName} :`, err);
 			throw err;
@@ -47,8 +47,9 @@ export const db = {
 
 	// Mettre à jour un record
 	async update(collectionName: string, data: any) {
+		const options = { requestKey: null };
 		try {
-			return await pb.collection(collectionName).update(data.id, data);
+			return await pb.collection(collectionName).update(data.id, data, options);
 		} catch (err) {
 			console.error(`Erreur update sur ${collectionName} :`, err);
 			throw err;
@@ -62,10 +63,16 @@ export const db = {
 		}
 
 		try {
+			// Désactiver l'auto-annulation
+			const options = { requestKey: null };
+
 			// 1. On tente de récupérer l'enregistrement existant
 			let existing = null;
 			try {
-				existing = await pb.collection(collectionName).getOne(data.id);
+				existing = await pb
+					.collection(collectionName)
+					.getOne(data.id, options)
+					.catch(() => null);
 			} catch (e) {
 				// Si getOne échoue, c'est généralement un 404 (n'existe pas)
 				existing = null;
@@ -73,9 +80,9 @@ export const db = {
 
 			// 2. Décision : Update si présent, Create si absent
 			if (existing) {
-				return await pb.collection(collectionName).update(data.id, data);
+				return await pb.collection(collectionName).update(data.id, data, options);
 			} else {
-				return await pb.collection(collectionName).create(data);
+				return await pb.collection(collectionName).create(data, options);
 			}
 		} catch (error) {
 			console.error(`Erreur lors de l'upsert sur ${collectionName}:`, error);

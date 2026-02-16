@@ -31,7 +31,7 @@ class ClubsStore {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
-			description,
+			description: '',
 			playersId,
 			teamsId
 		});

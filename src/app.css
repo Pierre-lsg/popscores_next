@@ -243,6 +243,16 @@ h2:not(:first-child) {
 	font-weight: bold;
 }
 
+.btn-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.5rem;
+	background: var(--bg-card);
+	border-radius: 8px;
+	margin-bottom: 0.5rem;
+	width: 25%;
+}
 /* Classement */
 .rank {
 	background: var(--primary);

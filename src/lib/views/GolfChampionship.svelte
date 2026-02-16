@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+	import { onMount } from 'svelte';
 
 	let csStore = $state(
 		championshipStore.list[0] ? championshipStore.list[0] : championshipStore.new()
 	);
+
+	onMount(() => {
+		console.log('cs', csStore);
+	});
 </script>
 
 <h2>Championnat {csStore.name}</h2>

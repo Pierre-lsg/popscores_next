@@ -31,8 +31,8 @@ class ChampionsStore {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
-			season,
-			location,
+			season: '',
+			location: '',
 			collectiveScale: '',
 			individualScale: ''
 		});

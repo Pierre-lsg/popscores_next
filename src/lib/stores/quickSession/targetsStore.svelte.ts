@@ -66,6 +66,7 @@ class TargetsStore {
 		this.list.push({
 			id: crypto.randomUUID(), // Identifiant unique stable
 			par: 4,
+			name: '',
 			rule: 'Individuel'
 		});
 	}

@@ -12,43 +12,25 @@
 	let csStore = $state(championshipStore.list[0]);
 
 	const saveChampionshipToCloud = async () => {
-		let idvScale: MarkedPointScale = mpsStore.list.filter(
-			(m) => (m.id = csStore.individualScale)
-		)[0];
-		let cltScale: MarkedPointScale = mpsStore.list.filter(
-			(m) => (m.id = csStore.collectiveScale)
-		)[0];
+		let idvScale: MarkedPointScale | undefined = mpsStore.getScaleById(csStore.individualScale);
+		let cltScale: MarkedPointScale | undefined = mpsStore.getScaleById(csStore.collectiveScale);
 
-		let tmpChamp: any = await championshipService.getByChampionshipId(csStore.id);
-		if (tmpChamp) {
-			try {
-				championshipService.updateChampionship(csStore, idvScale, cltScale);
-				toastStore.show('💾 Mise à jour effectuée ...', 'success');
-			} catch (err) {
-				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-			}
-		} else {
-			try {
-				championshipService.createChampionship(csStore, idvScale, cltScale);
-				toastStore.show('💾 Sauvegarde effectuée ...', 'success');
-			} catch (err) {
-				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-			}
+		try {
+			championshipService.saveChampionship(csStore, idvScale, cltScale);
+			toastStore.show('💾 Mise à jour effectuée ...', 'success');
+		} catch (err) {
+			toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
 		}
 	};
 
 	const showAvailableChampionship = () => {
 		alert('A faire : récupérer et afficher les championnats disponibles');
 	};
-
-	onMount(() => {
-		if (!csStore) csStore = championshipStore.new();
-	});
 </script>
 
-<button onclick={() => saveChampionshipToCloud()}>Save</button>
+<button onclick={() => saveChampionshipToCloud()}>Sauvegarde Serveur</button>
 
-<button onclick={() => showAvailableChampionship()}>Load championship</button>
+<button onclick={() => showAvailableChampionship()}>Charger un autre championnat</button>
 
 <div class="settings-page">
 	{#if csStore}
@@ -68,8 +50,8 @@
 			placeholder="Localisation"
 		/>
 		<h2>Barèmes de points</h2>
-		<ScaleUpdate bind:scaleId={csStore.collectiveScale} isIndividual={false} />
-		<ScaleUpdate bind:scaleId={csStore.individualScale} isIndividual={true} />
+		<ScaleUpdate scaleId={csStore.collectiveScale} isIndividual={false} />
+		<ScaleUpdate scaleId={csStore.individualScale} isIndividual={true} />
 	{/if}
 </div>
 

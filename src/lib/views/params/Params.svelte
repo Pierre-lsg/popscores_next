@@ -3,7 +3,6 @@
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
-	import Password from '$lib/ui/Password.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
 
 	const localReset = () => {
@@ -26,6 +25,11 @@
 
 		alert('Application réinitialisée. Redémarrage de Popscores');
 		window.location.reload();
+	};
+
+	const updatePocketBaseUrl = () => {
+		pb.baseURL = appSettings.values.cloudUrl;
+		if (pb.authStore.isValid) pb.authStore.clear();
 	};
 </script>
 
@@ -59,6 +63,7 @@
 		type="text"
 		bind:value={appSettings.values.cloudUrl}
 		placeholder="URL du serveur de stockage externe"
+		onchange={() => updatePocketBaseUrl()}
 	/>
 	<Param
 		label="Identifiant"
@@ -66,7 +71,6 @@
 		bind:value={appSettings.values.cloudLogin}
 		placeholder="Identifiant"
 	/>
-	<Password label="Mot de passe" bind:value={appSettings.values.cloudPassword} />
 
 	<h2>Réinitialisation</h2>
 	<button onclick={() => localReset()}>Réinitialisation des données</button>

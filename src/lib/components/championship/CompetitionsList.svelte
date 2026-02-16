@@ -6,7 +6,6 @@
 	import Param from '$lib/ui/Param.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
-	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 
 	let competitions = $state<Competition[]>(competitionsStore.list);
 	let editCompetition: boolean[] = $state([]);
@@ -85,9 +84,9 @@
 					startDate: filteredCompetitions[index].startDate,
 					scorePublicationDate: filteredCompetitions[index].scorePublicationDate,
 					location: filteredCompetitions[index].location,
-					teamsId: [],
-					playersId: [],
-					flysId: []
+					teamsId: filteredCompetitions[index].teamsId,
+					playersId: filteredCompetitions[index].playersId,
+					flysId: filteredCompetitions[index].flysId
 				};
 				// Load session to the local Store
 				competitionsStore.load(newCompetition);

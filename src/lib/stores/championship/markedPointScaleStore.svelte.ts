@@ -29,12 +29,14 @@ class MarkedPointScaleStore {
 	 * @param points - Marked point scale
 	 */
 	add(id: string, name: string, isIndividual: boolean, points: number[]) {
-		this.list.push({
+		let newScale: MarkedPointScale = {
 			id,
 			name,
-			isIndividual,
-			points
-		});
+			points,
+			isIndividual
+		};
+		this.list.push(newScale);
+		return newScale;
 	}
 
 	/**

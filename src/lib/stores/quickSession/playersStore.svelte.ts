@@ -76,6 +76,8 @@ class PlayersStore {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
+			surname: '',
+			nickname: '',
 			teamId: '',
 			scores: {}
 		});

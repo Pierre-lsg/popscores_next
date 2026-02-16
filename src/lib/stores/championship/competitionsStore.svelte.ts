@@ -44,7 +44,7 @@ class CompetitionsStore {
 			step,
 			startDate: '',
 			scorePublicationDate: '',
-			location,
+			location: '',
 			teamsId: [],
 			playersId: [],
 			flysId: []

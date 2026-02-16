@@ -1,21 +1,18 @@
 <script lang="ts">
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
 	import { user, pb } from '$lib/utils/pocketbase/pocketBase';
+	import Login from '$lib/components/LoginBox.svelte';
 	import { base } from '$app/paths';
 
-	const login = async () => {
-		try {
-			const authData = await pb
-				.collection('users')
-				.authWithPassword(appSettings.values.cloudLogin, appSettings.values.cloudPassword);
-			console.log('Connecté en tant que : ', pb.authStore.record?.email);
-		} catch (err) {
-			console.log(err);
-		}
-	};
+	let appSets = $derived(appSettings.values);
+	let isConnecting: boolean = $state(false);
 
 	const logout = () => {
 		pb.authStore.clear();
+	};
+
+	const showConnectBox = () => {
+		isConnecting = true;
 	};
 </script>
 
@@ -68,7 +65,7 @@
 				<p>Arrivederci ...</p>
 			</div>
 		{:else}
-			<div role="none" class="card" onclick={() => login()}>
+			<div role="none" class="card" onclick={() => showConnectBox()}>
 				<span class="icon">🔗</span>
 				<h3>Connexion</h3>
 				<p>Accès aux services et applications en ligne</p>
@@ -76,6 +73,10 @@
 		{/if}
 	</div>
 </div>
+
+{#if isConnecting}
+	<Login url={appSets.cloudUrl} username={appSets.cloudLogin} bind:isConnecting />
+{/if}
 
 <style>
 	.grid-container {

@@ -1,8 +1,8 @@
 export interface Player {
 	id: string;
 	name: string;
-	surname?: string;
-	nickname?: string;
+	surname: string;
+	nickname: string;
 	teamId: string;
 	clubId?: string;
 	scores: Record<string, number>;

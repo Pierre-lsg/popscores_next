@@ -1,8 +1,5 @@
 import { browser } from '$app/environment';
 
-// TODO : suppress cloud password.
-// Asked (prompt) it at the connection
-
 /**
  * Interface for application settings.
  */
@@ -17,7 +14,6 @@ export interface AppSettings {
 	isTeamGame: boolean;
 	cloudUrl: string;
 	cloudLogin: string;
-	cloudPassword: string;
 }
 
 /**
@@ -37,9 +33,8 @@ const defaultSettings: AppSettings = {
 	malusValue: 10,
 	malusOverPar: 4,
 	isTeamGame: false,
-	cloudUrl: 'http://192.168.1.143:8090',
-	cloudLogin: 'pierre.bonnafous@gmail.com',
-	cloudPassword: 'totototo'
+	cloudUrl: 'https://api.obip.fr',
+	cloudLogin: 'pierre.bonnafous@gmail.fr'
 };
 
 /**
@@ -54,20 +49,13 @@ class SettingsStore {
 			const saved = localStorage.getItem(STORAGE_KEY);
 			if (saved) {
 				// Fusion pour gérer les futures mises à jour de l'app
-				this.values = { ...defaultSettings, ...JSON.parse(saved) };
+				this.values = JSON.parse(saved);
 			}
 
 			// Sauvegarde automatique globale
 			$effect.root(() => {
 				$effect(() => {
 					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.values));
-
-					// Petit bonus : appliquer le dark mode au body automatiquement
-					if (this.values.darkMode) {
-						document.body.classList.add('dark');
-					} else {
-						document.body.classList.remove('dark');
-					}
 				});
 			});
 		}

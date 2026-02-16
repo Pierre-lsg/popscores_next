@@ -4,69 +4,72 @@
 	import { onMount } from 'svelte';
 
 	// Le barème passé en propriété
-	let { scaleId = $bindable(), isIndividual = false } = $props();
-	let scale: MarkedPointScale = $state({ id: '', name: '', isIndividual: false, points: [] });
+	let { scaleId = '', isIndividual = false } = $props();
+	let scale: MarkedPointScale | undefined = $derived(
+		mpsStore.getScaleById(scaleId)
+			? mpsStore.getScaleById(scaleId)
+			: mpsStore.add(scaleId, '', isIndividual, [])
+	);
 
 	let qtyToAdd = $state(1); // Quantité de rangs à ajouter d'un coup
 	let step = $state(1);
 
 	const addRanks = () => {
-		let newPoints = [...scale.points];
-		for (let i = 0; i < qtyToAdd; i++) {
-			const lastScore = newPoints[newPoints.length - 1] || 0;
-			// Décrémentation de 1 point, minimum 0
-			const nextScore = Math.max(0, lastScore - step);
-			newPoints.push(nextScore);
+		if (scale) {
+			let newPoints = [...scale.points];
+			for (let i = 0; i < qtyToAdd; i++) {
+				const lastScore = newPoints[newPoints.length - 1] || 0;
+				// Décrémentation de 1 point, minimum 0
+				const nextScore = Math.max(0, lastScore - step);
+				newPoints.push(nextScore);
+			}
+			scale.points = newPoints;
 		}
-		scale.points = newPoints;
 	};
 
 	const removeLastRank = () => {
-		if (scale.points.length > 0) {
-			scale.points = scale.points.slice(0, -1);
+		if (scale) {
+			if (scale.points.length > 0) {
+				scale.points = scale.points.slice(0, -1);
+			}
 		}
 	};
-
-	onMount(() => {
-		let scaleTemp = mpsStore.list.find((scale) => scale.id === scaleId);
-		if (scaleTemp) scale = scaleTemp;
-		else {
-			scale = mpsStore.new(isIndividual);
-			scaleId = scale.id;
-		}
-	});
 </script>
 
 <div class="scale-container">
-	<div class="scale-header">
-		<span class="badge">{scale.isIndividual ? 'Individuel' : 'Collectif'}</span>
-		<h3>{scale.name || 'Nouveau barème'}</h3>
-	</div>
-
-	<div class="ranks-grid">
-		{#each scale.points as point, i}
-			<div class="rank-item">
-				<label for="rank-{i}">{i + 1}<sup>e</sup></label>
-				<input id="rank-{i}" type="number" min="0" bind:value={scale.points[i]} />
-			</div>
-		{/each}
-	</div>
-
-	<div class="actions-bar">
-		<div class="add-group">
-			<input type="number" min="1" max="50" bind:value={qtyToAdd} class="input-qty" />
-			<button class="btn-add" onclick={addRanks}>
-				Ajouter {qtyToAdd > 1 ? qtyToAdd + ' rangs' : 'un rang'}
-			</button>
-			<input type="number" min="1" max="50" bind:value={step} class="input-qty" />
+	{#if scale}
+		<div class="scale-header">
+			<span class="badge">{scale.isIndividual ? 'Individuel' : 'Collectif'}</span>
+			<h3>{scale.name || 'Nouveau barème'}</h3>
 		</div>
 
-		{#if scale.points.length > 0}
-			<button class="btn-remove" onclick={removeLastRank} title="Supprimer la dernière place">
-				Supprimer la place {scale.points.length}
-			</button>
-		{/if}
-	</div>
+		<div class="ranks-grid">
+			{#each scale.points as point, i}
+				<div class="rank-item">
+					<label for="rank-{i}">{i + 1}<sup>e</sup></label>
+					<input id="rank-{i}" type="number" min="0" bind:value={scale.points[i]} />
+				</div>
+			{/each}
+		</div>
+
+		<div class="actions-bar">
+			<div class="add-group">
+				<input type="number" min="1" max="50" bind:value={qtyToAdd} class="input-qty" />
+				<button class="btn-add" onclick={addRanks}>
+					Ajouter {qtyToAdd > 1 ? qtyToAdd + ' rangs' : 'un rang'}
+				</button>
+				<input type="number" min="1" max="50" bind:value={step} class="input-qty" />
+			</div>
+
+			{#if scale.points.length > 0}
+				<button class="btn-remove" onclick={removeLastRank} title="Supprimer la dernière place">
+					Supprimer la place {scale.points.length}
+				</button>
+			{/if}
+		</div>
+	{:else}
+		<p>Echec à la récupération de l'échelle</p>
+	{/if}
 </div>
 
 <style>

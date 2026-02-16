@@ -9,8 +9,8 @@ export const championshipService = {
 
 	saveChampionship: (
 		aChampionShip: Championship,
-		idvScale: MarkedPointScale,
-		cltScale: MarkedPointScale
+		idvScale?: MarkedPointScale,
+		cltScale?: MarkedPointScale
 	) => {
 		const data = {
 			id: aChampionShip.id,
@@ -31,8 +31,8 @@ export const championshipService = {
 
 	createChampionship: (
 		aChampionShip: Championship,
-		idvScale: MarkedPointScale,
-		cltScale: MarkedPointScale
+		idvScale?: MarkedPointScale,
+		cltScale?: MarkedPointScale
 	) => {
 		const data = {
 			id: aChampionShip.id,
@@ -53,8 +53,8 @@ export const championshipService = {
 
 	updateChampionship: (
 		aChampionShip: Championship,
-		idvScale: MarkedPointScale,
-		cltScale: MarkedPointScale
+		idvScale?: MarkedPointScale,
+		cltScale?: MarkedPointScale
 	) => {
 		const data = {
 			id: aChampionShip.id,
