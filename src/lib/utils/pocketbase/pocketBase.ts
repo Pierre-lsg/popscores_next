@@ -36,8 +36,8 @@ export const db = {
 
 	// Créer un record
 	async create(collectionName: string, data: any) {
-		const options = { requestKey: null };
 		try {
+			const options = { requestKey: null };
 			return await pb.collection(collectionName).create(data, options);
 		} catch (err) {
 			console.error(`Erreur save sur ${collectionName} :`, err);
@@ -47,8 +47,8 @@ export const db = {
 
 	// Mettre à jour un record
 	async update(collectionName: string, data: any) {
-		const options = { requestKey: null };
 		try {
+			const options = { requestKey: null };
 			return await pb.collection(collectionName).update(data.id, data, options);
 		} catch (err) {
 			console.error(`Erreur update sur ${collectionName} :`, err);

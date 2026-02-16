@@ -46,7 +46,7 @@ class TargetsChampionshipStore {
 	new(): Target {
 		const aTarget: Target = {
 			id: crypto.randomUUID(),
-			name: '',
+			name: 'Titre',
 			par: 4,
 			rule: 'Individuel'
 		};

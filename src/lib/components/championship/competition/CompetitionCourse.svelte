@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
-	import { collectiveRules, type Target } from '$lib/types/targetsType';
+	import { collectiveRules, individualRules, type Target } from '$lib/types/targetsType';
 	import type { Course } from '$lib/types/courseType';
 
 	import { dndzone } from 'svelte-dnd-action';
@@ -11,16 +11,18 @@
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { onMount } from 'svelte';
+	import TextField from '$lib/ui/TextField.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 	}>();
 
-	let ruleOptions: string[] = collectiveRules;
+	const ruleOptions = isCompetitionTeam(currentCompetition) ? collectiveRules : individualRules;
 
 	let targets: Target[] = $state([]);
 	let editingTarget: boolean[] = $state([]);
@@ -100,9 +102,21 @@
 				{#each targets as target (target.id)}
 					<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
 						<div class="content">
-							<span class="target-name">{target.name || 'Cible #'}</span>
-							<span class="target-par">{target.par}</span>
-							<span class="target-rule">{target.rule}</span>
+							<span class="target-name">
+								<TextField bind:value={target.name} />
+							</span>
+							<span class="target-par">
+								<Stepper bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
+							</span>
+							<span class="target-rule">
+								<Selector
+									id="rule{target.id}"
+									bind:value={target.rule}
+									onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+									options={ruleOptions}
+								/>
+							</span>
+
 							<span>
 								<span role="none" onclick={() => editTarget(targets.indexOf(target))}>✏️</span>
 							</span>
@@ -189,14 +203,14 @@
 	}
 
 	.target-par {
-		width: 5%;
+		width: 32%;
 	}
 
 	.target-name {
-		width: 40%;
+		width: 28%;
 	}
 
 	.target-rule {
-		width: 40%;
+		width: 25%;
 	}
 </style>

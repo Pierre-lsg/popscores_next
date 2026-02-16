@@ -132,7 +132,7 @@
 	.controls {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0rem;
 	}
 	.btn-step {
 		width: 40px;
@@ -145,6 +145,8 @@
 		-webkit-user-select: none;
 		user-select: none;
 		background-color: var(--bg-ui);
+		margin: 0;
+		padding: 0;
 	}
 	.value-display {
 		font-size: 1.2rem;
