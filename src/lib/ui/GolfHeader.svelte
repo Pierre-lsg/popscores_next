@@ -37,14 +37,12 @@
 		{/if}
 	</div>
 </div>
-{#if isFixed === 'fixed'}
-	<div style="height: 10vh"></div>
-{/if}
 
 <style>
 	.header-section {
 		background: var(--bg-card);
 		display: flex;
+		z-index: 10;
 		justify-content: space-between;
 		align-items: flex-start;
 		width: 100%;
@@ -56,8 +54,8 @@
 	}
 
 	.header-section.fixed {
-		position: fixed;
-		top: 50px;
+		position: sticky;
+		top: 7vh;
 		left: 0;
 		width: 100%;
 		width: 100%;

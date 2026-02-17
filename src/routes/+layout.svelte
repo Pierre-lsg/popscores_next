@@ -33,7 +33,7 @@
 
 <main>
 	<div class="top-bar">
-		<div class="nav-action">
+		<div>
 			{#if $page.url.pathname.includes('/championship/') && $page.url.pathname !== '/championship/'}
 				<a class="btn btn-back" href={base + '/championship'}>👑 Accueil</a>
 			{:else}
@@ -58,20 +58,30 @@
 		display: flex;
 		justify-content: space-between;
 		position: sticky;
-		top: 0;
+		height: 7vh;
 		z-index: 999;
+		top: 0;
 		align-items: center;
-		margin-bottom: 1rem;
+		margin-bottom: 0.5rem;
 		width: 100%;
 		background-color: var(--bg-card);
 	}
 
 	.wrapper {
-		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
 		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0.5rem;
+		padding: 0 0.5rem 0.5rem 0.5rem;
+		margin-bottom: 3vh;
+	}
+
+	footer {
+		display: flex;
+		position: fixed;
+		z-index: 999;
+		top: 97vh;
+		height: 3vh;
+		width: 100vw;
+		background-color: var(--bg-ui);
 	}
 </style>

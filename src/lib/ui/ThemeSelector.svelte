@@ -36,8 +36,8 @@
 		background: var(--bg-card);
 		border: 2px solid var(--border-color);
 		border-radius: 50%;
-		width: 40px;
-		height: 40px;
+		width: 4.5vh;
+		height: 4.5vh;
 		cursor: pointer;
 		font-size: 1.2rem;
 		display: flex;
