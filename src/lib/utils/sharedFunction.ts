@@ -47,3 +47,13 @@ export const shuffle = <T>(array: T[]): T[] => {
 
 	return newArray;
 };
+
+export const formatList = (list: string[]): string => {
+	// On crée le formateur pour le français
+	const formatter = new Intl.ListFormat('fr', {
+		style: 'long',
+		type: 'conjunction'
+	});
+
+	return formatter.format(list);
+};

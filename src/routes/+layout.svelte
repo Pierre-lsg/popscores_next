@@ -6,6 +6,7 @@
 	import ThemeSelector from '$lib/ui/ThemeSelector.svelte';
 	import NetworkBanner from '$lib/ui/NetworkBanner.svelte';
 	import Toast from '$lib/ui/Toast.svelte';
+	import { formatList } from '$lib/utils/sharedFunction';
 	import { checkDataVersion, CURRENT_VERSION } from '$lib/utils/migration';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { onMount } from 'svelte';
@@ -50,7 +51,8 @@
 
 <footer>
 	Popscores v{CURRENT_VERSION}
-	{#if $user}🔗{/if}
+	{#if $user}🔗 ({formatList($user.role)})
+	{/if}
 </footer>
 
 <style>

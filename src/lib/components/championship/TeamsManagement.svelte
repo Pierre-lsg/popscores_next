@@ -25,6 +25,7 @@
 
 	let creatingNewTeam: boolean = $state(false);
 	let editingTeam: boolean[] = $state([]);
+	let isEditingTeam: boolean = $state(false);
 	let teamName: string = $state('');
 
 	// Function to add a new team
@@ -53,36 +54,41 @@
 			if (i !== index) editingTeam[i] = false;
 		}
 		editingTeam[index] = !editingTeam[index];
+		isEditingTeam = editingTeam.some((value) => value === true);
 	};
 </script>
 
-<!-- Teams's list -->
-<div class="teams-list">
-	{#each teams as team, i}
-		<div role="none" class="team-item" onclick={() => editTeam(i)}>
-			<div role="none" class="team-card">
-				<div class="details">
-					{team.name}
-				</div>
-				<div class="details">
-					<ul>
-						{#each clubPlayers.filter((p) => p.teamId === team.id) as player}
-							<li>{player.name}</li>
-						{/each}
-					</ul>
+{#if !isEditingTeam}
+	<div class="teams-list">
+		{#each teams as team, i}
+			<div role="none" class="team-item" onclick={() => editTeam(i)}>
+				<div role="none" class="team-card">
+					<div class="details">
+						{team.name}
+					</div>
+					<div class="details">
+						<ul>
+							{#each clubPlayers.filter((p) => p.teamId === team.id) as player}
+								<li>{player.name}</li>
+							{/each}
+						</ul>
+					</div>
 				</div>
 			</div>
-		</div>
+		{/each}
+	</div>
+{:else}
+	<!-- Form for team's editing -->
+	{#each teams as team, i}
+		{#if editingTeam[i]}
+			<TeamEditing {currentClub} {team} {clubPlayers} />
+			<div class="action">
+				<button onclick={() => editTeam(i)}> Valider </button>
+				<button onclick={() => removeTeam(team.id)}> 🗑️ Supprimer</button>
+			</div>
+		{/if}
 	{/each}
-</div>
-
-<!-- Form for team's editing -->
-{#each teams as team, i}
-	{#if editingTeam[i]}
-		<TeamEditing {currentClub} {team} {clubPlayers} />
-		<button onclick={() => removeTeam(team.id)}> 🗑️ </button>
-	{/if}
-{/each}
+{/if}
 
 {#if teams.length === 0}
 	<p>Aucune équipe enregistrée pour le moment. 🏆</p>
@@ -144,5 +150,11 @@
 		align-items: center;
 		margin: 0.5rem;
 		gap: 8px;
+	}
+
+	.action {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 0.5rem 0 0;
 	}
 </style>

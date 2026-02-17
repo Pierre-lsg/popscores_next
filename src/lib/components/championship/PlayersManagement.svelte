@@ -19,7 +19,8 @@
 	let players = $derived<Player[]>(pcs.list.filter((p) => p.clubId === currentClub));
 	let numPlayers: number = $derived(players.length);
 
-	let creatingNewPlayer: boolean = $state(false);
+	let isCreatingNewPlayer: boolean = $state(false);
+	let isEditingPlayer: boolean = $state(false);
 	let editingPlayer: boolean[] = $state([]);
 	let playerName: string = $state('');
 	let playerSurname: string = $state('');
@@ -33,7 +34,7 @@
 		}
 
 		playerName = playerSurname = playerNickname = '';
-		creatingNewPlayer = false;
+		isCreatingNewPlayer = false;
 	};
 
 	// Function to remove a player
@@ -44,6 +45,7 @@
 		}
 		// Todo : fix this. It should the derived runes which recalculate this
 		players = pcs.list.filter((p) => p.clubId === currentClub);
+		editingPlayer.fill(false);
 	};
 
 	// Function to toggle editing of a player
@@ -52,55 +54,61 @@
 			if (i !== index) editingPlayer[i] = false;
 		}
 		editingPlayer[index] = !editingPlayer[index];
+		isEditingPlayer = editingPlayer.some((value) => value === true);
 	};
 </script>
 
-<div class="players-list">
-	{#each players as player, i}
-		<div role="none" class="player-item" onclick={() => editPlayer(i)}>
-			<div style="background-image: url({photo});" class="player-card">
-				<div class="details">
-					<div>{player.name}</div>
-					<div>{player.surname}</div>
-					<div>{player.nickname}</div>
+{#if !isEditingPlayer && !isCreatingNewPlayer}
+	<div class="players-list">
+		{#each players as player, i}
+			<div role="none" class="player-item" onclick={() => editPlayer(i)}>
+				<div style="background-image: url({photo});" class="player-card">
+					<div class="details">
+						<div>{player.name}</div>
+						<div>{player.surname}</div>
+						<div>{player.nickname}</div>
+					</div>
 				</div>
 			</div>
-		</div>
-	{/each}
-</div>
+		{/each}
+	</div>
 
-{#each players as player, i}
-	{#if editingPlayer[i]}
-		<div class="player-form">
-			<h3>Modifier le joueur 👤</h3>
-			<Param
-				label="Nom du joueur"
-				type="text"
-				bind:value={player.name}
-				focus={true}
-				placeholder="Nom du joueur"
-			/>
-			<Param
-				label="Nom de famille"
-				type="text"
-				bind:value={player.surname}
-				placeholder="Nom du famille"
-			/>
-			<Param label="Surnom" type="text" bind:value={player.nickname} placeholder="Surnom" />
-			<button onclick={() => removePlayer(player.id)}> 🗑️ </button>
-		</div>
+	{#if players.length === 0}
+		<p>Aucun joueur enregistré pour le moment. 🏆</p>
 	{/if}
-{/each}
 
-{#if players.length === 0}
-	<p>Aucun joueur enregistré pour le moment. 🏆</p>
+	{#if !editingPlayer.some(Boolean) && !isCreatingNewPlayer}
+		<button onclick={() => (isCreatingNewPlayer = true)}>Ajouter un nouveau joueur</button>
+	{/if}
+{:else}
+	{#each players as player, i}
+		{#if editingPlayer[i]}
+			<div class="player-form">
+				<h3>Modifier le joueur 👤</h3>
+				<Param
+					label="Nom du joueur"
+					type="text"
+					bind:value={player.name}
+					focus={true}
+					placeholder="Nom du joueur"
+				/>
+				<Param
+					label="Nom de famille"
+					type="text"
+					bind:value={player.surname}
+					placeholder="Nom du famille"
+				/>
+				<Param label="Surnom" type="text" bind:value={player.nickname} placeholder="Surnom" />
+				<div class="action">
+					<button onclick={() => editPlayer(i)}> Valider </button>
+					<button onclick={() => removePlayer(player.id)}> 🗑️ Supprimer</button>
+				</div>
+			</div>
+		{/if}
+	{/each}
 {/if}
 
-{#if !editingPlayer.some(Boolean) && !creatingNewPlayer}
-	<button onclick={() => (creatingNewPlayer = true)}>Ajouter un nouveau joueur</button>
-{/if}
-
-{#if creatingNewPlayer}
+{#if isCreatingNewPlayer}
 	<div class="player-form">
 		<h3>Nouveau joueur</h3>
 		<Param
@@ -118,7 +126,7 @@
 		/>
 		<Param label="Surnom" type="text" bind:value={playerNickname} placeholder="Surnom" />
 		<button onclick={addNewPlayer}>Créer</button>
-		<button onclick={() => (creatingNewPlayer = false)}>Annuler</button>
+		<button onclick={() => (isCreatingNewPlayer = false)}>Annuler</button>
 	</div>
 {/if}
 
@@ -164,5 +172,11 @@
 		gap: 8px;
 		background-color: rgba(255, 255, 255, 0.8);
 		color: var(--primary);
+	}
+
+	.action {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 0.5rem 0 0;
 	}
 </style>

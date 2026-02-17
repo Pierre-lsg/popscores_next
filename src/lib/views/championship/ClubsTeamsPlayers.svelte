@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ClubsList from '$lib/components/championship/ClubsList.svelte';
 	import ClubManagement from '$lib/components/championship/ClubManagement.svelte';
+	import ClubManagementNoClub from '$lib/components/championship/ClubManagementNoClub.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 
 	let csStore = $state(championshipStore.list[0]);
@@ -12,11 +13,10 @@
 	{#if currentClub === ''}
 		<!-- Gestion des clubs -->
 		<ClubsList bind:currentClub csId={csStore.id} />
-	{:else}
+	{:else if currentClub !== 'no_club'}
 		<!-- Suivi d'un club -->
 		<ClubManagement bind:currentClub csId={csStore.id} />
+	{:else}
+		<ClubManagementNoClub bind:currentClub csId={csStore.id} />
 	{/if}
-	<ul>
-		<li>Lister les joueurs sans club</li>
-	</ul>
 </div>

@@ -134,7 +134,7 @@
 				<div class="details">
 					{club.name}
 				</div>
-				<div>{club.description}</div>
+				<div style="font-size: smaller;">{club.description}</div>
 				<div class="icon">🏆</div>
 			</div>
 			<div class="action">
@@ -145,6 +145,15 @@
 			</div>
 		</div>
 	{/each}
+
+	<!-- Sans club -->
+	<div class="club-item">
+		<div role="none" class="club-card" onclick={() => (currentClub = 'no_club')}>
+			<div class="details">Sans club</div>
+			<div style="font-size: smaller;">Equipes et joueurs sans club</div>
+			<div class="icon">❓</div>
+		</div>
+	</div>
 </div>
 
 {#each clubs as club, i}
