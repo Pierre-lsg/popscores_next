@@ -308,8 +308,8 @@ h2:not(:first-child) {
 	flex-direction: row;
 	width: 95%;
 	align-items: center;
+	justify-content: center;
 	overflow: hidden;
-	justify-content: space-between;
 }
 
 .content-edit-item {

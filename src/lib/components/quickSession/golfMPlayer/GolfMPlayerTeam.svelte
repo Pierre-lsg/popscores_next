@@ -5,6 +5,7 @@
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { shuffle } from '$lib/utils/sharedFunction';
 	import Selector from '$lib/ui/Selector.svelte';
+	import TextField from '$lib/ui/TextField.svelte';
 	import type { Team } from '$lib/types/teamType';
 
 	const s = sessionSettingsStore.settings;
@@ -122,41 +123,14 @@
 			{#each teamsStore.list as team (team.id)}
 				<div class="team-items">
 					<div class="team-item">
-						{#if editingTeamId === team.id}
-							<input
-								class="name-input"
-								bind:value={team.name}
-								onblur={() => saveTeamName()}
-								onkeydown={(e) => e.key === 'Enter' && saveTeamName()}
-								use:focus
-							/>
-						{:else}
-							<button class="invisible-button" onclick={() => editTeamName(team.id)}>
-								{team.name}
-							</button>
-						{/if}
+						<TextField bind:value={team.name} />
 					</div>
 					<div class="team-item">
 						{#each team.playersId as playerId}
-							{@const player = playersStore.list.find((p) => p.id === playerId) || {
-								id: '',
-								name: '',
-								teamId: '',
-								scores: {}
-							}}
-							<div class="player-item">
-								{#if editingId === player.id}
-									<input
-										class="name-input"
-										bind:value={player.name}
-										onblur={saveName}
-										onkeydown={(e) => e.key === 'Enter' && saveName(e)}
-										use:focus
-									/>
-								{:else}
-									<button class="invisible-button" onclick={() => editPlayerName(player.id)}>
-										{player.name}
-									</button>
+							{@const player = playersStore.list.find((p) => p.id === playerId)}
+							{#if player}
+								<div class="player-items">
+									<TextField bind:value={player.name} />
 									<div class="handle">
 										<button
 											class="invisible-button"
@@ -166,8 +140,8 @@
 											✕
 										</button>
 									</div>
-								{/if}
-							</div>
+								</div>
+							{/if}
 						{/each}
 					</div>
 					{#if team.playersId.length == 0}
@@ -193,7 +167,7 @@
 				<div class="players-list">
 					{#each playersStore.unassignedPlayers as player}
 						<div class="player-items">
-							<span>{player.name}</span>
+							<span style="width: 45%"><TextField bind:value={player.name} /></span>
 
 							<Selector
 								bind:value={selectedTeamId}

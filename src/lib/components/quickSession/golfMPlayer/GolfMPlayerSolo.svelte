@@ -4,6 +4,7 @@
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { smartSort } from '$lib/utils/sharedFunction';
 	import { dndzone } from 'svelte-dnd-action';
+	import TextField from '$lib/ui/TextField.svelte';
 
 	const flipDurationMs = 300;
 
@@ -77,22 +78,7 @@
 			{#each playersStore.list as player (player.id)}
 				<div class="player-item" animate:flip={{ duration: flipDurationMs }}>
 					<div class="content">
-						{#if editingId === player.id}
-							<input
-								class="name-input"
-								bind:value={player.name}
-								onblur={saveName}
-								onkeydown={(e) => e.key === 'Enter' && saveName(e)}
-								use:focus
-							/>
-						{:else}
-							<button
-								class="content-edit-item invisible-button"
-								onclick={() => editPlayerName(player.id)}
-							>
-								{player.name}
-							</button>
-						{/if}
+						<TextField bind:value={player.name} />
 					</div>
 					<div class="handle">☰</div>
 				</div>

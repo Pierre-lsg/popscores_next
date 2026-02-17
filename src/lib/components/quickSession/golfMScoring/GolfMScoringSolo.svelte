@@ -11,6 +11,7 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 	import Param from '$lib/ui/Param.svelte';
+	import TextField from '$lib/ui/TextField.svelte';
 
 	import { swipe } from '$lib/utils/swipe';
 	import { onMount } from 'svelte';
@@ -122,8 +123,8 @@
 	>
 		<button class="btn-target" onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
 		<div class="target-info">
-			<h3 role="none" onclick={() => modifyUpdatingBools('name')}>
-				{currentTarget.name} (# {activeTargetIndex + 1})
+			<h3>
+				<TextField bind:value={currentTarget.name} />&nbsp;(#&nbsp;{activeTargetIndex + 1})
 			</h3>
 			<div class="target-details">
 				<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('rule')}
@@ -198,3 +199,12 @@
 		</table>
 	</div>
 </div>
+
+<style>
+	h3 {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: center;
+	}
+</style>

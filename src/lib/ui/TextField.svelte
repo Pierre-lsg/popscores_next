@@ -3,10 +3,9 @@
 		value: string;
 		placeholder?: string;
 		focus?: boolean;
-		onchange?: () => void;
 	}
 
-	let { value = $bindable(''), placeholder = '', focus = false, onchange }: Props = $props();
+	let { value = $bindable(''), placeholder = '', focus = false }: Props = $props();
 	let isEditing: boolean = $state(false);
 
 	const init = (elt: any) => {
@@ -16,7 +15,7 @@
 	const isFinished = (e: KeyboardEvent) => {
 		if (e.key === 'Enter') {
 			isEditing = !isEditing;
-			if (onchange) onchange(); // Call onchange if it's provided
+			// if (onchange) onchange();
 		}
 	};
 </script>
@@ -24,11 +23,11 @@
 <div>
 	{#if isEditing}
 		<input
-			class="name-input"
+			class="input-field"
 			bind:value
 			onblur={() => (isEditing = !isEditing)}
 			onkeydown={(e) => isFinished(e)}
-			{onchange}
+			onchange={() => (isEditing = !isEditing)}
 		/>
 	{:else}
 		<div role="none" class="value-zone" onclick={() => (isEditing = !isEditing)}>
@@ -39,6 +38,20 @@
 
 <style>
 	.value-zone {
-		/*border: 2px red solid;*/
+		min-width: 50px;
+		border: 2px var(--bg-card) solid;
+	}
+
+	.input-field {
+		background: none;
+		border: none;
+		width: 100%;
+		padding: 0;
+		font: inherit;
+		cursor: pointer;
+		color: inherit;
+		border-bottom: 2px solid var(--primary);
+		outline: none;
+		color: var(--primary);
 	}
 </style>

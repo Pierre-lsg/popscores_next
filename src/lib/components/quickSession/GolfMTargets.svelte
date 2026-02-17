@@ -171,9 +171,6 @@
 		font: inherit;
 		cursor: pointer;
 		color: inherit;
-	}
-
-	.name-input {
 		border-bottom: 2px solid var(--primary);
 		outline: none;
 		color: var(--primary);
