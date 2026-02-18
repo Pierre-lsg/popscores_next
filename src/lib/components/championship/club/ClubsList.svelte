@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Club } from '$lib/types/clubType';
+	import ClubDisplayBox from './ClubDisplayBox.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
@@ -13,12 +14,20 @@
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	let clubs = $state<Club[]>(clubsStore.list);
+	let clubDisplayed: Club = $state({
+		id: '',
+		name: '',
+		description: '',
+		playersId: [],
+		teamsId: []
+	});
 	let editClub: boolean[] = $state([]);
 
 	let addNewClub: boolean = $state(false);
 
 	let clubName: string = $state('');
 	let clubDescription: string = $state('');
+	let showBox: boolean = $state(false);
 
 	let allClubs: Club[] = $state([]);
 	let loading = $state(true);
@@ -48,8 +57,9 @@
 		editClub[index] = !editClub[index];
 	};
 
-	const quickViewTeams = (index: number) => {
-		alert(`Affichage rapide des équipes du club : ${clubs[index].name}`);
+	const quickViewTeams = (club: Club) => {
+		clubDisplayed = club;
+		showBox = true;
 	};
 
 	const savingClub = async (id: string) => {
@@ -140,7 +150,7 @@
 			<div class="action">
 				<button onclick={() => removeClub(club.id)}> 🗑️ </button>
 				<button onclick={() => editingClub(i)}>✏️</button>
-				<button onclick={() => quickViewTeams(i)}>👁️</button>
+				<button onclick={() => quickViewTeams(club)}>👁️</button>
 				<button onclick={() => savingClub(club.id)}>☁️</button>
 			</div>
 		</div>
@@ -214,6 +224,10 @@
 			<div>{c.name} - {c.description?.slice(0, 30)}</div>
 		</button>
 	{/each}
+{/if}
+
+{#if showBox}
+	<ClubDisplayBox club={clubDisplayed} bind:showBox />
 {/if}
 
 <style>

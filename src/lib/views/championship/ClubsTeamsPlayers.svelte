@@ -1,7 +1,7 @@
 <script lang="ts">
-	import ClubsList from '$lib/components/championship/ClubsList.svelte';
-	import ClubManagement from '$lib/components/championship/ClubManagement.svelte';
-	import ClubManagementNoClub from '$lib/components/championship/ClubManagementNoClub.svelte';
+	import ClubsList from '$lib/components/championship/club/ClubsList.svelte';
+	import ClubManagement from '$lib/components/championship/club/ClubManagement.svelte';
+	import ClubManagementNoClub from '$lib/components/championship/club/ClubManagementNoClub.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 
 	let csStore = $state(championshipStore.list[0]);

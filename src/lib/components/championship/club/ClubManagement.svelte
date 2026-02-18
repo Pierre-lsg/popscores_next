@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 
-	import PlayersManagement from './PlayersManagement.svelte';
-	import TeamsManagement from './TeamsManagement.svelte';
+	import PlayersManagement from '../PlayersManagement.svelte';
+	import TeamsManagement from '../TeamsManagement.svelte';
 
 	import type { Club } from '$lib/types/clubType';
 
