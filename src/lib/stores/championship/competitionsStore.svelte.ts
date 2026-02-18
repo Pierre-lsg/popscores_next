@@ -42,9 +42,9 @@ class CompetitionsStore {
 			name,
 			status,
 			step,
-			startDate: '',
-			scorePublicationDate: '',
-			location: '',
+			startDate: startDate || '',
+			scorePublicationDate: scorePublicationDate || '',
+			location: location || '',
 			teamsId: [],
 			playersId: [],
 			flysId: []

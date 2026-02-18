@@ -40,9 +40,13 @@
 	};
 
 	// Function to remove a team
-	const removeTeam = (teamId: string) => {
+	const removeTeam = (team: Team) => {
 		if (confirm('Voulez-vous vraiment supprimer cette équipe ?')) {
-			teamsChampionshipStore.remove(teamId);
+			team.playersId.forEach((id) => {
+				const player = playersChampionshipStore.list.find((p) => p.id === id);
+				if (player) player.teamId = '';
+			});
+			teamsChampionshipStore.remove(team.id);
 		}
 		// Todo : fix this. It should the derived runes which recalculate this
 		teams = teamsChampionshipStore.list.filter((t) => t.clubId === currentClub);
@@ -58,7 +62,7 @@
 	};
 </script>
 
-{#if !isEditingTeam}
+{#if !isEditingTeam && !creatingNewTeam}
 	<div class="teams-list">
 		{#each teams as team, i}
 			<div role="none" class="team-item" onclick={() => editTeam(i)}>
@@ -81,10 +85,12 @@
 	<!-- Form for team's editing -->
 	{#each teams as team, i}
 		{#if editingTeam[i]}
-			<TeamEditing {currentClub} {team} {clubPlayers} />
-			<div class="action">
-				<button onclick={() => editTeam(i)}> Valider </button>
-				<button onclick={() => removeTeam(team.id)}> 🗑️ Supprimer</button>
+			<div class="team-form">
+				<TeamEditing {currentClub} {team} {clubPlayers} />
+				<div class="action">
+					<button onclick={() => editTeam(i)}> Valider </button>
+					<button onclick={() => removeTeam(team)}> 🗑️ Supprimer</button>
+				</div>
 			</div>
 		{/if}
 	{/each}
@@ -95,13 +101,13 @@
 {/if}
 
 <!-- Adding a new team-->
-{#if !editingTeam.some(Boolean)}
+{#if !isEditingTeam && !creatingNewTeam}
 	<button onclick={() => (creatingNewTeam = true)}>Ajouter une nouvelle équipe</button>
 {/if}
 
 {#if creatingNewTeam}
 	<div class="team-form">
-		<h3>Nouvelle équipe 👥</h3>
+		<h3 style="margin-top: 0">Nouvelle équipe 👥</h3>
 		<Param
 			label="Nom de l'équipe"
 			type="text"
@@ -109,8 +115,10 @@
 			focus={true}
 			placeholder="Nom de l'équipe"
 		/>
-		<button onclick={addNewTeam}>Créer</button>
-		<button onclick={() => (creatingNewTeam = false)}>Annuler</button>
+		<div class="action">
+			<button onclick={addNewTeam}>Créer</button>
+			<button onclick={() => (creatingNewTeam = false)}>Annuler</button>
+		</div>
 	</div>
 {/if}
 
@@ -146,6 +154,18 @@
 		border-color: var(--border-color);
 	}
 
+	.team-form {
+		border: 1px var(--primary) solid;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+	}
+
+	.team-form {
+		border: 1px var(--primary) solid;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+	}
+
 	.details {
 		align-items: center;
 		margin: 0.5rem;
@@ -155,6 +175,6 @@
 	.action {
 		display: flex;
 		justify-content: space-between;
-		margin: 0 0.5rem 0 0;
+		margin: 1rem 0.5rem 0 0;
 	}
 </style>

@@ -61,4 +61,8 @@
 		border-radius: 8px;
 		margin-bottom: 0.5rem;
 	}
+
+	select {
+		width: 50%;
+	}
 </style>

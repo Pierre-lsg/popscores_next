@@ -9,6 +9,7 @@
 
 	let competitions = $state<Competition[]>(competitionsStore.list);
 	let editCompetition: boolean[] = $state([]);
+	let isEditingCompetition: boolean = $state(false);
 	let numCompetitions: number = $derived(competitions.length);
 
 	let allCompetitions: Competition[] = $state([]);
@@ -56,6 +57,8 @@
 			if (i !== index) editCompetition[i] = false;
 		}
 		editCompetition[index] = !editCompetition[index];
+
+		isEditingCompetition = editCompetition.some((item) => item);
 	};
 
 	const savingCompetition = async (id: string) => {
@@ -109,61 +112,62 @@
 </script>
 
 <h2>Compétitions</h2>
-
-<div class="competitions-list">
-	{#each competitions as competition, i}
-		<div class="competition-item">
-			<div role="none" class="competition-card" onclick={() => loadingCompetition(competition)}>
-				<div class="details">
-					{competition.name}
+{#if !addNewCompetition}
+	<div class="competitions-list">
+		{#each competitions as competition, i}
+			<div class="competition-item">
+				<div role="none" class="competition-card" onclick={() => loadingCompetition(competition)}>
+					<div class="details">
+						{competition.name}
+					</div>
+					<div>{competition.startDate}</div>
+					<div class="icon">🏆</div>
 				</div>
-				<div>{competition.startDate}</div>
-				<div class="icon">🏆</div>
+				<div class="action">
+					<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
+					<button onclick={() => editingCompetition(i)}>✏️</button>
+					<button onclick={() => savingCompetition(competition.id)}>☁️</button>
+				</div>
 			</div>
-			<div class="action">
-				<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
-				<button onclick={() => editingCompetition(i)}>✏️</button>
-				<button onclick={() => savingCompetition(competition.id)}>☁️</button>
+		{/each}
+	</div>
+
+	{#each competitions as competition, i}
+		{#if editCompetition[i]}
+			<div class="competition-form">
+				<h3>Modifier la Compétition</h3>
+				<Param
+					label="⛳ Nom de la compétition"
+					type="text"
+					bind:value={competition.name}
+					focus={true}
+					placeholder="Nom de la compétition"
+				/>
+				<DatePicker label="📅 Date de la compétition" bind:value={competition.startDate} />
+				<DatePicker
+					label="📅 Publication des résultats"
+					bind:value={competition.scorePublicationDate}
+				/>
+				<Param
+					label="⛳ Localisation"
+					type="text"
+					bind:value={competition.location}
+					placeholder="Localisation"
+				/>
 			</div>
-		</div>
+		{/if}
 	{/each}
-</div>
 
-{#each competitions as competition, i}
-	{#if editCompetition[i]}
-		<div class="competition-form">
-			<h3>Modifier la Compétition</h3>
-			<Param
-				label="⛳ Nom de la compétition"
-				type="text"
-				bind:value={competition.name}
-				focus={true}
-				placeholder="Nom de la compétition"
-			/>
-			<DatePicker label="📅 Date de la compétition" bind:value={competition.startDate} />
-			<DatePicker
-				label="📅 Publication des résultats"
-				bind:value={competition.scorePublicationDate}
-			/>
-			<Param
-				label="⛳ Localisation"
-				type="text"
-				bind:value={competition.location}
-				placeholder="Localisation"
-			/>
-		</div>
+	{#if competitions.length === 0}
+		<p>Aucune compétition enregistrée pour le moment. 🏆</p>
 	{/if}
-{/each}
 
-{#if competitions.length === 0}
-	<p>Aucune compétition enregistrée pour le moment. 🏆</p>
-{/if}
-
-<button onclick={() => (addNewCompetition = true)}>Ajouter une nouvelle compétition</button>
-
-{#if addNewCompetition}
+	{#if !isEditingCompetition}
+		<button onclick={() => (addNewCompetition = true)}>Ajouter une nouvelle compétition</button>
+	{/if}
+{:else}
 	<div class="competition-form">
-		<h3>Nouvelle Compétition</h3>
+		<h3 style="margin-top: 0">Nouvelle Compétition</h3>
 		<Param
 			label="⛳ Nom de la compétition"
 			type="text"
@@ -179,8 +183,10 @@
 			bind:value={competitionLocation}
 			placeholder="Localisation"
 		/>
-		<button onclick={createCompetition}>Créer</button>
-		<button onclick={() => (addNewCompetition = false)}>Annuler</button>
+		<div class="action">
+			<button onclick={createCompetition}>Créer</button>
+			<button onclick={() => (addNewCompetition = false)}>Annuler</button>
+		</div>
 	</div>
 {/if}
 
@@ -242,10 +248,13 @@
 
 	.action {
 		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		width: 100%;
-		gap: 2rem;
-		margin-top: 0.5rem;
+		justify-content: space-between;
+		margin: 1rem 0.5rem 0 0;
+	}
+
+	.competition-form {
+		border: 1px var(--primary) solid;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
 	}
 </style>

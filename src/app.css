@@ -227,6 +227,20 @@ h2:not(:first-child) {
 	transition: background 0.2s;
 }
 
+.btn-delete-small {
+	background: #ffcdd2;
+	color: #c62828;
+	border: none;
+	border-radius: 50%;
+	width: 25px;
+	height: 25px;
+	font-weight: bold;
+	font-size: 1.1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .btn-delete:hover {
 	background: #ef5350;
 	color: white;

@@ -1,14 +1,14 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
-	import CompetitionSettings from './competition/CompetitionSettings.svelte';
-	import CompetitionCourse from './competition/CompetitionCourse.svelte';
-	import CompetitionFollowing from './competition/CompetitionFollowing.svelte';
-	import CompetitionPlayers from './competition/CompetitionPlayers.svelte';
-	import CompetitionScoring from './competition/CompetitionScoring.svelte';
-	import CompetitionStarting from './competition/CompetitionStarting.svelte';
-	import CompetitionGreetings from './competition/CompetitionGreetings.svelte';
+	import CompetitionSettings from './CompetitionSettings.svelte';
+	import CompetitionCourse from './CompetitionCourse.svelte';
+	import CompetitionFollowing from './CompetitionFollowing.svelte';
+	import CompetitionPlayers from './CompetitionPlayers.svelte';
+	import CompetitionScoring from './CompetitionScoring.svelte';
+	import CompetitionStarting from './CompetitionStarting.svelte';
+	import CompetitionGreetings from './CompetitionGreetings.svelte';
 
-	import CompetitionMenu from './competition/CompetitionMenu.svelte';
+	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { onMount } from 'svelte';
 
 	let { currentCompetition = $bindable(), csId } = $props<{

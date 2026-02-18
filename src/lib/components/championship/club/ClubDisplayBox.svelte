@@ -21,10 +21,10 @@
 <div class="container">
 	<div class="displayed-box">
 		<div class="btn-close" role="none" onclick={() => (showBox = false)}>X</div>
-		<p>Club : {club.name}</p>
-		<p>Joueurs</p>
+		<div style="text-align: center;">{club.name}</div>
+		<p>Joueurs :</p>
 		{formatList(players.map((p) => p.name))}
-		<p>Equipes</p>
+		<p>Equipes :</p>
 		{formatList(teams.map((t) => t.name))}
 	</div>
 </div>
@@ -61,6 +61,9 @@
 		right: 10px;
 		width: 3vh;
 		height: 3vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		font-weight: bolder;
 		border-radius: 50%;
 		background-color: var(--bg-card);

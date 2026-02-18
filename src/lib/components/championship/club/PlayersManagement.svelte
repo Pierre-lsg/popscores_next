@@ -7,6 +7,7 @@
 
 	import type { Club } from '$lib/types/clubType';
 	import type { Player } from '$lib/types/playerType';
+	import Selector from '$lib/ui/Selector.svelte';
 
 	const pcs = playersChampionshipStore;
 
@@ -15,6 +16,7 @@
 	}>();
 
 	let club: Club = clubsStore.list.filter((c) => c.id === currentClub)[0];
+	let newClubId: string = $state(club.id);
 
 	let players = $derived<Player[]>(pcs.list.filter((p) => p.clubId === currentClub));
 	let numPlayers: number = $derived(players.length);
@@ -49,7 +51,18 @@
 	};
 
 	// Function to toggle editing of a player
-	const editPlayer = (index: number) => {
+	const editPlayer = (player: Player, index: number) => {
+		// Change club if needed
+		if (newClubId !== club.id) {
+			player.clubId = newClubId;
+			// Remove player.id from club.playersId
+			const indexToRemove = club.playersId.indexOf(player.id);
+			if (indexToRemove !== -1) {
+				club.playersId.splice(indexToRemove, 1);
+			}
+		}
+
+		// Mask edit options
 		for (let i = 0; i < numPlayers; i++) {
 			if (i !== index) editingPlayer[i] = false;
 		}
@@ -61,7 +74,7 @@
 {#if !isEditingPlayer && !isCreatingNewPlayer}
 	<div class="players-list">
 		{#each players as player, i}
-			<div role="none" class="player-item" onclick={() => editPlayer(i)}>
+			<div role="none" class="player-item" onclick={() => editPlayer(player, i)}>
 				<div style="background-image: url({photo});" class="player-card">
 					<div class="details">
 						<div>{player.name}</div>
@@ -84,7 +97,7 @@
 	{#each players as player, i}
 		{#if editingPlayer[i]}
 			<div class="player-form">
-				<h3>Modifier le joueur 👤</h3>
+				<h3 style="margin-top: 0">Modifier le joueur 👤</h3>
 				<Param
 					label="Nom du joueur"
 					type="text"
@@ -99,8 +112,15 @@
 					placeholder="Nom du famille"
 				/>
 				<Param label="Surnom" type="text" bind:value={player.nickname} placeholder="Surnom" />
+				<Selector
+					id="clubSelect"
+					bind:value={newClubId}
+					label="Liste des clubs"
+					options={clubsStore.list.map((club) => club.id)}
+					optionsLabel={clubsStore.list.map((club) => club.name)}
+				/>
 				<div class="action">
-					<button onclick={() => editPlayer(i)}> Valider </button>
+					<button onclick={() => editPlayer(player, i)}> Valider </button>
 					<button onclick={() => removePlayer(player.id)}> 🗑️ Supprimer</button>
 				</div>
 			</div>
@@ -110,7 +130,7 @@
 
 {#if isCreatingNewPlayer}
 	<div class="player-form">
-		<h3>Nouveau joueur</h3>
+		<h3 style="margin-top: 0">Nouveau joueur 👤</h3>
 		<Param
 			label="Nom du joueur"
 			type="text"
@@ -125,8 +145,10 @@
 			placeholder="Nom de famille"
 		/>
 		<Param label="Surnom" type="text" bind:value={playerNickname} placeholder="Surnom" />
-		<button onclick={addNewPlayer}>Créer</button>
-		<button onclick={() => (isCreatingNewPlayer = false)}>Annuler</button>
+		<div class="action">
+			<button onclick={addNewPlayer}>Créer</button>
+			<button onclick={() => (isCreatingNewPlayer = false)}>Annuler</button>
+		</div>
 	</div>
 {/if}
 
@@ -163,6 +185,12 @@
 	.player-card:hover {
 		transform: translateY(-5px);
 		border-color: var(--border-color);
+	}
+
+	.player-form {
+		border: 1px var(--primary) solid;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
 	}
 
 	.details {

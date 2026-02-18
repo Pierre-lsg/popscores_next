@@ -42,7 +42,7 @@
 </script>
 
 <div class="team-form">
-	<h3>Modifier l'équipe 👥</h3>
+	<h3 style="margin-top: 0">Modifier l'équipe 👥</h3>
 	<Param
 		label="Nom de l'équipe"
 		type="text"
@@ -67,7 +67,7 @@
 	{#each team.playersId as playerId (playerId)}
 		<div class="team-players">
 			<div>{clubPlayers.find((p: Player) => p.id === playerId).name}</div>
-			<button onclick={() => removePlayer(playerId)}>X</button>
+			<button class="btn-delete-small" onclick={() => removePlayer(playerId)}>X</button>
 		</div>
 	{/each}
 </div>
