@@ -261,6 +261,7 @@
 	.action {
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		margin: 0 0.5rem 0 0;
 	}
 </style>

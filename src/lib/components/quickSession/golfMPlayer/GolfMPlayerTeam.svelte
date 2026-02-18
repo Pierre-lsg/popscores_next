@@ -10,12 +10,6 @@
 
 	const s = sessionSettingsStore.settings;
 
-	let isSettingTeams: boolean = $state(false);
-	let isEditingTeams: boolean = $state(false);
-
-	let editingId = $state<string | null>(null);
-	let editingTeamId = $state<string | null>(null);
-
 	let selectedTeamId: string = $state('');
 
 	const addPlayer = () => {
@@ -56,34 +50,6 @@
 		}
 	};
 
-	const settingTeams = () => {
-		isSettingTeams = !isSettingTeams;
-		isEditingTeams = false;
-	};
-
-	const editPlayerName = (id: string) => {
-		editingId = id;
-	};
-
-	const saveName = (e: Event) => {
-		editingId = null;
-	};
-
-	const editTeamName = (id: string) => {
-		editingTeamId = id;
-	};
-
-	const saveTeamName = () => {
-		editingTeamId = null;
-	};
-
-	const focus = (node: HTMLInputElement) => {
-		node.focus();
-		node.select();
-	};
-
-	// playersStore.svelte.ts (ou teamsStore selon ta préférence)
-
 	const movePlayerToTeam = (playerId: string, targetTeamId: string) => {
 		const player = playersStore.list.find((p) => p.id === playerId);
 		if (!player) return;
@@ -111,11 +77,12 @@
 
 <div class="step-content" in:slide>
 	<button onclick={addPlayer} class="btn btn-primary">Ajouter un Joueur</button>
-	<button onclick={settingTeams} class="btn btn-primary">☰ Param équipes</button>
-	{#if isSettingTeams}
-		<button onclick={createTeams} class="btn btn-secondary">Définir les équipes</button>
-		<button onclick={addTeam} class="btn btn-secondary">Ajouter une équipe</button>
-	{/if}
+	<div class="action">
+		<span role="none" class="dice-icon" onclick={createTeams}>🎲</span>
+		<span style="width: 85%"
+			><button onclick={addTeam} class="btn btn-primary">Ajouter une équipe</button></span
+		>
+	</div>
 
 	<!-- Liste des équipes -->
 	<div class="card-list">
@@ -205,16 +172,6 @@
 		touch-action: shadow;
 	}
 
-	.player-item {
-		display: flex;
-		background: var(--bg-card);
-		border: 1px solid var(--border-color);
-		border-radius: 8px;
-		padding: 0.5rem 0.5rem;
-		margin: 0.1rem;
-		touch-action: shadow;
-	}
-
 	.team-items {
 		display: flex;
 		align-items: center;
@@ -233,6 +190,21 @@
 		background: var(--bg-card);
 		padding: 0.5rem 0.1rem;
 		touch-action: shadow;
+		width: 100%;
+	}
+
+	.dice-icon {
+		padding: 0.2rem;
+		border-radius: 8px;
+		font-size: 2rem;
+		width: 10%;
+		background-color: var(--primary);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+	}
+
+	.action {
+		display: flex;
+		justify-content: space-between;
 		width: 100%;
 	}
 </style>
