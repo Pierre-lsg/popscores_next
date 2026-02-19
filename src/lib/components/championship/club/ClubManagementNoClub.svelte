@@ -6,10 +6,11 @@
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import type { Championship } from '$lib/types/championshipType';
 
-	let { currentClub = $bindable(''), csId } = $props<{
+	let { currentClub = $bindable(''), championship } = $props<{
 		currentClub: string;
-		csId: string;
+		championship: Championship;
 	}>();
 
 	let players: Player[] = $derived(
@@ -98,10 +99,5 @@
 
 	.player-list {
 		display: flex;
-	}
-	.action {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
 	}
 </style>

@@ -12,6 +12,7 @@
 	import Param from '$lib/ui/Param.svelte';
 
 	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import type { Championship } from '$lib/types/championshipType';
 
 	let clubs = $state<Club[]>(clubsStore.list);
 	let clubDisplayed: Club = $state({
@@ -34,9 +35,9 @@
 	let knownClubsId: string[] = $derived(clubsStore.list.map((c) => c.id));
 	let filteredClubs: Club[] = $derived(allClubs.filter((c) => !knownClubsId.includes(c.id)));
 
-	let { currentClub = $bindable(''), csId } = $props<{
+	let { currentClub = $bindable(''), championship } = $props<{
 		currentClub: string;
-		csId: string;
+		championship: Championship;
 	}>();
 
 	const createClub = () => {
@@ -270,12 +271,5 @@
 	.icon {
 		font-size: 36px;
 		background-color: var(--bg-card);
-	}
-
-	.action {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin: 0 0.5rem 0 0;
 	}
 </style>

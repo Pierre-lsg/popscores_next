@@ -4,10 +4,11 @@
 	import PlayersManagement from './PlayersManagement.svelte';
 	import TeamsManagement from './TeamsManagement.svelte';
 	import type { Club } from '$lib/types/clubType';
+	import type { Championship } from '$lib/types/championshipType';
 
-	let { currentClub = $bindable(''), csId } = $props<{
+	let { currentClub = $bindable(''), championship } = $props<{
 		currentClub: string;
-		csId: string;
+		championship: Championship;
 	}>();
 
 	let club: Club = clubsStore.list.filter((c) => c.id === currentClub)[0];

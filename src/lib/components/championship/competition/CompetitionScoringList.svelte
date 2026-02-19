@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Fly } from '$lib/types/flyType';
-	import type { Regulations } from '$lib/types/regulationsType';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';

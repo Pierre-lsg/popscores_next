@@ -39,12 +39,6 @@
 </div>
 
 <style>
-	.action {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
 	.container {
 		display: flex;
 		flex-direction: column;

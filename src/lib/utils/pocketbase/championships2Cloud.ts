@@ -17,6 +17,7 @@ export const championshipService = {
 			name: aChampionShip.name,
 			season: aChampionShip.season,
 			location: aChampionShip.location,
+			competitionsId: aChampionShip.competitionsId,
 			individualScale: idvScale,
 			collectiveScale: cltScale
 		};

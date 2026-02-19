@@ -4,7 +4,7 @@
 	import ClubManagementNoClub from '$lib/components/championship/club/ClubManagementNoClub.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 
-	let csStore = $state(championshipStore.list[0]);
+	let championship = $state(championshipStore.list[0]);
 
 	let currentClub: string = $state('');
 </script>
@@ -12,11 +12,11 @@
 <div class="mobile-wizard">
 	{#if currentClub === ''}
 		<!-- Gestion des clubs -->
-		<ClubsList bind:currentClub csId={csStore.id} />
+		<ClubsList bind:currentClub {championship} />
 	{:else if currentClub !== 'no_club'}
 		<!-- Suivi d'un club -->
-		<ClubManagement bind:currentClub csId={csStore.id} />
+		<ClubManagement bind:currentClub {championship} />
 	{:else}
-		<ClubManagementNoClub bind:currentClub csId={csStore.id} />
+		<ClubManagementNoClub bind:currentClub {championship} />
 	{/if}
 </div>

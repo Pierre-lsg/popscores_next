@@ -6,17 +6,25 @@
 	import Param from '$lib/ui/Param.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
+	import type { Championship } from '$lib/types/championshipType';
 
-	let competitions = $state<Competition[]>(competitionsStore.list);
+	let { currentCompetition = $bindable(), championship } = $props<{
+		currentCompetition: Competition | undefined;
+		championship: Championship;
+	}>();
+
+	let competitions = $state<Competition[]>(
+		competitionsStore.list.filter((c) => championship.competitionsId.includes(c.id))
+	);
 	let editCompetition: boolean[] = $state([]);
 	let isEditingCompetition: boolean = $state(false);
 	let numCompetitions: number = $derived(competitions.length);
 
-	let allCompetitions: Competition[] = $state([]);
+	let allCloudCompetitions: Competition[] = $state([]);
 	let loading = $state(true);
 	let knownCompetitionsId: string[] = $derived(competitionsStore.list.map((c) => c.id));
 	let filteredCompetitions: Competition[] = $derived(
-		allCompetitions.filter((c) => !knownCompetitionsId.includes(c.id))
+		allCloudCompetitions.filter((c) => !knownCompetitionsId.includes(c.id))
 	);
 
 	let addNewCompetition: boolean = $state(false);
@@ -25,11 +33,6 @@
 	let competitionDate: string = $state(new Date().toISOString().split('T')[0]);
 	let publicationDate: string = $state(new Date().toISOString().split('T')[0]);
 	let competitionLocation: string = $state('');
-
-	let { currentCompetition = $bindable(), csId } = $props<{
-		currentCompetition: Competition | undefined;
-		csId: string;
-	}>();
 
 	const createCompetition = () => {
 		competitionsStore.add(
@@ -66,7 +69,7 @@
 
 		if (aCompetition) {
 			try {
-				competitionService.saveCompetition(aCompetition, csId);
+				competitionService.saveCompetition(aCompetition, championship.id);
 				toastStore.show('💾 Enregistrement effectué ...', 'success');
 			} catch (e) {
 				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
@@ -99,9 +102,9 @@
 
 	onMount(async () => {
 		// Retrieve all competitions known in the Cloud
-		let cloudCompetition: any = await competitionService.getByChampionshipId(csId);
+		let cloudCompetition: any = await competitionService.getByChampionshipId(championship.id);
 		if (Array.isArray(cloudCompetition)) {
-			cloudCompetition.forEach((comp) => allCompetitions.push(comp.data));
+			cloudCompetition.forEach((comp) => allCloudCompetitions.push(comp.data));
 		}
 		loading = false;
 	});
@@ -244,12 +247,6 @@
 		margin: 0.5rem;
 		font-size: 24px;
 		color: #2c3e50;
-	}
-
-	.action {
-		display: flex;
-		justify-content: space-between;
-		margin: 1rem 0.5rem 0 0;
 	}
 
 	.competition-form {

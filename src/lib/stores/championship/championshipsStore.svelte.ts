@@ -33,6 +33,7 @@ class ChampionsStore {
 			name,
 			season: '',
 			location: '',
+			competitionsId: [],
 			collectiveScale: '',
 			individualScale: ''
 		});
@@ -47,6 +48,7 @@ class ChampionsStore {
 			name: '',
 			season: '',
 			location: '',
+			competitionsId: [],
 			collectiveScale: crypto.randomUUID(),
 			individualScale: crypto.randomUUID()
 		};

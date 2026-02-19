@@ -201,10 +201,4 @@
 		background-color: rgba(255, 255, 255, 0.8);
 		color: var(--primary);
 	}
-
-	.action {
-		display: flex;
-		justify-content: space-between;
-		margin: 0 0.5rem 0 0;
-	}
 </style>

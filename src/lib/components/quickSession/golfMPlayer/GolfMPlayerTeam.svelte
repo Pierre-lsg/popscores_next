@@ -201,10 +201,4 @@
 		background-color: var(--primary);
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 	}
-
-	.action {
-		display: flex;
-		justify-content: space-between;
-		width: 100%;
-	}
 </style>

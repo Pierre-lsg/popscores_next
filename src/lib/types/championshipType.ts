@@ -5,6 +5,7 @@ export interface Championship {
 	name: string;
 	season: string;
 	location: string;
+	competitionsId: string[];
 	individualScale: string;
 	collectiveScale: string;
 }

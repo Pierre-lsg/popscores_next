@@ -5,14 +5,14 @@
 
 	// Le barème passé en propriété
 	let { scaleId = '', isIndividual = false } = $props();
-	let scale: MarkedPointScale | undefined = $derived(
-		mpsStore.getScaleById(scaleId)
-			? mpsStore.getScaleById(scaleId)
-			: mpsStore.add(scaleId, '', isIndividual, [])
-	);
+	let scale: MarkedPointScale | undefined = $derived(mpsStore.getScaleById(scaleId));
 
 	let qtyToAdd = $state(1); // Quantité de rangs à ajouter d'un coup
 	let step = $state(1);
+
+	onMount(() => {
+		if (!scale) mpsStore.add(scaleId, '', isIndividual, []);
+	});
 
 	const addRanks = () => {
 		if (scale) {

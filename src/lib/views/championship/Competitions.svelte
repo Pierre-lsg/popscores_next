@@ -4,15 +4,15 @@
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
 
-	let csStore = $state(championshipStore.list[0]);
+	let championship = $state(championshipStore.list[0]);
 
 	let currentCompetition: Competition | undefined = $state();
 </script>
 
 {#if currentCompetition === undefined}
 	<!-- Gestion des compétitions -->
-	<CompetitionsList bind:currentCompetition csId={csStore.id} />
+	<CompetitionsList bind:currentCompetition {championship} />
 {:else}
 	<!-- Suivi d'une compétition -->
-	<CompetitionManagement bind:currentCompetition csId={csStore.id} />
+	<CompetitionManagement bind:currentCompetition {championship} />
 {/if}

@@ -387,3 +387,10 @@ h2:not(:first-child) {
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* Internet Explorer/Edge */
 }
+
+.action {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0 0.5rem 0 0;
+}

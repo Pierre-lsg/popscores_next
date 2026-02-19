@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
+	import type { Championship } from '$lib/types/championshipType';
 	import CompetitionSettings from './CompetitionSettings.svelte';
 	import CompetitionCourse from './CompetitionCourse.svelte';
 	import CompetitionFollowing from './CompetitionFollowing.svelte';
@@ -11,9 +12,9 @@
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { onMount } from 'svelte';
 
-	let { currentCompetition = $bindable(), csId } = $props<{
+	let { currentCompetition = $bindable(), championship } = $props<{
 		currentCompetition: Competition | undefined;
-		csId: string;
+		championship: Championship;
 	}>();
 
 	onMount(() => {
