@@ -57,6 +57,15 @@ class ChampionsStore {
 	}
 
 	/**
+	 * Loads an external championship to the list.
+	 *
+	 * @param aChampionship - championship
+	 */
+	load(aChampionship: Championship) {
+		this.list.push(aChampionship);
+	}
+
+	/**
 	 * Removes a championship from the list.
 	 *
 	 * @param id - ID of the championship to remove

@@ -54,6 +54,15 @@ class MarkedPointScaleStore {
 	}
 
 	/**
+	 * Loads an external MarkedPointScale to the list.
+	 *
+	 * @param aMarkedPointScale - MarkedPointScale
+	 */
+	load(aMarkedPointScale: MarkedPointScale) {
+		this.list.push(aMarkedPointScale);
+	}
+
+	/**
 	 * Gets a markedPointScale by its ID.
 	 *
 	 * @param id - ID of the markedPointScale

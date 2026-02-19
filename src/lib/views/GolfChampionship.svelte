@@ -10,6 +10,7 @@
 
 	const changeChampionship = () => {
 		championshipStore.reset();
+		window.location.reload();
 	};
 </script>
 
