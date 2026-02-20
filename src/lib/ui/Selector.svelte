@@ -53,16 +53,26 @@
 
 <style>
 	.select-container {
+		width: 100%;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 0.5rem;
 		background: var(--bg-card);
 		border-radius: 8px;
 		margin-bottom: 0.5rem;
 	}
 
+	option {
+		color: var(--text-main);
+	}
+
 	select {
+		color: var(--text-main);
+		flex: 1;
+		min-width: 0;
+	}
+
+	label {
 		width: 50%;
 	}
 </style>

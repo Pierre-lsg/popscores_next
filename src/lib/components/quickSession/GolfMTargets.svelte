@@ -109,7 +109,6 @@
 						</button>
 					{/if}
 					<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
-
 					<Selector
 						id="rule{target.id}"
 						bind:value={target.rule}

@@ -10,6 +10,7 @@
 	import type { Team } from '$lib/types/teamType';
 	import type { Target } from '$lib/types/targetsType';
 
+	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import SessionDetails from '$lib/components/quickSession/SessionDetails.svelte';
 	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
 	import PlayerScoreOrder from '$lib/ui/PlayerScoreOrder.svelte';
@@ -53,8 +54,12 @@
 </script>
 
 <div>
-	<button onclick={() => retourHistorique()}>Back</button>
-	<button onclick={() => saveSessionToCloud()}>Save</button>
+	<div class="action">
+		<button onclick={() => retourHistorique()}>Back</button>
+		{#if $user}
+			<button onclick={() => saveSessionToCloud()}>Enregistrer dans le Cloud</button>
+		{/if}
+	</div>
 	<h2>{title}</h2>
 	{#if session}
 		<div>
