@@ -3,11 +3,8 @@
 	import type { Club } from '$lib/types/clubType';
 	import ClubDisplayBox from './ClubDisplayBox.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
-	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
-	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { clubService } from '$lib/utils/pocketbase/clubs2Cloud';
-	import { teamService } from '$lib/utils/pocketbase/teams2Cloud';
-	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
+	import { cloudSaveClubs } from '$lib/utils/championship/clubsFunctions.svelete';
 
 	import Param from '$lib/ui/Param.svelte';
 
@@ -63,48 +60,21 @@
 		showBox = true;
 	};
 
-	const savingClub = async (id: string) => {
-		let aClub = clubsStore.find(id);
+	const savingClub = async (club: Club) => {
+		let clubs: Club[] = [];
+		clubs[0] = club;
 
-		if (aClub) {
-			try {
-				clubService.saveClub(aClub);
+		let results = await cloudSaveClubs(clubs);
+
+		switch (results) {
+			case 'success':
 				toastStore.show('💾 Enregistrement effectué ...', 'success');
-			} catch (err) {
+				break;
+			case 'failure':
 				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-			}
-		}
-		savingTeams(aClub?.teamsId || [], id);
-		savingPlayers(aClub?.playersId || [], id);
-	};
-
-	const savingTeams = async (ids: string[], clId: string) => {
-		for (let id of ids) {
-			let aTeam = teamsChampionshipStore.find(id);
-
-			if (aTeam) {
-				try {
-					teamService.saveTeam(aTeam);
-					toastStore.show('💾 Enregistrement effectué ...', 'success');
-				} catch (err) {
-					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-				}
-			}
-		}
-	};
-
-	const savingPlayers = async (ids: string[], clId: string) => {
-		for (let id of ids) {
-			let aPlayer = playersChampionshipStore.find(id);
-
-			if (aPlayer) {
-				try {
-					playerService.savePlayer(aPlayer);
-					toastStore.show('💾 Enregistrement effectué ...', 'success');
-				} catch (err) {
-					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-				}
-			}
+				break;
+			default:
+				toastStore.show('💾 Enregsistrement en cours ...', 'failure');
 		}
 	};
 
@@ -127,11 +97,8 @@
 	};
 
 	onMount(async () => {
-		// Retrieve all clubs known in the Cloud
-		let cloudClub: any = await clubService.getAll();
-		if (Array.isArray(cloudClub)) {
-			cloudClub.forEach((club) => allClubs.push(club.data));
-		}
+		allClubs = await clubService.getAllClubs();
+
 		loading = false;
 	});
 </script>
@@ -152,7 +119,7 @@
 				<button onclick={() => removeClub(club.id)}> 🗑️ </button>
 				<button onclick={() => editingClub(i)}>✏️</button>
 				<button onclick={() => quickViewTeams(club)}>👁️</button>
-				<button onclick={() => savingClub(club.id)}>☁️</button>
+				<button onclick={() => savingClub(club)}>☁️</button>
 			</div>
 		</div>
 	{/each}
