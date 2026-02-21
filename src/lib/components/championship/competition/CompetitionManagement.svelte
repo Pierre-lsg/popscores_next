@@ -12,7 +12,7 @@
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { onMount } from 'svelte';
 
-	let { currentCompetition = $bindable(), championship } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 		championship: Championship;
 	}>();

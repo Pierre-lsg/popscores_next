@@ -71,7 +71,7 @@
 		top: 56px;
 		left: 0;
 		right: 0;
-		z-index: 9999;
+		z-index: 899;
 		background-color: var(--bg-app);
 	}
 

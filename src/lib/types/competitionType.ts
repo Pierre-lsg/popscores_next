@@ -19,7 +19,7 @@ export interface Competition {
 	courseId?: string;
 	teamsId: string[];
 	playersId: string[];
-	flysId?: string[];
+	flysId: string[];
 	status: CompetitionStatus;
 	step: CompetitionStep;
 }

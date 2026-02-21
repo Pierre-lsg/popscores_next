@@ -11,8 +11,8 @@
 
 {#if currentCompetition === undefined}
 	<!-- Gestion des compétitions -->
-	<CompetitionsList bind:currentCompetition {championship} />
+	<CompetitionsList bind:currentCompetition bind:championship />
 {:else}
 	<!-- Suivi d'une compétition -->
-	<CompetitionManagement bind:currentCompetition {championship} />
+	<CompetitionManagement bind:currentCompetition bind:championship />
 {/if}

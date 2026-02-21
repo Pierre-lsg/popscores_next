@@ -57,7 +57,7 @@
 
 	.theme-wrapper {
 		position: fixed;
-		top: 0.2rem;
+		top: 0.1rem;
 		right: 0.5rem;
 		z-index: 1000;
 	}

@@ -6,4 +6,5 @@ export interface Fly {
 	playersId: string[];
 	teamsId: string[];
 	status: CompetitionStatus;
+	supervisorId: string; // id of an User
 }

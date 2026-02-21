@@ -32,7 +32,8 @@ class FlysChampionshipStore {
 			order,
 			playersId: [],
 			teamsId: [],
-			status: 'not_started'
+			status: 'not_started',
+			supervisorId: ''
 		};
 
 		this.list.push(aFly);

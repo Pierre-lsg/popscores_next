@@ -8,12 +8,12 @@
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
 	import type { Championship } from '$lib/types/championshipType';
 
-	let { currentCompetition = $bindable(), championship } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 		championship: Championship;
 	}>();
 
-	let competitions = $state<Competition[]>(
+	let competitions = $derived<Competition[]>(
 		competitionsStore.list.filter((c) => championship.competitionsId.includes(c.id))
 	);
 	let editCompetition: boolean[] = $state([]);
@@ -35,7 +35,7 @@
 	let competitionLocation: string = $state('');
 
 	const createCompetition = () => {
-		competitionsStore.add(
+		let tmpCompetition: Competition = competitionsStore.add(
 			competitionName,
 			'setup',
 			'welcome',
@@ -43,6 +43,8 @@
 			publicationDate,
 			competitionLocation
 		);
+		championship.competitionsId.push(tmpCompetition.id);
+
 		competitionName = competitionLocation = '';
 		competitionDate = publicationDate = new Date().toISOString().split('T')[0];
 		addNewCompetition = false;

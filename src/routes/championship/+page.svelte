@@ -97,7 +97,7 @@
 		<p>Récupération des championnats connus ...</p>
 	{/if}
 
-	{#if $user && $user?.role.includes('admin')}
+	{#if $user && $user?.roles.includes('admin')}
 		<h3>Créer un nouveau championnat 💼</h3>
 		<button onclick={() => addNewChampionship()}>Créer nouveau championnat</button>
 	{/if}

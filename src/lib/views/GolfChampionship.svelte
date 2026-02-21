@@ -18,7 +18,7 @@
 
 <div class="hub-container">
 	<div class="grid-container">
-		{#if $user && ($user?.role.includes('admin') || $user?.role.includes('csMgr') || $user?.role.includes('cpMgr'))}
+		{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr') || $user?.roles.includes('cpMgr'))}
 			<a class="card" href={base + '/championship/competitions'}>
 				<span class="icon">🏆</span>
 				<h3>Compétitions</h3>
@@ -31,7 +31,7 @@
 			</a>
 		{/if}
 
-		{#if $user && ($user?.role.includes('admin') || $user?.role.includes('csMgr'))}
+		{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))}
 			<a class="card" href={base + '/championship/params'}>
 				<span class="icon">⚙️</span>
 				<h3>Paramétrages</h3>
@@ -39,7 +39,7 @@
 			</a>
 		{/if}
 
-		{#if $user && $user?.role.includes('marshall')}
+		{#if $user && $user?.roles.includes('marshall')}
 			<a class="card" href={base + '/championship/fly'}>
 				<span class="icon">🏆</span>
 				<h3>Fly</h3>
@@ -49,13 +49,11 @@
 		<a class="card" href={base + '/'}>
 			<span class="icon">🏠</span>
 			<h3>Retour Accueil</h3>
-			<p></p>
 		</a>
 
 		<div role="none" class="card" onclick={() => changeChampionship()}>
 			<span class="icon">🔄</span>
 			<h3>Changer de championnat</h3>
-			<p></p>
 		</div>
 	</div>
 </div>

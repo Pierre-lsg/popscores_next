@@ -49,9 +49,9 @@
 	</div>
 </main>
 
-<footer>
+<footer style="background-color: var(--bg-card)">
 	Popscores v{CURRENT_VERSION}
-	{#if $user}🔗 ({formatList($user.role)})
+	{#if $user}🔗 ({formatList($user.roles)})
 	{/if}
 </footer>
 

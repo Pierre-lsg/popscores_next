@@ -36,8 +36,8 @@ class CompetitionsStore {
 		startDate?: string,
 		scorePublicationDate?: string,
 		location?: string
-	) {
-		this.list.push({
+	): Competition {
+		let aCompetition = {
 			id: crypto.randomUUID(),
 			name,
 			status,
@@ -48,7 +48,9 @@ class CompetitionsStore {
 			teamsId: [],
 			playersId: [],
 			flysId: []
-		});
+		};
+		this.list.push(aCompetition);
+		return aCompetition;
 	}
 
 	/**
