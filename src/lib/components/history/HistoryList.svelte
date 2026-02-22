@@ -18,13 +18,8 @@
 	}>();
 
 	onMount(async () => {
-		let cloudHistory: any;
 		if ($user) {
-			// Retrieve all sessions known in the Cloud
-			cloudHistory = await historyService.getAll();
-			if (Array.isArray(cloudHistory)) {
-				cloudHistory.forEach((hist) => allSessions.push(hist.data));
-			}
+			allSessions = await historyService.getAllSessionArchives();
 			loading = false;
 		}
 	});
@@ -34,18 +29,10 @@
 	};
 
 	const loadSessionfromCloud = (index: number) => {
-		// If session doesn't exist
 		const aSession = historyStore.list.filter((s) => s.id === filteredSessions[index].id);
 		if (aSession.length == 0) {
 			if (confirm('Voulez-vous importer la session ?')) {
-				const newArchive = {
-					id: filteredSessions[index].id,
-					settings: filteredSessions[index].settings,
-					targets: filteredSessions[index].targets,
-					teams: filteredSessions[index].teams,
-					players: filteredSessions[index].players
-				};
-				// Add session to the local Store
+				const newArchive = filteredSessions[index];
 				historyStore.archiveGame(newArchive);
 			}
 		}

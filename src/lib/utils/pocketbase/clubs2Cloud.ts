@@ -6,13 +6,7 @@ export const clubService = {
 
 	getAllClubs: async () => {
 		const clubs = await db.getFullList('clubs', { sort: 'created' });
-		return clubs.map((item) => ({
-			id: item.id,
-			name: item.name,
-			description: item.data.description,
-			playersId: item.data.playersId,
-			teamsId: item.data.teamsId
-		})) as Club[];
+		return clubs.map((club) => club.data) as Club[];
 	},
 
 	getById: (id: string) => db.getOne('clubs', id, {}),

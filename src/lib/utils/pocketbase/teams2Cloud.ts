@@ -6,13 +6,12 @@ export const teamService = {
 
 	getAllTeams: async () => {
 		const teams = await db.getFullList('teams', { sort: 'created' });
-		return teams.map((item) => ({
-			id: item.id,
-			name: item.name,
-			playersId: item.data.playersId,
-			clubId: item.data.clubId || '',
-			sessionId: item.data.sessionId || ''
-		})) as Team[];
+		return teams.map((team) => team.data) as Team[];
+	},
+
+	getTeamsByClub: async (clubId: string) => {
+		const teams = await db.getFullList('teams', { filter: `club ~ "${clubId}"` });
+		return teams.map((team) => team.data) as Team[];
 	},
 
 	getById: (id: string) => db.getOne('teams', id, {}),

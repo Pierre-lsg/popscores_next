@@ -4,6 +4,16 @@ import { db, pb } from './pocketBase';
 export const playerService = {
 	getAll: () => db.getFullList('players', { sort: 'created' }),
 
+	getAllPlayers: async () => {
+		const players = await db.getFullList('players', { sort: 'created' });
+		return players.map((player) => player.data) as Player[];
+	},
+
+	getPlayersByClub: async (clubId: string) => {
+		const players = await db.getFullList('players', { filter: `club ~ "${clubId}"` });
+		return players.map((player) => player.data) as Player[];
+	},
+
 	getById: (id: string) => db.getOne('players', id, {}),
 
 	savePlayer: (aPlayer: Player) => {

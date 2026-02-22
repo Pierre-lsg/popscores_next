@@ -4,6 +4,18 @@ import { db, pb } from './pocketBase';
 export const competitionService = {
 	getAll: () => db.getFullList('competitions', { sort: 'created' }),
 
+	getAllCompetitions: async () => {
+		const competitions = await db.getFullList('competitions', { sort: 'created' });
+		return competitions.map((competition) => competition.data) as Competition[];
+	},
+
+	getCompetitionsByChampionship: async (csId: string) => {
+		const competitions = await db.getFullList('competitions', {
+			filter: `championship ~ "${csId}"`
+		});
+		return competitions.map((competition) => competition.data) as Competition[];
+	},
+
 	getByChampionshipId: (csId: string) =>
 		db.getFullList('competitions', {
 			filter: `championship ~ "${csId}"`

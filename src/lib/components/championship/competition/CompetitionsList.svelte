@@ -80,34 +80,16 @@
 	};
 
 	const loadCompetitionfromCloud = (index: number) => {
-		// If competition doesn't exist
 		const aCompet = competitionsStore.list.filter((c) => c.id === filteredCompetitions[index].id);
 		if (aCompet.length == 0) {
 			if (confirm('Voulez-vous importer la compétition ?')) {
-				const newCompetition: Competition = {
-					id: filteredCompetitions[index].id,
-					status: 'setup',
-					step: 'welcome',
-					name: filteredCompetitions[index].name,
-					startDate: filteredCompetitions[index].startDate,
-					scorePublicationDate: filteredCompetitions[index].scorePublicationDate,
-					location: filteredCompetitions[index].location,
-					teamsId: filteredCompetitions[index].teamsId,
-					playersId: filteredCompetitions[index].playersId,
-					flysId: filteredCompetitions[index].flysId
-				};
-				// Load session to the local Store
-				competitionsStore.load(newCompetition);
+				competitionsStore.load(filteredCompetitions[index]);
 			}
 		}
 	};
 
 	onMount(async () => {
-		// Retrieve all competitions known in the Cloud
-		let cloudCompetition: any = await competitionService.getByChampionshipId(championship.id);
-		if (Array.isArray(cloudCompetition)) {
-			cloudCompetition.forEach((comp) => allCloudCompetitions.push(comp.data));
-		}
+		allCloudCompetitions = await competitionService.getCompetitionsByChampionship(championship.id);
 		loading = false;
 	});
 
