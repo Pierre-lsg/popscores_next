@@ -16,6 +16,11 @@ export const playerService = {
 
 	getById: (id: string) => db.getOne('players', id, {}),
 
+	getPlayerById: async (id: string) => {
+		const player = await db.getOne('players', id, {});
+		return player?.data as Player;
+	},
+
 	savePlayer: (aPlayer: Player) => {
 		const playerToSave = {
 			id: aPlayer.id,

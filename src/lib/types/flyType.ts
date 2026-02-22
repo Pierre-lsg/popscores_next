@@ -3,6 +3,7 @@ export type CompetitionStatus = 'not_started' | 'in_progress' | 'finished' | 'va
 export interface Fly {
 	id: string;
 	order: number;
+	competitionId: string;
 	playersId: string[];
 	teamsId: string[];
 	status: CompetitionStatus;

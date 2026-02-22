@@ -46,7 +46,7 @@
 		for (let i = 0; i < sortedPlayersId.length; i++) {
 			if (i % nbPlayersPerFly === 0) {
 				nbFlys += 1;
-				fly = flysChampionshipStore.add(nbFlys);
+				fly = flysChampionshipStore.add(nbFlys, currentCompetition.id);
 				fly.playersId.push(sortedPlayersId[i]);
 				currentCompetition.flysId.push(fly.id);
 			} else fly.playersId.push(sortedPlayersId[i]);
@@ -62,7 +62,7 @@
 		for (let i = 0; i < sortedTeamsId.length; i++) {
 			if (i % nbTeamsPerFly === 0) {
 				nbFlys += 1;
-				fly = flysChampionshipStore.add(nbFlys);
+				fly = flysChampionshipStore.add(nbFlys, currentCompetition.id);
 				fly.teamsId.push(sortedTeamsId[i]);
 				currentCompetition.flysId.push(fly.id);
 			} else fly.teamsId.push(sortedTeamsId[i]);

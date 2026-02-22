@@ -1,12 +1,16 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
+	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
+	import { cloudSaveCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
+
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
-	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
+	import { onMount } from 'svelte';
 	import type { Championship } from '$lib/types/championshipType';
+	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
+	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -54,7 +58,6 @@
 		if (confirm('Voulez-vous vraiment supprimer cette compétition ?')) {
 			competitionsStore.remove(id);
 		}
-		competitions = competitionsStore.list;
 	};
 
 	const editingCompetition = (index: number) => {
@@ -66,16 +69,18 @@
 		isEditingCompetition = editCompetition.some((item) => item);
 	};
 
-	const savingCompetition = async (id: string) => {
-		let aCompetition = competitionsStore.find(id);
+	const savingCompetition = async (competition: Competition) => {
+		let results = await cloudSaveCompetition(competition, championship.id);
 
-		if (aCompetition) {
-			try {
-				competitionService.saveCompetition(aCompetition, championship.id);
+		switch (results) {
+			case 'success':
 				toastStore.show('💾 Enregistrement effectué ...', 'success');
-			} catch (e) {
+				break;
+			case 'failure':
 				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-			}
+				break;
+			default:
+				toastStore.show('💾 Enregsistrement en cours ...', 'failure');
 		}
 	};
 
@@ -113,7 +118,7 @@
 				<div class="action">
 					<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
 					<button onclick={() => editingCompetition(i)}>✏️</button>
-					<button onclick={() => savingCompetition(competition.id)}>☁️</button>
+					<button onclick={() => savingCompetition(competition)}>☁️</button>
 				</div>
 			</div>
 		{/each}

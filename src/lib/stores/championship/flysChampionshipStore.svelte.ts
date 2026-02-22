@@ -26,10 +26,11 @@ class FlysChampionshipStore {
 	 * Add a fly to the championship list.
 	 * @param order - The order of the fly
 	 */
-	add(order: number) {
+	add(order: number, competitionId: string) {
 		const aFly: Fly = {
 			id: crypto.randomUUID(),
 			order,
+			competitionId,
 			playersId: [],
 			teamsId: [],
 			status: 'not_started',

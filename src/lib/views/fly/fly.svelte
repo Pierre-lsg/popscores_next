@@ -12,11 +12,12 @@
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 
-	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
-
 	import { onMount } from 'svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
-	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import {
+		cloudLoadCurrentCompetition,
+		isCompetitionTeam
+	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 
 	let championshipId: string = championshipStore.list[0].id;
@@ -46,33 +47,9 @@
 	};
 
 	const loadCompetition = async () => {
-		competitionsStore.reset();
+		cloudLoadCurrentCompetition(championshipId);
 
-		// todo:
-		// Si la compétition n'est pas chargée ou n'est plus à jour
-
-		let tmpCloudComp = await competitionService.getByChampionshipId(championshipId);
-		if (Array.isArray(tmpCloudComp)) {
-			tmpCloudComp.forEach((competition) => {
-				// Todo: charger uniquement la compétition à la date du jour uniquement
-				const cp = competition.data;
-				let aCompetition: Competition = {
-					id: cp.id,
-					name: cp.name,
-					startDate: cp.startDate,
-					scorePublicationDate: cp.scorePublicationDate,
-					location: cp.location,
-					regulationsId: cp.regulationsId,
-					courseId: cp.courseId,
-					teamsId: cp.teamId,
-					playersId: cp.playerId,
-					flysId: cp.flysId,
-					status: cp.status,
-					step: cp.step
-				};
-				competitionsStore.load(aCompetition);
-			});
-		}
+		// load all the competitions elements
 	};
 
 	onMount(() => {
