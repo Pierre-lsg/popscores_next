@@ -47,7 +47,8 @@
 	};
 
 	const loadCompetition = async () => {
-		cloudLoadCurrentCompetition(championshipId);
+		if (confirm('Voulez-vous mettre à jour la compétition ?'))
+			cloudLoadCurrentCompetition(championshipId);
 
 		// load all the competitions elements
 	};

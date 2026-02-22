@@ -9,8 +9,6 @@
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { onMount } from 'svelte';
 	import type { Championship } from '$lib/types/championshipType';
-	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
-	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;

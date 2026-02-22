@@ -1072,11 +1072,11 @@
   },
   {
     "id": "pbc_562893559",
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\"",
+    "updateRule": "owner = @request.auth.id",
+    "deleteRule": "owner = @request.auth.id",
     "name": "courses",
     "type": "base",
     "fields": [
@@ -1122,13 +1122,84 @@
         "type": "relation"
       },
       {
-        "cascadeDelete": false,
-        "collectionId": "pbc_1041261049",
         "hidden": false,
-        "id": "relation1542800728",
-        "maxSelect": 999,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [],
+    "system": false
+  },
+  {
+    "id": "pbc_1849212942",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\"",
+    "updateRule": "owner = @request.auth.id",
+    "deleteRule": "owner = @request.auth.id",
+    "name": "flys",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 36,
+        "min": 36,
+        "name": "id",
+        "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_4031054395",
+        "hidden": false,
+        "id": "relation3037342897",
+        "maxSelect": 1,
         "minSelect": 0,
-        "name": "targets",
+        "name": "competition",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "_pb_users_auth_",
+        "hidden": false,
+        "id": "relation3479234172",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "owner",
         "presentable": false,
         "required": false,
         "system": false,
@@ -1267,12 +1338,180 @@
     "system": false
   },
   {
+    "id": "pbc_1652501341",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\"",
+    "updateRule": "owner = @request.auth.id",
+    "deleteRule": "owner = @request.auth.id",
+    "name": "regulations",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 36,
+        "min": 36,
+        "name": "id",
+        "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "_pb_users_auth_",
+        "hidden": false,
+        "id": "relation3479234172",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "owner",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [],
+    "system": false
+  },
+  {
+    "id": "pbc_250649598",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\"",
+    "updateRule": "owner = @request.auth.id",
+    "deleteRule": "owner = @request.auth.id",
+    "name": "results",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 36,
+        "min": 36,
+        "name": "id",
+        "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_4031054395",
+        "hidden": false,
+        "id": "relation3037342897",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "competition",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_3072146508",
+        "hidden": false,
+        "id": "relation2551806565",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "player",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "_pb_users_auth_",
+        "hidden": false,
+        "id": "relation3479234172",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "owner",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [],
+    "system": false
+  },
+  {
     "id": "pbc_1224639818",
     "listRule": null,
     "viewRule": null,
     "createRule": "@request.auth.id != \"\"",
     "updateRule": "owner = @request.auth.id",
-    "deleteRule": "",
+    "deleteRule": "owner = @request.auth.id",
     "name": "scorecards",
     "type": "base",
     "fields": [
@@ -1462,11 +1701,11 @@
   },
   {
     "id": "pbc_1041261049",
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\"",
+    "updateRule": "owner = @request.auth.id",
+    "deleteRule": "owner = @request.auth.id",
     "name": "targets",
     "type": "base",
     "fields": [
@@ -1512,17 +1751,14 @@
         "type": "relation"
       },
       {
-        "cascadeDelete": false,
-        "collectionId": "pbc_562893559",
         "hidden": false,
-        "id": "relation2846186060",
-        "maxSelect": 999,
-        "minSelect": 0,
-        "name": "courses",
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
         "presentable": false,
         "required": false,
         "system": false,
-        "type": "relation"
+        "type": "json"
       },
       {
         "hidden": false,
