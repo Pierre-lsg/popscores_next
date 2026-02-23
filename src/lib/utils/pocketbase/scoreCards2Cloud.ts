@@ -1,4 +1,4 @@
-import type { scoreCard } from '$lib/types/scoreCardType';
+import type { ScoreCard } from '$lib/types/scoreCardType';
 import { db, pb } from './pocketBase';
 
 export const scoreCardService = {
@@ -6,22 +6,22 @@ export const scoreCardService = {
 
 	getAllScoreCards: async () => {
 		const scoreCards = await db.getFullList('scorecards', { sort: 'created' });
-		return scoreCards.map((scoreCard) => scoreCard.data) as scoreCard[];
+		return scoreCards.map((scoreCard) => scoreCard.data) as ScoreCard[];
 	},
 
 	getScoreCardByCompetition: async (competitionId: string) => {
 		const scoreCards = await db.getFullList('scorecards', {
 			filter: `competition ~ "${competitionId}"`
 		});
-		return scoreCards.map((scoreCard) => scoreCard.data) as scoreCard[];
+		return scoreCards.map((scoreCard) => scoreCard.data) as ScoreCard[];
 	},
 
 	getScoreCardByFly: async (flyId: string) => {
 		const scoreCards = await db.getFullList('scorecards', { filter: `fly ~ "${flyId}"` });
-		return scoreCards.map((scoreCard) => scoreCard.data) as scoreCard[];
+		return scoreCards.map((scoreCard) => scoreCard.data) as ScoreCard[];
 	},
 
-	saveScoreCard: (aScoreCard: scoreCard) => {
+	saveScoreCard: (aScoreCard: ScoreCard) => {
 		const scoreCardToSave = {
 			competition: aScoreCard.competition.id,
 			fly: aScoreCard.fly.id,
@@ -31,7 +31,7 @@ export const scoreCardService = {
 		db.saveWithKey('scorecards', scoreCardToSave, 'competition, fly');
 	},
 
-	saveScoreCards: (scoreCards: scoreCard[]) => {
+	saveScoreCards: (scoreCards: ScoreCard[]) => {
 		for (let aScoreCard of scoreCards) {
 			const scoreCardToSave = {
 				competition: aScoreCard.competition.id,

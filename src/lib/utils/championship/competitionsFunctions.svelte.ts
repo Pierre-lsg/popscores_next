@@ -28,7 +28,7 @@ import { resultService } from '../pocketbase/Result2Cloud';
 import type { Result } from '$lib/types/resultType';
 import type { Target } from '$lib/types/targetType';
 import { scoreCardService } from '../pocketbase/scoreCards2Cloud';
-import type { scoreCard } from '$lib/types/scoreCardType';
+import type { ScoreCard } from '$lib/types/scoreCardType';
 
 export const isCompetitionTeam = (competition: Competition) => {
 	let rules: Regulations | undefined;
@@ -315,7 +315,7 @@ export const cloudSaveScoreCard = async (
 
 export const cloudLoadCompetitionScoreCards = async (
 	competitionId: string
-): Promise<scoreCard[]> => {
+): Promise<ScoreCard[]> => {
 	const scoreCards = scoreCardService.getScoreCardByCompetition(competitionId);
 
 	return scoreCards;
