@@ -69,6 +69,15 @@ class ResultsCompetitionStore {
 	}
 
 	/**
+	 * Find a result from the list.
+	 *
+	 * @param competitionId - ID of the competition
+	 */
+	findByCompetition(competitionId: string): Result | undefined {
+		return this.list.find((r) => r.competitionId === competitionId);
+	}
+
+	/**
 	 * Reset the result list and remove data from localStorage.
 	 */
 	reset() {

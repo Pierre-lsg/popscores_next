@@ -7,7 +7,7 @@
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 
-	import { individualRules, collectiveRules } from '$lib/types/targetsType';
+	import { individualRules, collectiveRules } from '$lib/types/targetType';
 
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';

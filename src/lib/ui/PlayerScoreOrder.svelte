@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { RankedPlayer } from '$lib/types/playerType';
-	import type { Target } from '$lib/types/targetsType';
+	import type { Target } from '$lib/types/targetType';
 
 	import { getPlayerStats } from '$lib/utils/session/golfScoringFunction.svelte';
 

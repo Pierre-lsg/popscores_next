@@ -1,4 +1,4 @@
-import type { Target } from '$lib/types/targetsType';
+import type { Target } from '$lib/types/targetType';
 import { db, pb } from './pocketBase';
 
 export const targetService = {

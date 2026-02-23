@@ -1,4 +1,4 @@
-import type { Target } from '$lib/types/targetsType';
+import type { Target } from '$lib/types/targetType';
 
 // Constant for storage key
 const STORAGE_KEY = 'cs-targets-data';

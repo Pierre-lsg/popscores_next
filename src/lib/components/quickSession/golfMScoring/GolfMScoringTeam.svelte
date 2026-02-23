@@ -15,7 +15,7 @@
 	import TextField from '$lib/ui/TextField.svelte';
 	import { onMount } from 'svelte';
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
-	import { collectiveRules } from '$lib/types/targetsType';
+	import { collectiveRules } from '$lib/types/targetType';
 
 	const settings = sessionSettingsStore.settings;
 	const scoringForAllPlayersRules = ['Bonus', 'Individuel'];

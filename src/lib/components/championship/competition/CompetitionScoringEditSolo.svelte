@@ -2,15 +2,16 @@
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Fly } from '$lib/types/flyType';
 	import type { Course } from '$lib/types/courseType';
-	import type { Target } from '$lib/types/targetsType';
+	import type { Target } from '$lib/types/targetType';
 	import type { Player } from '$lib/types/playerType';
 	import type { RankedPlayer } from '$lib/types/playerType';
-	import type { Regulations } from '$lib/types/regulationsType';
+	import type { Regulation, Regulations } from '$lib/types/regulationsType';
 
 	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
+	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
 
 	import { swipe } from '$lib/utils/swipe';
 	import { slide } from 'svelte/transition';
@@ -18,6 +19,7 @@
 	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
 	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { onMount } from 'svelte';
+	import { cloudSaveScoreCard } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -94,9 +96,21 @@
 			if (result) {
 				result.scores = player.scores;
 			} else {
-				resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
+				result = resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
 			}
+			// Sauver le résultat dans le Cloud si c'est possible
+			resultService.saveResult(result);
 		});
+		// transmettre la carte de score
+		cloudSaveScoreCard(
+			currentCompetition,
+			currentFly,
+			[],
+			rankedPlayers,
+			targets,
+			[],
+			rules?.regulation || ({} as Regulation)
+		);
 
 		// Modifier le status du fly
 		currentFly.status = 'validated';
@@ -183,6 +197,3 @@
 	<!-- Affichage de la carte de score -->
 	<PlayerScoreCardByTarget {rankedPlayers} {targets} />
 </div>
-
-<style>
-</style>

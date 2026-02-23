@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
-	import { collectiveRules, individualRules, type Target } from '$lib/types/targetsType';
+	import { collectiveRules, individualRules, type Target } from '$lib/types/targetType';
 	import type { Course } from '$lib/types/courseType';
 
 	import { dndzone } from 'svelte-dnd-action';

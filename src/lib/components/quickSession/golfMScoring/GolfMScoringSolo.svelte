@@ -6,7 +6,7 @@
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import PlayerScoreOrder from '$lib/ui/PlayerScoreOrder.svelte';
 
-	import { individualRules } from '$lib/types/targetsType';
+	import { individualRules } from '$lib/types/targetType';
 
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';

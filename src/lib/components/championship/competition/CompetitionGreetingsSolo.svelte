@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Player, RankedPlayer } from '$lib/types/playerType';
-	import type { Target } from '$lib/types/targetsType';
+	import type { Target } from '$lib/types/targetType';
 	import type { Course } from '$lib/types/courseType';
 
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';

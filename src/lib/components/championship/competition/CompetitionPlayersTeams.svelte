@@ -43,17 +43,40 @@
 
 	const engageTeam = (index: number) => {
 		currentCompetition.teamsId.push(filteredTeams[index].id);
+		engageClub(filteredTeams[index].clubId);
 	};
 
 	const disengageTeam = (index: number) => {
+		const clubId = competitionTeams[index].clubId;
 		currentCompetition.teamsId = currentCompetition.teamsId.filter(
 			(id: string) => id !== competitionTeams[index].id
 		);
+		disengageClub(clubId);
 	};
 
 	const addTeam = () => {
 		teamsChampionshipStore.add(newTeamsName, newTeamsClub);
 		addingTeam = false;
+		engageClub(newTeamsClub);
+	};
+
+	const engageClub = (clubId: string | undefined) => {
+		if (clubId && !currentCompetition.clubId.includes(clubId)) {
+			currentCompetition.clubId.push(clubId);
+		}
+	};
+
+	const disengageClub = (clubId: string | undefined) => {
+		let isClubStillEngaged: boolean = false;
+
+		if (clubId && clubId !== '') {
+			for (let team of competitionTeams) {
+				if (team.clubId === clubId) isClubStillEngaged = true;
+			}
+			if (!isClubStillEngaged) {
+				currentCompetition.clubId = currentCompetition.clubId.filter((id: string) => id !== clubId);
+			}
+		}
 	};
 
 	const editCompetingTeam = (index: number) => {
@@ -75,9 +98,6 @@
 			if (currentCompetition.regulationsId !== '')
 				rules = regulationsStore.find(currentCompetition.regulationsId);
 		}
-		// debug
-		// teamsChampionshipStore.list.forEach((t) => (t.playersId = []));
-		// playersChampionshipStore.list.forEach((p) => (p.teamId = ''));
 	});
 </script>
 

@@ -1,4 +1,4 @@
-import type { Target } from './targetsType';
+import type { Target } from './targetType';
 
 export interface Course {
 	id: string;

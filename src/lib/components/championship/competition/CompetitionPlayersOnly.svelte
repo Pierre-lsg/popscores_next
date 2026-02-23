@@ -39,7 +39,7 @@
 	};
 
 	const disengagePlayer = (index: number) => {
-		let clubId = competitionPlayers[index].clubId;
+		const clubId = competitionPlayers[index].clubId;
 		currentCompetition.playersId = currentCompetition.playersId.filter(
 			(id: string) => id !== competitionPlayers[index].id
 		);

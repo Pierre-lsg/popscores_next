@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Course } from '$lib/types/courseType';
-	import type { Target } from '$lib/types/targetsType';
+	import type { Target } from '$lib/types/targetType';
 	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
 	import type { Regulation } from '$lib/types/regulationsType';

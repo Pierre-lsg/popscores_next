@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '$lib/styles/scoreCard.css';
 
-	import type { Target } from '$lib/types/targetsType';
+	import type { Target } from '$lib/types/targetType';
 	import type { RankedPlayer } from '$lib/types/playerType';
 
 	import {

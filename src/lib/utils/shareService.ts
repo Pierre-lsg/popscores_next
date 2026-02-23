@@ -1,6 +1,6 @@
 import LZString from 'lz-string';
 import type { Player } from '$lib/types/playerType';
-import type { Target } from '$lib/types/targetsType';
+import type { Target } from '$lib/types/targetType';
 
 export const shareService = {
 	// Générer le lien

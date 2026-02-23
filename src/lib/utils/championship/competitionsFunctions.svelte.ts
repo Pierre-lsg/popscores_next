@@ -1,8 +1,8 @@
 import type { Competition } from '$lib/types/competitionType';
 import type { Course } from '$lib/types/courseType';
-import type { Player } from '$lib/types/playerType';
-import type { Regulations } from '$lib/types/regulationsType';
-import type { Team } from '$lib/types/teamType';
+import type { Player, RankedPlayer } from '$lib/types/playerType';
+import type { Regulations, Regulation } from '$lib/types/regulationsType';
+import type { RankedTeam, Team } from '$lib/types/teamType';
 import type { Fly } from '$lib/types/flyType';
 import type { Club } from '$lib/types/clubType';
 
@@ -26,6 +26,9 @@ import { flyService } from '../pocketbase/flys2Cloud';
 import { clubService } from '../pocketbase/clubs2Cloud';
 import { resultService } from '../pocketbase/Result2Cloud';
 import type { Result } from '$lib/types/resultType';
+import type { Target } from '$lib/types/targetType';
+import { scoreCardService } from '../pocketbase/scoreCards2Cloud';
+import type { scoreCard } from '$lib/types/scoreCardType';
 
 export const isCompetitionTeam = (competition: Competition) => {
 	let rules: Regulations | undefined;
@@ -275,4 +278,45 @@ export const cloudLoadCurrentCompetition = async (csId: string): Promise<string>
 	}
 
 	return status;
+};
+
+export const cloudSaveScoreCard = async (
+	competition: Competition,
+	fly: Fly,
+	rankedTeams: RankedTeam[],
+	rankedPlayers: RankedPlayer[],
+	targets: Target[],
+	players: Player[],
+	regulation: Regulation
+): Promise<string> => {
+	let status: string = 'success';
+
+	const aScoreCard = {
+		competition: competition,
+		fly: fly,
+		rankedTeams: rankedTeams,
+		rankedPlayers: rankedPlayers,
+		targets: targets,
+		players: players,
+		regulation: regulation
+	};
+
+	if (aScoreCard) {
+		try {
+			scoreCardService.saveScoreCard(aScoreCard);
+		} catch (e) {
+			console.log('error', e);
+			status = 'failure';
+		}
+	}
+
+	return status;
+};
+
+export const cloudLoadCompetitionScoreCards = async (
+	competitionId: string
+): Promise<scoreCard[]> => {
+	const scoreCards = scoreCardService.getScoreCardByCompetition(competitionId);
+
+	return scoreCards;
 };

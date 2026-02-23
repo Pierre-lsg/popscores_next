@@ -1,7 +1,7 @@
 import type { SessionSettings } from '$lib/types/gameSessionType';
 import type { Player } from '$lib/types/playerType';
 import type { Team } from '$lib/types/teamType';
-import type { Target } from '$lib/types/targetsType';
+import type { Target } from '$lib/types/targetType';
 
 export interface SessionArchive {
 	id: string; // crypto.randomUUID() !

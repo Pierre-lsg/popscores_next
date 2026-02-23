@@ -14,8 +14,6 @@ export const resultService = {
 		return results.map((result) => result.data) as Result[];
 	},
 
-	//
-	//todo : créer autre méthode save pour recherche sur clé et non sur id
 	saveResult: (aResult: Result) => {
 		const resultToSave = {
 			competition: aResult.competitionId,
