@@ -14,6 +14,7 @@ export const resultService = {
 		return results.map((result) => result.data) as Result[];
 	},
 
+	//
 	//todo : créer autre méthode save pour recherche sur clé et non sur id
 	saveResult: (aResult: Result) => {
 		const resultToSave = {
@@ -22,7 +23,7 @@ export const resultService = {
 			owner: pb.authStore.record?.id,
 			data: aResult
 		};
-		db.save('results', resultToSave);
+		db.saveWithKey('results', resultToSave, 'competition, player');
 	},
 
 	saveResults: (results: Result[]) => {
@@ -33,7 +34,7 @@ export const resultService = {
 				owner: pb.authStore.record?.id,
 				data: aResult
 			};
-			db.save('results', resultToSave);
+			db.saveWithKey('results', resultToSave, 'competition, player');
 		}
 	}
 };

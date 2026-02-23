@@ -1,10 +1,10 @@
 import type { Competition } from '$lib/types/competitionType';
 import type { Course } from '$lib/types/courseType';
-import type { Target } from '$lib/types/targetsType';
 import type { Player } from '$lib/types/playerType';
 import type { Regulations } from '$lib/types/regulationsType';
 import type { Team } from '$lib/types/teamType';
 import type { Fly } from '$lib/types/flyType';
+import type { Club } from '$lib/types/clubType';
 
 import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
@@ -13,6 +13,8 @@ import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampi
 import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
+import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
+import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 
 import { teamService } from '../pocketbase/teams2Cloud';
 import { playerService } from '../pocketbase/players2Cloud';
@@ -21,6 +23,9 @@ import { targetService } from '../pocketbase/target2Cloud';
 import { regulationService } from '../pocketbase/regulations2Cloud ';
 import { competitionService } from '../pocketbase/competitions2Cloud';
 import { flyService } from '../pocketbase/flys2Cloud';
+import { clubService } from '../pocketbase/clubs2Cloud';
+import { resultService } from '../pocketbase/Result2Cloud';
+import type { Result } from '$lib/types/resultType';
 
 export const isCompetitionTeam = (competition: Competition) => {
 	let rules: Regulations | undefined;
@@ -79,7 +84,17 @@ export const cloudSaveCompetition = async (
 	let status: string = 'success';
 
 	// Lister et sauver les clubs dont les joueurs ou équipes participeraient
-	// Todo
+	for (const clubId of competition.clubsId) {
+		const aClub: Club | undefined = clubsStore.find(clubId);
+		if (aClub) {
+			try {
+				clubService.saveClub(aClub);
+			} catch (e) {
+				console.log('error', e);
+				status = 'failure';
+			}
+		}
+	}
 
 	// Lister et sauver les équipes
 	for (const teamId of competition.teamsId) {
@@ -152,6 +167,19 @@ export const cloudSaveCompetition = async (
 				status = 'failure';
 			}
 		}
+
+		// Sauver les résultats de la compétition
+		const results = resultsCompetitionStore.list.filter(
+			(result) => result.competitionId === competition.id
+		);
+		if (results) {
+			try {
+				resultService.saveResults(results);
+			} catch (e) {
+				console.log('error', e);
+				status = 'failure';
+			}
+		}
 	}
 
 	// sauver la compétition
@@ -179,7 +207,13 @@ export const cloudLoadCurrentCompetition = async (csId: string): Promise<string>
 		competitionsStore.load(aCompetition);
 
 		// Charger les clubs liés à la compétition
-		//todo
+		for (let clubId of aCompetition.clubsId) {
+			const aClub = await clubService.getClubById(clubId);
+			if (aClub) {
+				clubsStore.remove(aClub.id);
+				clubsStore.load(aClub);
+			}
+		}
 
 		// Charger les équipes liés à la compétition
 		for (let teamId of aCompetition.teamsId) {
@@ -230,6 +264,13 @@ export const cloudLoadCurrentCompetition = async (csId: string): Promise<string>
 					targetsChampionshipStore.load(aTarget);
 				}
 			}
+		}
+
+		// Charger les résultats enregistrés
+		const results: Result[] = await resultService.getResultsByCompetition(aCompetition.id);
+		for (let aResult of results) {
+			resultsCompetitionStore.remove(aResult.competitionId, aResult.playerId);
+			resultsCompetitionStore.load(aResult);
 		}
 	}
 

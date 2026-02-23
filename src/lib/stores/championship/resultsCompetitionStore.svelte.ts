@@ -40,7 +40,8 @@ class ResultsCompetitionStore {
 
 	/**
 	 * Remove a competition's result
-	 * @param id - The ID of the team to remove
+	 * @param competitionId - ID of the competition
+	 * @param playerId - ID of the player
 	 */
 	remove(competitionId: string, playerId: string) {
 		this.list = this.list.filter(
@@ -60,7 +61,8 @@ class ResultsCompetitionStore {
 	/**
 	 * Find a result from the list.
 	 *
-	 * @param id - ID of the Team to remove
+	 * @param competitionId - ID of the competition
+	 * @param playerId - ID of the player
 	 */
 	find(competitionId: string, playerId: string): Result | undefined {
 		return this.list.find((r) => r.competitionId === competitionId && r.playerId === playerId);
@@ -78,4 +80,4 @@ class ResultsCompetitionStore {
 }
 
 // Export a unique instance of the store (Singleton)
-export const resultsCompetition = new ResultsCompetitionStore();
+export const resultsCompetitionStore = new ResultsCompetitionStore();

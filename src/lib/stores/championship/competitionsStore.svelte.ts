@@ -47,6 +47,7 @@ class CompetitionsStore {
 			location: location || '',
 			teamsId: [],
 			playersId: [],
+			clubsId: [],
 			flysId: []
 		};
 		this.list.push(aCompetition);

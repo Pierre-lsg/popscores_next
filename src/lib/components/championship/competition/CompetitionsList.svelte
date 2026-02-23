@@ -68,9 +68,9 @@
 	};
 
 	const savingCompetition = async (competition: Competition) => {
-		let results = await cloudSaveCompetition(competition, championship.id);
+		let status = await cloudSaveCompetition(competition, championship.id);
 
-		switch (results) {
+		switch (status) {
 			case 'success':
 				toastStore.show('💾 Enregistrement effectué ...', 'success');
 				break;

@@ -35,16 +35,39 @@
 
 	const engagePlayer = (index: number) => {
 		currentCompetition.playersId.push(filteredPlayers[index].id);
+		engageClub(filteredPlayers[index].clubId);
 	};
 
 	const disengagePlayer = (index: number) => {
+		let clubId = competitionPlayers[index].clubId;
 		currentCompetition.playersId = currentCompetition.playersId.filter(
 			(id: string) => id !== competitionPlayers[index].id
 		);
+		disengageClub(clubId);
 	};
 
 	const addPlayer = () => {
 		playersChampionshipStore.add(newPlayersName, '', '', newPlayersClub);
+		engageClub(newPlayersClub);
+	};
+
+	const engageClub = (clubId: string | undefined) => {
+		if (clubId && !currentCompetition.clubId.includes(clubId)) {
+			currentCompetition.clubId.push(clubId);
+		}
+	};
+
+	const disengageClub = (clubId: string | undefined) => {
+		let isClubStillEngaged: boolean = false;
+
+		if (clubId && clubId !== '') {
+			for (let player of competitionPlayers) {
+				if (player.clubId === clubId) isClubStillEngaged = true;
+			}
+			if (!isClubStillEngaged) {
+				currentCompetition.clubId = currentCompetition.clubId.filter((id: string) => id !== clubId);
+			}
+		}
 	};
 </script>
 

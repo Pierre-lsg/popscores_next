@@ -20,6 +20,7 @@ export const teamService = {
 		const team = await db.getOne('teams', id, {});
 		return team?.data as Team;
 	},
+
 	saveTeam: (aTeam: Team) => {
 		const teamToSave = {
 			id: aTeam.id,

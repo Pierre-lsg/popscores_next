@@ -6,12 +6,11 @@
 	import type { Player } from '$lib/types/playerType';
 	import type { RankedPlayer } from '$lib/types/playerType';
 	import type { Regulations } from '$lib/types/regulationsType';
-	import type { Result } from '$lib/types/resultType';
 
 	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
-	import { resultsCompetition } from '$lib/stores/championship/resultsCompetitionStore.svelte';
+	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 
 	import { swipe } from '$lib/utils/swipe';
 	import { slide } from 'svelte/transition';
@@ -91,11 +90,11 @@
 	const validateFly = () => {
 		// Sauver les scores dans le ResultStore
 		players.forEach((player) => {
-			let result = resultsCompetition.find(currentCompetition.id, player.id);
+			let result = resultsCompetitionStore.find(currentCompetition.id, player.id);
 			if (result) {
 				result.scores = player.scores;
 			} else {
-				resultsCompetition.add(currentCompetition.id, player.id, player.scores);
+				resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
 			}
 		});
 

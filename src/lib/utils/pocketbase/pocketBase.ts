@@ -56,6 +56,7 @@ export const db = {
 		}
 	},
 
+	// Sauvegarder
 	async save(collectionName: string, data: any) {
 		// On part du principe que data.id contient l'ID calculé par ton app
 		if (!data.id) {
@@ -86,6 +87,39 @@ export const db = {
 			}
 		} catch (error) {
 			console.error(`Erreur lors de l'upsert sur ${collectionName}:`, error);
+			throw error;
+		}
+	},
+
+	// Sauvegarder avec Clé
+	async saveWithKey(collectionName: string, data: any, keyFields: string) {
+		try {
+			const options = { requestKey: null };
+
+			// 1. Construction du filtre dynamique (ex: "competitionId='ID1' && playerId='ID2'")
+			// On sépare la chaîne 'competitionId, playerId' en tableau
+			const keys = keyFields.split(',').map((k) => k.trim());
+
+			const filter = keys.map((key) => `${key} = "${data[key]}"`).join(' && ');
+
+			// 2. Recherche de l'enregistrement existant avec ce filtre
+			const existingList = await pb.collection(collectionName).getList(1, 1, {
+				filter: filter,
+				...options
+			});
+
+			const existing = existingList.items[0];
+
+			// 3. Décision : Update (si trouvé) ou Create (si absent)
+			if (existing) {
+				// On utilise l'ID trouvé en base pour faire l'update
+				return await pb.collection(collectionName).update(existing.id, data, options);
+			} else {
+				// Création d'un nouvel enregistrement
+				return await pb.collection(collectionName).create(data, options);
+			}
+		} catch (error) {
+			console.error(`Erreur lors de l'upsert par clé sur ${collectionName}:`, error);
 			throw error;
 		}
 	}

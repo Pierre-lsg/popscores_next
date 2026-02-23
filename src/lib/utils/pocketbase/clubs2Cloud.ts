@@ -11,6 +11,11 @@ export const clubService = {
 
 	getById: (id: string) => db.getOne('clubs', id, {}),
 
+	getClubById: async (id: string) => {
+		const club = await db.getOne('clubs', id, {});
+		return club?.data as Club;
+	},
+
 	saveClub: (aClub: Club) => {
 		const clubToSave = {
 			id: aClub.id,

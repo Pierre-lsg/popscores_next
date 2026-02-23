@@ -64,9 +64,9 @@
 		let clubs: Club[] = [];
 		clubs[0] = club;
 
-		let results = await cloudSaveClubs(clubs);
+		let status = await cloudSaveClubs(clubs);
 
-		switch (results) {
+		switch (status) {
 			case 'success':
 				toastStore.show('💾 Enregistrement effectué ...', 'success');
 				break;
