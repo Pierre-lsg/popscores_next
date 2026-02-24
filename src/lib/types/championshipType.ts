@@ -8,6 +8,8 @@ export interface Championship {
 	competitionsId: string[];
 	individualScale: string;
 	collectiveScale: string;
+	rankingClubs: Record<string, number>;
+	rankingPlayers: Record<string, number>;
 }
 
 export interface CloudChampionship {

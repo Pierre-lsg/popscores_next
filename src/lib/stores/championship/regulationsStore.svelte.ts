@@ -39,7 +39,9 @@ class RegulationsStore {
 			id: crypto.randomUUID(),
 			teamsPerFly: 3,
 			playersPerFly: 6,
-			regulation: regulation
+			regulation: regulation,
+			doubleRanking: false,
+			nbPlayersForDoubleRankingTeam: 2
 		};
 		this.list.push(aRegulation);
 		return aRegulation;

@@ -12,4 +12,6 @@ export interface Regulations {
 	regulation: Regulation;
 	teamsPerFly: number;
 	playersPerFly: number;
+	doubleRanking: boolean;
+	nbPlayersForDoubleRankingTeam: number;
 }

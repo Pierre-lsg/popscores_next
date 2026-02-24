@@ -51,6 +51,14 @@
 			<Toggle label="Partenaires ghost à 'X'" bind:checked={rules.regulation.usePenalizingGhost} />
 		{:else}
 			<Stepper label="Nombre de joueurs par fly" bind:value={rules.playersPerFly} min={2} />
+			<Toggle label="Calcul d'un classement par équipe" bind:checked={rules.doubleRanking} />
+			{#if rules.doubleRanking}
+				<Stepper
+					label="Nombre de joueurs par équipe virtuelle"
+					bind:value={rules.playersPerFly}
+					min={2}
+				/>
+			{/if}
 		{/if}
 	{/if}
 </div>
