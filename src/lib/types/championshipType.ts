@@ -1,5 +1,10 @@
 import type { MarkedPointScale } from './markedPointScaleType';
 
+export interface Ranking {
+	id: string;
+	score: number;
+}
+
 export interface Championship {
 	id: string;
 	name: string;
@@ -8,8 +13,8 @@ export interface Championship {
 	competitionsId: string[];
 	individualScale: string;
 	collectiveScale: string;
-	rankingClubs: Record<string, number>;
-	rankingPlayers: Record<string, number>;
+	rankingClubs: Ranking[];
+	rankingPlayers: Ranking[];
 }
 
 export interface CloudChampionship {

@@ -7,6 +7,7 @@ export type CompetitionStep =
 	| 'scoring'
 	| 'following'
 	| 'greeting'
+	| 'ranking'
 	| 'welcome';
 
 export interface Competition {

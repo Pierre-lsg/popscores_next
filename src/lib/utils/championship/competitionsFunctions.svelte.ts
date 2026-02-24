@@ -15,6 +15,7 @@ import { flysChampionshipStore } from '$lib/stores/championship/flysChampionship
 import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
+import { calculatePlayerScore } from '../session/golfScoringFunction.svelte';
 
 import { teamService } from '../pocketbase/teams2Cloud';
 import { playerService } from '../pocketbase/players2Cloud';
@@ -319,4 +320,39 @@ export const cloudLoadCompetitionScoreCards = async (
 	const scoreCards = scoreCardService.getScoreCardByCompetition(competitionId);
 
 	return scoreCards;
+};
+
+export const teamsForDoubleRanking = (
+	competition: Competition,
+	targets: Target[],
+	rules: Regulations
+): Team[] => {
+	let teams: Team[] = [];
+
+	for (const clubId of competition.clubsId) {
+		let clubName: string = '';
+		if (clubId && clubId != '') {
+			clubName = clubsStore.find(clubId)?.name || 'vide';
+			// Retrouver l'ensemble des joueurs de ce club qui ont participé à la compétition
+			let playersClubCompetition = playersChampionshipStore.list
+				.filter((p) => p.clubId === clubId)
+				.filter((p) => competition.playersId.includes(p.id));
+			// Trier cette liste par résultat à la compétition
+			playersClubCompetition.sort((a, b) => {
+				return calculatePlayerScore(a, targets) - calculatePlayerScore(b, targets);
+			});
+			// Si suffisament de compétiteurs pour former une équipe
+			if (playersClubCompetition.length >= rules.nbPlayersForDoubleRankingTeam) {
+				// Créer une équipe avec les meilleurs compétiteurs
+				let team: Team = { id: '', name: '', playersId: [] };
+				team.name = clubName;
+				for (let i = 0; i < rules.nbPlayersForDoubleRankingTeam; i++) {
+					team.playersId.push(playersClubCompetition[i].id);
+				}
+				team.clubId = clubId;
+				teams.push(team);
+			}
+		}
+	}
+	return teams;
 };

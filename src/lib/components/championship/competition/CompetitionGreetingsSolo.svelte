@@ -16,6 +16,7 @@
 	import { calculatePlayerScore } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
+	import { teamsForDoubleRanking } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -68,43 +69,8 @@
 		}
 
 		if (currentCompetition && rules?.doubleRanking) {
-			// Calcul d'une équipe pour les clubs à partir des 2 joueurs de la compétition individuelle
-			// Pour chaque club de la compétition
-			console.log('Calcul du classment par équipe');
-			//debug
-			/*
-			currentCompetition.clubsId = [
-				'ac0d9308-a98e-4e0d-8d6a-81eaaeb55ed9',
-				'4911e424-3009-4a2b-92aa-98a831de46f3',
-				'6f4239db-3731-4857-854f-4e52fa10711c'
-			];*/
-			for (const clubId of currentCompetition.clubsId) {
-				console.log('listing des clubs');
-				let clubName: string = '';
-				if (clubId && clubId != '') {
-					clubName = clubsStore.find(clubId)?.name || 'vide';
-					// Retrouver l'ensemble des joueurs de ce club qui ont participé à la compétition
-					let playersClubCompetition = playersChampionshipStore.list
-						.filter((p) => p.clubId === clubId)
-						.filter((p) => currentCompetition.playersId.includes(p.id));
-					// Trier cette liste par résultat à la compétition
-					playersClubCompetition.sort((a, b) => {
-						return calculatePlayerScore(a, targets) - calculatePlayerScore(b, targets);
-					});
-					// Si plus d'un joueur pour la compétition
-					if (playersClubCompetition.length > 1) {
-						// Créer une équipe avec
-						let team: Team = { id: '', name: '', playersId: [] };
-						team.name = clubName;
-						team.playersId.push(playersClubCompetition[0].id);
-						team.playersId.push(playersClubCompetition[1].id);
-						team.clubId = clubId;
-						console.log('équipe créée : ', team);
-						teams.push(team);
-					}
-				}
-			}
-			console.log('Teams', teams);
+			console.log('rules', rules);
+			teams = teamsForDoubleRanking(currentCompetition, targets, rules);
 		}
 	});
 </script>

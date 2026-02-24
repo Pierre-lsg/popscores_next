@@ -35,7 +35,9 @@
 					location: c.location,
 					competitionsId: c.competitionsId,
 					individualScale: c.individualScale.id,
-					collectiveScale: c.collectiveScale.id
+					collectiveScale: c.collectiveScale.id,
+					rankingClubs: c.rankingClubs,
+					rankingPlayers: c.rankingPlayers
 				});
 				cloudScale.push({
 					id: c.individualScale.id,

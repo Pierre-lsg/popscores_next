@@ -42,7 +42,10 @@
 
 			{#if currentCompetition.status === 'finished'}
 				<button onclick={() => (currentCompetition.step = 'greeting')} class="subnav">
-					Calculer le podium
+					Afficher le podium
+				</button>
+				<button onclick={() => (currentCompetition.step = 'ranking')} class="subnav">
+					Calculer le classement général
 				</button>
 				<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav">
 					Boire une bière
