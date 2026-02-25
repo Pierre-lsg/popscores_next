@@ -10,7 +10,9 @@
 		listTeamPlayer,
 		calculateTeamScore,
 		getScoreClass,
-		getTotalPar
+		getTotalPar,
+		exportTSCToCSV,
+		exportAsImage
 	} from '$lib/utils/session/golfScoringFunction.svelte';
 
 	let {
@@ -31,8 +33,14 @@
 	}>();
 </script>
 
+<div>
+	<span role="none" onclick={() => exportAsImage('TSCBT-capture')}>📸</span>
+	<span role="none" onclick={() => exportTSCToCSV(rankedTeams, targets, players, settings)}>📁</span
+	>
+</div>
+
 <div class="scorecard">
-	<table class="scorecard-target">
+	<table class="scorecard-target" id="TSCBT-capture">
 		<thead>
 			<tr class="header">
 				<th colspan="2" class="first-fixed-col">Cibles</th>

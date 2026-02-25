@@ -2,6 +2,7 @@ import type { Player, RankedPlayer } from '$lib/types/playerType';
 import type { Team, RankedTeam } from '$lib/types/teamType';
 import type { Target } from '$lib/types/targetType';
 import type { Regulation } from '$lib/types/regulationsType';
+import { toPng } from 'html-to-image';
 
 //                      //
 // --    Parcours    -- //
@@ -74,6 +75,36 @@ export const getTop3Players = (rankedPlayers: RankedPlayer[]) => {
 };
 export const getOthersRankedPlayers = (rankedPlayers: RankedPlayer[]) => {
 	return rankedPlayers.slice(3);
+};
+
+export const exportPSCToCSV = (rankedPlayers: RankedPlayer[], targets: Target[]) => {
+	// 1. Définition des entêtes
+	const header1 = [
+		'Cibles',
+		...targets.map((t, i) => t.name || 'Cible #' + (i + 1)).flat(),
+		'Total'
+	];
+	const header2 = ['Par', ...targets.map((t) => t.par).flat(), getTotalPar(targets)];
+	const header3 = ['Rdj', ...targets.map((t) => t.rule).flat(), '...'];
+
+	// 2. Construction des lignes
+	const rows = rankedPlayers.map((rp) => {
+		return [
+			rp.player.name,
+			...targets.map((t) => rp.player.scores[t.id]),
+			calculatePlayerScore(rp.player, targets)
+		].join(';');
+	});
+
+	const csvContent = [header1.join(';'), header2.join(';'), header3.join(';'), ...rows].join('\n');
+
+	// 3. Téléchargement forcé
+	const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.setAttribute('download', `scores_competition.csv`);
+	link.click();
 };
 
 //                      //
@@ -204,6 +235,47 @@ export const getRankedTeams = (
 export const getTop3Teams = (rankedTeams: RankedTeam[]) => rankedTeams.slice(0, 3);
 export const getOthersRankedTeams = (rankedTeams: RankedTeam[]) => rankedTeams.slice(3);
 
+export const exportTSCToCSV = (
+	rankedTeams: RankedTeam[],
+	targets: Target[],
+	players: Player[],
+	settings: Regulation
+) => {
+	// 1. Définition des entêtes
+	const header1 = [
+		'',
+		'Cibles',
+		...targets.map((t, i) => t.name || 'Cible #' + (i + 1)).flat(),
+		'Total'
+	];
+	const header2 = ['', 'Par', ...targets.map((t) => t.par).flat(), getTotalPar(targets)];
+	const header3 = ['', 'Rdj', ...targets.map((t) => t.rule).flat(), '...'];
+
+	// 2. Construction des lignes
+	let rows: string[] = [];
+	rankedTeams.forEach((rt) => {
+		listTeamPlayer(rt.team, players).forEach((p) => {
+			const row = [
+				rt.team.name,
+				p.name,
+				...targets.map((t) => p.scores[t.id]),
+				calculatePlayerScore(p, targets)
+			].join(';');
+			rows.push(row);
+		});
+	});
+
+	const csvContent = [header1.join(';'), header2.join(';'), header3.join(';'), ...rows].join('\n');
+
+	// 3. Téléchargement forcé
+	const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.setAttribute('download', `scores_competition.csv`);
+	link.click();
+};
+
 //                       //
 // --    Résultats    -- //
 //                       //
@@ -324,3 +396,21 @@ export const shareResultsTeams =
 			alert("Le partage n'est pas supporté sur ce navigateur. Voici les résultats :\n\n" + message);
 		}
 	};
+
+export const exportAsImage = async (idCapture: string) => {
+	const node = document.getElementById(idCapture);
+	if (!node) return;
+
+	const dataUrl = await toPng(node, {
+		quality: 0.95,
+		backgroundColor: '#1a1a1a',
+		width: node.scrollWidth + 10,
+		height: node.scrollHeight + 10
+	});
+
+	// Téléchargement
+	const link = document.createElement('a');
+	link.download = `carte-score.png`;
+	link.href = dataUrl;
+	link.click();
+};

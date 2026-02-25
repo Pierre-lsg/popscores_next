@@ -7,7 +7,9 @@
 	import {
 		getScoreClass,
 		calculatePlayerScore,
-		getTotalPar
+		getTotalPar,
+		exportPSCToCSV,
+		exportAsImage
 	} from '$lib/utils/session/golfScoringFunction.svelte';
 
 	let { rankedPlayers, targets }: { rankedPlayers: RankedPlayer[]; targets: Target[] } = $props<{
@@ -16,7 +18,12 @@
 	}>();
 </script>
 
-<div class="scorecard">
+<div>
+	<span role="none" onclick={() => exportAsImage('PSC-capture')}>📸</span>
+	<span role="none" onclick={() => exportPSCToCSV(rankedPlayers, targets)}>📁</span>
+</div>
+
+<div class="scorecard" id="PSC-capture">
 	<table class="table-container">
 		<thead>
 			<tr class="header">
