@@ -33,13 +33,13 @@
 	}>();
 </script>
 
-<div>
-	<span role="none" onclick={() => exportAsImage('TSC-capture')}>📸</span>
-	<span role="none" onclick={() => exportTSCToCSV(rankedTeams, targets, players, settings)}>📁</span
-	>
-</div>
-
 <div class="scorecard">
+	<div class="action">
+		<span role="none" onclick={() => exportAsImage('TSC-capture')}>📸</span>&nbsp;&nbsp;
+		<span role="none" onclick={() => exportTSCToCSV(rankedTeams, targets, players, settings)}
+			>📁</span
+		>
+	</div>
 	<table class="table-container" id="TSC-capture">
 		<thead>
 			<tr class="header">

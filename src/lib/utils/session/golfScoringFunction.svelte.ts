@@ -403,7 +403,6 @@ export const exportAsImage = async (idCapture: string) => {
 
 	const dataUrl = await toPng(node, {
 		quality: 0.95,
-		backgroundColor: '#1a1a1a',
 		width: node.scrollWidth + 10,
 		height: node.scrollHeight + 10
 	});

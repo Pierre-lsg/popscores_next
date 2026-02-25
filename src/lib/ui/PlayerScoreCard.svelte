@@ -18,12 +18,11 @@
 	}>();
 </script>
 
-<div>
-	<span role="none" onclick={() => exportAsImage('PSC-capture')}>📸</span>
-	<span role="none" onclick={() => exportPSCToCSV(rankedPlayers, targets)}>📁</span>
-</div>
-
 <div class="scorecard" id="PSC-capture">
+	<div class="action">
+		<span role="none" onclick={() => exportAsImage('PSC-capture')}>📸</span>&nbsp;&nbsp;
+		<span role="none" onclick={() => exportPSCToCSV(rankedPlayers, targets)}>📁</span>
+	</div>
 	<table class="table-container">
 		<thead>
 			<tr class="header">

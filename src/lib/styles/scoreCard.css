@@ -14,7 +14,7 @@
 	& th:nth-child(2),
 	& td:nth-child(2) {
 		position: sticky;
-		left: 80px; /* À ajuster selon la largeur réelle de ta colonne 1 */
+		left: 75px; /* À ajuster selon la largeur réelle de ta colonne 1 */
 		z-index: 2;
 		background-color: var(--bg-card);
 	}
@@ -51,19 +51,19 @@ table {
 }
 
 .header {
-	border-bottom: 2px solid #ddd;
+	border-bottom: 2px solid var(--primary);
 }
 
 .par-row {
-	border-right: 2px solid #ddd;
+	border-right: 2px solid var(--primary);
 }
 
 .last-cell {
-	border-right: 2px solid #ddd;
+	border-right: 2px solid var(--primary);
 }
 
 .footer {
-	border-top: 2px solid #ddd;
+	border-top: 2px solid var(--primary);
 }
 
 th.vertical-header {
@@ -89,7 +89,7 @@ th.vertical-header span {
 	text-align: left;
 	background-color: var(--bg-card);
 	padding-right: 20px;
-	border-right: 2px solid #ddd;
+	border-right: 2px solid var(--primary);
 }
 
 /* Couleur suivant score */
@@ -149,6 +149,16 @@ th.vertical-header span {
 	background-color: rgba(0, 0, 0, 0.03); /* Léger fond pour distinguer l'équipe */
 	text-align: center;
 	font-weight: bold;
-	border-left: 2px solid #ccc;
-	border-right: 2px solid #ccc;
+	border-left: 2px solid var(--primary);
+	border-right: 2px solid var(--primary);
+}
+
+.action {
+	position: sticky;
+	display: flex;
+	justify-content: start;
+	font-size: 1.5rem;
+	top: 30px;
+	left: 0;
+	z-index: 1000;
 }
