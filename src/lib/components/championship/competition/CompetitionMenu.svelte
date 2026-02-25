@@ -44,9 +44,6 @@
 				<button onclick={() => (currentCompetition.step = 'greeting')} class="subnav">
 					Afficher le podium
 				</button>
-				<button onclick={() => (currentCompetition.step = 'ranking')} class="subnav">
-					Calculer le classement général
-				</button>
 				<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav">
 					Boire une bière
 				</button>

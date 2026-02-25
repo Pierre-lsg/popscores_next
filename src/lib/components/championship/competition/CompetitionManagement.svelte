@@ -8,7 +8,7 @@
 	import CompetitionScoring from './CompetitionScoring.svelte';
 	import CompetitionStarting from './CompetitionStarting.svelte';
 	import CompetitionGreetings from './CompetitionGreetings.svelte';
-	import ChampionshipRanking from './ChampionshipRanking.svelte';
+	import ChampionshipRanking from '../../ChampionshipRanking.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { onMount } from 'svelte';
@@ -72,9 +72,6 @@
 	{#if currentCompetition.status === 'finished'}
 		{#if currentCompetition.step === 'greeting'}
 			<CompetitionGreetings bind:currentCompetition />
-		{/if}
-		{#if currentCompetition.step === 'ranking'}
-			<ChampionshipRanking bind:currentCompetition bind:championship />
 		{/if}
 		{#if currentCompetition.step === 'welcome'}
 			🍺🍺🍺🍺🍺🍺

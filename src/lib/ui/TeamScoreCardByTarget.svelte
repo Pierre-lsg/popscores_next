@@ -92,7 +92,11 @@
 								</td>
 							{/if}
 						{/each}
-						<td>{calculateTeamScore(team, targets, players, settings)}</td>
+						{#if i === 0}
+							<td rowspan={listTeamPlayer(team, players).length}
+								>{calculateTeamScore(team, targets, players, settings)}</td
+							>
+						{/if}
 					</tr>
 				{/each}
 			{/each}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
-	import CompetitionMenu from './CompetitionMenu.svelte';
+	import CompetitionMenu from './championship/competition/CompetitionMenu.svelte';
 	import '$lib/styles/golfScoring.css';
 	import type { Championship } from '$lib/types/championshipType';
 	import type { Ranking } from '$lib/types/championshipType';
@@ -27,14 +27,9 @@
 	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import type { Regulations, Regulation } from '$lib/types/regulationsType';
 
-	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
-		currentCompetition: Competition;
+	let { championship = $bindable() } = $props<{
 		championship: Championship;
 	}>();
-
-	const somme = (scores: Record<string, number>) => {
-		return Object.values(scores).reduce((acc, score) => acc + score, 0);
-	};
 
 	onMount(() => {
 		let rankingClv: Ranking[] = [];
@@ -76,7 +71,7 @@
 					// Recherche du joueur dans rankingPlayers
 					const pId = rankingIdv.findIndex((rp: Ranking) => rp.id === rankedPlayers[i].player.id);
 					if (pId !== -1) {
-						prevScore = championship.rankingPlayers[pId].score;
+						prevScore = rankingIdv[pId].score;
 						rankingIdv.splice(pId, 1);
 					}
 					rankingIdv.push({
@@ -98,14 +93,15 @@
 				let rankedTeams: RankedTeam[] = [];
 				if (targets && teams && players && regulation)
 					rankedTeams = getRankedTeams(teams, targets, players, regulation);
-				// Conserver les 2 meilleures équipes du club
+				console.log(rankedTeams);
+				// Conserver les 'n' meilleures équipes du club
 				// Calculer le score ... todo à corriger
 				for (let i = 0; i < rankedTeams.length; i++) {
 					let prevScore: number = 0;
-					// Recherche du club dans rankingPTeams
+					// Recherche du club dans rankingTeams
 					const pId = rankingClv.findIndex((rp: Ranking) => rp.id === rankedTeams[i].team.clubId);
 					if (pId !== -1) {
-						prevScore = championship.rankingPlayers[pId].score;
+						prevScore = rankingClv[pId].score;
 						rankingClv.splice(pId, 1);
 					}
 					rankingClv.push({
@@ -136,7 +132,7 @@
 					let prevScore: number = 0;
 					const pId = rankingClv.findIndex((rp: Ranking) => rp.id === rankedTeams[i].team.clubId);
 					if (pId !== -1) {
-						prevScore = championship.rankingPlayers[pId].score;
+						prevScore = rankingClv[pId].score;
 						rankingClv.splice(pId, 1);
 					}
 					rankingClv.push({
@@ -146,18 +142,10 @@
 				}
 			}
 		});
-		championship.rankingPlayers = smartSort(rankingIdv, 'score', true);
-		championship.rankingClubs = smartSort(rankingClv, 'score', true);
+		championship.rankingPlayers = smartSort(rankingIdv, 'score', false);
+		championship.rankingClubs = smartSort(rankingClv, 'score', false);
 	});
 </script>
-
-<CompetitionMenu bind:currentCompetition />
-<p>Calcul du championnat</p>
-
-<p>S'il s'agit d'une compétition par équipe ou solo avec calcul équipe</p>
-<p>si second cas, calculer les équipes cf. fonction teamsForDoubleRanking()</p>
-<p>Pour chaque équipe des clubs qualifiés</p>
-<p>...</p>
 
 <p>Classement par joueur</p>
 {#each championship.rankingPlayers as p}
