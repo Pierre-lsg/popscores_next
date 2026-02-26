@@ -39,8 +39,8 @@
 <div class="scale-container">
 	{#if scale}
 		<div class="scale-header">
+			<h3>{scale.name || 'Barème'}</h3>
 			<span class="badge">{scale.isIndividual ? 'Individuel' : 'Collectif'}</span>
-			<h3>{scale.name || 'Nouveau barème'}</h3>
 		</div>
 
 		<div class="ranks-grid">
@@ -54,11 +54,14 @@
 
 		<div class="actions-bar">
 			<div class="add-group">
+				<button class="btn-add" onclick={addRanks}> Ajouter </button>
 				<input type="number" min="1" max="50" bind:value={qtyToAdd} class="input-qty" />
-				<button class="btn-add" onclick={addRanks}>
-					Ajouter {qtyToAdd > 1 ? qtyToAdd + ' rangs' : 'un rang'}
-				</button>
-				<input type="number" min="1" max="50" bind:value={step} class="input-qty" />
+				{#if scale.points.length === 0}
+					<input value={qtyToAdd > 1 ? 'rangs' : 'rang'} class="viewInput" disabled />
+				{:else}
+					<input value={qtyToAdd > 1 ? 'rangs de pas' : 'rang de pas'} class="viewInput" disabled />
+					<input type="number" min="1" max="50" bind:value={step} class="input-qty" />
+				{/if}
 			</div>
 
 			{#if scale.points.length > 0}
@@ -73,6 +76,10 @@
 </div>
 
 <style>
+	.viewInput {
+		max-width: 7rem;
+	}
+
 	.scale-container {
 		border: 1px solid #ddd;
 		border-radius: 8px;

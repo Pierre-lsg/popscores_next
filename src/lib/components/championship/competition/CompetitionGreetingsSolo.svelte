@@ -4,19 +4,22 @@
 	import type { Target } from '$lib/types/targetType';
 	import type { Course } from '$lib/types/courseType';
 	import type { Team } from '$lib/types/teamType';
+	import type { Regulations, Regulation } from '$lib/types/regulationsType';
 
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
+
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
-	import type { Regulations, Regulation } from '$lib/types/regulationsType';
+
 	import { onMount } from 'svelte';
-	import { calculatePlayerScore } from '$lib/utils/session/golfScoringFunction.svelte';
-	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
-	import { teamsForDoubleRanking } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import {
+		teamsForDoubleRanking,
+		getRules
+	} from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -24,7 +27,7 @@
 	let players: Player[] = $derived(
 		playersChampionshipStore.list.filter((p) => currentCompetition.playersId.includes(p.id))
 	);
-	let rules: Regulations | undefined = $state();
+	let rules: Regulations = $state(getRules(currentCompetition));
 	let course: Course | undefined = $derived(
 		coursesChampionshipStore.find(currentCompetition.courseId)
 	);
@@ -32,14 +35,7 @@
 	let rankedPlayers: RankedPlayer[] = $derived(getRankedPlayers(players, targets || []));
 	let teams: Team[] = $state([]);
 
-	let settings: Regulation = {
-		hasCrossAFixedPenalty: true,
-		malusOverPar: 4,
-		malusValue: 10,
-		teamGame: true,
-		playersPerTeam: 2,
-		usePenalizingGhost: false
-	};
+	let settings: Regulation = $derived(rules.regulation);
 
 	let rankedTeams = $derived(getRankedTeams(teams, targets, players, settings));
 
@@ -59,19 +55,7 @@
 	};
 
 	onMount(() => {
-		if (currentCompetition) {
-			if (currentCompetition.regulationsId !== '')
-				rules = regulationsStore.find(currentCompetition.regulationsId);
-			if (!rules) {
-				rules = regulationsStore.new();
-				currentCompetition.regulationsId = rules.id;
-			}
-		}
-
-		if (currentCompetition && rules?.doubleRanking) {
-			console.log('rules', rules);
-			teams = teamsForDoubleRanking(currentCompetition, targets, rules);
-		}
+		if (rules.doubleRanking) teams = teamsForDoubleRanking(currentCompetition, targets, rules);
 	});
 </script>
 

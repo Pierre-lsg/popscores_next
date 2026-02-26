@@ -5,8 +5,7 @@
 	import { shuffle } from '$lib/utils/sharedFunction';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
-	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
-	import { onMount } from 'svelte';
+	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
@@ -16,7 +15,7 @@
 		currentCompetition: Competition | undefined;
 	}>();
 
-	let rules: Regulations | undefined = $state();
+	let rules: Regulations = $state(getRules(currentCompetition));
 	let nbTeamsPerFly: number = $derived(rules?.teamsPerFly || 3);
 	let nbPlayersPerFly: number = $derived(rules?.playersPerFly || 6);
 	let flys: Fly[] = $derived(
@@ -111,20 +110,6 @@
 		}
 		editingFly[idx] = !editingFly[idx];
 	};
-
-	onMount(() => {
-		if (currentCompetition) {
-			if (currentCompetition.regulationsId !== '')
-				rules = regulationsStore.find(currentCompetition.regulationsId);
-			if (!rules) {
-				rules = regulationsStore.new();
-				currentCompetition.regulationsId = rules.id;
-			}
-		}
-		if (!currentCompetition.playersId) currentCompetition.playersId = [];
-		if (!currentCompetition.teamsId) currentCompetition.teamsId = [];
-		if (!currentCompetition.flysId) currentCompetition.flysId = [];
-	});
 </script>
 
 <div>

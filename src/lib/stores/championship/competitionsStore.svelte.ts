@@ -45,6 +45,7 @@ class CompetitionsStore {
 			startDate: startDate || '',
 			scorePublicationDate: scorePublicationDate || '',
 			location: location || '',
+			regulationsId: '',
 			teamsId: [],
 			playersId: [],
 			clubsId: [],

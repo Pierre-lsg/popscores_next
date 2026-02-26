@@ -6,11 +6,11 @@
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
-	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 
 	import { getFilteredTeams } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import { onMount } from 'svelte';
+	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 	import TeamCard from '$lib/ui/TeamCard.svelte';
@@ -25,11 +25,10 @@
 	let editingCompetingTeam: boolean[] = $state([]);
 	let editingAvailableTeam: boolean[] = $state([]);
 	let addingTeam: boolean = $state(false);
-	let teamName: string = $state('');
 	let newTeamsName: string = $state('');
 	let newTeamsClub: string = $state('');
 
-	let rules: Regulations | undefined = $state();
+	let rules: Regulations = $state(getRules(currentCompetition));
 
 	let competitionTeams: Team[] = $derived(
 		teamsChampionshipStore.list.filter((team: Team) => currentCompetition.teamsId.includes(team.id))
@@ -92,13 +91,6 @@
 			if (index !== i) editingAvailableTeam[i] = false;
 		}
 	};
-
-	onMount(() => {
-		if (currentCompetition) {
-			if (currentCompetition.regulationsId !== '')
-				rules = regulationsStore.find(currentCompetition.regulationsId);
-		}
-	});
 </script>
 
 <div>
@@ -110,7 +102,7 @@
 					<TeamCard
 						{team}
 						players={playersChampionshipStore.list}
-						playersPerTeam={rules?.regulation.playersPerTeam || 2}
+						playersPerTeam={rules.regulation.playersPerTeam || 2}
 					/>
 				</span>
 				<span class="edit-team" role="none" onclick={() => editCompetingTeam(i)}>✏️</span>
@@ -125,7 +117,7 @@
 			<CompetitionEditTeam
 				{team}
 				players={playersChampionshipStore.list}
-				playersPerTeam={rules?.regulation.playersPerTeam || 2}
+				playersPerTeam={rules.regulation.playersPerTeam || 2}
 			/>
 		{/if}
 	{/each}
@@ -147,7 +139,7 @@
 					<TeamCard
 						{team}
 						players={playersChampionshipStore.list}
-						playersPerTeam={rules?.regulation.playersPerTeam || 2}
+						playersPerTeam={rules.regulation.playersPerTeam || 2}
 					/>
 				</span>
 				<span class="edit-team" role="none" onclick={() => editAvailableTeam(i)}>✏️</span>
@@ -163,7 +155,7 @@
 			<CompetitionEditTeam
 				{team}
 				players={playersChampionshipStore.list}
-				playersPerTeam={rules?.regulation.playersPerTeam || 2}
+				playersPerTeam={rules.regulation.playersPerTeam || 2}
 			/>
 		{/if}
 	{/each}

@@ -1,30 +1,16 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Regulations } from '$lib/types/regulationsType';
-	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
-	import { onMount } from 'svelte';
-
-	let rules: Regulations | undefined = $state();
+	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 	}>();
-
-	// Chargement du paramétrage de la compétition
-	onMount(() => {
-		if (currentCompetition) {
-			if (currentCompetition.regulationsId !== '')
-				rules = regulationsStore.find(currentCompetition.regulationsId);
-			if (!rules) {
-				rules = regulationsStore.new();
-				currentCompetition.regulationsId = rules.id;
-			}
-		}
-	});
+	let rules: Regulations = $state(getRules(currentCompetition));
 </script>
 
 <div>
@@ -55,7 +41,7 @@
 			{#if rules.doubleRanking}
 				<Stepper
 					label="Nombre de joueurs par équipe virtuelle"
-					bind:value={rules.playersPerFly}
+					bind:value={rules.nbPlayersForDoubleRankingTeam}
 					min={2}
 				/>
 			{/if}

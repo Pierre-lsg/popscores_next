@@ -8,7 +8,6 @@
 	import type { Regulations, Regulation } from '$lib/types/regulationsType';
 	import { individualRules } from '$lib/types/targetType';
 
-	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
@@ -19,16 +18,18 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
-	import { onMount } from 'svelte';
 	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
-	import { cloudSaveScoreCard } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import {
+		cloudSaveScoreCard,
+		getRules
+	} from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 		currentFly: Fly | undefined;
 	}>();
 
-	let rules: Regulations | undefined = $state();
+	let rules: Regulations = $state(getRules(currentCompetition));
 	let course: Course | undefined = $derived(
 		coursesChampionshipStore.find(currentCompetition.courseId)
 	);
@@ -43,14 +44,7 @@
 				.includes(p.id)
 		)
 	);
-	let regulation: Regulation = {
-		hasCrossAFixedPenalty: true,
-		malusOverPar: 4,
-		malusValue: 10,
-		teamGame: true,
-		playersPerTeam: 2,
-		usePenalizingGhost: false
-	};
+	let regulation: Regulation = $state(rules.regulation);
 	let targets: Target[] = $derived(course?.targets || []);
 	let rankedTeams = $derived(getRankedTeams(teams, targets, players, regulation));
 
@@ -139,17 +133,6 @@
 		// Modifier le status du fly
 		currentFly.status = 'validated';
 	};
-
-	onMount(() => {
-		if (currentCompetition) {
-			if (currentCompetition.regulationsId !== '')
-				rules = regulationsStore.find(currentCompetition.regulationsId);
-			if (!rules) {
-				rules = regulationsStore.new();
-				currentCompetition.regulationsId = rules.id;
-			}
-		}
-	});
 </script>
 
 <div>

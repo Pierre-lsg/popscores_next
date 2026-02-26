@@ -4,7 +4,7 @@
 	import type { Target } from '$lib/types/targetType';
 	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
-	import type { Regulation } from '$lib/types/regulationsType';
+	import type { Regulations, Regulation } from '$lib/types/regulationsType';
 
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
@@ -12,10 +12,12 @@
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 
+	import { onMount } from 'svelte';
+	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
+
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 	}>();
-
 	let course: Course | undefined = $derived(
 		coursesChampionshipStore.find(currentCompetition.courseId)
 	);
@@ -30,14 +32,8 @@
 				.includes(p.id)
 		)
 	);
-	let settings: Regulation = {
-		hasCrossAFixedPenalty: true,
-		malusOverPar: 4,
-		malusValue: 10,
-		teamGame: true,
-		playersPerTeam: 2,
-		usePenalizingGhost: false
-	};
+	let rules: Regulations = $state(getRules(currentCompetition));
+	let settings: Regulation = $derived(rules.regulation);
 
 	let targets: Target[] = $derived(course?.targets || []);
 

@@ -45,6 +45,21 @@ export const isCompetitionTeam = (competition: Competition) => {
 	return isTeamGame;
 };
 
+export const getRules = (competition: Competition): Regulations => {
+	let rules: Regulations = {} as Regulations;
+	let tmpRegulations: Regulations | undefined;
+	if (competition) {
+		if (competition.regulationsId !== '')
+			tmpRegulations = regulationsStore.find(competition.regulationsId);
+		if (!tmpRegulations) {
+			tmpRegulations = regulationsStore.new();
+			competition.regulationsId = tmpRegulations.id;
+		}
+		rules = tmpRegulations;
+	}
+	return rules;
+};
+
 export const getFilteredPlayers = (
 	allPlayers: Player[],
 	clubFilt: string,

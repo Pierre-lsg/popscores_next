@@ -794,8 +794,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id ",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "championships",
     "type": "base",
     "fields": [
@@ -879,8 +879,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "clubs",
     "type": "base",
     "fields": [
@@ -977,8 +977,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "updateRule": "@request.auth.id != \"\" || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "@request.auth.id != \"\" || @request.auth.roles ~ \"admin\"",
     "name": "competitions",
     "type": "base",
     "fields": [
@@ -1075,8 +1075,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "courses",
     "type": "base",
     "fields": [
@@ -1160,8 +1160,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "flys",
     "type": "base",
     "fields": [
@@ -1244,8 +1244,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "players",
     "type": "base",
     "fields": [
@@ -1342,8 +1342,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "regulations",
     "type": "base",
     "fields": [
@@ -1413,8 +1413,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "results",
     "type": "base",
     "fields": [
@@ -1502,16 +1502,18 @@
         "type": "autodate"
       }
     ],
-    "indexes": [],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_comp_player` ON `results` (\n  `competition`,\n  `player`\n)"
+    ],
     "system": false
   },
   {
     "id": "pbc_1224639818",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "",
+    "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "scorecards",
     "type": "base",
     "fields": [
@@ -1530,30 +1532,6 @@
         "type": "text"
       },
       {
-        "autogeneratePattern": "",
-        "hidden": false,
-        "id": "text2929936659",
-        "max": 0,
-        "min": 0,
-        "name": "reference",
-        "pattern": "",
-        "presentable": false,
-        "primaryKey": false,
-        "required": false,
-        "system": false,
-        "type": "text"
-      },
-      {
-        "hidden": false,
-        "id": "json2918445923",
-        "maxSize": 0,
-        "name": "data",
-        "presentable": false,
-        "required": false,
-        "system": false,
-        "type": "json"
-      },
-      {
         "cascadeDelete": false,
         "collectionId": "pbc_4031054395",
         "hidden": false,
@@ -1561,6 +1539,19 @@
         "maxSelect": 1,
         "minSelect": 0,
         "name": "competition",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1849212942",
+        "hidden": false,
+        "id": "relation1401586611",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "fly",
         "presentable": false,
         "required": false,
         "system": false,
@@ -1578,6 +1569,16 @@
         "required": false,
         "system": false,
         "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "json2918445923",
+        "maxSize": 0,
+        "name": "data",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
       },
       {
         "hidden": false,
@@ -1608,8 +1609,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner.id = @request.auth.id",
-    "deleteRule": "owner.id = @request.auth.id",
+    "updateRule": "owner.id = @request.auth.id || @request.auth.roles ~ \"admin\"",
+    "deleteRule": "owner.id = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "sessions",
     "type": "base",
     "fields": [
@@ -1704,8 +1705,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "targets",
     "type": "base",
     "fields": [
@@ -1789,8 +1790,8 @@
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\" ",
-    "updateRule": "owner = @request.auth.id",
-    "deleteRule": "owner = @request.auth.id",
+    "updateRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\" || @request.auth.roles ~ \"csMgr\" || @request.auth.roles ~ \"cpMgr\"",
+    "deleteRule": "owner = @request.auth.id || @request.auth.roles ~ \"admin\"",
     "name": "teams",
     "type": "base",
     "fields": [

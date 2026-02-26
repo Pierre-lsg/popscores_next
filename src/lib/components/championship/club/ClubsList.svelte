@@ -4,7 +4,7 @@
 	import ClubDisplayBox from './ClubDisplayBox.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { clubService } from '$lib/utils/pocketbase/clubs2Cloud';
-	import { cloudSaveClubs } from '$lib/utils/championship/clubsFunctions.svelete';
+	import { cloudLoadClubs, cloudSaveClubs } from '$lib/utils/championship/clubsFunctions.svelete';
 
 	import Param from '$lib/ui/Param.svelte';
 
@@ -20,8 +20,8 @@
 		teamsId: []
 	});
 	let editClub: boolean[] = $state([]);
-
 	let addNewClub: boolean = $state(false);
+	let isEditingClub: boolean = $state(false);
 
 	let clubName: string = $state('');
 	let clubDescription: string = $state('');
@@ -53,6 +53,7 @@
 			if (i !== index) editClub[i] = false;
 		}
 		editClub[index] = !editClub[index];
+		isEditingClub = editClub.some((value) => value === true);
 	};
 
 	const quickViewTeams = (club: Club) => {
@@ -91,7 +92,7 @@
 					teamsId: filteredClubs[index].teamsId
 				};
 				// Load session to the local Store
-				clubsStore.load(newClub);
+				cloudLoadClubs([newClub]);
 			}
 		}
 	};
@@ -105,35 +106,56 @@
 
 <h2>Clubs</h2>
 
-<div class="clubs-list">
-	{#each clubs as club, i}
-		<div class="club-item">
-			<div role="none" class="club-card" onclick={() => (currentClub = club.id)}>
-				<div class="details">
-					{club.name}
+{#if !isEditingClub && !addNewClub}
+	<div class="clubs-list">
+		{#each clubs as club, i}
+			<div class="club-item">
+				<div role="none" class="club-card" onclick={() => (currentClub = club.id)}>
+					<div class="details">
+						{club.name}
+					</div>
+					<div style="font-size: smaller;">{club.description.substring(0, 40) + ' ...'}</div>
+					<div class="icon">🏆</div>
 				</div>
-				<div style="font-size: smaller;">{club.description}</div>
-				<div class="icon">🏆</div>
+				<div class="action">
+					<button onclick={() => removeClub(club.id)}> 🗑️ </button>
+					<button onclick={() => editingClub(i)}>✏️</button>
+					<button onclick={() => quickViewTeams(club)}>👁️</button>
+					<button onclick={() => savingClub(club)}>☁️</button>
+				</div>
 			</div>
-			<div class="action">
-				<button onclick={() => removeClub(club.id)}> 🗑️ </button>
-				<button onclick={() => editingClub(i)}>✏️</button>
-				<button onclick={() => quickViewTeams(club)}>👁️</button>
-				<button onclick={() => savingClub(club)}>☁️</button>
-			</div>
-		</div>
-	{/each}
+		{/each}
 
-	<!-- Sans club -->
-	<div class="club-item">
-		<div role="none" class="club-card" onclick={() => (currentClub = 'no_club')}>
-			<div class="details">Sans club</div>
-			<div style="font-size: smaller;">Equipes et joueurs sans club</div>
-			<div class="icon">❓</div>
+		<!-- Sans club -->
+		<div class="club-item">
+			<div role="none" class="club-card" onclick={() => (currentClub = 'no_club')}>
+				<div class="details">Sans club</div>
+				<div style="font-size: smaller;">Equipes et joueurs sans non affiliés à un club</div>
+				<div class="icon">❓</div>
+			</div>
 		</div>
 	</div>
-</div>
 
+	{#if clubs.length === 0}
+		<p>Aucun club enregistré pour le moment. 🏆</p>
+	{/if}
+
+	<button onclick={() => (addNewClub = true)}>Ajouter un nouveau club</button>
+
+	{#if loading}
+		<h3>Clubs disponibles sur le Cloud</h3>
+		<p>Chargement ...</p>
+	{:else}
+		<h3>Clubs disponibles sur le Cloud</h3>
+		{#each filteredClubs as c, i}
+			<button onclick={() => loadClubfromCloud(i)}>
+				<div>{c.name} - {c.description?.slice(0, 30)}</div>
+			</button>
+		{/each}
+	{/if}
+{/if}
+
+<!-- Interface édition de club -->
 {#each clubs as club, i}
 	{#if editClub[i]}
 		<div class="club-form">
@@ -151,16 +173,14 @@
 				bind:value={club.description}
 				placeholder="Description du club"
 			/>
+			<div class="action">
+				<button onclick={() => editingClub(i)}>Valider</button>
+			</div>
 		</div>
 	{/if}
 {/each}
 
-{#if clubs.length === 0}
-	<p>Aucun club enregistré pour le moment. 🏆</p>
-{/if}
-
-<button onclick={() => (addNewClub = true)}>Ajouter un nouveau club</button>
-
+<!-- Interface création de club -->
 {#if addNewClub}
 	<div class="club-form">
 		<h3>Nouveau Club</h3>
@@ -177,21 +197,11 @@
 			bind:value={clubDescription}
 			placeholder="Description du club"
 		/>
-		<button onclick={createClub}>Créer</button>
-		<button onclick={() => (addNewClub = false)}>Annuler</button>
+		<div class="action">
+			<button onclick={createClub}>Créer</button>
+			<button onclick={() => (addNewClub = false)}>Annuler</button>
+		</div>
 	</div>
-{/if}
-
-<h3>Clubs disponibles sur le Cloud</h3>
-
-{#if loading}
-	<p>Chargement ...</p>
-{:else}
-	{#each filteredClubs as c, i}
-		<button onclick={() => loadClubfromCloud(i)}>
-			<div>{c.name} - {c.description?.slice(0, 30)}</div>
-		</button>
-	{/each}
 {/if}
 
 {#if showBox}
@@ -199,6 +209,12 @@
 {/if}
 
 <style>
+	.club-form {
+		border: 1px var(--primary) solid;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+	}
+
 	.clubs-list {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);

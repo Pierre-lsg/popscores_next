@@ -7,7 +7,6 @@
 	import type { RankedPlayer } from '$lib/types/playerType';
 	import type { Regulation, Regulations } from '$lib/types/regulationsType';
 
-	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
@@ -19,14 +18,17 @@
 	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
 	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { onMount } from 'svelte';
-	import { cloudSaveScoreCard } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import {
+		cloudSaveScoreCard,
+		getRules
+	} from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 		currentFly: Fly | undefined;
 	}>();
 
-	let rules: Regulations | undefined = $state();
+	let rules: Regulations = $state(getRules(currentCompetition));
 	let course: Course | undefined = $derived(
 		coursesChampionshipStore.find(currentCompetition.courseId)
 	);
@@ -117,15 +119,6 @@
 	};
 
 	onMount(() => {
-		if (currentCompetition) {
-			if (currentCompetition.regulationsId !== '')
-				rules = regulationsStore.find(currentCompetition.regulationsId);
-			if (!rules) {
-				rules = regulationsStore.new();
-				currentCompetition.regulationsId = rules.id;
-			}
-		}
-
 		initScoresPlayerOnTarget();
 		if (!isCourseEnded) if (checkAllTargetsValidated()) isCourseEnded = true;
 	});
