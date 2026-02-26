@@ -10,7 +10,7 @@
 	}
 
 	let { team, players, playersPerTeam }: Props = $props();
-	let checkTeam: string = playersPerTeam !== team.playersId.length ? 'check-team' : '';
+	let checkTeam: string = $derived(playersPerTeam !== team.playersId.length ? 'check-team' : '');
 </script>
 
 <div class={checkTeam}>

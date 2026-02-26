@@ -52,8 +52,8 @@
 	};
 
 	const engageClub = (clubId: string | undefined) => {
-		if (clubId && !currentCompetition.clubId.includes(clubId)) {
-			currentCompetition.clubId.push(clubId);
+		if (clubId && !currentCompetition.clubsId.includes(clubId)) {
+			currentCompetition.clubsId.push(clubId);
 		}
 	};
 
@@ -65,7 +65,9 @@
 				if (player.clubId === clubId) isClubStillEngaged = true;
 			}
 			if (!isClubStillEngaged) {
-				currentCompetition.clubId = currentCompetition.clubId.filter((id: string) => id !== clubId);
+				currentCompetition.clubsId = currentCompetition.clubsId.filter(
+					(id: string) => id !== clubId
+				);
 			}
 		}
 	};

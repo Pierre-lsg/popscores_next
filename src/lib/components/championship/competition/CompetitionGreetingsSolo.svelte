@@ -56,6 +56,7 @@
 
 	onMount(() => {
 		if (rules.doubleRanking) teams = teamsForDoubleRanking(currentCompetition, targets, rules);
+		console.log(currentCompetition);
 	});
 </script>
 

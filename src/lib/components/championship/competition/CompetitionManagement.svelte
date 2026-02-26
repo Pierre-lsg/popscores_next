@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Championship } from '$lib/types/championshipType';
+
 	import CompetitionSettings from './CompetitionSettings.svelte';
 	import CompetitionCourse from './CompetitionCourse.svelte';
 	import CompetitionFollowing from './CompetitionFollowing.svelte';
@@ -8,19 +9,13 @@
 	import CompetitionScoring from './CompetitionScoring.svelte';
 	import CompetitionStarting from './CompetitionStarting.svelte';
 	import CompetitionGreetings from './CompetitionGreetings.svelte';
-	import ChampionshipRanking from '../../ChampionshipRanking.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
-	import { onMount } from 'svelte';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 		championship: Championship;
 	}>();
-
-	onMount(() => {
-		// for debug
-	});
 </script>
 
 <div>
@@ -53,7 +48,7 @@
 			<CompetitionPlayers bind:currentCompetition />
 		{/if}
 		{#if currentCompetition.step === 'starting'}
-			<CompetitionStarting bind:currentCompetition />
+			<CompetitionStarting bind:currentCompetition bind:championship />
 		{/if}
 	{/if}
 

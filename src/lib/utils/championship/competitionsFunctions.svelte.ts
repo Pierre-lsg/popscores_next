@@ -102,6 +102,14 @@ export const cloudSaveCompetition = async (
 ): Promise<string> => {
 	let status: string = 'success';
 
+	// sauver la compétition
+	try {
+		competitionService.saveCompetition(competition, csId);
+	} catch (e) {
+		console.log('error', e);
+		status = 'failure';
+	}
+
 	// Lister et sauver les clubs dont les joueurs ou équipes participeraient
 	for (const clubId of competition.clubsId) {
 		const aClub: Club | undefined = clubsStore.find(clubId);
@@ -199,14 +207,6 @@ export const cloudSaveCompetition = async (
 				status = 'failure';
 			}
 		}
-	}
-
-	// sauver la compétition
-	try {
-		competitionService.saveCompetition(competition, csId);
-	} catch (e) {
-		console.log('error', e);
-		status = 'failure';
 	}
 
 	return status;

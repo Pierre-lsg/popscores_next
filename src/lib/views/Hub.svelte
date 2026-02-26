@@ -33,11 +33,11 @@
 				<p>Suivi des compétitions</p>
 			</a>
 		{:else}
-			<a class="card disabled" href="#">
+			<div class="card disabled">
 				<span class="icon">👑</span>
 				<h3>Championnat</h3>
 				<p>Suivi des compétitions</p>
-			</a>
+			</div>
 		{/if}
 
 		<a class="card" href={base + '/history'}>

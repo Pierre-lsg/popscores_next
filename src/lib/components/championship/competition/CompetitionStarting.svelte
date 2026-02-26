@@ -1,18 +1,24 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Regulations } from '$lib/types/regulationsType';
+	import type { Championship } from '$lib/types/championshipType';
 	import type { Fly } from '$lib/types/flyType';
+
 	import { shuffle } from '$lib/utils/sharedFunction';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { cloudSaveCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
+
 	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
-	import Selector from '$lib/ui/Selector.svelte';
 
-	let { currentCompetition = $bindable() } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
+		championship: Championship;
 	}>();
 
 	let rules: Regulations = $state(getRules(currentCompetition));
@@ -24,10 +30,23 @@
 	let newIdFly: string = $state('');
 	let editingFly: boolean[] = $state([]);
 
-	const startCompetition = () => {
+	const startCompetition = async () => {
 		if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
 			currentCompetition.status = 'in_progress';
 			currentCompetition.step = 'welcome';
+			// mettre à jour dans le Cloud la compétition et ses éléments dans le Cloud
+			let status = await cloudSaveCompetition(currentCompetition, championship.id);
+
+			switch (status) {
+				case 'success':
+					toastStore.show('💾 Compétition mise à jour ...', 'success');
+					break;
+				case 'failure':
+					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+					break;
+				default:
+					toastStore.show('💾 Enregsistrement en cours ...', 'failure');
+			}
 		}
 	};
 

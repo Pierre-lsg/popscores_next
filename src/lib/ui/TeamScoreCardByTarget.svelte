@@ -34,7 +34,7 @@
 </script>
 
 <div class="scorecard">
-	<div class="action">
+	<div class="sc-action">
 		<span role="none" onclick={() => exportAsImage('TSCBT-capture')}>📸</span>&nbsp;&nbsp;
 		<span role="none" onclick={() => exportTSCToCSV(rankedTeams, targets, players, settings)}
 			>📁</span

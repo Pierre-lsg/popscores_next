@@ -7,6 +7,7 @@
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { smartSort } from '$lib/utils/sharedFunction';
 	import { onMount } from 'svelte';
 	import type { Championship } from '$lib/types/championshipType';
 
@@ -104,13 +105,13 @@
 <h2>Compétitions</h2>
 {#if !addNewCompetition}
 	<div class="competitions-list">
-		{#each competitions as competition, i}
+		{#each smartSort(competitions, 'startDate') as competition, i}
 			<div class="competition-item">
 				<div role="none" class="competition-card" onclick={() => loadingCompetition(competition)}>
 					<div class="details">
 						{competition.name}
 					</div>
-					<div>{competition.startDate}</div>
+					<div>{competition.startDate.split('-').reverse().join('/')}</div>
 					<div class="icon">🏆</div>
 				</div>
 				<div class="action">

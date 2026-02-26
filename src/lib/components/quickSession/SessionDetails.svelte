@@ -9,7 +9,6 @@
 	let {
 		players,
 		targets,
-		teams,
 		settings
 	}: { players: Player[]; targets: Target[]; teams: Team[]; settings: SessionSettings } = $props<{
 		players: Player[];

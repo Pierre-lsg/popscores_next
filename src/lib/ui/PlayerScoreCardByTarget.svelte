@@ -19,7 +19,7 @@
 </script>
 
 <div class="scorecard">
-	<div class="action">
+	<div class="sc-action">
 		<span role="none" onclick={() => exportAsImage('PSCBT-capture')}>📸</span>&nbsp;&nbsp;
 		<span role="none" onclick={() => exportPSCToCSV(rankedPlayers, targets)}>📁</span>
 	</div>
