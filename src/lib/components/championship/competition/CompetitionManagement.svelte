@@ -9,6 +9,7 @@
 	import CompetitionScoring from './CompetitionScoring.svelte';
 	import CompetitionStarting from './CompetitionStarting.svelte';
 	import CompetitionGreetings from './CompetitionGreetings.svelte';
+	import CompetitionSummary from './CompetitionSummary.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 
@@ -21,10 +22,10 @@
 <div>
 	{#if currentCompetition.step === 'welcome'}
 		<CompetitionMenu bind:currentCompetition />
-		<h2>Suivi d'une compétition</h2>
-		<p>Gestion de la compétition sélectionnée : {currentCompetition.name}</p>
+		<h2>Suivi de la compétition</h2>
+		<h3>{currentCompetition.name}</h3>
 		{#if currentCompetition.status === 'setup'}
-			Veuillez définir les paramètres de la compétition
+			<CompetitionSummary bind:currentCompetition bind:championship />
 		{/if}
 		{#if currentCompetition.status === 'in_progress'}
 			Compétition en cours. Vous pouvez saisir les scores, observer le déroulement ou récupérer les
@@ -33,8 +34,6 @@
 		{#if currentCompetition.status === 'finished'}
 			Compétition en terminé. Calculons le podium
 		{/if}
-
-		<p>Que voulez-vous faire ?</p>
 	{/if}
 
 	{#if currentCompetition.status === 'setup'}

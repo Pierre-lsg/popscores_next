@@ -194,6 +194,9 @@
 		<button onclick={() => calculateFlys()}>Calculer les flys</button>
 	{/if}
 
+	<p>Voir le résumé</p>
+	<p>Composant CompetitionSummary à masquer par défaut</p>
+
 	{#if flys.length > 0}
 		<button onclick={startCompetition} class="subnav"> Lancer la compétition </button>
 	{/if}

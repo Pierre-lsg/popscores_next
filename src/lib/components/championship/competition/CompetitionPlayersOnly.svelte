@@ -32,6 +32,15 @@
 	let filteredPlayers: Player[] = $derived(
 		getFilteredPlayers(availablePlayers, clubFilter, nameFilter)
 	);
+	let clubsRecord: Record<string, string> = $derived(
+		Object.fromEntries(clubsStore.list.map((club) => [club.id, club.name]))
+	);
+
+	const getClubName = (clubId: string): string => {
+		const aClub = clubsRecord[clubId];
+		if (aClub) return aClub;
+		else return '';
+	};
 
 	const engagePlayer = (index: number) => {
 		currentCompetition.playersId.push(filteredPlayers[index].id);
@@ -49,6 +58,7 @@
 	const addPlayer = () => {
 		playersChampionshipStore.add(newPlayersName, '', '', newPlayersClub);
 		engageClub(newPlayersClub);
+		newPlayersName = newPlayersClub = '';
 	};
 
 	const engageClub = (clubId: string | undefined) => {
@@ -79,7 +89,7 @@
 	{#if competitionPlayers.length > 0}
 		{#each competitionPlayers as player, i}
 			<div role="none" onclick={() => disengagePlayer(i)} class="selectable-item">
-				{player.name}
+				{player.name} - ({getClubName(player.clubId || '')})
 			</div>
 		{/each}
 	{:else}
@@ -99,7 +109,7 @@
 	{#if filteredPlayers.length > 0}
 		{#each filteredPlayers as player, i}
 			<div role="none" onclick={() => engagePlayer(i)} class="selectable-item">
-				{player.name}
+				{player.name} - ({getClubName(player.clubId || '')})
 			</div>
 		{/each}
 	{:else}
