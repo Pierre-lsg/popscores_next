@@ -39,6 +39,12 @@
 		team.playersId.push(playerId);
 		isSelectVisible = false;
 	};
+
+	const displayPlayer = (playerId: string) => {
+		const player = clubPlayers.find((p: Player) => p.id === playerId);
+		if (player) return player.name;
+		else return '???';
+	};
 </script>
 
 <div class="team-form">
@@ -66,7 +72,7 @@
 
 	{#each team.playersId as playerId (playerId)}
 		<div class="team-players">
-			<div>{clubPlayers.find((p: Player) => p.id === playerId).name}</div>
+			<div>{displayPlayer(playerId)}</div>
 			<button class="btn-delete-small" onclick={() => removePlayer(playerId)}>X</button>
 		</div>
 	{/each}

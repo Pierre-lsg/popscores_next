@@ -9,7 +9,7 @@
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
-	import { userService } from '$lib/utils/pocketbase/users2Cloud';
+	import { getSupervisors } from '$lib/utils/championship/championshipFunctions.svelte';
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/types/userType';
 
@@ -54,34 +54,13 @@
 		else return '';
 	};
 
-	onMount(() => {
-		if (!currentCompetition.playersId) currentCompetition.playersId = [];
-		if (!currentCompetition.teamsId) currentCompetition.teamsId = [];
-		if (!currentCompetition.flysId) currentCompetition.flysId = [];
-
+	onMount(async () => {
 		// check all flys
 		allFlysCompleted = flys.every((fly) => fly.status === 'validated');
 
 		// Retrieve all the marshalls
-		getSupervisors();
+		supervisors = await getSupervisors();
 	});
-
-	const getSupervisors = async () => {
-		let users: any = await userService.getByRole('marshall');
-
-		if (Array.isArray(users)) {
-			users.forEach((u) =>
-				supervisors.push({
-					id: u.id,
-					email: '',
-					emailVisibility: false,
-					verified: true,
-					name: u.name,
-					roles: []
-				})
-			);
-		}
-	};
 </script>
 
 <div>
@@ -115,13 +94,6 @@
 			</div>
 		{/each}
 	</div>
-
-	<h3>En organisateur</h3>
-	<p>Lister l'ensemble des flys et afficher la carte de score</p>
-	<p>Permettre d'import de carte depuis le Cloud</p>
-	<p>Controle de l'état de chaque carte</p>
-	<p>Si toutes les cartes validées par les responsables de fly</p>
-	<p>--> Validation de la compétition</p>
 
 	{#if allFlysCompleted}
 		<button onclick={validating} class="subnav"> Valider l'ensemble des cartes </button>

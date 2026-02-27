@@ -41,8 +41,9 @@
 	let filteredTeams: Team[] = $derived(getFilteredTeams(availableTeams, clubFilter, nameFilter));
 
 	const engageTeam = (index: number) => {
+		const clubId = filteredTeams[index].clubId;
 		currentCompetition.teamsId.push(filteredTeams[index].id);
-		engageClub(filteredTeams[index].clubId);
+		engageClub(clubId);
 	};
 
 	const disengageTeam = (index: number) => {

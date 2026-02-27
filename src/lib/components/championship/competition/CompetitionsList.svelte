@@ -112,7 +112,7 @@
 						{competition.name}
 					</div>
 					<div>{competition.startDate.split('-').reverse().join('/')}</div>
-					<div class="icon">🏆</div>
+					<div class="icon">⛳</div>
 				</div>
 				<div class="action">
 					<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
