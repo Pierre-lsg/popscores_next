@@ -2,7 +2,7 @@
 	import type { Competition } from '$lib/types/competitionType';
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
-	import { cloudSaveCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import { cloudSaveAllCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
@@ -17,7 +17,10 @@
 	}>();
 
 	let competitions = $derived<Competition[]>(
-		competitionsStore.list.filter((c) => championship.competitionsId.includes(c.id))
+		smartSort(
+			competitionsStore.list.filter((c) => championship.competitionsId.includes(c.id)),
+			'startDate'
+		)
 	);
 	let editCompetition: boolean[] = $state([]);
 	let isEditingCompetition: boolean = $state(false);
@@ -69,7 +72,7 @@
 	};
 
 	const savingCompetition = async (competition: Competition) => {
-		let status = await cloudSaveCompetition(competition, championship.id);
+		let status = await cloudSaveAllCompetition(competition, championship.id);
 
 		switch (status) {
 			case 'success':
@@ -105,7 +108,7 @@
 <h2>Compétitions</h2>
 {#if !addNewCompetition}
 	<div class="competitions-list">
-		{#each smartSort(competitions, 'startDate') as competition, i}
+		{#each competitions as competition, i}
 			<div class="competition-item">
 				<div role="none" class="competition-card" onclick={() => loadingCompetition(competition)}>
 					<div class="details">

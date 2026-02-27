@@ -8,7 +8,7 @@
 	import { shuffle } from '$lib/utils/sharedFunction';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { getSupervisors } from '$lib/utils/championship/championshipFunctions.svelte';
-	import { cloudSaveCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import { cloudSaveAllCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
@@ -18,6 +18,7 @@
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { onMount } from 'svelte';
+	import CompetitionSummaryBox from './CompetitionSummaryBox.svelte';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -35,13 +36,14 @@
 
 	let supervisors: User[] = $state([]);
 	let isAttachingSupervisor: boolean[] = $state([]);
+	let showBox: boolean = $state(false);
 
 	const startCompetition = async () => {
 		if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
 			currentCompetition.status = 'in_progress';
 			currentCompetition.step = 'welcome';
 			// mettre à jour dans le Cloud la compétition et ses éléments dans le Cloud
-			let status = await cloudSaveCompetition(currentCompetition, championship.id);
+			let status = await cloudSaveAllCompetition(currentCompetition, championship.id);
 
 			switch (status) {
 				case 'success':
@@ -149,11 +151,13 @@
 
 <svelte:window
 	onclick={(e) => {
-		console.log(e);
-		// Si le menu est ouvert et que l'élément cliqué n'est pas dans notre sélecteur
-		/*		if (isOpen && !e.target.closest('.supervisor-wrapper')) {
-			isOpen = false;
-		}*/
+		// Si le menu de recherche de marshall est ouvert, le fermer
+
+		if (isAttachingSupervisor.some((value) => value === true)) {
+			if (e.target && !(e.target as Element).closest('.supervisor-wrapper')) {
+				isAttachingSupervisor.fill(false);
+			}
+		}
 	}}
 />
 
@@ -241,11 +245,14 @@
 		<button onclick={() => calculateFlys()}>Calculer les flys</button>
 	{/if}
 
-	<p>Voir le résumé</p>
-	<p>Composant CompetitionSummary à masquer par défaut</p>
+	<button onclick={() => (showBox = true)}>Voir le résumé</button>
+
+	{#if showBox}
+		<CompetitionSummaryBox {currentCompetition} {championship} bind:showBox />
+	{/if}
 
 	{#if flys.length > 0}
-		<button onclick={startCompetition} class="subnav"> Lancer la compétition </button>
+		<button onclick={startCompetition}> Lancer la compétition </button>
 	{/if}
 
 	<p>Une fois la compétition lancée les flys ne peuvent etre modifié</p>
@@ -257,7 +264,7 @@
 
 <style>
 	.supervisor-wrapper {
-		border: red 2px solid;
+		display: inherit;
 	}
 
 	.fly {

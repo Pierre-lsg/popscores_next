@@ -10,9 +10,8 @@
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
-	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 
-	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
+	let { currentCompetition, championship } = $props<{
 		currentCompetition: Competition | undefined;
 		championship: Championship;
 	}>();
@@ -27,11 +26,10 @@
 	);
 	let courseCompetition = $derived(coursesChampionshipStore.find(currentCompetition.courseId));
 
-	let rules: Regulations = $state(getRules(currentCompetition));
+	let rules: Regulations = $derived(getRules(currentCompetition));
 </script>
 
 <div>
-	<CompetitionMenu bind:currentCompetition />
 	{#if currentCompetition}
 		<h3>Date / Lieu</h3>
 		<p>{currentCompetition.startDate} / {currentCompetition.location}</p>

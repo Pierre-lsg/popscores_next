@@ -96,6 +96,46 @@ export const getFilteredTeams = (allTeams: Team[], clubFilt: string, teamFilt: S
 	return tempFilteredList;
 };
 
+export const cloudSaveAllCompetition = async (
+	competition: Competition,
+	csId: string
+): Promise<string> => {
+	let status: string = 'success';
+
+	status = await cloudSaveCompetition(competition, csId);
+	console.log('Save competition : ' + status);
+
+	// Lister et sauver les clubs dont les joueurs ou équipes participeraient
+	status = await cloudSaveClubs(competition.clubsId);
+	console.log('Save clubs : ' + status);
+
+	// Lister et sauver les équipes
+	status = await cloudSaveTeams(competition.teamsId);
+	console.log('Save teams : ' + status);
+
+	// Lister et sauver les joueurs
+	status = await cloudSavePlayers(competition.playersId);
+	console.log('Save players : ' + status);
+
+	// Lister et sauver les flys
+	status = await cloudSaveFlys(competition.flysId);
+	console.log('Save players : ' + status);
+
+	// Sauver le règlement associé s'il existe
+	status = await cloudSaveRegulations(competition.regulationsId);
+	console.log('Save regulation : ' + status);
+
+	// Sauver le parcours associé et ses cibles s'il existe
+	status = await cloudSaveCourseAndTargets(competition.courseId);
+	console.log('Save course : ' + status);
+
+	// Sauver les résultats de la compétition
+	status = await cloudSaveResults(competition.id);
+	console.log('Save Results : ' + status);
+
+	return status;
+};
+
 export const cloudSaveCompetition = async (
 	competition: Competition,
 	csId: string
@@ -109,9 +149,13 @@ export const cloudSaveCompetition = async (
 		console.log('error', e);
 		status = 'failure';
 	}
+	return status;
+};
 
-	// Lister et sauver les clubs dont les joueurs ou équipes participeraient
-	for (const clubId of competition.clubsId) {
+export const cloudSaveClubs = async (clubsId: string[]): Promise<string> => {
+	let status: string = 'success';
+
+	for (const clubId of clubsId) {
 		const aClub: Club | undefined = clubsStore.find(clubId);
 		if (aClub) {
 			try {
@@ -122,9 +166,13 @@ export const cloudSaveCompetition = async (
 			}
 		}
 	}
+	return status;
+};
 
-	// Lister et sauver les équipes
-	for (const teamId of competition.teamsId) {
+export const cloudSaveTeams = async (teamsId: string[]): Promise<string> => {
+	let status: string = 'success';
+
+	for (const teamId of teamsId) {
 		const aTeam: Team | undefined = teamsChampionshipStore.find(teamId);
 		if (aTeam) {
 			try {
@@ -135,9 +183,13 @@ export const cloudSaveCompetition = async (
 			}
 		}
 	}
+	return status;
+};
 
-	// Lister et sauver les joueurs
-	for (const playerId of competition.playersId) {
+export const cloudSavePlayers = async (playersId: string[]): Promise<string> => {
+	let status: string = 'success';
+
+	for (const playerId of playersId) {
 		const aPlayer: Player | undefined = playersChampionshipStore.find(playerId);
 		if (aPlayer) {
 			try {
@@ -148,9 +200,13 @@ export const cloudSaveCompetition = async (
 			}
 		}
 	}
+	return status;
+};
 
-	// Lister et sauver les flys
-	for (const flyId of competition.flysId) {
+export const cloudSaveFlys = async (flysId: string[]): Promise<string> => {
+	let status: string = 'success';
+
+	for (const flyId of flysId) {
 		const aFly: Fly | undefined = flysChampionshipStore.find(flyId);
 		if (aFly) {
 			try {
@@ -161,10 +217,14 @@ export const cloudSaveCompetition = async (
 			}
 		}
 	}
+	return status;
+};
 
-	// Sauver le règlement associé s'il existe
-	if (competition.regulationsId && competition.regulationsId !== '') {
-		const aRegulation: Regulations | undefined = regulationsStore.find(competition.regulationsId);
+export const cloudSaveRegulations = async (regulationsId: string): Promise<string> => {
+	let status: string = 'success';
+
+	if (regulationsId !== '') {
+		const aRegulation: Regulations | undefined = regulationsStore.find(regulationsId);
 		if (aRegulation) {
 			try {
 				regulationService.saveRegulation(aRegulation);
@@ -174,10 +234,14 @@ export const cloudSaveCompetition = async (
 			}
 		}
 	}
+	return status;
+};
 
-	// Sauver le parcours associé s'il existe
-	if (competition.courseId && competition.courseId !== '') {
-		const aCourse: Course | undefined = coursesChampionshipStore.find(competition.courseId);
+export const cloudSaveCourseAndTargets = async (courseId: string): Promise<string> => {
+	let status: string = 'success';
+
+	if (courseId !== '') {
+		const aCourse: Course | undefined = coursesChampionshipStore.find(courseId);
 		if (aCourse) {
 			try {
 				courseService.saveCourse(aCourse);
@@ -194,17 +258,103 @@ export const cloudSaveCompetition = async (
 				status = 'failure';
 			}
 		}
+	}
+	return status;
+};
 
-		// Sauver les résultats de la compétition
-		const results = resultsCompetitionStore.list.filter(
-			(result) => result.competitionId === competition.id
-		);
-		if (results) {
-			try {
-				resultService.saveResults(results);
-			} catch (e) {
-				console.log('error', e);
-				status = 'failure';
+export const cloudSaveResults = async (competitionId: string): Promise<string> => {
+	let status: string = 'success';
+
+	const results = resultsCompetitionStore.list.filter(
+		(result) => result.competitionId === competitionId
+	);
+	if (results) {
+		try {
+			resultService.saveResults(results);
+		} catch (e) {
+			console.log('error', e);
+			status = 'failure';
+		}
+	}
+	return status;
+};
+
+export const cloudLoadCompetitionsChampionship = async (csId: string): Promise<string> => {
+	let status: string = 'success';
+
+	// Charger l'ensemble des compétitions
+	let tmpCompetitions = await competitionService.getCompetitionsByChampionship(csId);
+
+	for (const aCompetition of tmpCompetitions) {
+		competitionsStore.remove(aCompetition.id);
+		competitionsStore.load(aCompetition);
+
+		// Charger le règlement
+		if (aCompetition.regulationsId && aCompetition.regulationsId !== '') {
+			cloudLoadRegulations(aCompetition.regulationsId);
+		}
+
+		// Charger le parcours
+		if (aCompetition.courseId && aCompetition.courseId !== '') {
+			cloudLoadCourse(aCompetition.courseId);
+		}
+
+		// Charger les clubs liés à la compétition
+		cloudLoadClubs(aCompetition.clubsId);
+
+		// Charger les équipes liés à la compétition
+		if (isCompetitionTeam(aCompetition)) cloudLoadTeams(aCompetition.teamsId, aCompetition.id);
+		else cloudLoadPlayersCompetition(aCompetition.playersId, aCompetition.id);
+
+		// Charger les flys
+		cloudLoadFlys(aCompetition.flysId);
+	}
+
+	return status;
+};
+
+export const cloudLoadCurrentCompetitionForSupervisor = async (
+	csId: string,
+	userId: string
+): Promise<string> => {
+	let status: string = 'success';
+
+	// Charger la compétition
+	// Todo : tests en amont pour savoir s'il est nécessaire de charger
+	let tmpCompetitions = await competitionService.getCompetitionsByChampionship(csId);
+	const today = new Date().toISOString().slice(0, 10);
+	tmpCompetitions = tmpCompetitions.filter((t) => t.startDate === today);
+
+	for (const aCompetition of tmpCompetitions) {
+		competitionsStore.remove(aCompetition.id);
+		competitionsStore.load(aCompetition);
+
+		// Charger le règlement
+		if (aCompetition.regulationsId && aCompetition.regulationsId !== '') {
+			cloudLoadRegulations(aCompetition.regulationsId);
+		}
+
+		// Charger le parcours
+		if (aCompetition.courseId && aCompetition.courseId !== '') {
+			cloudLoadCourse(aCompetition.courseId);
+		}
+
+		// Charger les flys du superviseur
+		for (let flyId of aCompetition.flysId) {
+			let aFly = await flyService.getFlyById(flyId);
+			if (aFly && aFly.supervisorId === userId) {
+				flysChampionshipStore.remove(aFly.id);
+				flysChampionshipStore.load(aFly);
+
+				// Charger les clubs liés à la compétition
+				cloudLoadClubs(aCompetition.clubsId);
+
+				// Charger les équipes liés à la compétition
+				if (isCompetitionTeam(aCompetition)) {
+					cloudLoadTeams(aFly.teamsId, aCompetition.id);
+				} else {
+					cloudLoadPlayersCompetition(aFly.playersId, aCompetition.id);
+				}
 			}
 		}
 	}
@@ -212,88 +362,82 @@ export const cloudSaveCompetition = async (
 	return status;
 };
 
-export const cloudLoadCurrentCompetition = async (csId: string): Promise<string> => {
-	let status: string = 'success';
+export const cloudLoadRegulations = async (regulationsId: string) => {
+	const aRegulation = await regulationService.getRegulationById(regulationsId);
+	if (aRegulation) {
+		regulationsStore.remove(aRegulation.id);
+		regulationsStore.load(aRegulation);
+	}
+};
 
-	console.log('championship', csId);
-	// Charger la compétition
-	// Pour l'instant toutes les compétitions mais todo restreindre à la seule en cours
-	const tmpCompetitions = await competitionService.getCompetitionsByChampionship(csId);
-	console.log('tmpCompetitions', tmpCompetitions);
-	for (const aCompetition of tmpCompetitions) {
-		// Todo : si version plus récente
-		competitionsStore.remove(aCompetition.id);
-		competitionsStore.load(aCompetition);
+export const cloudLoadCourse = async (courseId: string) => {
+	const aCourse = await courseService.getCourseById(courseId);
+	if (aCourse) {
+		coursesChampionshipStore.remove(aCourse.id);
+		coursesChampionshipStore.load(aCourse);
 
-		// Charger les clubs liés à la compétition
-		for (let clubId of aCompetition.clubsId) {
-			const aClub = await clubService.getClubById(clubId);
-			if (aClub) {
-				clubsStore.remove(aClub.id);
-				clubsStore.load(aClub);
-			}
+		// Charger les cibles du parcours
+		for (let aTarget of aCourse.targets) {
+			targetsChampionshipStore.remove(aTarget.id);
+			targetsChampionshipStore.load(aTarget);
 		}
+	}
+};
 
-		// Charger les équipes liés à la compétition
-		for (let teamId of aCompetition.teamsId) {
-			const aTeam = await teamService.getTeamById(teamId);
-			if (aTeam) {
-				teamsChampionshipStore.remove(aTeam.id);
-				teamsChampionshipStore.load(aTeam);
-			}
+export const cloudLoadClubs = async (clubsId: string[]) => {
+	for (let clubId of clubsId) {
+		const aClub = await clubService.getClubById(clubId);
+		if (aClub) {
+			clubsStore.remove(aClub.id);
+			clubsStore.load(aClub);
 		}
+	}
+};
 
-		// Charger les joueurs liés à la compétition
-		for (let playerId of aCompetition.playersId) {
-			const aPlayer = await playerService.getPlayerById(playerId);
-			if (aPlayer) {
-				playersChampionshipStore.remove(aPlayer.id);
-				playersChampionshipStore.load(aPlayer);
-			}
-		}
-
-		// Charger les flys
-		for (let flyId of aCompetition.flysId) {
-			const aFly = await flyService.getFlyById(flyId);
-			if (aFly) {
-				flysChampionshipStore.remove(aFly.id);
-				flysChampionshipStore.load(aFly);
-			}
-		}
-
-		// Charger le règlement
-		if (aCompetition.regulationsId && aCompetition.regulationsId !== '') {
-			const aRegulation = await regulationService.getRegulationById(aCompetition.regulationsId);
-			if (aRegulation) {
-				regulationsStore.remove(aRegulation.id);
-				regulationsStore.load(aRegulation);
-			}
-		}
-
-		// Charger le parcours
-		if (aCompetition.courseId && aCompetition.courseId !== '') {
-			const aCourse = await courseService.getCourseById(aCompetition.courseId);
-			if (aCourse) {
-				coursesChampionshipStore.remove(aCourse.id);
-				coursesChampionshipStore.load(aCourse);
-
-				// Charger les cibles du parcours
-				for (let aTarget of aCourse.targets) {
-					targetsChampionshipStore.remove(aTarget.id);
-					targetsChampionshipStore.load(aTarget);
-				}
-			}
+export const cloudLoadPlayersCompetition = async (playersId: string[], competitionId: string) => {
+	for (let playerId of playersId) {
+		const aPlayer = await playerService.getPlayerById(playerId);
+		if (aPlayer) {
+			playersChampionshipStore.remove(aPlayer.id);
+			playersChampionshipStore.load(aPlayer);
 		}
 
 		// Charger les résultats enregistrés
-		const results: Result[] = await resultService.getResultsByCompetition(aCompetition.id);
-		for (let aResult of results) {
-			resultsCompetitionStore.remove(aResult.competitionId, aResult.playerId);
-			resultsCompetitionStore.load(aResult);
+		cloudLoadResults(aPlayer.id, competitionId);
+	}
+};
+
+export const cloudLoadResults = async (playerId: string, competitionId: string) => {
+	const results: Result[] = await resultService.getResultsByCompetitionAndPlayer(
+		competitionId,
+		playerId
+	);
+	for (let aResult of results) {
+		resultsCompetitionStore.remove(aResult.competitionId, aResult.playerId);
+		resultsCompetitionStore.load(aResult);
+	}
+};
+
+export const cloudLoadTeams = async (teamsId: string[], competitionId: string) => {
+	for (let teamId of teamsId) {
+		const aTeam = await teamService.getTeamById(teamId);
+		if (aTeam) {
+			teamsChampionshipStore.remove(aTeam.id);
+			teamsChampionshipStore.load(aTeam);
+		}
+
+		cloudLoadPlayersCompetition(aTeam.playersId, competitionId);
+	}
+};
+
+export const cloudLoadFlys = async (flysId: string[]) => {
+	for (let flyId of flysId) {
+		let aFly = await flyService.getFlyById(flyId);
+		if (aFly) {
+			flysChampionshipStore.remove(aFly.id);
+			flysChampionshipStore.load(aFly);
 		}
 	}
-
-	return status;
 };
 
 export const cloudSaveScoreCard = async (
@@ -359,12 +503,10 @@ export const teamsForDoubleRanking = (
 			// Si suffisament de compétiteurs pour former une équipe
 			if (playersClubCompetition.length >= rules.nbPlayersForDoubleRankingTeam) {
 				// Créer une équipe avec les meilleurs compétiteurs
-				let team: Team = { id: '', name: '', playersId: [] };
-				team.name = clubName;
+				let team: Team = { id: '', name: clubName, playersId: [], clubId: clubId };
 				for (let i = 0; i < rules.nbPlayersForDoubleRankingTeam; i++) {
 					team.playersId.push(playersClubCompetition[i].id);
 				}
-				team.clubId = clubId;
 				teams.push(team);
 			}
 		}

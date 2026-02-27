@@ -9,7 +9,6 @@
 
 	import { getFilteredTeams } from '$lib/utils/championship/competitionsFunctions.svelte';
 
-	import { onMount } from 'svelte';
 	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';

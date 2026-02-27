@@ -14,6 +14,13 @@ export const resultService = {
 		return results.map((result) => result.data) as Result[];
 	},
 
+	getResultsByCompetitionAndPlayer: async (competitionId: string, playerId: string) => {
+		const results = await db.getFullList('results', {
+			filter: `competition="${competitionId}" && player="${playerId}"`
+		});
+		return results.map((result) => result.data) as Result[];
+	},
+
 	saveResult: (aResult: Result) => {
 		const resultToSave = {
 			competition: aResult.competitionId,

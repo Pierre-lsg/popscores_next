@@ -15,7 +15,7 @@
 	import { onMount } from 'svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
 	import {
-		cloudLoadCurrentCompetition,
+		cloudLoadCurrentCompetitionForSupervisor,
 		isCompetitionTeam
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
@@ -47,8 +47,8 @@
 	};
 
 	const loadCompetition = async () => {
-		if (confirm('Voulez-vous mettre à jour la compétition ?'))
-			cloudLoadCurrentCompetition(championshipId);
+		if ($user && confirm('Voulez-vous mettre à jour la compétition ?'))
+			cloudLoadCurrentCompetitionForSupervisor(championshipId, $user.id);
 
 		// load all the competitions elements
 	};
@@ -73,7 +73,7 @@
 	<p>Mode 'superviseur'</p>
 	{#if flys.length === 0}
 		<p>Aucun fly n'est à surveiller ...</p>
-	{:else if flys.length === 1 || currentFly}
+	{:else if flys.length === 1 && currentFly}
 		{#if isCompetitionTeam(currentCompetition)}
 			<CompetitionScoringEditTeams bind:currentCompetition bind:currentFly />
 		{:else}

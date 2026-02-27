@@ -47,7 +47,7 @@
 			let targets: Target[] = [];
 			let regulations: Regulations | undefined;
 			let regulation: Regulation | undefined;
-			if (competition && competition.courseId)
+			if (competition && competition.courseId !== '')
 				course = coursesChampionshipStore.find(competition.courseId);
 			if (course) targets = targetsChampionshipStore.list.filter((t) => course.targets);
 			if (competition && competition.regulationsId)

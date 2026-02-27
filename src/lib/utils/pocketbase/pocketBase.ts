@@ -66,20 +66,17 @@ export const db = {
 		try {
 			// Désactiver l'auto-annulation
 			const options = { requestKey: null };
+			const filter = `id="${data.id}"`;
 
-			// 1. On tente de récupérer l'enregistrement existant
-			let existing = null;
-			try {
-				existing = await pb
-					.collection(collectionName)
-					.getOne(data.id, options)
-					.catch(() => null);
-			} catch (e) {
-				// Si getOne échoue, c'est généralement un 404 (n'existe pas)
-				existing = null;
-			}
+			// 1. Recherche de l'enregistrement existant avec ce filtre
+			const existingItem = await pb.collection(collectionName).getList(1, 1, {
+				filter: filter,
+				...options
+			});
 
-			// 2. Décision : Update si présent, Create si absent
+			const existing = existingItem.items[0];
+
+			// 2. Décision : Update (si trouvé) ou Create (si absent)
 			if (existing) {
 				return await pb.collection(collectionName).update(data.id, data, options);
 			} else {
