@@ -13,9 +13,25 @@ export const championshipService = {
 			season: aChampionship.data.season,
 			location: aChampionship.data.location,
 			competitionsId: aChampionship.data.competitionsId,
-			individualScale: aChampionship.idvScale.id,
-			collectiveScale: aChampionship.cltScale.id
+			individualScale: aChampionship.data.individualScale.id,
+			collectiveScale: aChampionship.data.collectiveScale.id,
+			rankingClubs: aChampionship.data.rankingClubs,
+			rankingPlayers: aChampionship.data.rankingPlayers,
+			status: aChampionship.data.status
 		})) as Championship[];
+	},
+
+	getAllChampionshipsScales: async () => {
+		const championships = await db.getFullList('championships', { sort: 'created' });
+		let scales: MarkedPointScale[] = [];
+		if (Array.isArray(championships)) {
+			championships.forEach((aChampionship) => {
+				if (aChampionship.data.individualScale) scales.push(aChampionship.data.individualScale);
+				if (aChampionship.data.collectiveScale) scales.push(aChampionship.data.collectiveScale);
+			});
+		}
+
+		return scales;
 	},
 
 	getByChampionshipId: (id: string) => db.getOne('championships', id, {}),
@@ -32,7 +48,10 @@ export const championshipService = {
 			location: aChampionShip.location,
 			competitionsId: aChampionShip.competitionsId,
 			individualScale: idvScale,
-			collectiveScale: cltScale
+			collectiveScale: cltScale,
+			rankingClubs: aChampionShip.rankingClubs,
+			rankingPlayers: aChampionShip.rankingPlayers,
+			status: aChampionShip.status
 		};
 		const championshipToSave = {
 			id: aChampionShip.id,

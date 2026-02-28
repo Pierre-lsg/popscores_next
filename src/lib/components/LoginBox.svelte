@@ -13,6 +13,9 @@
 	let password: string = $state('');
 
 	const login = async () => {
+		if (username && !username.includes('@')) {
+			username += '@obip.fr';
+		}
 		try {
 			const authData = await pb.collection('users').authWithPassword(username, password);
 			console.log('Connecté en tant que : ', pb.authStore.record?.email);

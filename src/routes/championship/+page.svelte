@@ -17,42 +17,10 @@
 	let loading: boolean = $state(true);
 	let selectedChampionshipId: string = $state('');
 
-	onMount(() => {
-		securityCheck();
-
-		listCloudChampionship();
-	});
-
 	const listCloudChampionship = async () => {
-		let tmpCloudChamp = await championshipService.getAll();
-		if (Array.isArray(tmpCloudChamp)) {
-			tmpCloudChamp.forEach((championship) => {
-				const c = championship.data;
-				cloudChampionships.push({
-					id: c.id,
-					name: c.name,
-					season: c.season,
-					location: c.location,
-					competitionsId: c.competitionsId,
-					individualScale: c.individualScale.id,
-					collectiveScale: c.collectiveScale.id,
-					rankingClubs: c.rankingClubs,
-					rankingPlayers: c.rankingPlayers
-				});
-				cloudScale.push({
-					id: c.individualScale.id,
-					name: c.individualScale.name,
-					isIndividual: true,
-					points: c.individualScale.points
-				});
-				cloudScale.push({
-					id: c.collectiveScale.id,
-					name: c.collectiveScale.name,
-					isIndividual: false,
-					points: c.collectiveScale.points
-				});
-			});
-		}
+		cloudChampionships = await championshipService.getAllChampionships();
+		cloudScale = await championshipService.getAllChampionshipsScales();
+
 		loading = false;
 	};
 
@@ -76,6 +44,11 @@
 	const addNewChampionship = () => {
 		currentChampionship = championshipStore.new();
 	};
+
+	onMount(() => {
+		securityCheck();
+		listCloudChampionship();
+	});
 </script>
 
 <!-- Existe un championnat -->
@@ -84,6 +57,8 @@
 {:else}
 	<!-- Sinon, lister les championnats disponibles en ligne -->
 	{#if !loading}
+		<!-- Si un seul championnat disponible (ajouter l'état) -->
+		<!-- et profil autre que admin -->
 		<h3>Récupérer un championnat depuis le cloud ☁️</h3>
 		<Selector
 			id="selectChamp"

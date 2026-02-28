@@ -1,4 +1,5 @@
 import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 import { userService } from '../pocketbase/users2Cloud';
 import type { User } from '$lib/types/userType';
 

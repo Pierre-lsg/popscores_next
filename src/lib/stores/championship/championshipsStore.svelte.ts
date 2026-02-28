@@ -35,7 +35,10 @@ class ChampionsStore {
 			location: '',
 			competitionsId: [],
 			collectiveScale: '',
-			individualScale: ''
+			individualScale: '',
+			rankingClubs: [],
+			rankingPlayers: [],
+			status: 'in_progress'
 		});
 	}
 
@@ -50,7 +53,10 @@ class ChampionsStore {
 			location: '',
 			competitionsId: [],
 			collectiveScale: crypto.randomUUID(),
-			individualScale: crypto.randomUUID()
+			individualScale: crypto.randomUUID(),
+			rankingClubs: [],
+			rankingPlayers: [],
+			status: 'in_progress'
 		};
 		this.list.push(newChampionship);
 		return newChampionship;
