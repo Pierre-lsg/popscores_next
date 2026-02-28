@@ -316,6 +316,27 @@ h2:not(:first-child) {
 	border-color: var(--border-color);
 }
 
+/* Flag status */
+.nothing {
+	border-color: var(--primary);
+	background-color: transparent;
+}
+
+.info {
+	border-color: darkgreen;
+	background-color: green;
+}
+
+.warning {
+	border-color: darkorange;
+	background-color: orange;
+}
+
+.alert {
+	border-color: darkred;
+	background-color: red;
+}
+
 /* Others */
 .content {
 	display: flex;

@@ -7,6 +7,7 @@
 
 	import Param from '$lib/ui/Param.svelte';
 	import ScaleUpdate from '$lib/components/championship/ScaleUpdate.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
 
 	let championship = $state(championshipStore.list[0]);
 
@@ -45,6 +46,13 @@
 			type="text"
 			bind:value={championship.location}
 			placeholder="Localisation"
+		/>
+		<Selector
+			id="statusSelect"
+			bind:value={championship.status}
+			label="Etat du championnat"
+			options={['setup', 'in_progress', 'finished']}
+			optionsLabel={['Initialisation', 'En cours', 'Terminé']}
 		/>
 		<h2>Barèmes de points</h2>
 		<ScaleUpdate scaleId={championship.collectiveScale} isIndividual={false} />

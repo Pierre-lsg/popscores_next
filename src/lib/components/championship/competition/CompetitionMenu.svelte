@@ -105,7 +105,7 @@
 		flex-direction: column;
 		position: fixed;
 		font-size: large;
-		top: 56px;
+		top: 65px;
 		left: 0;
 		right: 0;
 		z-index: 899;

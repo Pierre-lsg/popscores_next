@@ -10,6 +10,7 @@
 	import { checkDataVersion, CURRENT_VERSION } from '$lib/utils/migration';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { onMount } from 'svelte';
+	import StatusSignal from '$lib/ui/StatusSignal.svelte';
 
 	let { children } = $props();
 
@@ -41,6 +42,7 @@
 				<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 			{/if}
 		</div>
+		<StatusSignal />
 		<ThemeSelector />
 	</div>
 

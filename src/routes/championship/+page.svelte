@@ -20,7 +20,6 @@
 	const listCloudChampionship = async () => {
 		cloudChampionships = await championshipService.getAllChampionships();
 		cloudScale = await championshipService.getAllChampionshipsScales();
-
 		loading = false;
 	};
 
@@ -45,9 +44,17 @@
 		currentChampionship = championshipStore.new();
 	};
 
-	onMount(() => {
+	onMount(async () => {
 		securityCheck();
-		listCloudChampionship();
+		await listCloudChampionship();
+		if ($user && !$user?.roles.includes('admin')) {
+			// Récupérer directement le championnat si un seul en cours
+			cloudChampionships = cloudChampionships.filter((c) => c.status === 'in_progress');
+			if (cloudChampionships.length === 1) {
+				selectedChampionshipId = cloudChampionships[0].id;
+				loadChampionship();
+			}
+		}
 	});
 </script>
 
@@ -57,19 +64,21 @@
 {:else}
 	<!-- Sinon, lister les championnats disponibles en ligne -->
 	{#if !loading}
-		<!-- Si un seul championnat disponible (ajouter l'état) -->
-		<!-- et profil autre que admin -->
-		<h3>Récupérer un championnat depuis le cloud ☁️</h3>
-		<Selector
-			id="selectChamp"
-			bind:value={selectedChampionshipId}
-			label="Championnats connus"
-			options={cloudChampionships.map((c) => c.id)}
-			optionsLabel={cloudChampionships.map((c) => c.name)}
-			unselectedOption="-- choisir un championnat --"
-		/>
+		{#if cloudChampionships.length !== 0}
+			<h3>Récupérer un championnat depuis le cloud ☁️</h3>
+			<Selector
+				id="selectChamp"
+				bind:value={selectedChampionshipId}
+				label="Championnats connus"
+				options={cloudChampionships.map((c) => c.id)}
+				optionsLabel={cloudChampionships.map((c) => c.name)}
+				unselectedOption="-- choisir un championnat --"
+			/>
 
-		<button onclick={() => loadChampionship()}>Sélectionner</button>
+			<button onclick={() => loadChampionship()}>Sélectionner</button>
+		{:else}
+			Aucun championnat n'est disponible ...
+		{/if}
 	{:else}
 		<p>Récupération des championnats connus ...</p>
 	{/if}
