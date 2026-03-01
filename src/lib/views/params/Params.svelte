@@ -6,25 +6,27 @@
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
 
 	const localReset = () => {
-		localStorage.clear();
+		if (confirm('Voulez-vous supprimer le cache local ?')) localStorage.clear();
 	};
 
 	const deepReset = async () => {
-		// vide le localStorage
-		localStorage.clear();
+		if (confirm("Voulez-vous réinitialiser l'application ?")) {
+			// vide le localStorage
+			localStorage.clear();
 
-		// Désincrit le Service Worker
-		const registrations = await navigator.serviceWorker.getRegistrations();
-		for (let registration of registrations) {
-			await registration.unregister();
+			// Désincrit le Service Worker
+			const registrations = await navigator.serviceWorker.getRegistrations();
+			for (let registration of registrations) {
+				await registration.unregister();
+			}
+
+			// Vide les caches de fichiers
+			const cacheNames = await caches.keys();
+			await Promise.all(cacheNames.map((name) => caches.delete(name)));
+
+			alert('Application réinitialisée. Redémarrage de Popscores');
+			window.location.reload();
 		}
-
-		// Vide les caches de fichiers
-		const cacheNames = await caches.keys();
-		await Promise.all(cacheNames.map((name) => caches.delete(name)));
-
-		alert('Application réinitialisée. Redémarrage de Popscores');
-		window.location.reload();
 	};
 
 	const updatePocketBaseUrl = () => {

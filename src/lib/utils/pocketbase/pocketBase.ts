@@ -16,6 +16,7 @@ export const db = {
 		try {
 			return await pb.collection(collectionName).getFullList({
 				sort: '-created',
+				requestKey: null,
 				...options
 			});
 		} catch (err) {

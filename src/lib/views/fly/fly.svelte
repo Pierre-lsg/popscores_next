@@ -11,6 +11,7 @@
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+	import { messageStore } from '$lib/stores/appEventStore.svelte';
 
 	import { onMount } from 'svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
@@ -22,11 +23,7 @@
 
 	let championshipId: string = championshipStore.list[0].id;
 
-	let currentCompetition: Competition | undefined = $state(
-		competitionsStore.list.find(
-			(competition) => competition.startDate === new Date().toISOString().split('T')[0]
-		)
-	);
+	let currentCompetition: Competition | undefined = $state();
 	let currentFly: Fly | undefined = $state();
 	let flys: Fly[] = $state([]);
 
@@ -48,13 +45,18 @@
 
 	const loadCompetition = async () => {
 		if ($user && confirm('Voulez-vous mettre à jour la compétition ?'))
-			cloudLoadCurrentCompetitionForSupervisor(championshipId, $user.id);
-
-		// load all the competitions elements
+			await cloudLoadCurrentCompetitionForSupervisor(championshipId, $user.id);
+		selectFly();
+		messageStore.reset();
+		// Todo : proposer un fix pour la non mise à jour de currentCompétition
+		// location.reload est une solution fonctionnelle mais ...
+		location.reload();
 	};
 
-	onMount(() => {
-		loadCompetition();
+	const selectFly = () => {
+		currentCompetition = competitionsStore.list.find(
+			(competition) => competition.startDate === new Date().toISOString().split('T')[0]
+		);
 
 		if (currentCompetition && $user) {
 			//liste les flys de la compétition
@@ -65,15 +67,21 @@
 		}
 
 		if (flys.length === 1) currentFly = flys[0];
+	};
+
+	onMount(() => {
+		selectFly();
 	});
+
+	$inspect(currentCompetition);
 </script>
 
 <!-- Suivi d'une compétition -->
 {#if currentCompetition}
-	<p>Mode 'superviseur'</p>
 	{#if flys.length === 0}
 		<p>Aucun fly n'est à surveiller ...</p>
-	{:else if flys.length === 1 && currentFly}
+		<button onclick={() => loadCompetition()}>Récupérer des flys</button>
+	{:else if currentFly}
 		{#if isCompetitionTeam(currentCompetition)}
 			<CompetitionScoringEditTeams bind:currentCompetition bind:currentFly />
 		{:else}
@@ -94,7 +102,8 @@
 		</div>
 	{/if}
 {:else}
-	<p>Aucune compétition n'est accessible aujourd'hui ...</p>
+	<p>Aucune compétition n'est accessible ...</p>
+	<button onclick={() => loadCompetition()}>Récupérer la compétition</button>
 {/if}
 
 <style>
