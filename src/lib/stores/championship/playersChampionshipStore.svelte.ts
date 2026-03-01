@@ -1,11 +1,14 @@
 import type { Player } from '$lib/types/playerType';
 import { teamsChampionshipStore } from './teamsChampionshipStore.svelte';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 const STORAGE_KEY = 'cs-players-data';
 
 class PlayersChampionshipStore {
 	// État de base (la liste brute)
 	list = $state<Player[]>([]);
+	isInitialLoading = true;
 
 	unassignedPlayers = $derived(this.list.filter((player) => player.teamId === ''));
 
@@ -19,7 +22,17 @@ class PlayersChampionshipStore {
 			// Sauvegarde automatique dès que la liste (ou un élément de la liste) change
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifPlayer'))
+							messageStore.add('modifPlayer', 'info', 'Pensez à sauver les joueurs dans le Cloud');
+					});
 				});
 			});
 		}

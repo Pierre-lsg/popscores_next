@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+	import { messageStore } from '$lib/stores/appEventStore.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
 	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
@@ -12,16 +13,14 @@
 	let championship = $state(championshipStore.list[0]);
 
 	const saveChampionshipToCloud = async () => {
-		let idvScale: MarkedPointScale | undefined = mpsStore.getScaleById(
-			championship.individualScale
-		);
-		let cltScale: MarkedPointScale | undefined = mpsStore.getScaleById(
-			championship.collectiveScale
-		);
+		let champToSave = $state.snapshot(championship);
+		let idvScale: MarkedPointScale | undefined = mpsStore.getScaleById(champToSave.individualScale);
+		let cltScale: MarkedPointScale | undefined = mpsStore.getScaleById(champToSave.collectiveScale);
 
 		try {
-			championshipService.saveChampionship(championship, idvScale, cltScale);
+			championshipService.saveChampionship(champToSave, idvScale, cltScale);
 			toastStore.show('💾 Mise à jour effectuée ...', 'success');
+			messageStore.remove('modifChamp');
 		} catch (err) {
 			toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
 		}

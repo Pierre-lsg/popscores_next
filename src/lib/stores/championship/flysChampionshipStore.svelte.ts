@@ -1,4 +1,6 @@
 import type { Fly } from '$lib/types/flyType';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 // Constant for storage key
 const STORAGE_KEY = 'cs-flys-data';
@@ -8,6 +10,7 @@ const STORAGE_KEY = 'cs-flys-data';
  */
 class FlysChampionshipStore {
 	list = $state<Fly[]>([]);
+	isInitialLoading = true;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -16,7 +19,17 @@ class FlysChampionshipStore {
 
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifFly'))
+							messageStore.add('modifFly', 'info', 'Pensez à sauver les flys dans le Cloud');
+					});
 				});
 			});
 		}

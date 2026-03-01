@@ -1,11 +1,14 @@
 import type { Competition } from '$lib/types/competitionType';
 import type { CompetitionStatus, CompetitionStep } from '$lib/types/competitionType';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 const STORAGE_KEY = 'cs-competitions-data';
 
 class CompetitionsStore {
 	// List of competitions
 	list = $state<Competition[]>([]);
+	isInitialLoading = true;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -15,7 +18,17 @@ class CompetitionsStore {
 			// Save data automatically when competitions list changes
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifComp'))
+							messageStore.add('modifComp', 'info', 'Pensez à sauver la compétition dans le Cloud');
+					});
 				});
 			});
 		}
@@ -46,6 +59,7 @@ class CompetitionsStore {
 			scorePublicationDate: scorePublicationDate || '',
 			location: location || '',
 			regulationsId: '',
+			courseId: '',
 			teamsId: [],
 			playersId: [],
 			clubsId: [],

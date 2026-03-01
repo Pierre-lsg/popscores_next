@@ -26,7 +26,7 @@
 	);
 	let courseCompetition = $derived(coursesChampionshipStore.find(currentCompetition.courseId));
 
-	let rules: Regulations = $derived(getRules(currentCompetition));
+	let rules: Regulations = $state(getRules(currentCompetition));
 </script>
 
 <div>

@@ -14,6 +14,7 @@ import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampi
 import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
+import { messageStore } from '$lib/stores/appEventStore.svelte';
 import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 import { calculatePlayerScore } from '../session/golfScoringFunction.svelte';
 
@@ -103,35 +104,35 @@ export const cloudSaveAllCompetition = async (
 	let status: string = 'success';
 
 	status = await cloudSaveCompetition(competition, csId);
-	console.log('Save competition : ' + status);
+	messageStore.remove('modifComp');
 
 	// Lister et sauver les clubs dont les joueurs ou équipes participeraient
 	status = await cloudSaveClubs(competition.clubsId);
-	console.log('Save clubs : ' + status);
+	messageStore.remove('modifClubs');
 
 	// Lister et sauver les équipes
 	status = await cloudSaveTeams(competition.teamsId);
-	console.log('Save teams : ' + status);
+	messageStore.remove('modifTeams');
 
 	// Lister et sauver les joueurs
 	status = await cloudSavePlayers(competition.playersId);
-	console.log('Save players : ' + status);
+	messageStore.remove('modifPlayer');
 
 	// Lister et sauver les flys
 	status = await cloudSaveFlys(competition.flysId);
-	console.log('Save players : ' + status);
+	messageStore.remove('modifFly');
 
 	// Sauver le règlement associé s'il existe
 	status = await cloudSaveRegulations(competition.regulationsId);
-	console.log('Save regulation : ' + status);
+	messageStore.remove('modifRegul');
 
 	// Sauver le parcours associé et ses cibles s'il existe
 	status = await cloudSaveCourseAndTargets(competition.courseId);
-	console.log('Save course : ' + status);
+	messageStore.remove('modifCourse');
 
 	// Sauver les résultats de la compétition
 	status = await cloudSaveResults(competition.id);
-	console.log('Save Results : ' + status);
+	messageStore.remove('modifResult');
 
 	return status;
 };

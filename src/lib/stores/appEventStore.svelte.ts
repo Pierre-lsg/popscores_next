@@ -23,11 +23,8 @@ class AppStatusStore {
 
 					const fse = document.getElementById('flag-status');
 					if (fse) {
-						console.log('fse', fse);
-
 						fse.classList.remove('nothing', 'info', 'warning', 'alert');
 						fse.classList.add(this.computeStatus());
-						console.log('fse suite', fse);
 					}
 				});
 			});
@@ -95,4 +92,4 @@ class AppStatusStore {
 }
 
 // An instance of AppStatusStore used throughout the application.
-export const statusStore = new AppStatusStore();
+export const messageStore = new AppStatusStore();

@@ -1,10 +1,13 @@
 import type { Regulations, Regulation } from '$lib/types/regulationsType';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 const STORAGE_KEY = 'cs-regulations-data';
 
 class RegulationsStore {
 	// List of Regulations
 	list = $state<Regulations[]>([]);
+	isInitialLoading = true;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -14,7 +17,17 @@ class RegulationsStore {
 			// Save data automatically when Regulations list changes
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifRegul'))
+							messageStore.add('modifRegul', 'info', 'Pensez à sauver le règlement dans le Cloud');
+					});
 				});
 			});
 		}

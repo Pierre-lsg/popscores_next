@@ -1,0 +1,30 @@
+	status = await cloudSaveCompetition(competition, csId);
+	messageStore.remove('modifComp');
+
+	// Lister et sauver les clubs dont les joueurs ou équipes participeraient
+	status = await cloudSaveClubs(competition.clubsId);
+	messageStore.remove('modifClubs');
+
+	// Lister et sauver les équipes
+	status = await cloudSaveTeams(competition.teamsId);
+	messageStore.remove('modifTeams');
+
+	// Lister et sauver les joueurs
+	status = await cloudSavePlayers(competition.playersId);
+	messageStore.remove('modifPlayer');
+
+	// Lister et sauver les flys
+	status = await cloudSaveFlys(competition.flysId);
+	messageStore.remove('modifFly');
+
+	// Sauver le règlement associé s'il existe
+	status = await cloudSaveRegulations(competition.regulationsId);
+	messageStore.remove('modifRegul');
+
+	// Sauver le parcours associé et ses cibles s'il existe
+	status = await cloudSaveCourseAndTargets(competition.courseId);
+	messageStore.remove('modifCourse');
+
+	// Sauver les résultats de la compétition
+	status = await cloudSaveResults(competition.id);
+	messageStore.remove('modifResult');

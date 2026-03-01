@@ -1,14 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { statusStore } from '$lib/stores/appEventStore.svelte';
+	import { messageStore } from '$lib/stores/appEventStore.svelte';
 
 	let showStatus: boolean = $state(false);
-
-	// Définir les éléments ducomposant status
-	onMount(() => {
-		statusStore.reset();
-		statusStore.add('editChamp', 'nothing', 'Message de test. A supprimer');
-	});
 </script>
 
 <div class="status-wrapper">
@@ -23,12 +16,16 @@
 {#if showStatus}
 	<div class="container">
 		<div class="displayed-box">
-			<p>Messages :</p>
-			{#each statusStore.list as message}
-				<div>
-					<span class="badge">{message.status}</span> - {message.details}
-				</div>
-			{/each}
+			{#if messageStore.list.length > 0}
+				<p>Messages :</p>
+				{#each messageStore.list as message}
+					<div>
+						<span class="badge">{message.status}</span> - {message.details}
+					</div>
+				{/each}
+			{:else}
+				Aucun message
+			{/if}
 		</div>
 	</div>
 {/if}

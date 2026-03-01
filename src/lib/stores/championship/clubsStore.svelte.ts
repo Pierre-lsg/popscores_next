@@ -1,9 +1,12 @@
 import type { Club } from '$lib/types/clubType';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 const STORAGE_KEY = 'cs-clubs-data';
 
 class ClubsStore {
 	list = $state<Club[]>([]);
+	isInitialLoading = true;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -13,7 +16,17 @@ class ClubsStore {
 			// Sauvegarde automatique à chaque modification sur les clubs
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifClubs'))
+							messageStore.add('modifClubs', 'info', 'Pensez à sauver les clubs dans le Cloud');
+					});
 				});
 			});
 		}

@@ -1,4 +1,6 @@
 import type { Team } from '$lib/types/teamType';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 // Constant for storage key
 const STORAGE_KEY = 'cs-teams-data';
@@ -8,6 +10,7 @@ const STORAGE_KEY = 'cs-teams-data';
  */
 class TeamsChampionshipStore {
 	list = $state<Team[]>([]);
+	isInitialLoading = true;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -16,7 +19,17 @@ class TeamsChampionshipStore {
 
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifTeam'))
+							messageStore.add('modifTeam', 'info', 'Pensez à sauver les équipes dans le Cloud');
+					});
 				});
 			});
 		}

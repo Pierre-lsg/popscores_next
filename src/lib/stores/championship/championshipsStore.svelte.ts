@@ -1,10 +1,13 @@
 import type { Championship } from '$lib/types/championshipType';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 const STORAGE_KEY = 'championship-data';
 
 class ChampionsStore {
 	// List of championships
 	list = $state<Championship[]>([]);
+	isInitialLoading = true;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -14,7 +17,21 @@ class ChampionsStore {
 			// Save data automatically when championships list changes
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifChamp'))
+							messageStore.add(
+								'modifChamp',
+								'info',
+								'Pensez à sauver le championnat dans le Cloud'
+							);
+					});
 				});
 			});
 		}

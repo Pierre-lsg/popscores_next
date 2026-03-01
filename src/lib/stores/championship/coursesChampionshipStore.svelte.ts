@@ -1,5 +1,7 @@
 import type { Course } from '$lib/types/courseType';
 import type { Target } from '$lib/types/targetType';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 // Constant for storage key
 const STORAGE_KEY = 'cs-courses-data';
@@ -9,6 +11,7 @@ const STORAGE_KEY = 'cs-courses-data';
  */
 class CoursesChampionshipStore {
 	list = $state<Course[]>([]);
+	isInitialLoading = true;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -17,7 +20,17 @@ class CoursesChampionshipStore {
 
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifCourse'))
+							messageStore.add('modifCourse', 'info', 'Pensez à sauver le parcours dans le Cloud');
+					});
 				});
 			});
 		}

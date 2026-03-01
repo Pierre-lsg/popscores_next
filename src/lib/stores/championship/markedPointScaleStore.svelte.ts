@@ -1,10 +1,13 @@
 import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
+import { untrack } from 'svelte';
+import { messageStore } from '../appEventStore.svelte';
 
 const STORAGE_KEY = 'cs-markedpointscale-data';
 
 class MarkedPointScaleStore {
 	// List of markedPointScale
 	list = $state<MarkedPointScale[]>([]);
+	isInitialLoading = true;
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -14,7 +17,21 @@ class MarkedPointScaleStore {
 			// Save data automatically when scale list changes
 			$effect.root(() => {
 				$effect(() => {
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
+					const data = JSON.stringify(this.list);
+
+					untrack(() => {
+						localStorage.setItem(STORAGE_KEY, data);
+						if (this.isInitialLoading) {
+							this.isInitialLoading = false;
+							return;
+						}
+						if (!messageStore.find('modifChamp'))
+							messageStore.add(
+								'modifChamp',
+								'info',
+								'Pensez à sauver le championnat (mps) dans le Cloud'
+							);
+					});
 				});
 			});
 		}
