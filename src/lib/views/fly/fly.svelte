@@ -72,8 +72,6 @@
 	onMount(() => {
 		selectFly();
 	});
-
-	$inspect(currentCompetition);
 </script>
 
 <!-- Suivi d'une compétition -->

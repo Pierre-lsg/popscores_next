@@ -11,9 +11,9 @@
 
 <div class="status-wrapper">
 	{#if isOnline}
-		🌐
+		✅
 	{:else}
-		🔌
+		🔴
 	{/if}
 </div>
 

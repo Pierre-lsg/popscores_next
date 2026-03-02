@@ -11,6 +11,7 @@
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
+	import { networkStatus } from '$lib/stores/networkStore.svelte';
 
 	import { swipe } from '$lib/utils/swipe';
 	import { slide } from 'svelte/transition';
@@ -22,6 +23,7 @@
 		cloudSaveScoreCard,
 		getRules
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
+	import { messageStore } from '$lib/stores/appEventStore.svelte';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -50,6 +52,12 @@
 				: currentTarget.par + (rules?.regulation.malusOverPar || 4)
 	);
 	let isCourseEnded: boolean = $state(false);
+	let isOnline: boolean = $state(true);
+
+	$effect(() => {
+		if (networkStatus.isOnline) isOnline = true;
+		else isOnline = false;
+	});
 
 	const showNextTarget = () => {
 		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
@@ -101,21 +109,28 @@
 				result = resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
 			}
 			// Sauver le résultat dans le Cloud si c'est possible
-			resultService.saveResult(result);
+			if (isOnline) resultService.saveResult(result);
 		});
 		// transmettre la carte de score
-		cloudSaveScoreCard(
-			currentCompetition,
-			currentFly,
-			[],
-			rankedPlayers,
-			targets,
-			[],
-			rules?.regulation || ({} as Regulation)
-		);
+		if (isOnline)
+			cloudSaveScoreCard(
+				currentCompetition,
+				currentFly,
+				[],
+				rankedPlayers,
+				targets,
+				[],
+				rules?.regulation || ({} as Regulation)
+			);
 
 		// Modifier le status du fly
-		currentFly.status = 'validated';
+		if (isOnline) {
+			currentFly.status = 'validated';
+			messageStore.remove('sendFly');
+		} else {
+			currentFly.status = 'finished';
+			messageStore.add('sendFly', 'warning', 'Veuillez transmettre les résultats du fly');
+		}
 	};
 
 	onMount(() => {
@@ -127,8 +142,15 @@
 <div>
 	<div class="action">
 		<button onclick={() => (currentFly = undefined)}>Retour</button>
-		{#if isCourseEnded}
-			<button onclick={() => validateFly()}>Valider le fly</button>
+		{#if isCourseEnded && currentFly.status === 'in_progress'}
+			<button onclick={() => validateFly()}
+				>Valider{isOnline ? ' et transmettre ' : ' '}le fly</button
+			>
+		{/if}
+		{#if isCourseEnded && (currentFly.status === 'validated' || currentFly.status === 'finished')}
+			<button onclick={() => validateFly()}
+				>Corriger{isOnline ? ' et transmettre ' : ' '}le fly</button
+			>
 		{/if}
 	</div>
 	<!-- Saisie des résultats d'une cible pour un fly -->
