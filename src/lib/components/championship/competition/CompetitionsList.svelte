@@ -2,7 +2,10 @@
 	import type { Competition } from '$lib/types/competitionType';
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
-	import { cloudSaveAllCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import {
+		cloudLoadCompetition,
+		cloudSaveAllCompetition
+	} from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import DatePicker from '$lib/ui/DatePicker.svelte';
 	import Param from '$lib/ui/Param.svelte';
@@ -90,7 +93,7 @@
 		const aCompet = competitionsStore.list.filter((c) => c.id === filteredCompetitions[index].id);
 		if (aCompet.length == 0) {
 			if (confirm('Voulez-vous importer la compétition ?')) {
-				competitionsStore.load(filteredCompetitions[index]);
+				cloudLoadCompetition(filteredCompetitions[index].id);
 			}
 		}
 	};

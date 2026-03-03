@@ -20,6 +20,8 @@
 		teamsForDoubleRanking,
 		getRules
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
+	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
+	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -39,10 +41,13 @@
 
 	let rankedTeams = $derived(getRankedTeams(teams, targets, players, settings));
 
-	let isShowingPlayers = $state(true);
-	let isShowingTeams = $state(true);
+	let isShowingPlayers: boolean = $state(true);
+	let isShowingTeams: boolean = $state(true);
 	let playersDisp = $state('réduire');
 	let teamsDisp = $state('réduire');
+	let isShowingPlayoff: boolean = $state(false);
+	let playoffPlayers: Player[] = $state([]);
+	let playoffTarget: Target = $state({} as Target);
 
 	const showPlayers = () => {
 		isShowingPlayers = !isShowingPlayers;
@@ -56,8 +61,27 @@
 
 	onMount(() => {
 		if (rules.doubleRanking) teams = teamsForDoubleRanking(currentCompetition, targets, rules);
-		console.log(currentCompetition);
 	});
+
+	const preparePlayoff = () => {
+		// create playoff target
+		playoffTarget = targetsChampionshipStore.add('playoff', 0, 'Bonus');
+		if (course) course.targets.push(playoffTarget);
+		// List tied first place competitors
+		playoffPlayers = rankedPlayers
+			.filter((player) => player.isTie && player.rank === 1)
+			.map((player) => player.player);
+		// show interface for scoring playoffTarget
+		isShowingPlayoff = true;
+	};
+
+	const resolveTies = (winner: Player) => {
+		if (confirm(winner.name + ' a gagné le playoff ?')) {
+			players.forEach((player) => {
+				player.scores[playoffTarget.id] = player.id === winner.id ? -1 : 0;
+			});
+		}
+	};
 </script>
 
 <div>
@@ -67,6 +91,19 @@
 		Classement final (regroupement de l'ensemble des cartes de scores en individuel)
 		<span role="none" onclick={() => showPlayers()} class="action">{playersDisp}</span>
 	</div>
+
+	{#if rankedPlayers[0].isTie && !isShowingPlayoff}
+		<button onclick={() => preparePlayoff()}>Préparer le playoff</button>
+		<p>Ajout d'un trou supplémentaire</p>
+		<p>Score saisie, uniquement pour les équipes ou joueurs à départager</p>
+	{/if}
+
+	{#if isShowingPlayoff}
+		<h3>Sélectionner le vainqueur du playoff</h3>
+		{#each playoffPlayers as player}
+			<p>{player.name} <button onclick={() => resolveTies(player)}>👑</button></p>
+		{/each}
+	{/if}
 
 	{#if isShowingPlayers}
 		<PlayerScoreCardByTarget {rankedPlayers} {targets} />

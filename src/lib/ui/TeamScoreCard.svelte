@@ -87,11 +87,15 @@
 								{@const playerScore = player.scores[target.id]}
 								{#if i === listTeamPlayer(team, players).length - 1}
 									<td class="score-cell {getScoreClass(playerScore, target)} last-cell">
-										<div class="shape">{playerScore}</div>
+										<div class="shape">
+											{target.rule === 'Bonus' && playerScore === 0 ? '-' : playerScore}
+										</div>
 									</td>
 								{:else}
 									<td class="score-cell {getScoreClass(playerScore, target)}">
-										<div class="shape">{playerScore}</div>
+										<div class="shape">
+											{target.rule === 'Bonus' && playerScore === 0 ? '-' : playerScore}
+										</div>
 									</td>
 								{/if}
 							{/each}

@@ -363,6 +363,49 @@ export const cloudLoadCurrentCompetitionForSupervisor = async (
 	return status;
 };
 
+export const cloudLoadCompetition = async (cId: string): Promise<string> => {
+	let status: string = 'success';
+
+	// Charger la compétition
+	let aCompetition = await competitionService.getCompetitionById(cId);
+
+	if (aCompetition) {
+		competitionsStore.remove(aCompetition.id);
+		competitionsStore.load(aCompetition);
+
+		// Charger le règlement
+		if (aCompetition.regulationsId && aCompetition.regulationsId !== '') {
+			cloudLoadRegulations(aCompetition.regulationsId);
+		}
+
+		// Charger le parcours
+		if (aCompetition.courseId && aCompetition.courseId !== '') {
+			cloudLoadCourse(aCompetition.courseId);
+		}
+
+		// Charger les flys du superviseur
+		for (let flyId of aCompetition.flysId) {
+			let aFly = await flyService.getFlyById(flyId);
+			if (aFly) {
+				flysChampionshipStore.remove(aFly.id);
+				flysChampionshipStore.load(aFly);
+
+				// Charger les clubs liés à la compétition
+				cloudLoadClubs(aCompetition.clubsId);
+
+				// Charger les équipes liés à la compétition
+				if (isCompetitionTeam(aCompetition)) {
+					cloudLoadTeams(aFly.teamsId, aCompetition.id);
+				} else {
+					cloudLoadPlayersCompetition(aFly.playersId, aCompetition.id);
+				}
+			}
+		}
+	}
+
+	return status;
+};
+
 export const cloudLoadRegulations = async (regulationsId: string) => {
 	const aRegulation = await regulationService.getRegulationById(regulationsId);
 	if (aRegulation) {

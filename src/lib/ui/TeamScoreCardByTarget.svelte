@@ -91,12 +91,16 @@
 										rowspan={listTeamPlayer(team, players).length}
 										class="score-cell {getScoreClass(playerScore, target)} last-cell"
 									>
-										<div class="shape">{playerScore}</div>
+										<div class="shape">
+											{target.rule === 'Bonus' && playerScore === 0 ? '-' : playerScore}
+										</div>
 									</td>
 								{/if}
 							{:else}
 								<td class="score-cell {getScoreClass(playerScore, target)} last-cell">
-									<div class="shape">{playerScore}</div>
+									<div class="shape">
+										{target.rule === 'Bonus' && playerScore === 0 ? '-' : playerScore}
+									</div>
 								</td>
 							{/if}
 						{/each}

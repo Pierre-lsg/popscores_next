@@ -26,6 +26,13 @@ export const competitionService = {
 			filter: `id ~ "${id}"`
 		}),
 
+	getCompetitionById: async (id: string) => {
+		const competitions = await db.getFullList('competitions', {
+			filter: `id ~ "${id}"`
+		});
+		return competitions.map((competition) => competition.data)[0] as Competition;
+	},
+
 	saveCompetition: (aCompetition: Competition, championshipId: string) => {
 		const competitionToSave = {
 			id: aCompetition.id,

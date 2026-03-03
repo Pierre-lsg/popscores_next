@@ -24,6 +24,7 @@
 		getRules
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -53,6 +54,8 @@
 	);
 	let isCourseEnded: boolean = $state(false);
 	let isOnline: boolean = $state(true);
+	let isSelectingTarget: boolean = $state(false);
+	let selectedTarget: string = $state('');
 
 	$effect(() => {
 		if (networkStatus.isOnline) isOnline = true;
@@ -62,7 +65,7 @@
 	const showNextTarget = () => {
 		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
 			currentFly.status = 'in_progress';
-			if (activeTargetIndex < targets.length) activeTargetIndex++;
+			if (activeTargetIndex < targets.length - 1) activeTargetIndex++;
 			else activeTargetIndex = 0;
 			initScoresPlayerOnTarget();
 			if (!isCourseEnded) if (checkAllTargetsValidated()) isCourseEnded = true;
@@ -133,6 +136,11 @@
 		}
 	};
 
+	const changeTarget = () => {
+		activeTargetIndex = parseInt(selectedTarget);
+		isSelectingTarget = false;
+	};
+
 	onMount(() => {
 		initScoresPlayerOnTarget();
 		if (!isCourseEnded) if (checkAllTargetsValidated()) isCourseEnded = true;
@@ -160,10 +168,21 @@
 			class="target-header"
 			use:swipe={{ onRight: showNextTarget, onLeft: showPrevTarget }}
 		>
-			<button class="btn-target" onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button
-			>
+			<button class="btn-target" onclick={() => showPrevTarget()}>◀</button>
 			<div class="target-info">
-				<h3>{currentTarget.name} (# {activeTargetIndex + 1})</h3>
+				{#if !isSelectingTarget}
+					<h3 role="none" onclick={() => (isSelectingTarget = true)}>
+						{currentTarget.name} (# {activeTargetIndex + 1})
+					</h3>
+				{:else}
+					<Selector
+						id="targetSelection"
+						bind:value={selectedTarget}
+						options={targets.map((_, i) => String(i))}
+						optionsLabel={targets.map((t) => t.name)}
+						onchange={() => changeTarget()}
+					/>
+				{/if}
 				<div class="target-details">
 					<span>{currentTarget.rule}</span>
 					{#if currentTarget.rule !== 'Bonus'}
@@ -171,7 +190,7 @@
 					{/if}
 				</div>
 			</div>
-			<button class="btn-target" onclick={() => showNextTarget()} disabled={isLastTarget}>▶</button>
+			<button class="btn-target" onclick={() => showNextTarget()}>▶</button>
 		</header>
 
 		<div class="scores-grid">
