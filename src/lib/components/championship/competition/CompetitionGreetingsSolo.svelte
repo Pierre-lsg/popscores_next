@@ -8,8 +8,10 @@
 
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
-	import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
+	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
+	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
 	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
+	import { networkStatus } from '$lib/stores/networkStore.svelte';
 
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
@@ -20,7 +22,6 @@
 		teamsForDoubleRanking,
 		getRules
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
-	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
@@ -48,6 +49,12 @@
 	let isShowingPlayoff: boolean = $state(false);
 	let playoffPlayers: Player[] = $state([]);
 	let playoffTarget: Target = $state({} as Target);
+	let isOnline: boolean = $state(true);
+
+	$effect(() => {
+		if (networkStatus.isOnline) isOnline = true;
+		else isOnline = false;
+	});
 
 	const showPlayers = () => {
 		isShowingPlayers = !isShowingPlayers;
@@ -79,6 +86,14 @@
 		if (confirm(winner.name + ' a gagné le playoff ?')) {
 			players.forEach((player) => {
 				player.scores[playoffTarget.id] = player.id === winner.id ? -1 : 0;
+
+				// Mettre à jour les résultats définitifs
+				let result = resultsCompetitionStore.find(currentCompetition.id, player.id);
+				if (result) result.scores = player.scores;
+				else result = resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
+
+				// Sauver le résultat dans le Cloud si c'est possible
+				if (isOnline) resultService.saveResult(result);
 			});
 		}
 	};

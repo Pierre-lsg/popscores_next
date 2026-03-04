@@ -5,6 +5,7 @@ export type ChampionshipStatus = 'setup' | 'in_progress' | 'finished';
 export interface Ranking {
 	id: string;
 	score: number;
+	competitionsId: string[];
 }
 
 export interface Championship {
@@ -18,6 +19,7 @@ export interface Championship {
 	rankingClubs: Ranking[];
 	rankingPlayers: Ranking[];
 	status: ChampionshipStatus;
+	maxScoringTeams: number;
 }
 
 export interface CloudChampionship {

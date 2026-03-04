@@ -55,7 +55,8 @@ class ChampionsStore {
 			individualScale: '',
 			rankingClubs: [],
 			rankingPlayers: [],
-			status: 'in_progress'
+			status: 'in_progress',
+			maxScoringTeams: 0
 		});
 	}
 
@@ -73,7 +74,8 @@ class ChampionsStore {
 			individualScale: crypto.randomUUID(),
 			rankingClubs: [],
 			rankingPlayers: [],
-			status: 'in_progress'
+			status: 'in_progress',
+			maxScoringTeams: 0
 		};
 		this.list.push(newChampionship);
 		return newChampionship;

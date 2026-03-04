@@ -8,6 +8,8 @@
 	import type { Club } from '$lib/types/clubType';
 	import type { Player } from '$lib/types/playerType';
 	import Selector from '$lib/ui/Selector.svelte';
+	import { onMount } from 'svelte';
+	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
 
 	const pcs = playersChampionshipStore;
 
@@ -19,9 +21,11 @@
 	let newClubId: string = $state(club.id);
 
 	let players = $derived<Player[]>(pcs.list.filter((p) => p.clubId === currentClub));
+	let cloudPlayers: Player[] = $state([]);
 	let numPlayers: number = $derived(players.length);
 
 	let isCreatingNewPlayer: boolean = $state(false);
+	let isFindingCloudPlayer: boolean = $state(false);
 	let isEditingPlayer: boolean = $state(false);
 	let editingPlayer: boolean[] = $state([]);
 	let playerName: string = $state('');
@@ -69,6 +73,20 @@
 		editingPlayer[index] = !editingPlayer[index];
 		isEditingPlayer = editingPlayer.some((value) => value === true);
 	};
+
+	const downloadPlayer = (aPlayer: Player) => {
+		pcs.load(aPlayer);
+		refrechCloudPlayers();
+	};
+
+	const refrechCloudPlayers = async () => {
+		const cp = await playerService.getPlayersByClub(club.id);
+		cloudPlayers = cp.filter((cpp) => !players.some((p) => p.id === cpp.id));
+	};
+
+	onMount(() => {
+		refrechCloudPlayers();
+	});
 </script>
 
 {#if !isEditingPlayer && !isCreatingNewPlayer}
@@ -92,6 +110,11 @@
 
 	{#if !editingPlayer.some(Boolean) && !isCreatingNewPlayer}
 		<button onclick={() => (isCreatingNewPlayer = true)}>Ajouter un nouveau joueur</button>
+		{#if cloudPlayers.length > 0}
+			<button onclick={() => (isFindingCloudPlayer = true)}
+				>Rechercher un joueur dans le Cloud</button
+			>
+		{/if}
 	{/if}
 {:else}
 	{#each players as player, i}
@@ -149,6 +172,15 @@
 			<button onclick={addNewPlayer}>Créer</button>
 			<button onclick={() => (isCreatingNewPlayer = false)}>Annuler</button>
 		</div>
+	</div>
+{/if}
+
+{#if isFindingCloudPlayer}
+	<div class="player-form">
+		<h3 style="margin-top: 0">Autres joueurs du Cloud 👤</h3>
+		{#each cloudPlayers as player}
+			{player.name} <button onclick={() => downloadPlayer(player)}>Rapatrier</button>
+		{/each}
 	</div>
 {/if}
 
