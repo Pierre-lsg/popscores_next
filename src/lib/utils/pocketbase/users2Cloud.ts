@@ -1,5 +1,5 @@
 import type { User } from '$lib/types/userType';
-import { db, pb } from './pocketBase';
+import { db } from './pocketBase';
 
 export const userService = {
 	getAll: () => db.getFullList('users', { sort: 'created' }),
@@ -8,6 +8,26 @@ export const userService = {
 		db.getFullList('users', {
 			filter: `roles ~ "${role}"`
 		}),
+
+	getUsersByRole: async (role: string) => {
+		let users: User[] = [];
+		const cloudUsers: any = await db.getFullList('users', {
+			filter: `roles ~ "${role}"`
+		});
+		if (Array.isArray(cloudUsers)) {
+			cloudUsers.forEach((u) =>
+				users.push({
+					id: u.id,
+					email: '',
+					emailVisibility: false,
+					verified: true,
+					name: u.name,
+					roles: []
+				})
+			);
+		}
+		return users;
+	},
 
 	saveUser: (aUser: User) => {
 		const userToSave = {

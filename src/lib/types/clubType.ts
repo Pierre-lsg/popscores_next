@@ -4,4 +4,5 @@ export interface Club {
 	description: string;
 	playersId: string[];
 	teamsId: string[];
+	isMember: boolean;
 }

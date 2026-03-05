@@ -10,7 +10,7 @@
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
-	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
@@ -27,7 +27,7 @@
 		coursesChampionshipStore.find(currentCompetition.courseId)
 	);
 	let teams: Team[] | undefined = $derived(
-		teamsChampionshipStore.list.filter((t) => currentCompetition.teamsId.includes(t.id))
+		teamsCompetitionStore.list.filter((t) => currentCompetition.teamsId.includes(t.id))
 	);
 	let players: Player[] | undefined = $derived(
 		playersChampionshipStore.list.filter((p) =>

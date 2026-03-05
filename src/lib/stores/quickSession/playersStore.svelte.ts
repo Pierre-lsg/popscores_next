@@ -8,7 +8,6 @@ class PlayersStore {
 	list = $state<Player[]>([]);
 
 	unassignedPlayers = $derived(this.list.filter((player) => player.teamId === ''));
-
 	assignedPlayers = $derived(this.list.filter((player) => player.teamId !== ''));
 
 	constructor() {

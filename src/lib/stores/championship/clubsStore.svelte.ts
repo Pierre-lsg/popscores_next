@@ -6,6 +6,8 @@ const STORAGE_KEY = 'cs-clubs-data';
 
 class ClubsStore {
 	list = $state<Club[]>([]);
+	affiliatedClubs = $derived(this.list.filter((club) => club.isMember));
+
 	isInitialLoading = true;
 
 	constructor() {
@@ -46,7 +48,8 @@ class ClubsStore {
 			name,
 			description: '',
 			playersId,
-			teamsId
+			teamsId,
+			isMember: false
 		});
 	}
 

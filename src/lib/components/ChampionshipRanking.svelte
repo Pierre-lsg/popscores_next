@@ -65,7 +65,7 @@
 	</tbody>
 </table>
 
-<h3>Classement par club</h3>
+<h3>Classement par club ...</h3>
 <table>
 	<thead>
 		<tr>

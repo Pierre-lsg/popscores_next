@@ -9,7 +9,7 @@
 	import { individualRules } from '$lib/types/targetType';
 
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
-	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
@@ -38,7 +38,7 @@
 		coursesChampionshipStore.find(currentCompetition.courseId)
 	);
 	let teams: Team[] | undefined = $derived(
-		teamsChampionshipStore.list.filter((t) => currentFly.teamsId.includes(t.id))
+		teamsCompetitionStore.list.filter((t) => currentFly.teamsId.includes(t.id))
 	);
 	let players: Player[] | undefined = $derived(
 		playersChampionshipStore.list.filter((p) =>

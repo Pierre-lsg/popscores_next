@@ -17,6 +17,7 @@
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { onMount } from 'svelte';
 	import CompetitionSummaryBox from './CompetitionSummaryBox.svelte';
 
@@ -42,6 +43,18 @@
 		if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
 			currentCompetition.status = 'in_progress';
 			currentCompetition.step = 'welcome';
+
+			//Figer les équipes de la compétition
+			currentCompetition.teamsId.forEach((teamId: string) => {
+				const aTeam = teamsChampionshipStore.find(teamId);
+				if (aTeam) {
+					aTeam.sessionId = currentCompetition.id;
+					teamsCompetitionStore.findByIdAndSession(aTeam.id, aTeam.sessionId || '');
+					teamsCompetitionStore.load(aTeam);
+				}
+			});
+			//teamsCompetitionStore.find
+
 			// mettre à jour dans le Cloud la compétition et ses éléments dans le Cloud
 			let status = await cloudSaveAllCompetition(currentCompetition, championship.id);
 

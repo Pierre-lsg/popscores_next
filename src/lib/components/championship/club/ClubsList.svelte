@@ -7,6 +7,7 @@
 	import { cloudLoadClubs, cloudSaveClubs } from '$lib/utils/championship/clubsFunctions.svelete';
 
 	import Param from '$lib/ui/Param.svelte';
+	import Toggle from '$lib/ui/Toggle.svelte';
 
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import type { Championship } from '$lib/types/championshipType';
@@ -17,7 +18,8 @@
 		name: '',
 		description: '',
 		playersId: [],
-		teamsId: []
+		teamsId: [],
+		isMember: false
 	});
 	let editClub: boolean[] = $state([]);
 	let addNewClub: boolean = $state(false);
@@ -89,7 +91,8 @@
 					name: filteredClubs[index].name,
 					description: filteredClubs[index].description,
 					playersId: filteredClubs[index].playersId,
-					teamsId: filteredClubs[index].teamsId
+					teamsId: filteredClubs[index].teamsId,
+					isMember: filteredClubs[index].isMember
 				};
 				// Load session to the local Store
 				cloudLoadClubs([newClub]);
@@ -173,6 +176,7 @@
 				bind:value={club.description}
 				placeholder="Description du club"
 			/>
+			<Toggle label="Est membre de la Fédération" bind:checked={club.isMember} />
 			<div class="action">
 				<button onclick={() => editingClub(i)}>Valider</button>
 			</div>

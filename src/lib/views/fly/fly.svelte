@@ -8,7 +8,7 @@
 
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
-	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
@@ -32,7 +32,7 @@
 		if (currentCompetition) {
 			if (isCompetitionTeam(currentCompetition)) {
 				fly.teamsId.forEach((teamId) => {
-					compList.push(teamsChampionshipStore.list.find((t) => t.id === teamId)?.name || '');
+					compList.push(teamsCompetitionStore.list.find((t) => t.id === teamId)?.name || '');
 				});
 			} else {
 				fly.playersId.forEach((playerId) => {

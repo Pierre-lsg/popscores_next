@@ -4,7 +4,7 @@ import { playersChampionshipStore } from '$lib/stores/championship/playersChampi
 import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
-import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 
 import { teamsForDoubleRanking } from './competitionsFunctions.svelte';
@@ -21,27 +21,17 @@ import type { Course } from '$lib/types/courseType';
 import type { Target } from '$lib/types/targetType';
 import type { Regulations } from '$lib/types/regulationsType';
 import type { Regulation } from '$lib/types/regulationsType';
-import type { Player } from '$lib/types/playerType';
 import type { RankedPlayer } from '$lib/types/playerType';
 import type { RankedTeam } from '$lib/types/teamType';
 import type { Competition } from '$lib/types/competitionType';
+import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 
+/**
+ * Fetches users with the 'marshall' role and returns them as supervisors.
+ * @returns Promise<User[]> - Array of supervisor users.
+ */
 export const getSupervisors = async () => {
-	let supervisors: User[] = [];
-	let users: any = await userService.getByRole('marshall');
-
-	if (Array.isArray(users)) {
-		users.forEach((u) =>
-			supervisors.push({
-				id: u.id,
-				email: '',
-				emailVisibility: false,
-				verified: true,
-				name: u.name,
-				roles: []
-			})
-		);
-	}
+	let supervisors: User[] = await userService.getUsersByRole('marshall');
 
 	return supervisors;
 };
@@ -58,44 +48,44 @@ export const calculateChampionship = (aChampionship: Championship) => {
 
 	aChampionship.competitionsId.forEach((cId: string) => {
 		const competition = competitionsStore.find(cId);
-		let course: Course | undefined;
-		let targets: Target[] = [];
-		let regulations: Regulations | undefined;
-		let regulation: Regulation | undefined;
-		if (competition && competition.courseId !== '')
-			course = coursesChampionshipStore.find(competition.courseId);
-		if (course) targets = course.targets;
-		if (competition && competition.regulationsId)
-			regulations = regulationsStore.find(competition.regulationsId);
-		if (regulations) regulation = regulations.regulation;
+		if (competition && competition.status === 'finished') {
+			let course: Course | undefined;
+			let targets: Target[] = [];
+			let regulations: Regulations | undefined;
+			let regulation: Regulation | undefined;
+			if (competition.courseId !== '') course = coursesChampionshipStore.find(competition.courseId);
+			if (course) targets = course.targets;
+			if (competition.regulationsId) regulations = regulationsStore.find(competition.regulationsId);
+			if (regulations) regulation = regulations.regulation;
 
-		// Calcul pour le classement individuel
-		if (competition && idvScale && regulation && !regulation.teamGame) {
-			rankingIdv = rankingForIndividualCompetition(competition, targets, idvScale, rankingIdv);
-		}
+			// Calcul pour le classement individuel
+			if (idvScale && regulation && !regulation.teamGame) {
+				rankingIdv = rankingForIndividualCompetition(competition, targets, idvScale, rankingIdv);
+			}
 
-		// Calcul pour le classement des clubs si compétition en équipe
-		if (competition && clvScale && isCompetitionTeam(competition)) {
-			rankingClv = rankingForCollectiveCompetition(
-				competition,
-				targets,
-				clvScale,
-				rankingClv,
-				aChampionship.maxScoringTeams,
-				regulation
-			);
-		}
+			// Calcul pour le classement des clubs si compétition en équipe
+			if (clvScale && isCompetitionTeam(competition)) {
+				rankingClv = rankingForCollectiveCompetition(
+					competition,
+					targets,
+					clvScale,
+					rankingClv,
+					aChampionship.maxScoringTeams,
+					regulation
+				);
+			}
 
-		// Calcul pour le classement des clubs si compétition solo et calcul résultat équipe
-		if (competition && clvScale && !isCompetitionTeam(competition) && regulations?.doubleRanking) {
-			rankingClv = rankingClubForIdvCompetition(
-				competition,
-				targets,
-				clvScale,
-				rankingClv,
-				regulations,
-				regulation || ({} as Regulation)
-			);
+			// Calcul pour le classement des clubs si compétition solo et calcul résultat équipe
+			if (clvScale && !regulation?.teamGame && regulations?.doubleRanking) {
+				rankingClv = rankingClubForIdvCompetition(
+					competition,
+					targets,
+					clvScale,
+					rankingClv,
+					regulations,
+					regulation || ({} as Regulation)
+				);
+			}
 		}
 	});
 	aChampionship.rankingPlayers = smartSort(rankingIdv, 'score', false);
@@ -111,15 +101,16 @@ export const rankingClubForIdvCompetition = (
 	regulation: Regulation
 ): Ranking[] => {
 	let teams = teamsForDoubleRanking(aCompetition, targets, regulations);
-	let players: Player[] | undefined = playersChampionshipStore.list.filter((p) =>
-		teams
-			.map((t) => t.playersId)
-			.flat()
-			.includes(p.id)
+	// Ne conserver que les équipes dont le club est affilié à la fédération
+	teams = teams.filter((t) => t.clubId !== '' && clubsStore.find(t.clubId)?.isMember);
+
+	const players = playersChampionshipStore.list.filter((p) =>
+		teams.flatMap((t) => t.playersId).includes(p.id)
 	);
-	let rankedTeams: RankedTeam[] = [];
-	if (targets && teams && players && regulation)
-		rankedTeams = getRankedTeams(teams, targets, players, regulation);
+	if (!targets || !teams || !players || !regulation) return curClvRank;
+
+	const rankedTeams = getRankedTeams(teams, targets, players, regulation);
+
 	for (let i = 0; i < rankedTeams.length; i++) {
 		let prevScore: number = 0;
 		let prevCompetitions: string[] = [];
@@ -127,7 +118,7 @@ export const rankingClubForIdvCompetition = (
 		if (pId !== -1) {
 			prevScore = curClvRank[pId].score;
 			prevCompetitions = curClvRank[pId].competitionsId;
-			curClvRank.splice(pId, 1);
+			curClvRank = curClvRank.filter((rc) => rc.id !== rankedTeams[i].team.clubId);
 		}
 		curClvRank.push({
 			id: rankedTeams[i].team.clubId || '',
@@ -146,13 +137,20 @@ export const rankingForCollectiveCompetition = (
 	nbMaxScoringTeams: number,
 	regulation: Regulation | undefined
 ): Ranking[] => {
-	let teams = teamsChampionshipStore.list.filter((t) => aCompetition.teamsId.includes(t.id));
-	let players: Player[] | undefined = playersChampionshipStore.list.filter((p) =>
-		teams
-			.map((t) => t.playersId)
-			.flat()
-			.includes(p.id)
+	if (!targets || !regulation || !aScale) return curClvRank;
+
+	let teams = teamsCompetitionStore.list.filter(
+		(t) => aCompetition.teamsId.includes(t.id) && t.clubId !== ''
 	);
+	// Ne conserver que les équipes dont le club est affilié à la fédération
+	teams = teams.filter((t) => t.clubId !== '' && clubsStore.find(t.clubId)?.isMember);
+
+	const players = playersChampionshipStore.list.filter((p) =>
+		teams.flatMap((t) => t.playersId).includes(p.id)
+	);
+	const INITIAL_COUNT = 1;
+
+	if (!teams || !players) return curClvRank;
 	let rankedTeams: RankedTeam[] = [];
 	let clubsRecord: Record<string, number> = {};
 
@@ -160,7 +158,8 @@ export const rankingForCollectiveCompetition = (
 		rankedTeams = getRankedTeams(teams, targets, players, regulation);
 
 	for (let i = 0; i < rankedTeams.length; i++) {
-		if (!clubsRecord[rankedTeams[i].team.clubId]) clubsRecord[rankedTeams[i].team.clubId] = 1;
+		if (!clubsRecord[rankedTeams[i].team.clubId])
+			clubsRecord[rankedTeams[i].team.clubId] = INITIAL_COUNT;
 		else clubsRecord[rankedTeams[i].team.clubId]++;
 		if (clubsRecord[rankedTeams[i].team.clubId] > nbMaxScoringTeams) continue;
 
@@ -172,7 +171,7 @@ export const rankingForCollectiveCompetition = (
 		if (pId !== -1) {
 			prevScore = curClvRank[pId].score;
 			prevCompetitions = curClvRank[pId].competitionsId;
-			curClvRank.splice(pId, 1);
+			curClvRank = curClvRank.filter((rc) => rc.id !== rankedTeams[i].team.clubId);
 		}
 		curClvRank.push({
 			id: rankedTeams[i].team.clubId || '',
@@ -190,13 +189,18 @@ export const rankingForIndividualCompetition = (
 	aScale: MarkedPointScale,
 	curIdvRank: Ranking[]
 ): Ranking[] => {
-	let players = playersChampionshipStore.list.filter((p) => aCompetition.playersId.includes(p.id));
-	let rankedPlayers: RankedPlayer[] = [];
+	let players = playersChampionshipStore.list.filter(
+		(p) => aCompetition.playersId.includes(p.id) && p.clubId !== ''
+	);
+	// Ne conserver que les équipes dont le club est affilié à la fédération
+	players = players.filter((p) => p.clubId !== '' && clubsStore.find(p.clubId || '')?.isMember);
+
+	const rankedPlayers: RankedPlayer[] =
+		targets && players ? getRankedPlayers(players, targets) : [];
 	// Récupérer le score validé de chaque joueur lors de la compétition
 	players.forEach((p) => {
 		p.scores = resultsCompetitionStore.find(aCompetition.id, p.id)?.scores ?? {};
 	});
-	if (targets && players) rankedPlayers = getRankedPlayers(players, targets);
 
 	for (let i = 0; i < rankedPlayers.length; i++) {
 		let prevScore: number = 0;
@@ -208,6 +212,7 @@ export const rankingForIndividualCompetition = (
 			prevScore = curIdvRank[pId].score;
 			prevCompetitions = curIdvRank[pId].competitionsId;
 			curIdvRank.splice(pId, 1);
+			curIdvRank = curIdvRank.filter((rp) => rp.id !== rankedPlayers[i].player.clubId);
 		}
 		curIdvRank.push({
 			id: rankedPlayers[i].player.id,
