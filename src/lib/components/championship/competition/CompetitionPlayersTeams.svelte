@@ -2,6 +2,7 @@
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Team } from '$lib/types/teamType';
 	import type { Regulations } from '$lib/types/regulationsType';
+	import type { Championship } from '$lib/types/championshipType';
 
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
@@ -15,10 +16,12 @@
 	import TeamCard from '$lib/ui/TeamCard.svelte';
 	import CompetitionEditTeam from './CompetitionEditTeam.svelte';
 
-	let { currentCompetition = $bindable() } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
+		championship: Championship;
 	}>();
 
+	let clubs = clubsStore.list.filter((c) => c.championshipId === championship.id);
 	let clubFilter: string = $state('');
 	let nameFilter: string = $state('');
 	let editingCompetingTeam: boolean[] = $state([]);
@@ -129,8 +132,8 @@
 		id="selectClub"
 		bind:value={clubFilter}
 		label="Club"
-		options={clubsStore.list.map((club) => club.id)}
-		optionsLabel={clubsStore.list.map((club) => club.name)}
+		options={clubs.map((club) => club.id)}
+		optionsLabel={clubs.map((club) => club.name)}
 		unselectedOption="-- Choisis un club --"
 	/>
 	<Param label="Nom" bind:value={nameFilter} oneline={true} />
@@ -171,8 +174,8 @@
 			id="selectClub"
 			bind:value={newTeamsClub}
 			label="Club"
-			options={clubsStore.list.map((club) => club.id)}
-			optionsLabel={clubsStore.list.map((club) => club.name)}
+			options={clubs.map((club) => club.id)}
+			optionsLabel={clubs.map((club) => club.name)}
 			unselectedOption="sans club"
 		/>
 		<button onclick={addTeam}>Valider</button>

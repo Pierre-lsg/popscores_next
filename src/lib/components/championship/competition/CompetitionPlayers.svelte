@@ -5,9 +5,11 @@
 	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
+	import type { Championship } from '$lib/types/championshipType';
 
-	let { currentCompetition = $bindable() } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
+		championship: Championship;
 	}>();
 </script>
 
@@ -18,9 +20,9 @@
 
 	{#if isCompetitionTeam(currentCompetition)}
 		<!-- Compétition par équipe -->
-		<CompetitionPlayersTeams bind:currentCompetition />
+		<CompetitionPlayersTeams bind:currentCompetition bind:championship />
 	{:else}
 		<!-- Compétition individuelle -->
-		<CompetitionPlayersOnly bind:currentCompetition />
+		<CompetitionPlayersOnly bind:currentCompetition bind:championship />
 	{/if}
 </div>

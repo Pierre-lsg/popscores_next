@@ -12,14 +12,15 @@
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 
-	let clubs = $state<Club[]>(clubsStore.list);
+	let clubs = $state<Club[]>(clubsStore.list.filter((c) => c.championshipId === championship.id));
 	let clubDisplayed: Club = $state({
 		id: '',
 		name: '',
 		description: '',
 		playersId: [],
 		teamsId: [],
-		isMember: false
+		isMember: false,
+		championshipId: ''
 	});
 	let editClub: boolean[] = $state([]);
 	let addNewClub: boolean = $state(false);
@@ -40,7 +41,7 @@
 	}>();
 
 	const createClub = () => {
-		clubsStore.add(clubName, clubDescription);
+		clubsStore.add(clubName, clubDescription, championship.id);
 		((clubName = ''), (clubDescription = ''));
 		addNewClub = false;
 	};
@@ -92,7 +93,8 @@
 					description: filteredClubs[index].description,
 					playersId: filteredClubs[index].playersId,
 					teamsId: filteredClubs[index].teamsId,
-					isMember: filteredClubs[index].isMember
+					isMember: filteredClubs[index].isMember,
+					championshipId: filteredClubs[index].championshipId
 				};
 				// Load session to the local Store
 				cloudLoadClubs([newClub]);
@@ -102,7 +104,6 @@
 
 	onMount(async () => {
 		allClubs = await clubService.getAllClubs();
-
 		loading = false;
 	});
 </script>

@@ -11,7 +11,7 @@
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 
-	let { currentCompetition, championship } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 		championship: Championship;
 	}>();

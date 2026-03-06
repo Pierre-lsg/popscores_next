@@ -8,11 +8,14 @@
 
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import type { Championship } from '$lib/types/championshipType';
 
-	let { currentCompetition = $bindable() } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
+		championship: Championship;
 	}>();
 
+	let clubs = clubsStore.list.filter((c) => c.championshipId === championship.id);
 	let clubFilter: string = $state('');
 	let nameFilter: string = $state('');
 	let addingPlayer: boolean = $state(false);
@@ -101,8 +104,8 @@
 		id="selectClub"
 		bind:value={clubFilter}
 		label="Club"
-		options={clubsStore.list.map((club) => club.id)}
-		optionsLabel={clubsStore.list.map((club) => club.name)}
+		options={clubs.map((club) => club.id)}
+		optionsLabel={clubs.map((club) => club.name)}
 		unselectedOption="-- Tous les clubs --"
 	/>
 	<Param label="Nom" bind:value={nameFilter} oneline={true} />
@@ -128,8 +131,8 @@
 			id="selectClub"
 			bind:value={newPlayersClub}
 			label="Club"
-			options={clubsStore.list.map((club) => club.id)}
-			optionsLabel={clubsStore.list.map((club) => club.name)}
+			options={clubs.map((club) => club.id)}
+			optionsLabel={clubs.map((club) => club.name)}
 			unselectedOption="sans club"
 		/>
 		<button onclick={addPlayer}>Valider</button>

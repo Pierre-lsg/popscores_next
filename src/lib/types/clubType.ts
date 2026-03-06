@@ -5,4 +5,5 @@ export interface Club {
 	playersId: string[];
 	teamsId: string[];
 	isMember: boolean;
+	championshipId: string;
 }

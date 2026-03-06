@@ -39,17 +39,25 @@ class ClubsStore {
 	 *
 	 * @param name - The name of the club.
 	 * @param description - A description of the club (optional).
+	 * @param championshipId - id of the championship
 	 * @param playersId - An array of player IDs associated with the club (optional).
 	 * @param teamsId - An array of team IDs associated with the club (optional).
 	 */
-	add(name: string, description?: string, playersId: string[] = [], teamsId: string[] = []) {
+	add(
+		name: string,
+		description: string,
+		championshipId: string,
+		playersId: string[] = [],
+		teamsId: string[] = []
+	) {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
-			description: '',
+			description,
 			playersId,
 			teamsId,
-			isMember: false
+			isMember: false,
+			championshipId
 		});
 	}
 

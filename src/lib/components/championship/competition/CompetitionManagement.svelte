@@ -44,7 +44,7 @@
 			<CompetitionCourse bind:currentCompetition />
 		{/if}
 		{#if currentCompetition.step === 'players'}
-			<CompetitionPlayers bind:currentCompetition />
+			<CompetitionPlayers bind:currentCompetition bind:championship />
 		{/if}
 		{#if currentCompetition.step === 'starting'}
 			<CompetitionStarting bind:currentCompetition bind:championship />
