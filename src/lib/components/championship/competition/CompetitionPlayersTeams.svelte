@@ -37,7 +37,9 @@
 	);
 	let availableTeams: Team[] = $derived(
 		teamsChampionshipStore.list.filter(
-			(team: Team) => !currentCompetition.teamsId.includes(team.id)
+			(team: Team) =>
+				!currentCompetition.teamsId.includes(team.id) &&
+				clubs.map((c) => c.id).includes(team.clubId)
 		)
 	);
 	let filteredTeams: Team[] = $derived(getFilteredTeams(availableTeams, clubFilter, nameFilter));

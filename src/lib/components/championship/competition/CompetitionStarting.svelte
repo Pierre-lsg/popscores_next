@@ -6,9 +6,8 @@
 	import type { User } from '$lib/types/userType';
 
 	import { shuffle } from '$lib/utils/sharedFunction';
-	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { getSupervisors } from '$lib/utils/championship/championshipFunctions.svelte';
-	import { cloudSaveAllCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import { startCompetition } from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
@@ -17,7 +16,6 @@
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
-	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { onMount } from 'svelte';
 	import CompetitionSummaryBox from './CompetitionSummaryBox.svelte';
 
@@ -39,36 +37,8 @@
 	let isAttachingSupervisor: boolean[] = $state([]);
 	let showBox: boolean = $state(false);
 
-	const startCompetition = async () => {
-		if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
-			currentCompetition.status = 'in_progress';
-			currentCompetition.step = 'welcome';
-
-			//Figer les équipes de la compétition
-			currentCompetition.teamsId.forEach((teamId: string) => {
-				const aTeam = teamsChampionshipStore.find(teamId);
-				if (aTeam) {
-					aTeam.sessionId = currentCompetition.id;
-					teamsCompetitionStore.findByIdAndSession(aTeam.id, aTeam.sessionId || '');
-					teamsCompetitionStore.load(aTeam);
-				}
-			});
-			//teamsCompetitionStore.find
-
-			// mettre à jour dans le Cloud la compétition et ses éléments dans le Cloud
-			let status = await cloudSaveAllCompetition(currentCompetition, championship.id);
-
-			switch (status) {
-				case 'success':
-					toastStore.show('💾 Compétition mise à jour ...', 'success');
-					break;
-				case 'failure':
-					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-					break;
-				default:
-					toastStore.show('💾 Enregsistrement en cours ...', 'failure');
-			}
-		}
+	const start = async () => {
+		startCompetition(currentCompetition, championship);
 	};
 
 	const calculateFlys = () => {
@@ -265,7 +235,7 @@
 	{/if}
 
 	{#if flys.length > 0}
-		<button onclick={startCompetition}> Lancer la compétition </button>
+		<button onclick={start}> Lancer la compétition </button>
 	{/if}
 
 	<p>Une fois la compétition lancée les flys ne peuvent etre modifié</p>

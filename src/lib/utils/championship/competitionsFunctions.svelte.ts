@@ -5,9 +5,11 @@ import type { Regulations, Regulation } from '$lib/types/regulationsType';
 import type { RankedTeam, Team } from '$lib/types/teamType';
 import type { Fly } from '$lib/types/flyType';
 import type { Club } from '$lib/types/clubType';
+import type { Championship } from '$lib/types/championshipType';
 
 import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
@@ -18,6 +20,7 @@ import { messageStore } from '$lib/stores/appEventStore.svelte';
 import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 import { calculatePlayerScore } from '../session/golfScoringFunction.svelte';
 
+import { toastStore } from '$lib/stores/toastStore.svelte';
 import { teamService } from '../pocketbase/teams2Cloud';
 import { playerService } from '../pocketbase/players2Cloud';
 import { courseService } from '../pocketbase/courses2Cloud';
@@ -556,4 +559,38 @@ export const teamsForDoubleRanking = (
 		}
 	}
 	return teams;
+};
+
+export const startCompetition = async (
+	currentCompetition: Competition,
+	championship: Championship
+) => {
+	if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
+		//Figer les équipes de la compétition
+		currentCompetition.teamsId.forEach((teamId: string) => {
+			const aTeam = teamsChampionshipStore.find(teamId);
+			if (aTeam) {
+				aTeam.sessionId = currentCompetition.id;
+				teamsCompetitionStore.findByIdAndSession(aTeam.id, aTeam.sessionId || '');
+				teamsCompetitionStore.load(aTeam);
+			}
+		});
+		//teamsCompetitionStore.find
+
+		let status = await cloudSaveAllCompetition(currentCompetition, championship.id);
+		currentCompetition.status = 'in_progress';
+		currentCompetition.step = 'welcome';
+
+		// mettre à jour dans le Cloud la compétition et ses éléments dans le Cloud
+		switch (status) {
+			case 'success':
+				toastStore.show('💾 Compétition mise à jour ...', 'success');
+				break;
+			case 'failure':
+				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+				break;
+			default:
+				toastStore.show('💾 Enregsistrement en cours ...', 'failure');
+		}
+	}
 };

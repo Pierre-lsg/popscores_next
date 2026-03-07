@@ -29,7 +29,9 @@
 	);
 	let availablePlayers: Player[] = $derived(
 		playersChampionshipStore.list.filter(
-			(player) => !currentCompetition.playersId.includes(player.id)
+			(player) =>
+				!currentCompetition.playersId.includes(player.id) &&
+				clubs.map((c) => c.id).includes(player.clubId || '')
 		)
 	);
 	let filteredPlayers: Player[] = $derived(
