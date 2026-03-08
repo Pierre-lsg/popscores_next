@@ -9,6 +9,11 @@ export const clubService = {
 		return clubs.map((club) => club.data) as Club[];
 	},
 
+	getAllClubsOfChampionship: async (csId: string) => {
+		const clubs = await db.getFullList('clubs', { filter: `championship ~ "${csId}"` });
+		return clubs.map((club) => club.data) as Club[];
+	},
+
 	getById: (id: string) => db.getOne('clubs', id, {}),
 
 	getClubById: async (id: string) => {
@@ -20,6 +25,7 @@ export const clubService = {
 		const clubToSave = {
 			id: aClub.id,
 			name: aClub.name,
+			championship: aClub.championshipId,
 			owner: pb.authStore.record?.id,
 			data: aClub
 		};
@@ -31,6 +37,7 @@ export const clubService = {
 			const clubToSave = {
 				id: aClub.id,
 				name: aClub.name,
+				championship: aClub.championshipId,
 				owner: pb.authStore.record?.id,
 				data: aClub
 			};
@@ -42,6 +49,7 @@ export const clubService = {
 		const clubToSave = {
 			id: aClub.id,
 			name: aClub.name,
+			championship: aClub.championshipId,
 			owner: pb.authStore.record?.id,
 			data: aClub
 		};
@@ -52,6 +60,7 @@ export const clubService = {
 		const clubToSave = {
 			id: aClub.id,
 			name: aClub.name,
+			championship: aClub.championshipId,
 			owner: pb.authStore.record?.id,
 			data: aClub
 		};

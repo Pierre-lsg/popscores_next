@@ -32,7 +32,7 @@
 
 	let allClubs: Club[] = $state([]);
 	let loading = $state(true);
-	let knownClubsId: string[] = $derived(clubsStore.list.map((c) => c.id));
+	let knownClubsId: string[] = $derived(clubs.map((c) => c.id));
 	let filteredClubs: Club[] = $derived(allClubs.filter((c) => !knownClubsId.includes(c.id)));
 
 	let { currentClub = $bindable(''), championship } = $props<{
@@ -103,7 +103,7 @@
 	};
 
 	onMount(async () => {
-		allClubs = await clubService.getAllClubs();
+		allClubs = await clubService.getAllClubsOfChampionship(championship.id);
 		loading = false;
 	});
 </script>
