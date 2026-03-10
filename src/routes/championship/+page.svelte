@@ -6,9 +6,9 @@
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 
 	import { securityCheck } from '$lib/utils/security';
+	import { loadAChampionship } from '$lib/utils/championship/championshipFunctions.svelte';
 	import { onMount } from 'svelte';
 	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
-	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
 
 	let currentChampionship: Championship | undefined = $state(championshipStore.list[0]);
@@ -23,21 +23,10 @@
 		loading = false;
 	};
 
-	const loadChampionship = () => {
-		championshipStore.reset();
-		mpsStore.reset();
+	const loadChampionship = async () => {
+		const tmpChampionship = await loadAChampionship(selectedChampionshipId);
 
-		let tmpChampionship = cloudChampionships.find((c) => c.id === selectedChampionshipId);
-		if (tmpChampionship) {
-			let tmpCloudScale = cloudScale.find((cl) => cl.id === tmpChampionship.individualScale);
-			if (tmpCloudScale) mpsStore.load(tmpCloudScale);
-
-			tmpCloudScale = cloudScale.find((cl) => cl.id === tmpChampionship.collectiveScale);
-			if (tmpCloudScale) mpsStore.load(tmpCloudScale);
-
-			championshipStore.load(tmpChampionship);
-			currentChampionship = tmpChampionship;
-		}
+		if (tmpChampionship) currentChampionship = tmpChampionship;
 	};
 
 	const addNewChampionship = () => {

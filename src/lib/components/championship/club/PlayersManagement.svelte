@@ -179,7 +179,9 @@
 	<div class="player-form">
 		<h3 style="margin-top: 0">Autres joueurs du Cloud 👤</h3>
 		{#each cloudPlayers as player}
-			{player.name} <button onclick={() => downloadPlayer(player)}>Rapatrier</button>
+			<div class="action">
+				{player.name} <button onclick={() => downloadPlayer(player)}>Rapatrier</button>
+			</div>
 		{/each}
 	</div>
 {/if}

@@ -7,7 +7,10 @@ import { regulationsStore } from '$lib/stores/championship/regulationsStore.svel
 import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 
-import { teamsForDoubleRanking } from './competitionsFunctions.svelte';
+import {
+	cloudLoadCompetitionsChampionship,
+	teamsForDoubleRanking
+} from './competitionsFunctions.svelte';
 import { userService } from '../pocketbase/users2Cloud';
 import { isCompetitionTeam } from './competitionsFunctions.svelte';
 import { smartSort } from '../sharedFunction';
@@ -25,6 +28,7 @@ import type { RankedPlayer } from '$lib/types/playerType';
 import type { RankedTeam } from '$lib/types/teamType';
 import type { Competition } from '$lib/types/competitionType';
 import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
+import { championshipService } from '../pocketbase/championships2Cloud';
 
 /**
  * Fetches users with the 'marshall' role and returns them as supervisors.
@@ -34,6 +38,48 @@ export const getSupervisors = async () => {
 	let supervisors: User[] = await userService.getUsersByRole('marshall');
 
 	return supervisors;
+};
+
+export const loadAChampionship = async (csId: string): Promise<Championship | undefined> => {
+	championshipStore.reset();
+	mpsStore.reset();
+	let aChampionship: Championship | undefined;
+
+	const tmpChampionship = await championshipService.getByChampionshipId(csId);
+	if (tmpChampionship) {
+		aChampionship = {
+			id: tmpChampionship.data.id,
+			name: tmpChampionship.data.name,
+			season: tmpChampionship.data.season,
+			location: tmpChampionship.data.location,
+			competitionsId: tmpChampionship.data.competitionsId,
+			individualScale: tmpChampionship.data.individualScale.id,
+			collectiveScale: tmpChampionship.data.collectiveScale.id,
+			rankingClubs: tmpChampionship.data.rankingClubs,
+			rankingPlayers: tmpChampionship.data.rankingPlayers,
+			status: tmpChampionship.data.status,
+			maxScoringTeams: tmpChampionship.data.maxScoringTeams
+		};
+		const aIdvScale: MarkedPointScale | undefined = tmpChampionship.data.individualScale;
+		const aClvScale: MarkedPointScale | undefined = tmpChampionship.data.collectiveScale;
+
+		if (aIdvScale) {
+			mpsStore.remove(aIdvScale.id);
+			mpsStore.load(aIdvScale);
+		}
+		if (aClvScale) {
+			mpsStore.remove(aClvScale.id);
+			mpsStore.load(aClvScale);
+		}
+		if (aChampionship) {
+			championshipStore.remove(aChampionship.id);
+			championshipStore.load(aChampionship);
+		}
+
+		cloudLoadCompetitionsChampionship(aChampionship.id);
+	}
+
+	return aChampionship;
 };
 
 export const calculateChampionship = (aChampionship: Championship) => {
