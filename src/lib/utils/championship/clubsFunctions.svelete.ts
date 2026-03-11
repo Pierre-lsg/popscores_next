@@ -9,6 +9,7 @@ import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 import { teamService } from '../pocketbase/teams2Cloud';
 import { playerService } from '../pocketbase/players2Cloud';
 import { clubService } from '../pocketbase/clubs2Cloud';
+import ClubManagementNoClub from '$lib/components/championship/club/ClubManagementNoClub.svelte';
 
 export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 	let status: string = 'success';
@@ -75,4 +76,31 @@ export const cloudLoadClubs = async (clubs: Club[]): Promise<string> => {
 	}
 
 	return status;
+};
+
+export const cloudLoadChampionshipsClubs = async (csId: string): Promise<string> => {
+	const allClubs = await clubService.getAllClubsOfChampionship(csId);
+
+	for (let club of allClubs) {
+		// sauver le club
+		clubsStore.remove(club.id);
+		clubsStore.load(club);
+
+		// Récupérer dans le cloud les équipes et les charger dans le modèle local
+		const teams: Team[] = await teamService.getTeamsByClub(club.id);
+		console.log('teams', teams);
+		for (const team of teams) {
+			teamsChampionshipStore.remove(team.id);
+			teamsChampionshipStore.load(team);
+		}
+
+		// Récupérer dans le cloud les joueurs et les charger dans le modèle local
+		const players: Player[] = await playerService.getPlayersByClub(club.id);
+		for (const player of players) {
+			playersChampionshipStore.remove(player.id);
+			playersChampionshipStore.load(player);
+		}
+	}
+
+	return 'ok';
 };

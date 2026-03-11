@@ -23,6 +23,7 @@
 		getRules
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
+	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -93,7 +94,13 @@
 				else result = resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
 
 				// Sauver le résultat dans le Cloud si c'est possible
-				if (isOnline) resultService.saveResult(result);
+				if (isOnline) {
+					playerService.savePlayer(player);
+					resultService.saveResult(result);
+				}
+
+				// Supprimer l'affichage du playoff
+				isShowingPlayoff = false;
 			});
 		}
 	};

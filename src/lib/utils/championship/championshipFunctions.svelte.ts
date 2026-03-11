@@ -11,6 +11,7 @@ import {
 	cloudLoadCompetitionsChampionship,
 	teamsForDoubleRanking
 } from './competitionsFunctions.svelte';
+import { cloudLoadChampionshipsClubs } from './clubsFunctions.svelete';
 import { userService } from '../pocketbase/users2Cloud';
 import { isCompetitionTeam } from './competitionsFunctions.svelte';
 import { smartSort } from '../sharedFunction';
@@ -77,6 +78,7 @@ export const loadAChampionship = async (csId: string): Promise<Championship | un
 		}
 
 		cloudLoadCompetitionsChampionship(aChampionship.id);
+		cloudLoadChampionshipsClubs(aChampionship.id);
 	}
 
 	return aChampionship;

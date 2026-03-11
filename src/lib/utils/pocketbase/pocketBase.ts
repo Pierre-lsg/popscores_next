@@ -28,7 +28,7 @@ export const db = {
 	// Récupérer un record par id
 	async getOne(collectionName: string, id: string, options = {}) {
 		try {
-			return await pb.collection(collectionName).getOne(id, options);
+			return await pb.collection(collectionName).getOne(id, { requestKey: null, ...options });
 		} catch (err) {
 			console.error(`Erreur getOne sur ${collectionName} :`, err);
 			return null;
