@@ -10,8 +10,9 @@ export default defineConfig({
 		SvelteKitPWA({
 			registerType: 'autoUpdate',
 			injectRegister: 'auto',
+			//strategies: 'injectManifest',
 			workbox: {
-				globPatterns: ['**/*.{js,css,json,html,png,txt,js,webmanifest,ico}']
+				globPatterns: ['**/*.{js,css,json,html,png,txt,webmanifest,ico}']
 			},
 			manifest: {
 				name: 'Popscores',
@@ -34,12 +35,6 @@ export default defineConfig({
 						sizes: '512x512',
 						type: 'image/png',
 						purpose: 'any'
-					},
-					{
-						src: 'pwa-512x512.png',
-						sizes: '512x512',
-						type: 'image/png',
-						purpose: 'any maskable'
 					}
 				]
 			}

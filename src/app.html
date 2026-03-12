@@ -12,6 +12,14 @@
 		<meta name="mobile-web-app-title" content="PopScores" />
 	</head>
 
+	<script>
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/popscores_next/sw.js');
+			});
+		}
+	</script>
+
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
