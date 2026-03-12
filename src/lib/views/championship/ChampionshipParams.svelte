@@ -7,7 +7,7 @@
 	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 
 	import Param from '$lib/ui/Param.svelte';
-	import ParamNum from '$lib/ui/ParamNum.svelte';
+	import Stepper from '$lib/ui/Stepper.svelte';
 	import ScaleUpdate from '$lib/components/championship/ScaleUpdate.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 
@@ -54,10 +54,11 @@
 			options={['setup', 'in_progress', 'finished']}
 			optionsLabel={['Initialisation', 'En cours', 'Terminé']}
 		/>
-		<ParamNum
-			label="Combien d'équipes scorent lors d'une compétition?"
+		<Stepper
+			label="Combien d'équipes scorent lors d'une compétition ?"
 			bind:value={championship.maxScoringTeams}
-			placeholder="1"
+			min={1}
+			max={9}
 		/>
 		<h2>Barèmes de points</h2>
 		<ScaleUpdate scaleId={championship.collectiveScale} isIndividual={false} />

@@ -120,11 +120,13 @@
 					<div>{competition.startDate.split('-').reverse().join('/')}</div>
 					<div class="icon">⛳</div>
 				</div>
-				<div class="action">
-					<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
-					<button onclick={() => editingCompetition(i)}>✏️</button>
-					<button onclick={() => savingCompetition(competition)}>☁️</button>
-				</div>
+				{#if competition.status !== 'finished'}
+					<div class="action">
+						<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
+						<button onclick={() => editingCompetition(i)}>✏️</button>
+						<button onclick={() => savingCompetition(competition)}>☁️</button>
+					</div>
+				{/if}
 			</div>
 		{/each}
 	</div>

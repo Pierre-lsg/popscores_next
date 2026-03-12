@@ -12,7 +12,7 @@
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 
-	let clubs = $state<Club[]>(clubsStore.list.filter((c) => c.championshipId === championship.id));
+	let clubs = $derived<Club[]>(clubsStore.list.filter((c) => c.championshipId === championship.id));
 	let clubDisplayed: Club = $state({
 		id: '',
 		name: '',
@@ -49,7 +49,7 @@
 		if (confirm('Voulez-vous vraiment supprimer ce club ?')) {
 			clubsStore.remove(id);
 		}
-		clubs = clubsStore.list;
+		//clubs = clubsStore.list;
 	};
 	const editingClub = (index: number) => {
 		for (let i = 0; i < clubs.length; i++) {
@@ -65,10 +65,10 @@
 	};
 
 	const savingClub = async (club: Club) => {
-		let clubs: Club[] = [];
-		clubs[0] = club;
+		let cloudClubs: Club[] = [];
+		cloudClubs[0] = club;
 
-		let status = await cloudSaveClubs(clubs);
+		let status = await cloudSaveClubs(cloudClubs);
 
 		switch (status) {
 			case 'success':
@@ -84,8 +84,8 @@
 
 	const loadClubfromCloud = (index: number) => {
 		// If club doesn't exist
-		const aCompet = clubsStore.list.filter((c) => c.id === filteredClubs[index].id);
-		if (aCompet.length == 0) {
+		const aClub = clubsStore.list.filter((c) => c.id === filteredClubs[index].id);
+		if (aClub.length == 0) {
 			if (confirm('Voulez-vous importer le club ?')) {
 				const newClub = {
 					id: filteredClubs[index].id,

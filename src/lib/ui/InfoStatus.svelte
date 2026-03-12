@@ -30,6 +30,15 @@
 	</div>
 {/if}
 
+<svelte:window
+	onclick={(e) => {
+		// If click out of the display area, leave it
+		if (e.target && (e.target as Element).closest('.displayed-box')) {
+			showStatus = !showStatus;
+		}
+	}}
+/>
+
 <style>
 	.status-wrapper {
 		position: fixed;

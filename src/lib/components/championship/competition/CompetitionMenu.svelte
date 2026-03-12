@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
-	import { fade, fly } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -14,10 +14,19 @@
 	};
 </script>
 
+<svelte:window
+	onclick={(e) => {
+		// If click out of the display area, leave it
+		if (e.target && !(e.target as Element).closest('.menu')) {
+			showMenu = false;
+		}
+	}}
+/>
+
 <div>
 	<div role="none" onclick={() => (showMenu = !showMenu)} class="menu">☰ Menu ...</div>
 	{#if showMenu}
-		<div class="menu-details" in:fly={{ duration: 200 }} out:fade>
+		<div class="menu-details" in:fade={{ duration: 500 }} out:fade={{ duration: 500 }}>
 			{#if currentCompetition.status === 'setup'}
 				<button
 					onclick={() => (currentCompetition.step = 'settings')}
@@ -85,16 +94,12 @@
 					Boire une bière
 				</button>
 			{/if}
-
-			{#if currentCompetition.step !== 'welcome'}
-				<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav">
-					Retour à l'accueil de la compétition
-				</button>
-			{:else}
-				<button onclick={() => (currentCompetition = undefined)} class="subnav">
-					Retour à la liste des compétitions
-				</button>
-			{/if}
+			<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav">
+				Retour à l'accueil de la compétition
+			</button>
+			<button onclick={() => (currentCompetition = undefined)} class="subnav">
+				Retour à la liste des compétitions
+			</button>
 		</div>
 	{/if}
 </div>
