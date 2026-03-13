@@ -4,6 +4,7 @@
 	import ChampionshipRanking from '$lib/components/ChampionshipRanking.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { onMount } from 'svelte';
 
 	let { currentChampionship = $bindable() } = $props<{
 		currentChampionship: Championship;
@@ -12,9 +13,18 @@
 	let showResults: boolean = $state(false);
 
 	const changeChampionship = () => {
-		championshipStore.reset();
-		window.location.reload();
+		if (
+			confirm(
+				'Voulez-vous vraiment changer de championnat ? \n Les données non sauvegardées dans le Cloud seront écrasées.'
+			)
+		) {
+			championshipStore.reset();
+			window.location.reload();
+		}
 	};
+	onMount(() => {
+		//
+	});
 </script>
 
 <h2>Championnat {currentChampionship.name}</h2>

@@ -18,11 +18,24 @@
 		<div class="displayed-box">
 			{#if messageStore.list.length > 0}
 				<p>Messages :</p>
-				{#each messageStore.list as message}
-					<div>
-						<span class="badge">{message.status}</span> - {message.details}
-					</div>
-				{/each}
+				<table>
+					<tbody>
+						{#each messageStore.list as message}
+							<tr>
+								<td>
+									<button
+										class="btn-delete-small"
+										onclick={() => messageStore.remove(message.keyEvent)}
+									>
+										X
+									</button>
+								</td>
+								<td class="badge">{message.status}</td>
+								<td class="message">{message.details}</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
 			{:else}
 				Aucun message
 			{/if}
@@ -33,13 +46,24 @@
 <svelte:window
 	onclick={(e) => {
 		// If click out of the display area, leave it
-		if (e.target && (e.target as Element).closest('.displayed-box')) {
+		if (
+			e.target &&
+			(e.target as Element).closest('.displayed-box') &&
+			!(e.target as Element).closest('.btn-delete-small')
+		) {
 			showStatus = !showStatus;
 		}
 	}}
 />
 
 <style>
+	.message {
+		font-size: 0.9em;
+		white-space: normal;
+		word-wrap: break-word;
+		text-align: left;
+	}
+
 	.status-wrapper {
 		position: fixed;
 		top: 0.7rem;
@@ -71,7 +95,7 @@
 		align-items: center;
 		justify-content: center;
 		height: 100vh;
-		width: 100vw;
+		width: 100%;
 		margin: 0;
 		background-color: rgba(0, 0, 0, 0.6);
 	}
@@ -82,22 +106,7 @@
 		background-color: var(--bg-card);
 		justify-content: center;
 		min-height: 30vh;
-		width: 100vw;
+		width: 100%;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-	}
-
-	.btn-close {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		width: 3vh;
-		height: 3vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-weight: bolder;
-		border-radius: 50%;
-		background-color: var(--bg-card);
-		color: var(--primary);
 	}
 </style>

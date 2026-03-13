@@ -6,6 +6,7 @@ import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampi
 import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
+import { messageStore } from '$lib/stores/appEventStore.svelte';
 
 import {
 	cloudLoadCompetitionsChampionship,
@@ -77,10 +78,11 @@ export const loadAChampionship = async (csId: string): Promise<Championship | un
 			championshipStore.load(aChampionship);
 		}
 
-		cloudLoadCompetitionsChampionship(aChampionship.id);
-		cloudLoadChampionshipsClubs(aChampionship.id);
+		await cloudLoadCompetitionsChampionship(aChampionship.id);
+		await cloudLoadChampionshipsClubs(aChampionship.id);
 	}
 
+	messageStore.reset();
 	return aChampionship;
 };
 

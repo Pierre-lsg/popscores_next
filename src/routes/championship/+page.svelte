@@ -4,7 +4,6 @@
 	import Selector from '$lib/ui/Selector.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
-
 	import { securityCheck } from '$lib/utils/security';
 	import { loadAChampionship } from '$lib/utils/championship/championshipFunctions.svelte';
 	import { onMount } from 'svelte';

@@ -12,16 +12,8 @@
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 
-	let clubs = $derived<Club[]>(clubsStore.list.filter((c) => c.championshipId === championship.id));
-	let clubDisplayed: Club = $state({
-		id: '',
-		name: '',
-		description: '',
-		playersId: [],
-		teamsId: [],
-		isMember: false,
-		championshipId: ''
-	});
+	let clubs = $derived(clubsStore.list.filter((c) => c.championshipId === championship.id));
+	let clubDisplayed: Club = $state({} as Club);
 	let editClub: boolean[] = $state([]);
 	let addNewClub: boolean = $state(false);
 	let isEditingClub: boolean = $state(false);
