@@ -10,7 +10,8 @@ import { messageStore } from '$lib/stores/appEventStore.svelte';
 
 import {
 	cloudLoadCompetitionsChampionship,
-	teamsForDoubleRanking
+	teamsForDoubleRanking,
+	cloudLoadCurrentCompetitionForSupervisor
 } from './competitionsFunctions.svelte';
 import { cloudLoadChampionshipsClubs } from './clubsFunctions.svelete';
 import { userService } from '../pocketbase/users2Cloud';
@@ -42,7 +43,10 @@ export const getSupervisors = async () => {
 	return supervisors;
 };
 
-export const loadAChampionship = async (csId: string): Promise<Championship | undefined> => {
+export const loadAChampionship = async (
+	csId: string,
+	userId: string
+): Promise<Championship | undefined> => {
 	championshipStore.reset();
 	mpsStore.reset();
 	let aChampionship: Championship | undefined;
@@ -78,7 +82,8 @@ export const loadAChampionship = async (csId: string): Promise<Championship | un
 			championshipStore.load(aChampionship);
 		}
 
-		await cloudLoadCompetitionsChampionship(aChampionship.id);
+		if (userId !== '') await cloudLoadCurrentCompetitionForSupervisor(aChampionship.id, userId);
+		else await cloudLoadCompetitionsChampionship(aChampionship.id);
 		await cloudLoadChampionshipsClubs(aChampionship.id);
 	}
 

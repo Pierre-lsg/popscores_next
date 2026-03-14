@@ -60,6 +60,7 @@
 		background: var(--bg-card);
 		border-radius: 8px;
 		margin-bottom: 0.5rem;
+		padding: 0.5rem 0;
 	}
 
 	option {

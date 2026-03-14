@@ -6,6 +6,7 @@
 
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 
 	import { getFilteredTeams } from '$lib/utils/championship/competitionsFunctions.svelte';
@@ -45,9 +46,11 @@
 	let filteredTeams: Team[] = $derived(getFilteredTeams(availableTeams, clubFilter, nameFilter));
 
 	const engageTeam = (index: number) => {
-		const clubId = filteredTeams[index].clubId;
-		currentCompetition.teamsId.push(filteredTeams[index].id);
-		engageClub(clubId);
+		const aTeam = filteredTeams[index];
+		aTeam.sessionId = currentCompetition.id;
+		currentCompetition.teamsId.push(aTeam.id);
+		teamsCompetitionStore.load(aTeam);
+		engageClub(aTeam.clubId);
 	};
 
 	const disengageTeam = (index: number) => {
@@ -55,6 +58,7 @@
 		currentCompetition.teamsId = currentCompetition.teamsId.filter(
 			(id: string) => id !== competitionTeams[index].id
 		);
+		teamsCompetitionStore.remove(competitionTeams[index].id);
 		disengageClub(clubId);
 	};
 

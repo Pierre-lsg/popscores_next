@@ -32,6 +32,17 @@ export const teamService = {
 		db.save('teams', teamToSave);
 	},
 
+	saveCompetitionTeam: (aTeam: Team) => {
+		const teamToSave = {
+			id: aTeam.id,
+			name: aTeam.name,
+			competition: aTeam.sessionId,
+			owner: pb.authStore.record?.id,
+			data: aTeam
+		};
+		db.save('teams_in_competition', teamToSave);
+	},
+
 	saveTeams: (teams: Team[]) => {
 		for (let aTeam of teams) {
 			const teamToSave = {

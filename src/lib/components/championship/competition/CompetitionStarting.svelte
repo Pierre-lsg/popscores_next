@@ -15,7 +15,7 @@
 	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
-	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { onMount } from 'svelte';
 	import CompetitionSummaryBox from './CompetitionSummaryBox.svelte';
 
@@ -178,7 +178,7 @@
 				<div class="fly">
 					{fly.order}
 					{#each fly.teamsId as teamId, j}
-						{@const teamFly = teamsChampionshipStore.find(teamId)}
+						{@const teamFly = teamsCompetitionStore.find(teamId)}
 						<div class="team-in-fly">
 							{teamFly?.name}
 							<span class="edit-fly" role="none" onclick={() => editTeamFly(i, j)}>✏️</span>

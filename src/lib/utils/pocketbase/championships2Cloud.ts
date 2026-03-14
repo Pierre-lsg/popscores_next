@@ -17,7 +17,8 @@ export const championshipService = {
 			collectiveScale: aChampionship.data.collectiveScale.id,
 			rankingClubs: aChampionship.data.rankingClubs,
 			rankingPlayers: aChampionship.data.rankingPlayers,
-			status: aChampionship.data.status
+			status: aChampionship.data.status,
+			maxScoringTeams: aChampionship.data.maxScoringTeams
 		})) as Championship[];
 	},
 
@@ -51,7 +52,8 @@ export const championshipService = {
 			collectiveScale: cltScale,
 			rankingClubs: aChampionShip.rankingClubs,
 			rankingPlayers: aChampionShip.rankingPlayers,
-			status: aChampionShip.status
+			status: aChampionShip.status,
+			maxScoringTeams: aChampionShip.maxScoringTeams
 		};
 		const championshipToSave = {
 			id: aChampionShip.id,

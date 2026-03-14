@@ -71,6 +71,7 @@
 
 	onMount(() => {
 		selectFly();
+		console.log('currentFly', currentFly);
 	});
 </script>
 

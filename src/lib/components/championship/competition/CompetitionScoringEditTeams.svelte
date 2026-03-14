@@ -14,19 +14,22 @@
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
 
-	import { swipe } from '$lib/utils/swipe';
-	import { slide } from 'svelte/transition';
+	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
+	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
+	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
+	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
+
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
-	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
-	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
 	import {
 		cloudSaveScoreCard,
 		getRules
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
 	import { onMount } from 'svelte';
+	import { swipe } from '$lib/utils/swipe';
+	import { slide } from 'svelte/transition';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -133,7 +136,10 @@
 				result = resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
 			}
 			// Sauver le résultat dans le Cloud si c'est possible
-			if (isOnline) resultService.saveResult(result);
+			if (isOnline) {
+				playerService.savePlayer(player);
+				resultService.saveResult(result);
+			}
 		});
 		// Transmettre la carte de score
 		if (isOnline)
@@ -150,6 +156,7 @@
 		// Modifier le status du fly
 		if (isOnline) {
 			currentFly.status = 'validated';
+			flyService.saveFly(currentFly);
 			messageStore.remove('sendFly');
 		} else {
 			currentFly.status = 'finished';
@@ -165,6 +172,7 @@
 	onMount(() => {
 		initScoresPlayerOnTarget();
 		if (!isCourseEnded) if (checkAllTargetsValidated()) isCourseEnded = true;
+		console.log('teams', teams);
 	});
 </script>
 

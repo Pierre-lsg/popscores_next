@@ -3,12 +3,11 @@
 	import type { Regulations } from '$lib/types/regulationsType';
 	import type { Championship } from '$lib/types/championshipType';
 
-	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
-	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
@@ -22,7 +21,7 @@
 		playersChampionshipStore.list.filter((p) => currentCompetition.playersId.includes(p.id))
 	);
 	let teamsCompetition = $derived(
-		teamsChampionshipStore.list.filter((t) => currentCompetition.teamsId.includes(t.id))
+		teamsCompetitionStore.list.filter((t) => currentCompetition.teamsId.includes(t.id))
 	);
 	let courseCompetition = $derived(coursesChampionshipStore.find(currentCompetition.courseId));
 

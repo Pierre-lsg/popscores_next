@@ -23,7 +23,9 @@
 	};
 
 	const loadChampionship = async () => {
-		const tmpChampionship = await loadAChampionship(selectedChampionshipId);
+		let userId: string = '';
+		if ($user && $user?.roles.includes('marshall')) userId = $user.id;
+		const tmpChampionship = await loadAChampionship(selectedChampionshipId, userId);
 
 		if (tmpChampionship) currentChampionship = tmpChampionship;
 	};

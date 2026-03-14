@@ -8,7 +8,6 @@ import type { Club } from '$lib/types/clubType';
 import type { Championship } from '$lib/types/championshipType';
 
 import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
-import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
@@ -115,6 +114,7 @@ export const cloudSaveAllCompetition = async (
 
 	// Lister et sauver les équipes
 	status = await cloudSaveTeams(competition.teamsId);
+	status = await cloudSaveCompetitionTeams(competition.teamsId);
 	messageStore.remove('modifTeams');
 
 	// Lister et sauver les joueurs
@@ -177,10 +177,27 @@ export const cloudSaveTeams = async (teamsId: string[]): Promise<string> => {
 	let status: string = 'success';
 
 	for (const teamId of teamsId) {
-		const aTeam: Team | undefined = teamsChampionshipStore.find(teamId);
+		const aTeam: Team | undefined = teamsCompetitionStore.find(teamId);
 		if (aTeam) {
 			try {
 				teamService.saveTeam(aTeam);
+			} catch (e) {
+				console.log('error', e);
+				status = 'failure';
+			}
+		}
+	}
+	return status;
+};
+
+export const cloudSaveCompetitionTeams = async (teamsId: string[]): Promise<string> => {
+	let status: string = 'success';
+
+	for (const teamId of teamsId) {
+		const aTeam: Team | undefined = teamsCompetitionStore.find(teamId);
+		if (aTeam) {
+			try {
+				teamService.saveCompetitionTeam(aTeam);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -286,6 +303,8 @@ export const cloudSaveResults = async (competitionId: string): Promise<string> =
 export const cloudLoadCompetitionsChampionship = async (csId: string): Promise<string> => {
 	let status: string = 'success';
 
+	console.log('On récupère la compétition');
+
 	// Charger l'ensemble des compétitions
 	let tmpCompetitions = await competitionService.getCompetitionsByChampionship(csId);
 
@@ -353,7 +372,7 @@ export const cloudLoadCurrentCompetitionForSupervisor = async (
 				// Charger les clubs liés à la compétition
 				cloudLoadClubs(aCompetition.clubsId);
 
-				// Charger les équipes liés à la compétition
+				// Charger les équipes liées à la compétition
 				if (isCompetitionTeam(aCompetition)) {
 					cloudLoadTeams(aFly.teamsId, aCompetition.id);
 				} else {
@@ -469,8 +488,8 @@ export const cloudLoadTeams = async (teamsId: string[], competitionId: string) =
 	for (let teamId of teamsId) {
 		const aTeam = await teamService.getTeamById(teamId);
 		if (aTeam) {
-			teamsChampionshipStore.remove(aTeam.id);
-			teamsChampionshipStore.load(aTeam);
+			teamsCompetitionStore.remove(aTeam.id);
+			teamsCompetitionStore.load(aTeam);
 		}
 
 		cloudLoadPlayersCompetition(aTeam.playersId, competitionId);
@@ -568,7 +587,7 @@ export const startCompetition = async (
 	if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
 		//Figer les équipes de la compétition
 		currentCompetition.teamsId.forEach((teamId: string) => {
-			const aTeam = teamsChampionshipStore.find(teamId);
+			const aTeam = teamsCompetitionStore.find(teamId);
 			if (aTeam) {
 				aTeam.sessionId = currentCompetition.id;
 				teamsCompetitionStore.findByIdAndSession(aTeam.id, aTeam.sessionId || '');

@@ -10,8 +10,11 @@
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
+
 	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
+	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
+	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
 
 	import { swipe } from '$lib/utils/swipe';
 	import { slide } from 'svelte/transition';
@@ -112,7 +115,10 @@
 				result = resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
 			}
 			// Sauver le résultat dans le Cloud si c'est possible
-			if (isOnline) resultService.saveResult(result);
+			if (isOnline) {
+				playerService.savePlayer(player);
+				resultService.saveResult(result);
+			}
 		});
 		// transmettre la carte de score
 		if (isOnline)
@@ -129,6 +135,7 @@
 		// Modifier le status du fly
 		if (isOnline) {
 			currentFly.status = 'validated';
+			flyService.saveFly(currentFly);
 			messageStore.remove('sendFly');
 		} else {
 			currentFly.status = 'finished';

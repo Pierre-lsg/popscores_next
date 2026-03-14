@@ -63,19 +63,4 @@
 		width: 100vw;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 	}
-
-	.btn-close {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		width: 3vh;
-		height: 3vh;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-weight: bolder;
-		border-radius: 50%;
-		background-color: var(--bg-card);
-		color: var(--primary);
-	}
 </style>

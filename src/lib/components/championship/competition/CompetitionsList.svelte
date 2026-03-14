@@ -38,9 +38,10 @@
 
 	let addNewCompetition: boolean = $state(false);
 
+	const today = new Date().toISOString().split('T')[0];
 	let competitionName: string = $state('');
-	let competitionDate: string = $state(new Date().toISOString().split('T')[0]);
-	let publicationDate: string = $state(new Date().toISOString().split('T')[0]);
+	let competitionDate: string = $state(today);
+	let publicationDate: string = $state(today);
 	let competitionLocation: string = $state('');
 
 	const createCompetition = () => {
@@ -55,7 +56,7 @@
 		championship.competitionsId.push(tmpCompetition.id);
 
 		competitionName = competitionLocation = '';
-		competitionDate = publicationDate = new Date().toISOString().split('T')[0];
+		competitionDate = publicationDate = today;
 		addNewCompetition = false;
 	};
 
@@ -120,7 +121,7 @@
 					<div>{competition.startDate.split('-').reverse().join('/')}</div>
 					<div class="icon">⛳</div>
 				</div>
-				{#if competition.status !== 'finished'}
+				{#if competition.status !== 'finished' || competition.startDate >= today}
 					<div class="action">
 						<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
 						<button onclick={() => editingCompetition(i)}>✏️</button>

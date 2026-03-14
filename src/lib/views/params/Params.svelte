@@ -7,6 +7,7 @@
 
 	const localReset = () => {
 		if (confirm('Voulez-vous supprimer le cache local ?')) localStorage.clear();
+		window.location.reload();
 	};
 
 	const deepReset = async () => {
