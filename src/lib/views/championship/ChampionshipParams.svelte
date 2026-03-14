@@ -12,6 +12,7 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import ScaleUpdate from '$lib/components/championship/ScaleUpdate.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import MultiSelector from '$lib/ui/MultiSelector.svelte';
 
 	import { getCsMgrs } from '$lib/utils/championship/championshipFunctions.svelte';
 
@@ -66,13 +67,12 @@
 			max={9}
 		/>
 		{#await csMgrs then csMgrs}
-			<Selector
+			<MultiSelector
 				id="managerSelect"
-				bind:value={championship.managersId[0]}
+				bind:value={championship.managersId}
 				label="Sélection du responsable"
 				options={csMgrs.map((c) => c.id)}
 				optionsLabel={csMgrs.map((c) => c.name)}
-				unselectedOption="-- à définir --"
 			/>
 		{/await}
 		<h2>Barèmes de points</h2>

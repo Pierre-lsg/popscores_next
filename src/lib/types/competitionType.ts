@@ -24,4 +24,5 @@ export interface Competition {
 	clubsId: string[];
 	status: CompetitionStatus;
 	step: CompetitionStep;
+	managersId: string[];
 }

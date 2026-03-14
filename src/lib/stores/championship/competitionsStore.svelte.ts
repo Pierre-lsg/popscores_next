@@ -63,7 +63,8 @@ class CompetitionsStore {
 			teamsId: [],
 			playersId: [],
 			clubsId: [],
-			flysId: []
+			flysId: [],
+			managersId: []
 		};
 		this.list.push(aCompetition);
 		return aCompetition;
