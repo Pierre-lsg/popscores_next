@@ -1,1 +1,0 @@
-import{b as d,c,r as n,k as u,m as p}from"./D5XO518v.js";function m(s,o,e){d(()=>{var a=c(()=>o(s,e?.())||{});if(e&&a?.update){var t=!1,f={};n(()=>{var r=e();u(r),t&&p(f,r)&&(f=r,a.update(r))}),t=!0}if(a?.destroy)return()=>a.destroy()})}export{m as a};
