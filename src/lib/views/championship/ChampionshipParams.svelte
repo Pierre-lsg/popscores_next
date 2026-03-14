@@ -3,15 +3,20 @@
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
-	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
 	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
+
+	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
+	import type { User } from '$lib/types/userType';
 
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import ScaleUpdate from '$lib/components/championship/ScaleUpdate.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 
+	import { getCsMgrs } from '$lib/utils/championship/championshipFunctions.svelte';
+
 	let championship = $state(championshipStore.list[0]);
+	let csMgrs: Promise<User[]> = $state(getCsMgrs());
 
 	const saveChampionshipToCloud = async () => {
 		let champToSave = $state.snapshot(championship);
@@ -60,6 +65,16 @@
 			min={1}
 			max={9}
 		/>
+		{#await csMgrs then csMgrs}
+			<Selector
+				id="managerSelect"
+				bind:value={championship.managersId[0]}
+				label="Sélection du responsable"
+				options={csMgrs.map((c) => c.id)}
+				optionsLabel={csMgrs.map((c) => c.name)}
+				unselectedOption="-- à définir --"
+			/>
+		{/await}
 		<h2>Barèmes de points</h2>
 		<ScaleUpdate scaleId={championship.collectiveScale} isIndividual={false} />
 		<ScaleUpdate scaleId={championship.individualScale} isIndividual={true} />

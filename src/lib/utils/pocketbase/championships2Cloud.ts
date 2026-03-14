@@ -18,7 +18,8 @@ export const championshipService = {
 			rankingClubs: aChampionship.data.rankingClubs,
 			rankingPlayers: aChampionship.data.rankingPlayers,
 			status: aChampionship.data.status,
-			maxScoringTeams: aChampionship.data.maxScoringTeams
+			maxScoringTeams: aChampionship.data.maxScoringTeams,
+			managersId: aChampionship.data.managersId
 		})) as Championship[];
 	},
 
@@ -53,7 +54,8 @@ export const championshipService = {
 			rankingClubs: aChampionShip.rankingClubs,
 			rankingPlayers: aChampionShip.rankingPlayers,
 			status: aChampionShip.status,
-			maxScoringTeams: aChampionShip.maxScoringTeams
+			maxScoringTeams: aChampionShip.maxScoringTeams,
+			managersId: aChampionShip.managersId
 		};
 		const championshipToSave = {
 			id: aChampionShip.id,

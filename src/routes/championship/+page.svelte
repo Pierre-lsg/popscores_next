@@ -39,7 +39,9 @@
 		await listCloudChampionship();
 		if ($user && !$user?.roles.includes('admin')) {
 			// Récupérer directement le championnat si un seul en cours
-			cloudChampionships = cloudChampionships.filter((c) => c.status === 'in_progress');
+			cloudChampionships = cloudChampionships.filter(
+				(c) => c.status === 'in_progress' && c.managersId.includes($user.id)
+			);
 			if (cloudChampionships.length === 1) {
 				selectedChampionshipId = cloudChampionships[0].id;
 				loadChampionship();

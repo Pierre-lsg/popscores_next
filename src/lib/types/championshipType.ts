@@ -20,6 +20,7 @@ export interface Championship {
 	rankingPlayers: Ranking[];
 	status: ChampionshipStatus;
 	maxScoringTeams: number;
+	managersId: string[];
 }
 
 export interface CloudChampionship {

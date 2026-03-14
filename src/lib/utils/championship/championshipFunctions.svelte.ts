@@ -43,6 +43,18 @@ export const getSupervisors = async () => {
 	return supervisors;
 };
 
+export const getCsMgrs = async () => {
+	const csMgrs: User[] = await userService.getUsersByRole('csMgr');
+
+	return csMgrs;
+};
+
+export const getCpMgrs = async () => {
+	const cpMgrs: User[] = await userService.getUsersByRole('cpMgr');
+
+	return cpMgrs;
+};
+
 export const loadAChampionship = async (
 	csId: string,
 	userId: string
@@ -64,7 +76,8 @@ export const loadAChampionship = async (
 			rankingClubs: tmpChampionship.data.rankingClubs,
 			rankingPlayers: tmpChampionship.data.rankingPlayers,
 			status: tmpChampionship.data.status,
-			maxScoringTeams: tmpChampionship.data.maxScoringTeams
+			maxScoringTeams: tmpChampionship.data.maxScoringTeams,
+			managersId: tmpChampionship.data.managersId
 		};
 		const aIdvScale: MarkedPointScale | undefined = tmpChampionship.data.individualScale;
 		const aClvScale: MarkedPointScale | undefined = tmpChampionship.data.collectiveScale;
@@ -80,11 +93,11 @@ export const loadAChampionship = async (
 		if (aChampionship) {
 			championshipStore.remove(aChampionship.id);
 			championshipStore.load(aChampionship);
-		}
 
-		if (userId !== '') await cloudLoadCurrentCompetitionForSupervisor(aChampionship.id, userId);
-		else await cloudLoadCompetitionsChampionship(aChampionship.id);
-		await cloudLoadChampionshipsClubs(aChampionship.id);
+			if (userId !== '') await cloudLoadCurrentCompetitionForSupervisor(aChampionship.id, userId);
+			else await cloudLoadCompetitionsChampionship(aChampionship.id);
+			await cloudLoadChampionshipsClubs(aChampionship.id);
+		}
 	}
 
 	messageStore.reset();
