@@ -39,9 +39,17 @@
 		await listCloudChampionship();
 		if ($user && !$user?.roles.includes('admin')) {
 			// Récupérer directement le championnat si un seul en cours
-			cloudChampionships = cloudChampionships.filter(
-				(c) => c.status === 'in_progress' && c.managersId.includes($user.id)
-			);
+			// Et si l'utilisateur est responsable du championnat
+			// ou au moins d'une compétition
+			cloudChampionships = cloudChampionships.filter((c) => {
+				// Todo Corriger la situation 'marshall' en listant les autorisés sur un championnat
+				if (c.status === 'in_progress') {
+					if (c.managersId.includes($user.id)) return true;
+					if (c.cpManagersId.includes($user.id)) return true;
+					if ($user?.roles.includes('marshall')) return true;
+				}
+				return false;
+			});
 			if (cloudChampionships.length === 1) {
 				selectedChampionshipId = cloudChampionships[0].id;
 				loadChampionship();

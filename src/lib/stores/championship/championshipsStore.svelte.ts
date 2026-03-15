@@ -57,7 +57,8 @@ class ChampionsStore {
 			rankingPlayers: [],
 			status: 'in_progress',
 			maxScoringTeams: 0,
-			managersId: []
+			managersId: [],
+			cpManagersId: []
 		});
 	}
 
@@ -77,7 +78,8 @@ class ChampionsStore {
 			rankingPlayers: [],
 			status: 'in_progress',
 			maxScoringTeams: 0,
-			managersId: []
+			managersId: [],
+			cpManagersId: []
 		};
 		this.list.push(newChampionship);
 		return newChampionship;

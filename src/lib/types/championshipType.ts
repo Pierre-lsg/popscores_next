@@ -21,6 +21,7 @@ export interface Championship {
 	status: ChampionshipStatus;
 	maxScoringTeams: number;
 	managersId: string[];
+	cpManagersId: string[];
 }
 
 export interface CloudChampionship {

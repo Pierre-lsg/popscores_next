@@ -70,7 +70,7 @@
 			<MultiSelector
 				id="managerSelect"
 				bind:value={championship.managersId}
-				label="Sélection du responsable"
+				label="Sélection de responsables"
 				options={csMgrs.map((c) => c.id)}
 				optionsLabel={csMgrs.map((c) => c.name)}
 			/>

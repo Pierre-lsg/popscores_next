@@ -77,7 +77,8 @@ export const loadAChampionship = async (
 			rankingPlayers: tmpChampionship.data.rankingPlayers,
 			status: tmpChampionship.data.status,
 			maxScoringTeams: tmpChampionship.data.maxScoringTeams,
-			managersId: tmpChampionship.data.managersId
+			managersId: tmpChampionship.data.managersId,
+			cpManagersId: tmpChampionship.data.cpManagersId
 		};
 		const aIdvScale: MarkedPointScale | undefined = tmpChampionship.data.individualScale;
 		const aClvScale: MarkedPointScale | undefined = tmpChampionship.data.collectiveScale;

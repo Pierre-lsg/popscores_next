@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
+	import type { User } from '$lib/types/userType';
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
 	import {
@@ -8,7 +9,11 @@
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 
 	import DatePicker from '$lib/ui/DatePicker.svelte';
+	import MultiSelector from '$lib/ui/MultiSelector.svelte';
 	import Param from '$lib/ui/Param.svelte';
+
+	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { getCpMgrs } from '$lib/utils/championship/championshipFunctions.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { smartSort } from '$lib/utils/sharedFunction';
 	import { onMount } from 'svelte';
@@ -18,10 +23,19 @@
 		currentCompetition: Competition | undefined;
 		championship: Championship;
 	}>();
+	let cpMgrs: Promise<User[]> = $state(getCpMgrs());
 
 	let competitions = $derived<Competition[]>(
 		smartSort(
-			competitionsStore.list.filter((c) => championship.competitionsId.includes(c.id)),
+			competitionsStore.list.filter((c: Competition) => {
+				if ($user) {
+					if ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))
+						return championship.competitionsId.includes(c.id);
+					if ($user.id !== null)
+						return championship.competitionsId.includes(c.id) && c.managersId.includes($user.id);
+				}
+				return false;
+			}),
 			'startDate'
 		)
 	);
@@ -107,30 +121,46 @@
 	const loadingCompetition = (competition: Competition) => {
 		currentCompetition = competition;
 	};
+
+	const toggleManagers = () => {
+		// Pour chaque compétition du championnat, renvoie la liste des managersId
+		const managers = championship.competitionsId
+			.map((competitionId: string) => {
+				const competition = competitionsStore.list.find((c) => c.id === competitionId);
+				return competition ? competition.managersId : [];
+			})
+			.flat();
+		const uniqueManagers = [...new Set(managers)];
+
+		// uniqueManagers est maintenant un tableau sans doublons
+		championship.cpManagersId = uniqueManagers;
+	};
 </script>
 
 <h2>Compétitions</h2>
 {#if !addNewCompetition}
-	<div class="competitions-list">
-		{#each competitions as competition, i}
-			<div class="competition-item">
-				<div role="none" class="competition-card" onclick={() => loadingCompetition(competition)}>
-					<div class="details">
-						{competition.name}
+	{#if !isEditingCompetition}
+		<div class="competitions-list">
+			{#each competitions as competition, i}
+				<div class="competition-item">
+					<div role="none" class="competition-card" onclick={() => loadingCompetition(competition)}>
+						<div class="details">
+							{competition.name}
+						</div>
+						<div>{competition.startDate.split('-').reverse().join('/')}</div>
+						<div class="icon">⛳</div>
 					</div>
-					<div>{competition.startDate.split('-').reverse().join('/')}</div>
-					<div class="icon">⛳</div>
+					{#if competition.status !== 'finished' || competition.startDate >= today}
+						<div class="action">
+							<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
+							<button onclick={() => editingCompetition(i)}>✏️</button>
+							<button onclick={() => savingCompetition(competition)}>☁️</button>
+						</div>
+					{/if}
 				</div>
-				{#if competition.status !== 'finished' || competition.startDate >= today}
-					<div class="action">
-						<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
-						<button onclick={() => editingCompetition(i)}>✏️</button>
-						<button onclick={() => savingCompetition(competition)}>☁️</button>
-					</div>
-				{/if}
-			</div>
-		{/each}
-	</div>
+			{/each}
+		</div>
+	{/if}
 
 	{#each competitions as competition, i}
 		{#if editCompetition[i]}
@@ -154,6 +184,17 @@
 					bind:value={competition.location}
 					placeholder="Localisation"
 				/>
+				{#await cpMgrs then cpMgrs}
+					<MultiSelector
+						id="managerSelect"
+						bind:value={competition.managersId}
+						label="Sélection de responsables"
+						options={cpMgrs.map((c) => c.id)}
+						optionsLabel={cpMgrs.map((c) => c.name)}
+						onchange={() => toggleManagers()}
+					/>
+				{/await}
+				<button onclick={() => editingCompetition(i)}>Terminer</button>
 			</div>
 		{/if}
 	{/each}
@@ -161,9 +202,10 @@
 	{#if competitions.length === 0}
 		<p>Aucune compétition enregistrée pour le moment. 🏆</p>
 	{/if}
-
-	{#if !isEditingCompetition}
-		<button onclick={() => (addNewCompetition = true)}>Ajouter une nouvelle compétition</button>
+	{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))}
+		{#if !isEditingCompetition}
+			<button onclick={() => (addNewCompetition = true)}>Ajouter une nouvelle compétition</button>
+		{/if}
 	{/if}
 {:else}
 	<div class="competition-form">
