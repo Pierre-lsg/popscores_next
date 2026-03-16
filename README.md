@@ -1,48 +1,82 @@
 # Présentation
 
-Application de gestion des sessions de street golf.
-Tourne uniqument sur Client Web.
-// Faire une description plus complète
+Popscores est une application de gestion des compétitions de street golf.
+Elle permet également de gérer les sessions libres et de les partager hors championnat.
+
+Popscores est développée avec Svelte et TypeScript. Il s'agit d'une application statique.
+Les données sont stockées sur un service PocketBase.
+
+Une documentation est en cours de préparation, prochainement dans le répertoire [docs](./docs)
 
 # License
 
-Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
+Ce projet est sous licence MIT - voir le fichier [LICENSE](./LICENSE) pour plus de détails.
 
-# sv
+# Développement
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## Prérequis
 
-## Creating a project
+- [git](https://git-scm.com/install)
+- [node.js](https://nodejs.org/en/download)
+- [npm](https://nodejs.org/en/download)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Création du projet
+
+Il s'agit d'un projet Svelte standard. Pour le construire, il faut :
 
 ```sh
-# create a new project in the current directory
-npx sv create
+# Cloner le projet popscores_next
+git clone https://github.com/Pierre-lsg/popscores_next
 
-# create a new project in my-app
-npx sv create my-app
+# Se placer sous l'arborescence
+cd popscores_next/
+
+# Installer les dépendances
+npm install
 ```
 
-## Developing
+## Tester localement
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Pour tester localement l'application veuillez saisir la commande 'npm run dev'
 
 ```sh
+# Test sur le localhost
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+```sh
+# Test sur un réseau local
+npm run dev -- --host
+```
 
-To create a production version of your app:
+## Générer l'applicatif final
+
+Parmi les commandes pour 'npm run' décrite dans le fichier package.json, on retrouve :
+
+- build - pour construire l'application statique à déposer sur son serveur web
+- preview - pour lancer un serveur web local de test
+- deploy - pour enchaîner un déploiement sur 'Github Pages'
+
+L'application fonctionnelle est réalisée en exécutant :
 
 ```sh
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+Le déploiement du fichier dist/ sur un serveur web est à votre charge
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+> Pour déployer votre application, vous pouvez aussi installer un [adapter](https://svelte.dev/docs/kit/adapters) pour votre environnement cible.
+
+# Production
+
+## Installation de l'application
+
+L'application est diponible là où vous déployez le répertoire dist/.
+Vous pouvez la déployer sur votre serveur web ou sur un service d'hébergement en modifiant les fichiers package.json et svelte.config.js
+Un exemple pour du développement est accessible sur mon [espace github](https://pierre-lsg.github.io/popscores_next/)
+
+## Installation de PocketBase
+
+Veuillez vous référer à la page du projet [PocketBase](https://pocketbase.io/docs/) pour trouver les instructions d'installation.
+Ce travail effectué, vous devez importer le fichier de configuration [pb_schema.json](./pb_schema.json) dans PocketBase.
+Pour cela, vous pouvez utiliser l'interface graphique de PocketBase
