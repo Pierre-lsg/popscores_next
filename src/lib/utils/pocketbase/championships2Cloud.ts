@@ -39,6 +39,16 @@ export const championshipService = {
 
 	getByChampionshipId: (id: string) => db.getOne('championships', id, {}),
 
+	save: (aChampionShip: Championship) => {
+		const championshipToSave = {
+			id: aChampionShip.id,
+			name: aChampionShip.name,
+			owner: pb.authStore.record?.id,
+			data: aChampionShip
+		};
+		db.save('championships', championshipToSave);
+	},
+
 	saveChampionship: (
 		aChampionShip: Championship,
 		idvScale?: MarkedPointScale,

@@ -3,6 +3,7 @@
 	import type { User } from '$lib/types/userType';
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
+	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
 	import {
 		cloudLoadCompetition,
 		cloudSaveAllCompetition
@@ -68,15 +69,20 @@
 			competitionLocation
 		);
 		championship.competitionsId.push(tmpCompetition.id);
+		championshipService.save(championship);
 
 		competitionName = competitionLocation = '';
 		competitionDate = publicationDate = today;
 		addNewCompetition = false;
 	};
 
-	const removeCompetition = (id: string) => {
+	const removeCompetition = (aCompetition: Competition) => {
 		if (confirm('Voulez-vous vraiment supprimer cette compétition ?')) {
-			competitionsStore.remove(id);
+			championship.competitionsId = championship.competitionsId.filter(
+				(id: string) => id !== aCompetition.id
+			);
+			competitionsStore.remove(aCompetition.id);
+			championshipService.save(championship);
 		}
 	};
 
@@ -152,7 +158,7 @@
 					</div>
 					{#if competition.status !== 'finished' || competition.startDate >= today}
 						<div class="action">
-							<button onclick={() => removeCompetition(competition.id)}> 🗑️ </button>
+							<button onclick={() => removeCompetition(competition)}> 🗑️ </button>
 							<button onclick={() => editingCompetition(i)}>✏️</button>
 							<button onclick={() => savingCompetition(competition)}>☁️</button>
 						</div>

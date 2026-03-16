@@ -182,7 +182,6 @@
 			label="Club"
 			options={clubs.map((club) => club.id)}
 			optionsLabel={clubs.map((club) => club.name)}
-			unselectedOption="sans club"
 		/>
 		<button onclick={addTeam}>Valider</button>
 		<button onclick={() => (addingTeam = false)}>Annuler</button>
