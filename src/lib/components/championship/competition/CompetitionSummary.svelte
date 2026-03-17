@@ -88,7 +88,9 @@
 		{#if courseCompetition && courseCompetition.targets.length > 0}
 			{formatList(courseCompetition.targets.map((t) => t.name + ' (' + t.par + '/' + t.rule + ')'))}
 		{:else}
-			Veuillez définir le parcours
+			<span role="none" onclick={() => (currentCompetition.step = 'course')}
+				>Veuillez définir le parcours
+			</span>
 		{/if}
 		<p>---</p>
 		{#if currentCompetition.flysId.length > 0}

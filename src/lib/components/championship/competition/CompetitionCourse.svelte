@@ -45,6 +45,15 @@
 		}
 	});
 
+	const removeTarget = (id: string) => {
+		if (confirm('Voulez-vous vraiment supprimer cette cible ?')) {
+			course?.targets.splice(
+				course.targets.findIndex((target) => target.id === id),
+				1
+			);
+		}
+	};
+
 	const addNewTarget = () => {
 		if (course) course.targets.push(targetsChampionshipStore.new());
 	};
@@ -142,25 +151,28 @@
 		<div>&nbsp;</div>
 		{#each course?.targets as target, i}
 			{#if editingTarget[i]}
-				<Param
-					label="⛳ Nom de la cible"
-					type="text"
-					bind:value={target.name}
-					placeholder="Nom de la cible"
-					focus={true}
-					oneline={true}
-				/>
-				<Stepper label="Par" value={target.par} onchange={(val) => (target.par = val)} />
-				<Selector
-					label="Règle"
-					id="rule{target.id}"
-					bind:value={target.rule}
-					options={ruleOptions}
-					onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
-				/>
-				<p class="param-container">
-					Autres params à définir plus tard (départ, arrivée, GPS photos, ...)
-				</p>
+				<div class="target-form">
+					<Param
+						label="⛳ Nom de la cible"
+						type="text"
+						bind:value={target.name}
+						placeholder="Nom de la cible"
+						focus={true}
+						oneline={true}
+					/>
+					<Stepper label="Par" value={target.par} onchange={(val) => (target.par = val)} />
+					<Selector
+						label="Règle"
+						id="rule{target.id}"
+						bind:value={target.rule}
+						options={ruleOptions}
+						onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+					/>
+					<p class="param-container">
+						Autres params à définir plus tard (départ, arrivée, GPS photos, ...)
+					</p>
+					<button onclick={() => removeTarget(target.id)}> 🗑️ </button>
+				</div>
 			{/if}
 		{/each}
 	{:else}
@@ -174,6 +186,12 @@
 </div>
 
 <style>
+	.target-form {
+		border: 1px var(--primary) solid;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+	}
+
 	.param-container {
 		display: flex;
 		align-items: center;

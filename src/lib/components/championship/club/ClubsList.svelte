@@ -37,12 +37,13 @@
 		((clubName = ''), (clubDescription = ''));
 		addNewClub = false;
 	};
+
 	const removeClub = (id: string) => {
 		if (confirm('Voulez-vous vraiment supprimer ce club ?')) {
 			clubsStore.remove(id);
 		}
-		//clubs = clubsStore.list;
 	};
+
 	const editingClub = (index: number) => {
 		for (let i = 0; i < clubs.length; i++) {
 			if (i !== index) editClub[i] = false;

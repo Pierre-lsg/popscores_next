@@ -53,6 +53,9 @@
 				// ou au moins d'une compétition
 				cloudChampionships = cloudChampionships.filter((c) => {
 					// Todo Corriger la situation 'marshall' en listant les autorisés sur un championnat
+					if (c.status === 'setup') {
+						if (c.managersId.includes($user.id)) return true;
+					}
 					if (c.status === 'in_progress') {
 						if (c.managersId.includes($user.id)) return true;
 						if (c.cpManagersId.includes($user.id)) return true;

@@ -303,8 +303,6 @@ export const cloudSaveResults = async (competitionId: string): Promise<string> =
 export const cloudLoadCompetitionsChampionship = async (csId: string): Promise<string> => {
 	let status: string = 'success';
 
-	console.log('On récupère la compétition');
-
 	// Charger l'ensemble des compétitions
 	let tmpCompetitions = await competitionService.getCompetitionsByChampionship(csId);
 
@@ -314,23 +312,24 @@ export const cloudLoadCompetitionsChampionship = async (csId: string): Promise<s
 
 		// Charger le règlement
 		if (aCompetition.regulationsId && aCompetition.regulationsId !== '') {
-			cloudLoadRegulations(aCompetition.regulationsId);
+			await cloudLoadRegulations(aCompetition.regulationsId);
 		}
 
 		// Charger le parcours
 		if (aCompetition.courseId && aCompetition.courseId !== '') {
-			cloudLoadCourse(aCompetition.courseId);
+			await cloudLoadCourse(aCompetition.courseId);
 		}
 
 		// Charger les clubs liés à la compétition
-		cloudLoadClubs(aCompetition.clubsId);
+		await cloudLoadClubs(aCompetition.clubsId);
 
 		// Charger les équipes liés à la compétition
-		if (isCompetitionTeam(aCompetition)) cloudLoadTeams(aCompetition.teamsId, aCompetition.id);
-		else cloudLoadPlayersCompetition(aCompetition.playersId, aCompetition.id);
+		if (isCompetitionTeam(aCompetition))
+			await cloudLoadTeams(aCompetition.teamsId, aCompetition.id);
+		else await cloudLoadPlayersCompetition(aCompetition.playersId, aCompetition.id);
 
 		// Charger les flys
-		cloudLoadFlys(aCompetition.flysId);
+		await cloudLoadFlys(aCompetition.flysId);
 	}
 
 	return status;
@@ -485,6 +484,7 @@ export const cloudLoadResults = async (playerId: string, competitionId: string) 
 };
 
 export const cloudLoadTeams = async (teamsId: string[], competitionId: string) => {
+	console.log('Chargement des équipes : ' + competitionId + ' - ' + teamsId);
 	for (let teamId of teamsId) {
 		const aTeam = await teamService.getTeamById(teamId);
 		if (aTeam) {

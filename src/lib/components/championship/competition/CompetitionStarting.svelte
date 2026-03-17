@@ -16,6 +16,7 @@
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
+	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { onMount } from 'svelte';
 	import CompetitionSummaryBox from './CompetitionSummaryBox.svelte';
 
@@ -30,6 +31,7 @@
 	let flys: Fly[] = $derived(
 		flysChampionshipStore.list.filter((fly) => currentCompetition.flysId.includes(fly.id))
 	);
+	let courseCompetition = $derived(coursesChampionshipStore.find(currentCompetition.courseId));
 	let newIdFly: string = $state('');
 	let editingFly: boolean[] = $state([]);
 
@@ -233,9 +235,14 @@
 	{#if showBox}
 		<CompetitionSummaryBox {currentCompetition} {championship} bind:showBox />
 	{/if}
-
-	{#if flys.length > 0}
-		<button onclick={start}> Lancer la compétition </button>
+	{#if courseCompetition && courseCompetition?.targets.length > 0}
+		{#if flys.length > 0}
+			<button onclick={start}> Lancer la compétition </button>
+		{/if}
+	{:else}
+		<button onclick={() => (currentCompetition.step = 'course')}
+			>Veuillez définir le parcours ...</button
+		>
 	{/if}
 
 	<p>Une fois la compétition lancée les flys ne peuvent etre modifié</p>
