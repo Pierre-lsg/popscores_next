@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import MultiSelector from '$lib/ui/MultiSelector.svelte';
 
 	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
@@ -31,6 +32,13 @@
 		let player = clubPlayers.find((p: Player) => p.id === playerId);
 		if (player) player.teamId = '';
 		team.playersId = team.playersId.filter((p: string) => p !== playerId);
+	};
+
+	const confirmPlayersTeam = () => {
+		team.playersId.forEach((pId: string) => {
+			let player = clubPlayers.find((p: Player) => p.id === pId);
+			if (player) player.teamId = team.id;
+		});
 	};
 
 	// Function to handle selecting a player and adding it to the team
@@ -66,6 +74,15 @@
 	{#if playersAvailable.length > 0}
 		<button onclick={addPlayer}>Ajouter un joueur</button>
 		{#if isSelectVisible}
+			<MultiSelector
+				id="managerSelect"
+				bind:value={team.playersId}
+				label="Sélection de joueurs"
+				options={playersAvailable.map((p: Player) => p.id)}
+				optionsLabel={playersAvailable.map((p: Player) => p.name)}
+				onchange={() => confirmPlayersTeam()}
+			/>
+			<!--
 			<Selector
 				bind:value={playerId}
 				options={playersAvailable.map((p: Player) => p.id)}
@@ -73,6 +90,7 @@
 				unselectedOption="-- choisir un joueur"
 				onchange={() => selectPlayer()}
 			/>
+-->
 		{/if}
 	{/if}
 

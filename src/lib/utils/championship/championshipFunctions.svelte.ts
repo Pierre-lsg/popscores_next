@@ -57,7 +57,8 @@ export const getCpMgrs = async () => {
 
 export const loadAChampionship = async (
 	csId: string,
-	userId: string
+	userId: string,
+	userRole: string
 ): Promise<Championship | undefined> => {
 	championshipStore.reset();
 	mpsStore.reset();
@@ -95,7 +96,8 @@ export const loadAChampionship = async (
 			championshipStore.remove(aChampionship.id);
 			championshipStore.load(aChampionship);
 
-			if (userId !== '') await cloudLoadCurrentCompetitionForSupervisor(aChampionship.id, userId);
+			if (userId !== '' && userRole === 'marshall')
+				await cloudLoadCurrentCompetitionForSupervisor(aChampionship.id, userId);
 			else await cloudLoadCompetitionsChampionship(aChampionship.id);
 			await cloudLoadChampionshipsClubs(aChampionship.id);
 		}

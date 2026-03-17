@@ -169,13 +169,17 @@
 	{#if editClub[i]}
 		<div class="club-form">
 			<h3>Modifier le Club</h3>
-			<Param
-				label="⛳ Nom du club"
-				type="text"
-				bind:value={club.name}
-				placeholder="Nom du club"
-				focus={true}
-			/>
+			{#if club.name !== 'sans club'}
+				<Param
+					label="⛳ Nom du club"
+					type="text"
+					bind:value={club.name}
+					placeholder="Nom du club"
+					focus={true}
+				/>
+			{:else}
+				<h3>Sans club</h3>
+			{/if}
 			<Param
 				label="⛳ Description du club"
 				type="text"

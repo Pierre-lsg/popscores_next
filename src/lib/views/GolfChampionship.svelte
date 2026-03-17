@@ -23,7 +23,7 @@
 		}
 	};
 	onMount(() => {
-		//
+		// compter le nombre de championnats en cours et afficher un message si > 1
 	});
 </script>
 

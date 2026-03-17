@@ -12,10 +12,18 @@
 	import { onMount } from 'svelte';
 	import StatusSignal from '$lib/ui/InfoStatus.svelte';
 	import NetworkStatus from '$lib/ui/NetworkStatus.svelte';
+	import { pb } from '$lib/utils/pocketbase/pocketBase';
 
 	let { children } = $props();
 
 	let webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '';
+
+	const logoutAndPurge = () => {
+		user.set(null);
+		localStorage.clear(); // Clear all local storage items
+		pb.authStore.clear();
+		window.location.href = '/';
+	};
 
 	onMount(() => {
 		const hasMigrated = checkDataVersion();
@@ -57,6 +65,8 @@
 	Popscores v{CURRENT_VERSION}
 	{#if $user}🔗{$user.name} ({formatList($user.roles)})
 	{/if}
+	|
+	<span role="none" onclick={() => logoutAndPurge()}>🗝️</span>
 </footer>
 
 <style>

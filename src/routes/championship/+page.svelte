@@ -24,8 +24,17 @@
 
 	const loadChampionship = async () => {
 		let userId: string = '';
-		if ($user && $user?.roles.includes('marshall')) userId = $user.id;
-		const tmpChampionship = await loadAChampionship(selectedChampionshipId, userId);
+		let userRole: string = '';
+		if ($user && $user.roles) {
+			userId = $user.id;
+
+			if ($user.roles.includes('admin')) userRole = 'admin';
+			else if ($user.roles.includes('csMgr')) userRole = 'csMgr';
+			else if ($user.roles.includes('cpMgr')) userRole = 'cpMgr';
+			else userRole = 'marshall';
+		}
+		console.log('user role', userRole);
+		const tmpChampionship = await loadAChampionship(selectedChampionshipId, userId, userRole);
 
 		if (tmpChampionship) currentChampionship = tmpChampionship;
 	};
