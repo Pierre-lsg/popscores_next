@@ -9,6 +9,7 @@
 	import type { Club } from '$lib/types/clubType';
 	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
+	import { onMount } from 'svelte';
 
 	let { currentClub = $bindable('') } = $props<{
 		currentClub: string;

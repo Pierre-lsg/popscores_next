@@ -61,6 +61,10 @@
 	};
 
 	const addPlayer = () => {
+		if (newPlayersClub === '') {
+			newPlayersClub = clubsStore.list.find((c) => c.name === 'sans club')?.id || '';
+		}
+
 		playersChampionshipStore.add(newPlayersName, '', '', newPlayersClub);
 		engageClub(newPlayersClub);
 		newPlayersName = newPlayersClub = '';

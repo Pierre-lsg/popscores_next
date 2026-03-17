@@ -20,9 +20,11 @@
 
 	let aClubId: string = $state('');
 	let isAttachingPlayer: boolean = $state(false);
+	let isAttachingTeam: boolean = $state(false);
 	let checkedPlayers = $state([]);
+	let checkedTeams = $state([]);
 
-	const moveToSelectClub = () => {
+	const movePlayerToSelectClub = () => {
 		let club: Club | undefined = clubsStore.find(aClubId);
 
 		if (club) {
@@ -36,6 +38,22 @@
 			});
 		}
 		isAttachingPlayer = false;
+	};
+
+	const moveTeamToSelectClub = () => {
+		let club: Club | undefined = clubsStore.find(aClubId);
+
+		if (club) {
+			checkedTeams.forEach((team: Team) => {
+				// Ajout de la référence joueur au club
+				if (!club.teamsId.includes(team.id)) {
+					club.teamsId.push(team.id);
+				}
+				// Ajout de la référence du club au joueur
+				team.clubId = club.id;
+			});
+		}
+		isAttachingTeam = false;
 	};
 </script>
 
@@ -69,7 +87,7 @@
 
 	{#if isAttachingPlayer}
 		<div class="action">
-			<button onclick={() => moveToSelectClub()}>Valider</button>
+			<button onclick={() => movePlayerToSelectClub()}>Valider</button>
 			<button onclick={() => (isAttachingPlayer = false)}>Annuler</button>
 		</div>
 	{/if}
@@ -79,11 +97,36 @@
 
 {#if teams.length > 0}
 	<h3>Liste des équipes sans club</h3>
-	{#each teams as team}
+	<button onclick={() => (isAttachingTeam = true)}>Rattacher à un club</button>
+	{#if isAttachingTeam}
 		<div>
-			{team.name}
+			<Selector
+				id="clubSelect"
+				bind:value={aClubId}
+				label="Liste des clubs"
+				options={clubsStore.list.map((club) => club.id)}
+				optionsLabel={clubsStore.list.map((club) => club.name)}
+			/>
+		</div>
+	{/if}
+
+	{#each teams as team, i}
+		<div class="team-list">
+			{#if isAttachingTeam}
+				<input type="checkbox" value={team} id={team.id} bind:group={checkedTeams} />
+			{/if}
+			<label class="team-item" for={team.id}>
+				{team.name}
+			</label>
 		</div>
 	{/each}
+
+	{#if isAttachingTeam}
+		<div class="action">
+			<button onclick={() => moveTeamToSelectClub()}>Valider</button>
+			<button onclick={() => (isAttachingTeam = false)}>Annuler</button>
+		</div>
+	{/if}
 {:else}
 	<p>Il n'y a pas d'équipes non affiliées</p>
 {/if}

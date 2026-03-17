@@ -34,7 +34,7 @@ const defaultSettings: AppSettings = {
 	malusOverPar: 4,
 	isTeamGame: false,
 	cloudUrl: 'https://api.obip.fr',
-	cloudLogin: 'pierre.bonnafous@gmail.fr'
+	cloudLogin: 'xxx@xxx.zz'
 };
 
 /**

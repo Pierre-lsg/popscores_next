@@ -1,9 +1,12 @@
-<script>
+<script lang="ts">
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
+	import { importLocalStorage, exportLocalStorage } from '$lib/utils/utils';
+
+	let fileInput: HTMLInputElement;
 
 	const localReset = () => {
 		if (confirm('Voulez-vous supprimer le cache local ?')) localStorage.clear();
@@ -33,6 +36,13 @@
 	const updatePocketBaseUrl = () => {
 		pb.baseURL = appSettings.values.cloudUrl;
 		if (pb.authStore.isValid) pb.authStore.clear();
+	};
+
+	const handleFileChange = (event: Event) => {
+		const target = event.target as HTMLInputElement;
+		if (target.files && target.files[0]) {
+			importLocalStorage(target.files[0]);
+		}
 	};
 </script>
 
@@ -75,6 +85,16 @@
 		placeholder="Identifiant"
 	/>
 
+	<h2>Import/Export</h2>
+	<button onclick={() => exportLocalStorage()}>📥 Exporter backup</button>
+	<button onclick={() => fileInput.click()}>📥 Importer Backup</button>
+	<input
+		bind:this={fileInput}
+		type="file"
+		accept=".json"
+		onchange={handleFileChange}
+		style="display: none;"
+	/>
 	<h2>Réinitialisation</h2>
 	<button onclick={() => localReset()}>Réinitialisation des données</button>
 	<button onclick={() => deepReset()}>Réinitialisation totale</button>

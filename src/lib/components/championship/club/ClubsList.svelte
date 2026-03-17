@@ -95,6 +95,17 @@
 	};
 
 	onMount(async () => {
+		// Check if 'sans club' is available
+		if (
+			!clubsStore.list.find((c) => c.name === 'sans club' && c.championshipId === championship.id)
+		)
+			// if not, create it
+			clubsStore.add(
+				'sans club',
+				'Liste des joueurs et équipes non affiliées à une association',
+				championship.id
+			);
+
 		allClubs = await clubService.getAllClubsOfChampionship(championship.id);
 		loading = false;
 	});
@@ -123,6 +134,7 @@
 		{/each}
 
 		<!-- Sans club -->
+		<!--
 		<div class="club-item">
 			<div role="none" class="club-card" onclick={() => (currentClub = 'no_club')}>
 				<div class="details">Sans club</div>
@@ -130,6 +142,7 @@
 				<div class="icon">❓</div>
 			</div>
 		</div>
+		-->
 	</div>
 
 	{#if clubs.length === 0}

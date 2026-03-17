@@ -4,6 +4,7 @@
 
 	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
+	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 
 	let {
 		currentClub = $bindable(''),
@@ -41,9 +42,14 @@
 	};
 
 	const displayPlayer = (playerId: string) => {
-		const player = clubPlayers.find((p: Player) => p.id === playerId);
+		let player = clubPlayers.find((p: Player) => p.id === playerId);
 		if (player) return player.name;
-		else return '???';
+		else {
+			console.log('joueurs externes : ', playerId);
+			return (player =
+				(playersChampionshipStore.list.find((p: Player) => p.id === playerId)?.name || '') +
+				' (*)');
+		}
 	};
 </script>
 

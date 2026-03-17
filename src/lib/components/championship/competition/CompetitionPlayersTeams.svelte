@@ -63,6 +63,10 @@
 	};
 
 	const addTeam = () => {
+		if (newTeamsClub === '') {
+			newTeamsClub = clubsStore.list.find((c) => c.name === 'sans club')?.id || '';
+		}
+
 		teamsChampionshipStore.add(newTeamsName, newTeamsClub);
 		addingTeam = false;
 		engageClub(newTeamsClub);
