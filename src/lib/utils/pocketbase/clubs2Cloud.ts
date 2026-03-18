@@ -21,7 +21,7 @@ export const clubService = {
 		return club?.data as Club;
 	},
 
-	saveClub: (aClub: Club) => {
+	saveClub: async (aClub: Club) => {
 		const clubToSave = {
 			id: aClub.id,
 			name: aClub.name,

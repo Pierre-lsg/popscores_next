@@ -14,6 +14,14 @@ export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 	let status: string = 'success';
 
 	for (let club of clubs) {
+		// sauver le club
+		try {
+			await clubService.saveClub(club);
+		} catch (e) {
+			console.log('error', e);
+			status = 'failure';
+		}
+
 		// Lister et sauver les équipes
 		for (let teamId of club.teamsId) {
 			const aTeam: Team | undefined = teamsChampionshipStore.find(teamId);
@@ -38,14 +46,6 @@ export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 					status = 'failure';
 				}
 			}
-		}
-
-		// sauver le club
-		try {
-			clubService.saveClub(club);
-		} catch (e) {
-			console.log('error', e);
-			status = 'failure';
 		}
 	}
 

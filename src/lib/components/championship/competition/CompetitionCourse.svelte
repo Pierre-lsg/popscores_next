@@ -26,7 +26,9 @@
 
 	let targets: Target[] = $state([]);
 	let editingTarget: boolean[] = $state([]);
-	let course: Course | undefined = $state();
+	let course: Course | undefined = $derived(
+		coursesChampionshipStore.find(currentCompetition.courseId)
+	);
 
 	const flipDurationMs = 200;
 	let isDragging = $state(false);
@@ -55,7 +57,10 @@
 	};
 
 	const addNewTarget = () => {
-		if (course) course.targets.push(targetsChampionshipStore.new());
+		if (course) {
+			course.targets.push(targetsChampionshipStore.new());
+			targets = course.targets;
+		}
 	};
 
 	const editTarget = (id: number) => {

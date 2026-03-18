@@ -2,12 +2,12 @@
 
 ## Corrections
 
-1. Besoin de cliquer 2 fois sur le nuage à la validation d'un nouveau club pour le sauver dans le Cloud. Erreur au premier enregistrement
-2. A la création du parcours de compétition, la première saisie n'est pas enregistrée localement. Nécessite second passage. Vérifier la création du parcours ...
+1. ~~Besoin de cliquer 2 fois sur le nuage à la validation d'un nouveau club pour le sauver dans le Cloud. Erreur au premier enregistrement~~ Enregistrement du club avant joueurs et équipes et attente de validation avant de sauver les équipes et joueurs
+2. ~~A la création du parcours de compétition, la première saisie n'est pas enregistrée localement. Nécessite second passage. Vérifier la création du parcours ...~~ Correction : course doit être dérivé de competition.course et non mis à jour à posteriori
 3. ~~Au chargement d'un championnat, si profil différent d'admin, teams_in_competitions non remonté dans le localStorage [urgent++]~~ Correction : attente de la fin du chargement du règlement avant de charger les équipes.
-4. A la création d'un nouveau joueur pour une compétition, vérifier son affiliation à 'sans club'
+4. ~~A la création d'un nouveau joueur pour une compétition, vérifier son affiliation à 'sans club'~~
 5. ~~Positionner des contrôles pour empêcher validation d'une compétition incomplète~~
-6. Lorsqu'on modifie un championnat, il faut aussi injecter les échelles de classement (championships2Cloud : championshipService.save)
+6. ~~Lorsqu'on modifie un championnat, il faut aussi injecter les échelles de classement~~ (championships2Cloud : championshipService.save)
 
 ## Améliorations
 

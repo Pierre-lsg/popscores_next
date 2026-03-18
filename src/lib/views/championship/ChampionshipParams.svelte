@@ -21,11 +21,9 @@
 
 	const saveChampionshipToCloud = async () => {
 		let champToSave = $state.snapshot(championship);
-		let idvScale: MarkedPointScale | undefined = mpsStore.getScaleById(champToSave.individualScale);
-		let cltScale: MarkedPointScale | undefined = mpsStore.getScaleById(champToSave.collectiveScale);
 
 		try {
-			championshipService.saveChampionship(champToSave, idvScale, cltScale);
+			championshipService.save(champToSave);
 			toastStore.show('💾 Mise à jour effectuée ...', 'success');
 			messageStore.remove('modifChamp');
 		} catch (err) {

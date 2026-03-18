@@ -41,6 +41,7 @@ class CompetitionsStore {
 	 * @param startDate - Start date of the competition (optional)
 	 * @param scorePublicationDate - Date when scores will be published (optional)
 	 * @param location - Location of the competition (optional)
+	 * @param managersId - Location of the competition (optional)
 	 */
 	add(
 		name: string,
@@ -48,7 +49,8 @@ class CompetitionsStore {
 		step: CompetitionStep,
 		startDate?: string,
 		scorePublicationDate?: string,
-		location?: string
+		location?: string,
+		managersId?: string[]
 	): Competition {
 		let aCompetition = {
 			id: crypto.randomUUID(),
@@ -64,7 +66,7 @@ class CompetitionsStore {
 			playersId: [],
 			clubsId: [],
 			flysId: [],
-			managersId: []
+			managersId: managersId || []
 		};
 		this.list.push(aCompetition);
 		return aCompetition;

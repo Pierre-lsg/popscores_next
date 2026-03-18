@@ -42,13 +42,15 @@ class ClubsStore {
 	 * @param championshipId - id of the championship
 	 * @param playersId - An array of player IDs associated with the club (optional).
 	 * @param teamsId - An array of team IDs associated with the club (optional).
+	 * @param isMember - is the club affiliated to the federation
 	 */
 	add(
 		name: string,
 		description: string,
 		championshipId: string,
 		playersId: string[] = [],
-		teamsId: string[] = []
+		teamsId: string[] = [],
+		isMember: boolean = false
 	) {
 		this.list.push({
 			id: crypto.randomUUID(),
@@ -56,7 +58,7 @@ class ClubsStore {
 			description,
 			playersId,
 			teamsId,
-			isMember: false,
+			isMember,
 			championshipId
 		});
 	}

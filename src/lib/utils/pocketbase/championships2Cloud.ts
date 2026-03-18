@@ -1,6 +1,7 @@
 import { db, pb } from './pocketBase';
 import type { Championship, CloudChampionship } from '$lib/types/championshipType';
 import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
+import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 
 export const championshipService = {
 	getAll: () => db.getFullList('championships', { sort: 'created' }),
@@ -40,28 +41,15 @@ export const championshipService = {
 	getByChampionshipId: (id: string) => db.getOne('championships', id, {}),
 
 	save: (aChampionShip: Championship) => {
-		const championshipToSave = {
-			id: aChampionShip.id,
-			name: aChampionShip.name,
-			owner: pb.authStore.record?.id,
-			data: aChampionShip
-		};
-		db.save('championships', championshipToSave);
-	},
-
-	saveChampionship: (
-		aChampionShip: Championship,
-		idvScale?: MarkedPointScale,
-		cltScale?: MarkedPointScale
-	) => {
+		mpsStore.getScaleById(aChampionShip.individualScale);
 		const data = {
 			id: aChampionShip.id,
 			name: aChampionShip.name,
 			season: aChampionShip.season,
 			location: aChampionShip.location,
 			competitionsId: aChampionShip.competitionsId,
-			individualScale: idvScale,
-			collectiveScale: cltScale,
+			individualScale: mpsStore.getScaleById(aChampionShip.individualScale),
+			collectiveScale: mpsStore.getScaleById(aChampionShip.collectiveScale),
 			rankingClubs: aChampionShip.rankingClubs,
 			rankingPlayers: aChampionShip.rankingPlayers,
 			status: aChampionShip.status,
@@ -69,6 +57,7 @@ export const championshipService = {
 			managersId: aChampionShip.managersId,
 			cpManagersId: aChampionShip.cpManagersId
 		};
+
 		const championshipToSave = {
 			id: aChampionShip.id,
 			name: aChampionShip.name,
@@ -76,49 +65,5 @@ export const championshipService = {
 			data: data
 		};
 		db.save('championships', championshipToSave);
-	},
-
-	createChampionship: (
-		aChampionShip: Championship,
-		idvScale?: MarkedPointScale,
-		cltScale?: MarkedPointScale
-	) => {
-		const data = {
-			id: aChampionShip.id,
-			name: aChampionShip.name,
-			season: aChampionShip.season,
-			location: aChampionShip.location,
-			individualScale: idvScale,
-			collectiveScale: cltScale
-		};
-		const championshipToSave = {
-			id: aChampionShip.id,
-			name: aChampionShip.name,
-			owner: pb.authStore.record?.id,
-			data: data
-		};
-		db.create('championships', championshipToSave);
-	},
-
-	updateChampionship: (
-		aChampionShip: Championship,
-		idvScale?: MarkedPointScale,
-		cltScale?: MarkedPointScale
-	) => {
-		const data = {
-			id: aChampionShip.id,
-			name: aChampionShip.name,
-			season: aChampionShip.season,
-			location: aChampionShip.location,
-			individualScale: idvScale,
-			collectiveScale: cltScale
-		};
-		const championshipToSave = {
-			id: aChampionShip.id,
-			name: aChampionShip.name,
-			owner: pb.authStore.record?.id,
-			data: data
-		};
-		db.update('championships', championshipToSave);
 	}
 };

@@ -20,6 +20,7 @@
 
 	let clubName: string = $state('');
 	let clubDescription: string = $state('');
+	let isFederationMember: boolean = $state(false);
 	let showBox: boolean = $state(false);
 
 	let allClubs: Club[] = $state([]);
@@ -33,8 +34,8 @@
 	}>();
 
 	const createClub = () => {
-		clubsStore.add(clubName, clubDescription, championship.id);
-		((clubName = ''), (clubDescription = ''));
+		clubsStore.add(clubName, clubDescription, championship.id, [], [], isFederationMember);
+		((clubName = ''), (clubDescription = ''), (isFederationMember = false));
 		addNewClub = false;
 	};
 
@@ -212,6 +213,7 @@
 			bind:value={clubDescription}
 			placeholder="Description du club"
 		/>
+		<Toggle label="Est membre de la Fédération" bind:checked={isFederationMember} />
 		<div class="action">
 			<button onclick={createClub}>Créer</button>
 			<button onclick={() => (addNewClub = false)}>Annuler</button>

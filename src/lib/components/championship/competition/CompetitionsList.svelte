@@ -58,6 +58,7 @@
 	let competitionDate: string = $state(today);
 	let publicationDate: string = $state(today);
 	let competitionLocation: string = $state('');
+	let competitionManagersId: string[] = $state([]);
 
 	const createCompetition = () => {
 		let tmpCompetition: Competition = competitionsStore.add(
@@ -66,7 +67,8 @@
 			'welcome',
 			competitionDate,
 			publicationDate,
-			competitionLocation
+			competitionLocation,
+			competitionManagersId
 		);
 		championship.competitionsId.push(tmpCompetition.id);
 		championshipService.save(championship);
@@ -231,6 +233,16 @@
 			bind:value={competitionLocation}
 			placeholder="Localisation"
 		/>
+		{#await cpMgrs then cpMgrs}
+			<MultiSelector
+				id="managerSelect"
+				bind:value={competitionManagersId}
+				label="Sélection de responsables"
+				options={cpMgrs.map((c) => c.id)}
+				optionsLabel={cpMgrs.map((c) => c.name)}
+				onchange={() => toggleManagers()}
+			/>
+		{/await}
 		<div class="action">
 			<button onclick={createCompetition}>Créer</button>
 			<button onclick={() => (addNewCompetition = false)}>Annuler</button>
