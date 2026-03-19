@@ -19,9 +19,13 @@ export const getTotalPar = (targets: Target[]) => {
 
 // Retourne le score total d'un joueur sur un parcours
 export const calculatePlayerScore = (player: Player, targets: Target[]) => {
-	return targets.reduce((sum, target) => {
+	//console.log(player);
+
+	const result = targets.reduce((sum, target) => {
 		return sum + (player.scores[target.id] || 0);
 	}, 0);
+	//console.log('player', player, 'targets', targets, 'result', result);
+	return result;
 };
 
 // Retourne la liste des joueurs classés par score avec mise à jour

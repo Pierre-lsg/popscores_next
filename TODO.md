@@ -8,6 +8,7 @@
 4. ~~A la création d'un nouveau joueur pour une compétition, vérifier son affiliation à 'sans club'~~
 5. ~~Positionner des contrôles pour empêcher validation d'une compétition incomplète~~
 6. ~~Lorsqu'on modifie un championnat, il faut aussi injecter les échelles de classement~~ (championships2Cloud : championshipService.save)
+7. ~~Calcul du résultat erroné en individuel.~~ Les résultats du joueurs étaient récupérés après le calcul du classement
 
 ## Améliorations
 
@@ -24,3 +25,4 @@
 11. Les messages à la remontée d'un fly ne semble plus à jour (joueurs, résultats et carte de score bien sauvés)
 12. Supprimer les options et informations inutiles
 13. Supprimer les cibles non rattachées à au moins une compétition
+14. Ajouter la notion de championnat dans la table utilisateurs

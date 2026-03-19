@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
+	import type { Championship } from '$lib/types/championshipType';
 	import type { Fly } from '$lib/types/flyType';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
@@ -13,8 +14,13 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/types/userType';
 
-	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
+	let {
+		currentCompetition = $bindable(),
+		championship = $bindable(),
+		currentFly = $bindable()
+	} = $props<{
 		currentCompetition: Competition | undefined;
+		championship: Championship;
 		currentFly: Fly | undefined;
 	}>();
 
@@ -59,7 +65,7 @@
 		allFlysCompleted = flys.every((fly) => fly.status === 'validated');
 
 		// Retrieve all the marshalls
-		supervisors = await getSupervisors();
+		supervisors = await getSupervisors(championship);
 	});
 </script>
 

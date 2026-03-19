@@ -37,7 +37,15 @@ import { championshipService } from '../pocketbase/championships2Cloud';
  * Fetches users with the 'marshall' role and returns them as supervisors.
  * @returns Promise<User[]> - Array of supervisor users.
  */
-export const getSupervisors = async () => {
+export const getSupervisors = async (cs: Championship) => {
+	let supervisors: User[] = await userService.getUsersByRole('marshall');
+
+	supervisors = supervisors.filter((s) => cs.supervisorsId.includes(s.id));
+
+	return supervisors;
+};
+
+export const getAllSupervisors = async () => {
 	let supervisors: User[] = await userService.getUsersByRole('marshall');
 
 	return supervisors;
@@ -79,7 +87,8 @@ export const loadAChampionship = async (
 			status: tmpChampionship.data.status,
 			maxScoringTeams: tmpChampionship.data.maxScoringTeams,
 			managersId: tmpChampionship.data.managersId,
-			cpManagersId: tmpChampionship.data.cpManagersId
+			cpManagersId: tmpChampionship.data.cpManagersId,
+			supervisorsId: tmpChampionship.data.supervisorsId
 		};
 		const aIdvScale: MarkedPointScale | undefined = tmpChampionship.data.individualScale;
 		const aClvScale: MarkedPointScale | undefined = tmpChampionship.data.collectiveScale;
@@ -266,12 +275,13 @@ export const rankingForIndividualCompetition = (
 	// Ne conserver que les équipes dont le club est affilié à la fédération
 	players = players.filter((p) => p.clubId !== '' && clubsStore.find(p.clubId || '')?.isMember);
 
-	const rankedPlayers: RankedPlayer[] =
-		targets && players ? getRankedPlayers(players, targets) : [];
 	// Récupérer le score validé de chaque joueur lors de la compétition
 	players.forEach((p) => {
 		p.scores = resultsCompetitionStore.find(aCompetition.id, p.id)?.scores ?? {};
 	});
+
+	const rankedPlayers: RankedPlayer[] =
+		targets && players ? getRankedPlayers(players, targets) : [];
 
 	for (let i = 0; i < rankedPlayers.length; i++) {
 		let prevScore: number = 0;

@@ -130,7 +130,7 @@
 	};
 
 	onMount(async () => {
-		supervisors = await getSupervisors();
+		supervisors = await getSupervisors(championship);
 	});
 </script>
 

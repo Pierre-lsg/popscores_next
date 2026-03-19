@@ -58,7 +58,8 @@ class ChampionsStore {
 			status: 'in_progress',
 			maxScoringTeams: 0,
 			managersId: [],
-			cpManagersId: []
+			cpManagersId: [],
+			supervisorsId: []
 		});
 	}
 
@@ -79,7 +80,8 @@ class ChampionsStore {
 			status: 'in_progress',
 			maxScoringTeams: 0,
 			managersId: [],
-			cpManagersId: []
+			cpManagersId: [],
+			supervisorsId: []
 		};
 		this.list.push(newChampionship);
 		return newChampionship;

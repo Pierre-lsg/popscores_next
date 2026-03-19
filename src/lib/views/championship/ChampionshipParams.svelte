@@ -14,10 +14,14 @@
 	import Selector from '$lib/ui/Selector.svelte';
 	import MultiSelector from '$lib/ui/MultiSelector.svelte';
 
-	import { getCsMgrs } from '$lib/utils/championship/championshipFunctions.svelte';
+	import {
+		getCsMgrs,
+		getAllSupervisors
+	} from '$lib/utils/championship/championshipFunctions.svelte';
 
 	let championship = $state(championshipStore.list[0]);
 	let csMgrs: Promise<User[]> = $state(getCsMgrs());
+	let supervisors: Promise<User[]> = $state(getAllSupervisors());
 
 	const saveChampionshipToCloud = async () => {
 		let champToSave = $state.snapshot(championship);
@@ -71,6 +75,15 @@
 				label="Sélection de responsables"
 				options={csMgrs.map((c) => c.id)}
 				optionsLabel={csMgrs.map((c) => c.name)}
+			/>
+		{/await}
+		{#await supervisors then supervisors}
+			<MultiSelector
+				id="supervisorsSelect"
+				bind:value={championship.supervisorsId}
+				label="Sélection de arbitres"
+				options={supervisors.map((s) => s.id)}
+				optionsLabel={supervisors.map((s) => s.name)}
 			/>
 		{/await}
 		<h2>Barèmes de points</h2>
