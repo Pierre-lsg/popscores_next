@@ -9,6 +9,7 @@
 5. ~~Positionner des contrôles pour empêcher validation d'une compétition incomplète~~
 6. ~~Lorsqu'on modifie un championnat, il faut aussi injecter les échelles de classement~~ (championships2Cloud : championshipService.save)
 7. ~~Calcul du résultat erroné en individuel.~~ Les résultats du joueurs étaient récupérés après le calcul du classement
+8. ~~Problème des liens (href) si non à la racine d'un domaine~~
 
 ## Améliorations
 

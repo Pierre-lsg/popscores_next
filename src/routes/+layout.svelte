@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { base } from '$app/paths';
+	import { goto } from '$app/navigation';
 	import { pwaInfo } from 'virtual:pwa-info';
 	import { page } from '$app/stores';
 	import ThemeSelector from '$lib/ui/ThemeSelector.svelte';
@@ -22,10 +23,12 @@
 		user.set(null);
 		localStorage.clear(); // Clear all local storage items
 		pb.authStore.clear();
-		window.location.href = '/';
+		goto('/');
+		//		window.location.href = '/';
 	};
 
 	onMount(() => {
+		console.log('base', { base });
 		const hasMigrated = checkDataVersion();
 		if (hasMigrated) {
 			alert('Application mise à jour');
@@ -35,7 +38,8 @@
 </script>
 
 <svelte:head>
-	{@html webManifestLink}
+	<!--{@html webManifestLink}-->
+	<link rel="manifest" href="{base}/manifest.webmanifest" />
 	<link rel="icon" href="{base}/favicon.ico" />
 </svelte:head>
 
