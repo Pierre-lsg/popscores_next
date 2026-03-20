@@ -47,7 +47,7 @@
 	};
 
 	const loadCompetition = async () => {
-		if ($user && confirm('Voulez-vous rapatrier la compétition ?'))
+		if ($user && championshipId && confirm('Voulez-vous rapatrier la compétition ?'))
 			await cloudLoadCurrentCompetitionForSupervisor(championshipId, $user.id);
 		selectFly();
 		messageStore.reset();
