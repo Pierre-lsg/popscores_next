@@ -3,8 +3,11 @@
 	import CompetitionsList from '$lib/components/championship/competition/CompetitionsList.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
+	import { selection } from '$lib/stores/selection';
+	import type { Championship } from '$lib/types/championshipType';
 
-	let championship = $state(championshipStore.list[0]);
+	let championship = $state(selection.currentChampionship || ({} as Championship));
+	//	let championship = $state(championshipStore.list[0]);
 
 	let currentCompetition: Competition | undefined = $state();
 </script>

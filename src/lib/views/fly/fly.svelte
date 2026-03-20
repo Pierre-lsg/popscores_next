@@ -20,8 +20,11 @@
 		isCompetitionTeam
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { selection } from '$lib/stores/selection';
 
-	let championshipId: string = championshipStore.list[0].id;
+	let championshipId = selection.currentId;
+
+	//	let championshipId: string = championshipStore.list[0].id;
 
 	let currentCompetition: Competition | undefined = $state();
 	let currentFly: Fly | undefined = $state();

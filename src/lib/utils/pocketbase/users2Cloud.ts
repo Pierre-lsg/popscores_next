@@ -29,6 +29,46 @@ export const userService = {
 		return users;
 	},
 
+	getUsersByRoleAndChampionship: async (role: string, cs: string) => {
+		let users: User[] = [];
+		const cloudUsers: any = await db.getFullList('users', {
+			filter: `roles ~ "${role} && championships ~ "${cs}"`
+		});
+		if (Array.isArray(cloudUsers)) {
+			cloudUsers.forEach((u) =>
+				users.push({
+					id: u.id,
+					email: '',
+					emailVisibility: false,
+					verified: true,
+					name: u.name,
+					roles: []
+				})
+			);
+		}
+		return users;
+	},
+
+	getUsersByChampionship: async (cs: string) => {
+		let users: User[] = [];
+		const cloudUsers: any = await db.getFullList('users', {
+			filter: `championships ~ "${cs}"`
+		});
+		if (Array.isArray(cloudUsers)) {
+			cloudUsers.forEach((u) =>
+				users.push({
+					id: u.id,
+					email: '',
+					emailVisibility: false,
+					verified: true,
+					name: u.name,
+					roles: []
+				})
+			);
+		}
+		return users;
+	},
+
 	saveUser: (aUser: User) => {
 		const userToSave = {
 			id: aUser.id,

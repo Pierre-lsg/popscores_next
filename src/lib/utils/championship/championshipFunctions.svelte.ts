@@ -38,27 +38,21 @@ import { championshipService } from '../pocketbase/championships2Cloud';
  * @returns Promise<User[]> - Array of supervisor users.
  */
 export const getSupervisors = async (cs: Championship) => {
-	let supervisors: User[] = await userService.getUsersByRole('marshall');
+	let supervisors: User[] = await userService.getUsersByRoleAndChampionship('marshall', cs.id);
 
 	supervisors = supervisors.filter((s) => cs.supervisorsId.includes(s.id));
 
 	return supervisors;
 };
 
-export const getAllSupervisors = async () => {
-	let supervisors: User[] = await userService.getUsersByRole('marshall');
-
-	return supervisors;
-};
-
-export const getCsMgrs = async () => {
-	const csMgrs: User[] = await userService.getUsersByRole('csMgr');
+export const getCsMgrs = async (cs: Championship) => {
+	const csMgrs: User[] = await userService.getUsersByRoleAndChampionship('csMgr', cs.id);
 
 	return csMgrs;
 };
 
-export const getCpMgrs = async () => {
-	const cpMgrs: User[] = await userService.getUsersByRole('cpMgr');
+export const getCpMgrs = async (cs: Championship) => {
+	const cpMgrs: User[] = await userService.getUsersByRoleAndChampionship('cpMgr', cs.id);
 
 	return cpMgrs;
 };
@@ -68,8 +62,8 @@ export const loadAChampionship = async (
 	userId: string,
 	userRole: string
 ): Promise<Championship | undefined> => {
-	championshipStore.reset();
-	mpsStore.reset();
+	//championshipStore.reset();
+	//mpsStore.reset();
 	let aChampionship: Championship | undefined;
 
 	const tmpChampionship = await championshipService.getByChampionshipId(csId);

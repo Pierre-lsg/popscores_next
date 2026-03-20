@@ -18,7 +18,7 @@
 				'Voulez-vous vraiment changer de championnat ? \n Les données non sauvegardées dans le Cloud seront écrasées.'
 			)
 		) {
-			championshipStore.reset();
+			//championshipStore.reset();
 			window.location.reload();
 		}
 	};
@@ -36,12 +36,12 @@
 	<div class="hub-container">
 		<div class="grid-container">
 			{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr') || $user?.roles.includes('cpMgr'))}
-				<a class="card" href={base + '/championship/competitions'}>
+				<a class="card" href="{base}/championship/{currentChampionship.id}/competitions}">
 					<span class="icon">⛳</span>
 					<h3>Compétitions</h3>
 					<p>Les étapes du Championnat</p>
 				</a>
-				<a class="card" href={base + '/championship/players'}>
+				<a class="card" href="{base}/championship/{currentChampionship.id}/players">
 					<span class="icon">👥</span>
 					<h3>Participants</h3>
 					<p>Clubs, équipes et joueurs Participants</p>
@@ -49,7 +49,7 @@
 			{/if}
 
 			{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))}
-				<a class="card" href={base + '/championship/params'}>
+				<a class="card" href="{base}/championship/{currentChampionship.id}/params">
 					<span class="icon">⚙️</span>
 					<h3>Paramétrages</h3>
 					<p>Configuration du championnat</p>
@@ -62,7 +62,7 @@
 			{/if}
 
 			{#if $user && $user?.roles.includes('marshall')}
-				<a class="card" href={base + '/championship/fly'}>
+				<a class="card" href="{base}/championship/{currentChampionship.id}/fly">
 					<span class="icon">⛳</span>
 					<h3>Fly</h3>
 					<p>Suivi du fly</p>

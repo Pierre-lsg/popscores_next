@@ -3,8 +3,10 @@
 	import ClubManagement from '$lib/components/championship/club/ClubManagement.svelte';
 	import ClubManagementNoClub from '$lib/components/championship/club/ClubManagementNoClub.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+	import type { Championship } from '$lib/types/championshipType';
+	import { selection } from '$lib/stores/selection';
 
-	let championship = $state(championshipStore.list[0]);
+	let championship = selection.currentChampionship || ({} as Championship);
 
 	let currentClub: string = $state('');
 </script>

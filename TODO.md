@@ -22,8 +22,9 @@
 7. Harmoniser l'affichage des boîtes de détail
 8. Forcer l'enregistrement de la compétition (réalisé) et des clubs/équipes/joueurs (non réalisé) si modification
 9. Détailler les messages pour réaliser la sauvegarde depuis l'écran de message
-10. Lister les marshalls autorisés d'un championnat. Revoir la gestion de chargement des championnats
-11. Les messages à la remontée d'un fly ne semble plus à jour (joueurs, résultats et carte de score bien sauvés)
-12. Supprimer les options et informations inutiles
-13. Supprimer les cibles non rattachées à au moins une compétition
-14. Ajouter la notion de championnat dans la table utilisateurs
+10. ~~Lister les marshalls autorisés d'un championnat.~~
+11. Revoir la gestion de chargement des championnats
+12. Les messages à la remontée d'un fly ne semble plus à jour (joueurs, résultats et carte de score bien sauvés)
+13. Supprimer les options et informations inutiles
+14. Supprimer les cibles non rattachées à au moins une compétition
+15. Ajouter la notion de championnat dans la table utilisateurs

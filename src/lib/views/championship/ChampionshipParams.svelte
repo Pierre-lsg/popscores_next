@@ -4,6 +4,7 @@
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
 	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
+	import { selection } from '$lib/stores/selection';
 
 	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
 	import type { User } from '$lib/types/userType';
@@ -14,14 +15,12 @@
 	import Selector from '$lib/ui/Selector.svelte';
 	import MultiSelector from '$lib/ui/MultiSelector.svelte';
 
-	import {
-		getCsMgrs,
-		getAllSupervisors
-	} from '$lib/utils/championship/championshipFunctions.svelte';
+	import { getCsMgrs, getSupervisors } from '$lib/utils/championship/championshipFunctions.svelte';
+	import type { Championship } from '$lib/types/championshipType';
 
-	let championship = $state(championshipStore.list[0]);
-	let csMgrs: Promise<User[]> = $state(getCsMgrs());
-	let supervisors: Promise<User[]> = $state(getAllSupervisors());
+	let championship = selection.currentChampionship || ({} as Championship);
+	let csMgrs: Promise<User[]> = $state(getCsMgrs(championship));
+	let supervisors: Promise<User[]> = $state(getSupervisors(championship));
 
 	const saveChampionshipToCloud = async () => {
 		let champToSave = $state.snapshot(championship);

@@ -24,7 +24,7 @@
 		currentCompetition: Competition | undefined;
 		championship: Championship;
 	}>();
-	let cpMgrs: Promise<User[]> = $state(getCpMgrs());
+	let cpMgrs: Promise<User[]> = $state(getCpMgrs(championship));
 
 	let competitions = $derived<Competition[]>(
 		smartSort(
