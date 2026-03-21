@@ -1,14 +1,19 @@
 <script lang="ts">
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
-	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
+	import Param from '$lib/ui/Param.svelte';
+	import Map from '$lib/ui/Map.svelte';
+	import type { Target } from '$lib/types/targetType';
 
 	import { slide, fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
+	import { getGPS } from '$lib/utils/sharedFunction';
+	import { calculateDistance, type GPSCoords } from '$lib/utils/sharedFunction';
 
 	import { individualRules, collectiveRules } from '$lib/types/targetType';
 
+	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
@@ -18,6 +23,9 @@
 	let editingId = $state<string | null>(null);
 	let isDragging = $state(false);
 	let newTargetName = $state('');
+	let isEditingTarget: boolean[] = $state([]);
+	let isEditing: boolean = $state(false);
+	let loadingGps = $state(true);
 
 	// Set rule options based on whether it's a team game or not
 	const ruleOptions = isTeamGame ? collectiveRules : individualRules;
@@ -64,6 +72,41 @@
 		editingId = null;
 	};
 
+	const editTarget = (id: number) => {
+		isEditingTarget[id] = !isEditingTarget[id];
+		for (let i = 0; i < isEditingTarget.length; i++) {
+			if (i !== id) isEditingTarget[i] = false;
+		}
+		isEditing = isEditingTarget[id];
+	};
+
+	const removeTarget = (id: string) => {
+		if (confirm('Voulez-vous vraiment supprimer cette cible ?')) {
+			targetsStore.removeById(id);
+		}
+	};
+
+	async function setPosition(type: 'start' | 'end', target: Target) {
+		loadingGps = true;
+		console.log('attente GPS');
+		try {
+			const coords = (await getGPS()) as GPSCoords;
+			if (type === 'start') target.start_pos = coords;
+			else target.end_pos = coords;
+		} catch (err) {
+			alert('Erreur GPS : ' + err);
+		} finally {
+			loadingGps = false;
+		}
+	}
+
+	const displayDistance = (target: Target) => {
+		if (target.start_pos && target.end_pos) {
+			const distance = Math.round(calculateDistance(target.start_pos, target.end_pos));
+			alert('Calcul de la distance : ' + distance);
+		} else alert("Veuillez saisir les coordonnées de départ et d'arrivée");
+	};
+
 	// Focus function for input element to set focus on it and select its text
 	const focus = (node: HTMLInputElement) => {
 		node.focus();
@@ -75,66 +118,123 @@
 	<button style="margin: 0.5rem 0;" onclick={() => addTarget()} class="btn btn-primary"
 		>Ajouter une cible ≡</button
 	>
-
-	<div
-		class="targets-list"
-		use:dndzone={{
-			items: targetsStore.list,
-			flipDurationMs,
-			dropTargetStyle: { outline: '2px dashed var(--primary)', borderRadius: '8px' }
-		}}
-		onconsider={(e) => {
-			handleConsider();
-			targetsStore.list = e.detail.items;
-		}}
-		onfinalize={handleFinalize}
-	>
-		{#each targetsStore.list as target (target.id)}
-			<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
-				<div class="content">
-					{#if editingId === target.id}
-						<input
-							class="name-input"
-							bind:value={target.name}
-							onblur={saveName}
-							onkeydown={(e) => e.key === 'Enter' && saveName(e)}
-							use:focus
-						/>
-					{:else}
-						<button
-							class="content-edit-item invisible-button"
-							onclick={() => editTargetName(target.id)}
-						>
-							{target.name || `Cible ${targetsStore.list.indexOf(target) + 1}`}
-						</button>
-					{/if}
-					<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
-					<Selector
-						id="rule{target.id}"
-						bind:value={target.rule}
-						onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
-						options={ruleOptions}
-					/>
-				</div>
-				<div class="handle">☰</div>
-			</div>
-		{/each}
-	</div>
-
-	{#if isDragging}
+	{#if !isEditing}
 		<div
-			transition:fly={{ x: 100, duration: 300 }}
-			class="delete-zone"
-			use:dndzone={{ items: [] }}
-			onfinalize={handleRemoveDrop}
+			class="targets-list"
+			use:dndzone={{
+				items: targetsStore.list,
+				flipDurationMs,
+				dropTargetStyle: { outline: '2px dashed var(--primary)', borderRadius: '8px' }
+			}}
+			onconsider={(e) => {
+				handleConsider();
+				targetsStore.list = e.detail.items;
+			}}
+			onfinalize={handleFinalize}
 		>
-			<div class="trash-icon">🗑️</div>
-			<p>Lâcher pour supprimer</p>
+			{#each targetsStore.list as target (target.id)}
+				<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
+					<div class="content">
+						{#if editingId === target.id}
+							<input
+								class="name-input"
+								bind:value={target.name}
+								onblur={saveName}
+								onkeydown={(e) => e.key === 'Enter' && saveName(e)}
+								use:focus
+							/>
+						{:else}
+							<button
+								class="content-edit-item invisible-button"
+								onclick={() => editTargetName(target.id)}
+							>
+								{target.name || `Cible ${targetsStore.list.indexOf(target) + 1}`}
+							</button>
+						{/if}
+						<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
+						<Selector
+							id="rule{target.id}"
+							bind:value={target.rule}
+							onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+							options={ruleOptions}
+						/>
+						<span
+							class="btn-actions btn-par"
+							role="none"
+							onclick={() => editTarget(targetsStore.list.indexOf(target))}>+</span
+						>
+					</div>
+					<div class="handle">☰</div>
+				</div>
+			{/each}
 		</div>
+
+		{#if isDragging}
+			<div
+				transition:fly={{ x: 100, duration: 300 }}
+				class="delete-zone"
+				use:dndzone={{ items: [] }}
+				onfinalize={handleRemoveDrop}
+			>
+				<div class="trash-icon">🗑️</div>
+				<p>Lâcher pour supprimer</p>
+			</div>
+		{/if}
 	{/if}
 </div>
 
+{#each targetsStore.list as target, i}
+	{#if isEditingTarget[i]}
+		<div class="target-form">
+			<Param
+				label="⛳ Nom de la cible"
+				type="text"
+				bind:value={target.name}
+				placeholder="Nom de la cible"
+				focus={true}
+				oneline={true}
+			/>
+			<Stepper label="Par" value={target.par} onchange={(val) => (target.par = val)} />
+			<Selector
+				label="Règle"
+				id="rule{target.id}"
+				bind:value={target.rule}
+				options={ruleOptions}
+				onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+			/>
+			<div class="hole-card">
+				<div class="flex gap-2">
+					<button onclick={() => setPosition('start', target)} class:active={target.start_pos}>
+						{target.start_pos ? '🚩 Départ fixé' : '📍 Fixer Départ'}
+					</button>
+
+					<button onclick={() => setPosition('end', target)} class:active={target.end_pos}>
+						{target.end_pos ? '🎯 Arrivée fixée' : '📍 Fixer Arrivée'}
+					</button>
+
+					<button onclick={() => displayDistance(target)}>Distance</button>
+				</div>
+				<div class="map-container">
+					{#if target.start_pos && target.end_pos}
+						<Map start_pos={target.start_pos} end_pos={target.end_pos} />
+					{/if}
+				</div>
+			</div>
+			<div class="action">
+				<button onclick={() => editTarget(i)}>Valider</button>
+				<button onclick={() => removeTarget(target.id)}> 🗑️ </button>
+			</div>
+		</div>
+	{/if}
+{/each}
+
 <style>
+	.target-form {
+		border: 1px var(--primary) solid;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+	}
+
 	.btn {
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
@@ -173,5 +273,20 @@
 		border-bottom: 2px solid var(--primary);
 		outline: none;
 		color: var(--primary);
+	}
+
+	img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+	.placeholder {
+		height: 200px;
+		background: #f3f4f6;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 8px;
+		color: #9ca3af;
 	}
 </style>

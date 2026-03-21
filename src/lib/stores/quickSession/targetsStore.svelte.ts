@@ -81,6 +81,15 @@ class TargetsStore {
 	}
 
 	/**
+	 * Removes a target relative to its id.
+	 *
+	 * @param index The id of the target to remove
+	 */
+	removeById(id: string) {
+		this.list = this.list.filter((t) => t.id !== id);
+	}
+
+	/**
 	 * Resets the list to contain only one target with default values.
 	 */
 	reset() {

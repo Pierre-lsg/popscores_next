@@ -27,4 +27,4 @@
 12. Les messages à la remontée d'un fly ne semble plus à jour (joueurs, résultats et carte de score bien sauvés)
 13. Supprimer les options et informations inutiles
 14. Supprimer les cibles non rattachées à au moins une compétition
-15. Ajouter la notion de championnat dans la table utilisateurs
+15. ~~Ajouter la notion de championnat dans la table utilisateurs~~

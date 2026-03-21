@@ -79,6 +79,15 @@ Vous pouvez la déployer sur votre serveur web ou sur un service d'hébergement 
 
 Un exemple pour du développement est accessible sur mon [espace github](https://pierre-lsg.github.io/popscores_next/).
 
+Si vous déployez sur un serveur apache, un fichier .htaccess est déployé and nécessite le module Rewrite.
+
+```sh
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+```
+
+Pour d'autres serveurs web, pensez à rediriger les appels sans réponse vers la page index.html afin d'éviter l'erreur 404.
+
 ## Installation de PocketBase
 
 Veuillez vous référer à la page du projet [PocketBase](https://pocketbase.io/docs/) pour trouver les instructions d'installation.

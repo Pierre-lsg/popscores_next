@@ -57,3 +57,48 @@ export const formatList = (list: string[]): string => {
 
 	return formatter.format(list);
 };
+
+export interface GPSCoords {
+	lat: number;
+	lng: number;
+	accuracy: number;
+}
+
+export const getGPS = (): Promise<GPSCoords> => {
+	return new Promise((resolve, reject) => {
+		if (!navigator.geolocation) {
+			reject("La géolocalisation n'est pas supportée par votre navigateur");
+		}
+
+		navigator.geolocation.getCurrentPosition(
+			(position) => {
+				resolve({
+					lat: position.coords.latitude,
+					lng: position.coords.longitude,
+					accuracy: position.coords.accuracy // Précision en mètres
+				});
+			},
+			(error) => {
+				reject(error.message);
+			},
+			{
+				enableHighAccuracy: true, // Force l'utilisation du GPS (plus précis que le Wi-Fi)
+				timeout: 5000, // Temps max d'attente
+				maximumAge: 0 // Ne pas utiliser de position en cache
+			}
+		);
+	});
+};
+
+export function calculateDistance(pos1: GPSCoords, pos2: GPSCoords): number {
+	// 1 degré de latitude vaut environ 111 111 mètres
+	const latMetres = (pos2.lat - pos1.lat) * 111111;
+
+	// Pour la longitude, la distance entre deux méridiens rétrécit quand on monte vers le nord
+	// On multiplie par le cosinus de la latitude moyenne
+	const avgLat = (pos1.lat + pos2.lat) / 2;
+	const lngMetres = (pos2.lng - pos1.lng) * 111111 * Math.cos((avgLat * Math.PI) / 180);
+
+	// On applique Pythagore : a² + b² = c²
+	return Math.sqrt(latMetres * latMetres + lngMetres * lngMetres);
+}

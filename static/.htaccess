@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Définit la base du site (ton sous-répertoire)
+    RewriteBase /popscores_next/
+
+    # Si le fichier ou le répertoire demandé n'existe pas physiquement
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Alors on redirige tout vers index.html (qui gère le routage Svelte)
+    RewriteRule ^ index.html [L]
+</IfModule>

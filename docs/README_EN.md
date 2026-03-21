@@ -77,6 +77,15 @@ You can deploy it to your web server or to a hosting service by modifying the `p
 
 An example for development is available on my [GitHub space](https://pierre-lsg.github.io/popscores_next/).
 
+If you deploy on an apache server, an .htaccess is deployed and need to activate the rewrite module.
+
+```sh
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+```
+
+For others webservers, think about redirecting to index.html to avoid 404 errors.
+
 ## Installing PocketBase
 
 Please refer to the [PocketBase project page](https://pocketbase.io/docs/) for installation instructions.

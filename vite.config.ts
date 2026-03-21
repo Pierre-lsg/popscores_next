@@ -12,7 +12,7 @@ export default defineConfig({
 			injectRegister: 'auto',
 			//strategies: 'injectManifest',
 			workbox: {
-				globPatterns: ['**/*.{js,css,json,html,png,txt,webmanifest,ico}']
+				globPatterns: ['**/*.{js,css,json,html,png,txt,webmanifest,ico,.htaccess}']
 			},
 			manifest: {
 				name: 'Popscores',
