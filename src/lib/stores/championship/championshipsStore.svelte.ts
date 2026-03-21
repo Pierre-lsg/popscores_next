@@ -48,6 +48,7 @@ class ChampionsStore {
 		this.list.push({
 			id: crypto.randomUUID(),
 			name,
+			description: '',
 			season: '',
 			location: '',
 			competitionsId: [],
@@ -70,6 +71,7 @@ class ChampionsStore {
 		let newChampionship: Championship = {
 			id: crypto.randomUUID(),
 			name: '',
+			description: '',
 			season: '',
 			location: '',
 			competitionsId: [],

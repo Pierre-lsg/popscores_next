@@ -11,6 +11,7 @@ export interface Ranking {
 export interface Championship {
 	id: string;
 	name: string;
+	description: string;
 	season: string;
 	location: string;
 	competitionsId: string[];

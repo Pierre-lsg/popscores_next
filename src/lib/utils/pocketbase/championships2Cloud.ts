@@ -11,6 +11,7 @@ export const championshipService = {
 		return championships.map((aChampionship) => ({
 			id: aChampionship.data.id,
 			name: aChampionship.data.name,
+			description: aChampionship.data.description,
 			season: aChampionship.data.season,
 			location: aChampionship.data.location,
 			competitionsId: aChampionship.data.competitionsId,
@@ -46,6 +47,7 @@ export const championshipService = {
 		const data = {
 			id: aChampionShip.id,
 			name: aChampionShip.name,
+			description: aChampionShip.description,
 			season: aChampionShip.season,
 			location: aChampionShip.location,
 			competitionsId: aChampionShip.competitionsId,

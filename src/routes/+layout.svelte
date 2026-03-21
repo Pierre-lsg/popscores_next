@@ -14,6 +14,7 @@
 	import StatusSignal from '$lib/ui/InfoStatus.svelte';
 	import NetworkStatus from '$lib/ui/NetworkStatus.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
+	import { selection } from '$lib/stores/selection';
 
 	let { children } = $props();
 
@@ -28,7 +29,6 @@
 	};
 
 	onMount(() => {
-		console.log('base', { base });
 		const hasMigrated = checkDataVersion();
 		if (hasMigrated) {
 			alert('Application mise à jour');
@@ -50,7 +50,7 @@
 	<div class="top-bar">
 		<div>
 			{#if $page.url.pathname.includes('/championship/') && $page.url.pathname !== '/championship/'}
-				<a class="btn btn-back" href={base + '/championship'}>👑 Accueil</a>
+				<a class="btn btn-back" href="{base}/championship/{selection.currentId}">👑 Accueil</a>
 			{:else}
 				<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 			{/if}

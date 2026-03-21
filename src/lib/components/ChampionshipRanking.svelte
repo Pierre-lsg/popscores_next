@@ -10,13 +10,13 @@
 	import { calculateChampionship } from '$lib/utils/championship/championshipFunctions.svelte';
 
 	import { formatList } from '$lib/utils/sharedFunction';
+	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+	import { selection } from '$lib/stores/selection';
 
-	let { championship = $bindable() } = $props<{
-		championship: Championship;
-	}>();
+	let championship = $state(championshipStore.list.find((c) => c.id === selection.currentId));
 
 	onMount(() => {
-		calculateChampionship(championship);
+		if (championship) calculateChampionship(championship);
 	});
 
 	const competitionsPlayerDetails = (playerRanking: Ranking) => {
@@ -51,17 +51,19 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each championship.rankingPlayers as p, i}
-			{@const player = playersChampionshipStore.find(p.id)}
-			{#if player}
-				<tr>
-					<td>#{i + 1}</td>
-					<td>{player.name}</td>
-					<td>{p.score}</td>
-					<td><div role="none" onclick={() => competitionsPlayerDetails(p)}>...</div></td>
-				</tr>
-			{/if}
-		{/each}
+		{#if championship}
+			{#each championship.rankingPlayers as p, i}
+				{@const player = playersChampionshipStore.find(p.id)}
+				{#if player}
+					<tr>
+						<td>#{i + 1}</td>
+						<td>{player.name}</td>
+						<td>{p.score}</td>
+						<td><div role="none" onclick={() => competitionsPlayerDetails(p)}>...</div></td>
+					</tr>
+				{/if}
+			{/each}
+		{/if}
 	</tbody>
 </table>
 
@@ -76,16 +78,18 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each championship.rankingClubs as c, i}
-			{@const club = clubsStore.find(c.id)}
-			{#if club}
-				<tr>
-					<td>#{i + 1}</td>
-					<td>{club.name}</td>
-					<td>{c.score}</td>
-					<td><div role="none" onclick={() => competitionsClubDetails(c)}>...</div></td>
-				</tr>
-			{/if}
-		{/each}
+		{#if championship}
+			{#each championship.rankingClubs as c, i}
+				{@const club = clubsStore.find(c.id)}
+				{#if club}
+					<tr>
+						<td>#{i + 1}</td>
+						<td>{club.name}</td>
+						<td>{c.score}</td>
+						<td><div role="none" onclick={() => competitionsClubDetails(c)}>...</div></td>
+					</tr>
+				{/if}
+			{/each}
+		{/if}
 	</tbody>
 </table>

@@ -32,7 +32,7 @@ export const userService = {
 	getUsersByRoleAndChampionship: async (role: string, cs: string) => {
 		let users: User[] = [];
 		const cloudUsers: any = await db.getFullList('users', {
-			filter: `roles ~ "${role} && championships ~ "${cs}"`
+			filter: `roles ~ "${role}" && championships ~ "${cs}"`
 		});
 		if (Array.isArray(cloudUsers)) {
 			cloudUsers.forEach((u) =>

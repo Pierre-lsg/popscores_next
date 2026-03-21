@@ -15,12 +15,7 @@ export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 
 	for (let club of clubs) {
 		// sauver le club
-		try {
-			await clubService.saveClub(club);
-		} catch (e) {
-			console.log('error', e);
-			status = 'failure';
-		}
+		await clubService.saveClub(club);
 
 		// Lister et sauver les équipes
 		for (let teamId of club.teamsId) {

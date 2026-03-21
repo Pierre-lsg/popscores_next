@@ -71,6 +71,7 @@ export const loadAChampionship = async (
 		aChampionship = {
 			id: tmpChampionship.data.id,
 			name: tmpChampionship.data.name,
+			description: tmpChampionship.data.description,
 			season: tmpChampionship.data.season,
 			location: tmpChampionship.data.location,
 			competitionsId: tmpChampionship.data.competitionsId,

@@ -5,6 +5,7 @@
 	import type { Championship } from '$lib/types/championshipType';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	let { currentChampionship = $bindable() } = $props<{
 		currentChampionship: Championship;
@@ -19,7 +20,8 @@
 			)
 		) {
 			//championshipStore.reset();
-			window.location.reload();
+			currentChampionship = null;
+			goto('/championship');
 		}
 	};
 	onMount(() => {
@@ -29,57 +31,52 @@
 
 <h2>Championnat {currentChampionship.name}</h2>
 
-{#if showResults}
-	<button onclick={() => (showResults = false)}>Retour</button>
-	<ChampionshipRanking championship={currentChampionship} />
-{:else}
-	<div class="hub-container">
-		<div class="grid-container">
-			{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr') || $user?.roles.includes('cpMgr'))}
-				<a class="card" href="{base}/championship/{currentChampionship.id}/competitions}">
-					<span class="icon">⛳</span>
-					<h3>Compétitions</h3>
-					<p>Les étapes du Championnat</p>
-				</a>
-				<a class="card" href="{base}/championship/{currentChampionship.id}/players">
-					<span class="icon">👥</span>
-					<h3>Participants</h3>
-					<p>Clubs, équipes et joueurs Participants</p>
-				</a>
-			{/if}
-
-			{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))}
-				<a class="card" href="{base}/championship/{currentChampionship.id}/params">
-					<span class="icon">⚙️</span>
-					<h3>Paramétrages</h3>
-					<p>Configuration du championnat</p>
-				</a>
-				<div role="none" class="card" onclick={() => (showResults = true)}>
-					<span class="icon">🏆</span>
-					<h3>Résultats</h3>
-					<p>Et accès au détail des compétitions</p>
-				</div>
-			{/if}
-
-			{#if $user && $user?.roles.includes('marshall')}
-				<a class="card" href="{base}/championship/{currentChampionship.id}/fly">
-					<span class="icon">⛳</span>
-					<h3>Fly</h3>
-					<p>Suivi du fly</p>
-				</a>
-			{/if}
-			<a class="card" href={base + '/'}>
-				<span class="icon">🏠</span>
-				<h3>Retour Accueil</h3>
+<div class="hub-container">
+	<div class="grid-container">
+		{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr') || $user?.roles.includes('cpMgr'))}
+			<a class="card" href="{base}/championship/{currentChampionship.id}/competitions">
+				<span class="icon">⛳</span>
+				<h3>Compétitions</h3>
+				<p>Les étapes du Championnat</p>
 			</a>
+			<a class="card" href="{base}/championship/{currentChampionship.id}/players">
+				<span class="icon">👥</span>
+				<h3>Participants</h3>
+				<p>Clubs, équipes et joueurs Participants</p>
+			</a>
+		{/if}
 
-			<div role="none" class="card" onclick={() => changeChampionship()}>
-				<span class="icon">🔄</span>
-				<h3>Changer de championnat</h3>
-			</div>
+		{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))}
+			<a class="card" href="{base}/championship/{currentChampionship.id}/params">
+				<span class="icon">⚙️</span>
+				<h3>Paramétrages</h3>
+				<p>Configuration du championnat</p>
+			</a>
+			<a class="card" href="{base}/championship/{currentChampionship.id}/ranking">
+				<span class="icon">🏆</span>
+				<h3>Résultats</h3>
+				<p>Et accès au détail des compétitions</p>
+			</a>
+		{/if}
+
+		{#if $user && $user?.roles.includes('marshall')}
+			<a class="card" href="{base}/championship/{currentChampionship.id}/fly">
+				<span class="icon">⛳</span>
+				<h3>Fly</h3>
+				<p>Suivi du fly</p>
+			</a>
+		{/if}
+		<a class="card" href={base + '/'}>
+			<span class="icon">🏠</span>
+			<h3>Retour Accueil</h3>
+		</a>
+
+		<div role="none" class="card" onclick={() => changeChampionship()}>
+			<span class="icon">🔄</span>
+			<h3>Changer de championnat</h3>
 		</div>
 	</div>
-{/if}
+</div>
 
 <style>
 	.grid-container {

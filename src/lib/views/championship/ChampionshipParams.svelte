@@ -47,6 +47,12 @@
 			focus={true}
 			placeholder="Nom du championnat"
 		/>
+		<Param
+			label="Description"
+			type="text"
+			bind:value={championship.description}
+			placeholder="Description"
+		/>
 		<Param label="Saison" type="text" bind:value={championship.season} placeholder="Saison" />
 		<Param
 			label="Localisation"
