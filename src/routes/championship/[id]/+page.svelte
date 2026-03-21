@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import GolfChampionship from '$lib/views/GolfChampionship.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
@@ -14,7 +15,7 @@
 	onMount(async () => {
 		securityCheck();
 
-		if (!currentChampionship) goto('/championship');
+		if (!currentChampionship) goto(base + '/championship');
 	});
 </script>
 

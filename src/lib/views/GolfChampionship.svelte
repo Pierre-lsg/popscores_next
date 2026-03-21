@@ -21,7 +21,7 @@
 		) {
 			//championshipStore.reset();
 			currentChampionship = null;
-			goto('/championship');
+			goto(base + '/championship');
 		}
 	};
 	onMount(() => {

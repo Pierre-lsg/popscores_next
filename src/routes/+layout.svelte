@@ -24,7 +24,7 @@
 		user.set(null);
 		localStorage.clear(); // Clear all local storage items
 		pb.authStore.clear();
-		goto('/');
+		goto(base + '/');
 		//		window.location.href = '/';
 	};
 

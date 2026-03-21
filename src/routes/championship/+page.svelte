@@ -48,7 +48,7 @@
 
 		if (tmpChampionship) {
 			currentChampionship = tmpChampionship;
-			goto('/championship/' + currentChampionship.id);
+			goto(base + '/championship/' + currentChampionship.id);
 		} else alert('Aucun championnat sélectionné');
 
 		loadingChampionship = false;
@@ -56,7 +56,7 @@
 
 	const addNewChampionship = () => {
 		currentChampionship = championshipStore.new();
-		goto('/championship/' + currentChampionship.id);
+		goto(base + '/championship/' + currentChampionship.id);
 	};
 
 	onMount(async () => {
