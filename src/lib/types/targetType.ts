@@ -23,6 +23,10 @@ export interface Target {
 	name: string;
 	rule: string;
 	// On pourra ajouter plus tard : distance, gps, etc.
-	start_pos?: { lat: number; lng: number; accuracy: number };
-	end_pos?: { lat: number; lng: number; accuracy: number };
+	description: string;
+	start_details: string;
+	start_pos: { lat: number; lng: number; accuracy: number };
+	end_details: string;
+	end_pos: { lat: number; lng: number; accuracy: number };
+	optional_rules: string;
 }

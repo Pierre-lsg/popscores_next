@@ -1,4 +1,5 @@
 import type { Target } from '$lib/types/targetType';
+import type { GPSCoords } from '$lib/utils/sharedFunction';
 
 // Constant for storage key
 const STORAGE_KEY = 'cs-targets-data';
@@ -33,7 +34,13 @@ class TargetsChampionshipStore {
 			id: crypto.randomUUID(),
 			name,
 			par,
-			rule
+			rule,
+			description: '',
+			start_details: '',
+			start_pos: {} as GPSCoords,
+			end_details: '',
+			end_pos: {} as GPSCoords,
+			optional_rules: ''
 		};
 
 		this.list.push(aTarget);
@@ -48,7 +55,13 @@ class TargetsChampionshipStore {
 			id: crypto.randomUUID(),
 			name: 'Titre',
 			par: 4,
-			rule: 'Individuel'
+			rule: 'Individuel',
+			description: '',
+			start_details: '',
+			start_pos: {} as GPSCoords,
+			end_details: '',
+			end_pos: {} as GPSCoords,
+			optional_rules: ''
 		};
 
 		this.list.push(aTarget);

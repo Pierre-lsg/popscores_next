@@ -102,3 +102,55 @@ export function calculateDistance(pos1: GPSCoords, pos2: GPSCoords): number {
 	// On applique Pythagore : a² + b² = c²
 	return Math.sqrt(latMetres * latMetres + lngMetres * lngMetres);
 }
+
+/**
+ * Lance la reconnaissance vocale et retourne le texte dicté
+ * @returns Promise<string>
+ */
+export const toggleDictation = (recognition: any, isListening: boolean): Promise<string> => {
+	return new Promise((resolve, reject) => {
+		if (!isListening) {
+			if (recognition) recognition.stop();
+			console.log("fin d'enregistrement");
+			return;
+		}
+
+		// Gestion de la compatibilité (préfixes selon les navigateurs)
+		const SpeechRecognition =
+			(window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+		if (!SpeechRecognition) {
+			reject('Désolé, votre navigateur ne supporte pas la dictée vocale.');
+			return;
+		}
+
+		recognition = new SpeechRecognition();
+
+		// Configuration
+		recognition.lang = 'fr-FR';
+		recognition.interimResults = false; // On ne veut que le résultat final
+		recognition.maxAlternatives = 1;
+		recognition.continuous = false; // On s'arrête après une phrase, ou au stop()
+
+		recognition.onresult = (event: any) => {
+			const transcript = event.results[0][0].transcript;
+			// Petite touche de propreté : majuscule au début
+			const cleanText = transcript.charAt(0).toUpperCase() + transcript.slice(1);
+			resolve(cleanText);
+		};
+
+		recognition.onend = () => {
+			recognition = null;
+		};
+
+		recognition.onerror = (event: any) => {
+			if (event.error === 'no-speech') {
+				resolve(''); // On résout avec du vide pour ne pas faire planter l'app si le joueur a juste éternué
+			} else {
+				reject(`Erreur : ${event.error}`);
+			}
+		};
+
+		recognition.start();
+	});
+};

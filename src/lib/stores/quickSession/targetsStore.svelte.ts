@@ -1,4 +1,5 @@
 import type { Target } from '$lib/types/targetType';
+import type { GPSCoords } from '$lib/utils/sharedFunction';
 
 const STORAGE_KEY = 'golf-targets-data';
 
@@ -32,7 +33,13 @@ class TargetsStore {
 			id: crypto.randomUUID(),
 			par: Number(par) || 0,
 			name,
-			rule
+			rule,
+			description: '',
+			start_details: '',
+			start_pos: {} as GPSCoords,
+			end_details: '',
+			end_pos: {} as GPSCoords,
+			optional_rules: ''
 		});
 	}
 	/**
@@ -67,7 +74,13 @@ class TargetsStore {
 			id: crypto.randomUUID(), // Identifiant unique stable
 			par: 4,
 			name: '',
-			rule: 'Individuel'
+			rule: 'Individuel',
+			description: '',
+			start_details: '',
+			start_pos: {} as GPSCoords,
+			end_details: '',
+			end_pos: {} as GPSCoords,
+			optional_rules: ''
 		});
 	}
 

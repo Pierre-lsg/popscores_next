@@ -3,6 +3,7 @@
 	import Selector from '$lib/ui/Selector.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Map from '$lib/ui/Map.svelte';
+	import ParamTextArea from '$lib/ui/ParamTextArea.svelte';
 	import type { Target } from '$lib/types/targetType';
 
 	import { slide, fly } from 'svelte/transition';
@@ -25,7 +26,7 @@
 	let newTargetName = $state('');
 	let isEditingTarget: boolean[] = $state([]);
 	let isEditing: boolean = $state(false);
-	let loadingGps = $state(true);
+	let loadingGps = $state(false);
 
 	// Set rule options based on whether it's a team game or not
 	const ruleOptions = isTeamGame ? collectiveRules : individualRules;
@@ -87,16 +88,20 @@
 	};
 
 	async function setPosition(type: 'start' | 'end', target: Target) {
-		loadingGps = true;
-		console.log('attente GPS');
-		try {
-			const coords = (await getGPS()) as GPSCoords;
-			if (type === 'start') target.start_pos = coords;
-			else target.end_pos = coords;
-		} catch (err) {
-			alert('Erreur GPS : ' + err);
-		} finally {
-			loadingGps = false;
+		let confirmedPositionning = true;
+		if ((type === 'start' && target.start_pos.lat) || (type === 'end' && target.end_pos.lat))
+			confirmedPositionning = confirm('Voulez-vous redéfinir les positions ? ');
+		if (confirmedPositionning) {
+			loadingGps = true;
+			try {
+				const coords = (await getGPS()) as GPSCoords;
+				if (type === 'start') target.start_pos = coords;
+				else target.end_pos = coords;
+			} catch (err) {
+				alert('Erreur GPS : ' + err);
+			} finally {
+				loadingGps = false;
+			}
 		}
 	}
 
@@ -192,7 +197,6 @@
 				bind:value={target.name}
 				placeholder="Nom de la cible"
 				focus={true}
-				oneline={true}
 			/>
 			<Stepper label="Par" value={target.par} onchange={(val) => (target.par = val)} />
 			<Selector
@@ -204,18 +208,38 @@
 			/>
 			<div class="hole-card">
 				<div class="flex gap-2">
+					<ParamTextArea
+						label="Description"
+						placeholder="Description du cadre de la cible ..."
+						bind:value={target.description}
+					/>
+					<button onclick={() => displayDistance(target)}>Distance</button>
+					<ParamTextArea
+						label="Règles spécifiques"
+						placeholder="Les parterres de fleurs sont hors limite ..."
+						bind:value={target.optional_rules}
+					/>
+
 					<button onclick={() => setPosition('start', target)} class:active={target.start_pos}>
 						{target.start_pos ? '🚩 Départ fixé' : '📍 Fixer Départ'}
 					</button>
+					<ParamTextArea
+						label="Emplacement de départ"
+						placeholder="Détails du départ : devant la plaque ..."
+						bind:value={target.start_details}
+					/>
 
 					<button onclick={() => setPosition('end', target)} class:active={target.end_pos}>
 						{target.end_pos ? '🎯 Arrivée fixée' : '📍 Fixer Arrivée'}
 					</button>
-
-					<button onclick={() => displayDistance(target)}>Distance</button>
+					<ParamTextArea
+						label="Emplacement de la cible"
+						placeholder="Toucher la borne. -1 si la balle reste ..."
+						bind:value={target.end_details}
+					/>
 				</div>
 				<div class="map-container">
-					{#if target.start_pos && target.end_pos}
+					{#if target.start_pos.lat && target.end_pos.lat}
 						<Map start_pos={target.start_pos} end_pos={target.end_pos} />
 					{/if}
 				</div>
@@ -226,10 +250,16 @@
 			</div>
 		</div>
 	{/if}
+
+	{#if loadingGps}
+		<div class="splash-screen">Looking for position ...</div>
+	{/if}
 {/each}
 
 <style>
 	.target-form {
+		display: flex;
+		flex-direction: column;
 		border: 1px var(--primary) solid;
 		padding: 0.5rem;
 		border-radius: 0.5rem;
@@ -275,18 +305,20 @@
 		color: var(--primary);
 	}
 
-	img {
-		width: 100%;
-		height: auto;
-		display: block;
-	}
-	.placeholder {
-		height: 200px;
-		background: #f3f4f6;
+	.splash-screen {
 		display: flex;
+		flex-direction: column;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 999;
 		align-items: center;
 		justify-content: center;
-		border-radius: 8px;
-		color: #9ca3af;
+		height: 100vh;
+		width: 100vw;
+		margin: 0;
+		background-color: rgba(0, 0, 0, 0.8);
+		color: white;
+		font-size: xx-large;
 	}
 </style>
