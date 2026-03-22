@@ -5,6 +5,8 @@
 	import Map from '$lib/ui/Map.svelte';
 	import ParamTextArea from '$lib/ui/ParamTextArea.svelte';
 	import type { Target } from '$lib/types/targetType';
+	import GolfSCourse from './GolfSCourse.svelte';
+	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
 
 	import { slide, fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
@@ -27,6 +29,8 @@
 	let isEditingTarget: boolean[] = $state([]);
 	let isEditing: boolean = $state(false);
 	let loadingGps = $state(false);
+	let isSelectingCourse = $state(false);
+	let isCourseSelected = $state(!!targetsStore.list.length || coursesStore.list.length === 0);
 
 	// Set rule options based on whether it's a team game or not
 	const ruleOptions = isTeamGame ? collectiveRules : individualRules;
@@ -39,6 +43,7 @@
 	const addTarget = () => {
 		targetsStore.add(newTargetRule === 'Bonus' ? 0 : 4, newTargetName, newTargetRule);
 		gameStatus.currentTargetIndex = 0;
+		isCourseSelected = true;
 	};
 
 	// Function to handle the removal of a target from dndzone
@@ -112,6 +117,11 @@
 		} else alert("Veuillez saisir les coordonnées de départ et d'arrivée");
 	};
 
+	const selectCourse = () => {
+		//
+		isSelectingCourse = true;
+	};
+
 	// Focus function for input element to set focus on it and select its text
 	const focus = (node: HTMLInputElement) => {
 		node.focus();
@@ -120,9 +130,17 @@
 </script>
 
 <div class="step-content" in:slide>
-	<button style="margin: 0.5rem 0;" onclick={() => addTarget()} class="btn btn-primary"
-		>Ajouter une cible ≡</button
-	>
+	<button onclick={() => addTarget()} class="btn btn-primary">Ajouter une cible ≡</button>
+	{#if !isCourseSelected}
+		<button onclick={() => selectCourse()} class="btn btn-primary"
+			>Sélectionner un précédent parcours ≡</button
+		>
+	{/if}
+
+	{#if isSelectingCourse}
+		<GolfSCourse bind:isSelectingCourse bind:isCourseSelected />
+	{/if}
+
 	{#if !isEditing}
 		<div
 			class="targets-list"

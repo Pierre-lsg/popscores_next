@@ -13,6 +13,7 @@
 
 	import Toast from '$lib/ui/Toast.svelte';
 	import GolfHeader from '$lib/ui/GolfHeader.svelte';
+	import type { Course } from '$lib/types/courseType';
 
 	import RankingPodium from '$lib/components/quickSession/RankingPodium.svelte';
 	import GolfMSession from '$lib/components/quickSession/GolfMSession.svelte';
@@ -21,6 +22,7 @@
 	import GolfMScoring from '$lib/components/quickSession/GolfMScoring.svelte';
 	import ScoreCard from '$lib/components/quickSession/ScoreCard.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
+	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
 
 	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5, scoreCard: 51 };
 
@@ -28,6 +30,7 @@
 	let activeTargetIndex = gameStatus.currentTargetIndex || 0;
 
 	let isSessionHistorised: boolean = $state(false);
+	let isCourseSaved: boolean = $state(false);
 
 	gameStatus.currentTargetIndex = activeTargetIndex;
 
@@ -51,6 +54,7 @@
 			}
 		}*/
 		isSessionHistorised = historyStore.isGameHistorized(sessionSettingsStore.settings.id);
+		isCourseSaved = coursesStore.isCourseExisted(sessionSettingsStore.settings.id);
 
 		if (gameStatus.status === 'setup') nextCard(Step.session);
 		else if (gameStatus.status === 'in_progress') nextCard(Step.scoring);
@@ -94,6 +98,22 @@
 
 		isSessionHistorised = historyStore.archiveGame(newArchive);
 		if (isSessionHistorised) toastStore.show("Session enregistrée dans l'historique");
+	};
+
+	const saveCourse = () => {
+		const newCourse: Course = {
+			id: sessionSettingsStore.settings.id,
+			name:
+				sessionSettingsStore.settings.locationName +
+				' (' +
+				sessionSettingsStore.settings.sessionBeginning +
+				')',
+			targets: targetsStore.list
+		};
+
+		coursesStore.load(newCourse);
+		toastStore.show('Parcours enregistré ...');
+		isCourseSaved = true;
 	};
 
 	const showPodium = () => {
@@ -192,6 +212,9 @@
 			<button class="btn btn-primary" onclick={() => saveGameToHistory()}
 				>Historiser la partie</button
 			>
+		{/if}
+		{#if !isCourseSaved}
+			<button class="btn btn-primary" onclick={() => saveCourse()}>Enregistrer le parcours</button>
 		{/if}
 
 		<!-- Résultat de la Partie : carte de score -->

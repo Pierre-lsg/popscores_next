@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
+	import { getGPS } from '$lib/utils/sharedFunction';
 	import L from 'leaflet';
 	import 'leaflet/dist/leaflet.css';
 
@@ -8,8 +9,11 @@
 	let mapElement: HTMLDivElement | undefined = $state();
 	let map: L.Map;
 
-	onMount(() => {
-		if (!start_pos) return;
+	onMount(async () => {
+		const myPosition = await getGPS();
+		const myIcon = L.divIcon({ className: 'my-div-icon' });
+
+		if (!start_pos.lat) return;
 
 		// Initialisation de la carte centrée sur le départ
 		if (mapElement && start_pos) {
@@ -20,6 +24,10 @@
 				attribution: '© OpenStreetMap contributors'
 			}).addTo(map);
 		}
+
+		// Ma position
+		if (myPosition)
+			L.marker([myPosition.lat, myPosition.lng], { icon: myIcon }).addTo(map).bindPopup('Moi');
 
 		// Marqueur Départ (Rouge)
 		L.marker([start_pos.lat, start_pos.lng]).addTo(map).bindPopup('Départ');
@@ -53,5 +61,11 @@
 	/* Important : Leaflet a besoin d'une hauteur explicite */
 	div {
 		height: 250px;
+	}
+	:global(.my-div-icon) {
+		background-color: red;
+		border: 3px solid white;
+		border-radius: 50%;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	}
 </style>

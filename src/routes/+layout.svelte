@@ -55,8 +55,10 @@
 				<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 			{/if}
 		</div>
-		<NetworkStatus />
-		<StatusSignal />
+		{#if $page.url.pathname.includes('/championship/')}
+			<NetworkStatus />
+			<StatusSignal />
+		{/if}
 		<ThemeSelector />
 	</div>
 

@@ -85,6 +85,15 @@ class TargetsStore {
 	}
 
 	/**
+	 * Loads an external target to the list.
+	 *
+	 * @param aTarget - Target
+	 */
+	load(aTarget: Target) {
+		this.list.push(aTarget);
+	}
+
+	/**
 	 * Removes a target at a given index from the list.
 	 *
 	 * @param index The index of the target to remove

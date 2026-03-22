@@ -5,6 +5,7 @@
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import PlayerScoreOrder from '$lib/ui/PlayerScoreOrder.svelte';
+	import TargetBox from '$lib/components/TargetBox.svelte';
 
 	import { individualRules } from '$lib/types/targetType';
 
@@ -42,6 +43,7 @@
 	);
 
 	let showRanking: boolean = $state(false);
+	let showDetails: boolean = $state(false);
 
 	const initScoresPlayerOnTarget = () => {
 		players.forEach((player) => {
@@ -135,10 +137,15 @@
 						>PAR {currentTarget.par}</span
 					>
 				{/if}
+				<span role="none" class="par-badge" onclick={() => (showDetails = !showDetails)}>?</span>
 			</div>
 		</div>
 		<button class="btn-target" onclick={() => showNextTarget()} disabled={isLastTarget}>▶</button>
 	</header>
+
+	{#if showDetails}
+		<TargetBox target={currentTarget} bind:showDetails />
+	{/if}
 
 	{#if updatingPar}
 		<Stepper
