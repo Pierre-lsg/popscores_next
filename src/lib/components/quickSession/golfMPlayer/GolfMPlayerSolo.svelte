@@ -2,14 +2,21 @@
 	import { slide, fly } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
+	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
 	import { smartSort } from '$lib/utils/sharedFunction';
 	import { dndzone } from 'svelte-dnd-action';
 	import TextField from '$lib/ui/TextField.svelte';
+	import MultiSelector from '$lib/ui/MultiSelector.svelte';
+	import type { Player } from '$lib/types/playerType';
 
 	const flipDurationMs = 300;
 
 	let isDragging: boolean = $state(false);
 	let isSortPlayerAsc: boolean = true;
+	let isSelectedPlayers: boolean = $state(false);
+	let selectedPlayers: string[] = $state([]);
+
+	let regularPlayers = $state(regularsStore.list);
 
 	let editingId = $state<string | null>(null);
 
@@ -45,6 +52,18 @@
 	const saveName = (e: Event) => {
 		editingId = null;
 	};
+
+	const selectPlayer = () => {
+		selectedPlayers.forEach((pId) => {
+			if (!playersStore.list.some((p) => p.id === pId)) {
+				const aPlayer = regularsStore.find(pId);
+				if (aPlayer) playersStore.load(aPlayer);
+			}
+		});
+		regularPlayers = regularPlayers.filter((p) => !selectedPlayers.includes(p.id));
+		isSelectedPlayers = true;
+	};
+
 	const focus = (node: HTMLInputElement) => {
 		node.focus();
 		node.select();
@@ -54,13 +73,29 @@
 <div class="step-content" in:slide>
 	<button onclick={addPlayer} class="btn btn-primary">Ajouter un Joueur</button>
 
+	{#if !isSelectedPlayers}
+		<MultiSelector
+			id="playerSelect"
+			bind:value={selectedPlayers}
+			label="Sélection de joueurs"
+			options={regularPlayers.map((p: Player) => p.id)}
+			optionsLabel={regularPlayers.map((p: Player) => p.name)}
+		/>
+
+		<button onclick={() => selectPlayer()} class="btn btn-primary">Valider la sélection</button>
+	{:else}
+		<span role="none" onclick={() => (isSelectedPlayers = false)}>charger d'autres joueurs</span>
+	{/if}
+
 	<div class="card-list">
 		<!-- Liste des joueurs -->
-		<div class="players-header">
-			<button class="invisible-button player-item-header" onclick={() => sortPlayersByPlayer()}
-				>Joueurs</button
-			>
-		</div>
+		{#if playersStore.list.length > 0}
+			<div class="players-header">
+				<button class="invisible-button player-item-header" onclick={() => sortPlayersByPlayer()}
+					>Joueurs</button
+				>
+			</div>
+		{/if}
 
 		<div
 			class="players-list"

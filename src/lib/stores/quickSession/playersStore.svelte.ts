@@ -129,6 +129,15 @@ class PlayersStore {
 	}
 
 	/**
+	 * Loads an external Player to the list.
+	 *
+	 * @param aPlayer - Player
+	 */
+	load(aPlayer: Player) {
+		this.list.push(aPlayer);
+	}
+
+	/**
 	 * Resets the list of players and removes any saved data from localStorage
 	 */
 	reset() {

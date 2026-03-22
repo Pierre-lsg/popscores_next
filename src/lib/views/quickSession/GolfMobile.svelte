@@ -2,14 +2,17 @@
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
-	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
+	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
+	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
+	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 
+	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 
 	import { shareService } from '$lib/utils/shareService';
-	import { toastStore } from '$lib/stores/toastStore.svelte';
-	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 
 	import Toast from '$lib/ui/Toast.svelte';
 	import GolfHeader from '$lib/ui/GolfHeader.svelte';
@@ -21,8 +24,6 @@
 	import GolfMTargets from '$lib/components/quickSession/GolfMTargets.svelte';
 	import GolfMScoring from '$lib/components/quickSession/GolfMScoring.svelte';
 	import ScoreCard from '$lib/components/quickSession/ScoreCard.svelte';
-	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
 
 	const Step = { session: 1, players: 2, targets: 3, scoring: 4, ranking: 5, scoreCard: 51 };
 
@@ -100,7 +101,7 @@
 		if (isSessionHistorised) toastStore.show("Session enregistrée dans l'historique");
 	};
 
-	const saveCourse = () => {
+	const saveCourseAndPlayers = () => {
 		const newCourse: Course = {
 			id: sessionSettingsStore.settings.id,
 			name:
@@ -113,6 +114,10 @@
 
 		coursesStore.load(newCourse);
 		toastStore.show('Parcours enregistré ...');
+
+		regularsStore.loads(playersStore.list);
+		toastStore.show('Parcours enregistré ...');
+
 		isCourseSaved = true;
 	};
 
@@ -214,7 +219,9 @@
 			>
 		{/if}
 		{#if !isCourseSaved}
-			<button class="btn btn-primary" onclick={() => saveCourse()}>Enregistrer le parcours</button>
+			<button class="btn btn-primary" onclick={() => saveCourseAndPlayers()}
+				>Enregistrer parcours et joueurs</button
+			>
 		{/if}
 
 		<!-- Résultat de la Partie : carte de score -->
