@@ -3,18 +3,42 @@
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
+	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
 	import { shuffle } from '$lib/utils/sharedFunction';
 	import Selector from '$lib/ui/Selector.svelte';
 	import TextField from '$lib/ui/TextField.svelte';
 	import type { Team } from '$lib/types/teamType';
+	import type { Player } from '$lib/types/playerType';
+	import MultiSelector from '$lib/ui/MultiSelector.svelte';
 
 	const s = sessionSettingsStore.settings;
 
 	let selectedTeamId: string = $state('');
+	let isSelectingPlayers: boolean = $state(false);
+	let selectedPlayers: string[] = $state([]);
+	let regularPlayers = $derived(regularsStore.list.filter((p) => !playersStore.exist(p)));
+
+	const addPlayers = () => {
+		if (regularPlayers.length !== 0) isSelectingPlayers = !isSelectingPlayers;
+		else playersStore.add('Joueur #' + (playersStore.list.length + 1));
+	};
 
 	const addPlayer = () => {
 		playersStore.add('Joueur #' + (playersStore.list.length + 1));
+		isSelectingPlayers = false;
 	};
+
+	const selectPlayer = () => {
+		selectedPlayers.forEach((pId) => {
+			if (!playersStore.list.some((p) => p.id === pId)) {
+				const aPlayer = regularsStore.find(pId);
+				if (aPlayer) playersStore.load(aPlayer);
+			}
+		});
+		selectedPlayers = [];
+		isSelectingPlayers = false;
+	};
+	$inspect(regularPlayers);
 
 	const addTeam = () => {
 		teamsStore.add(crypto.randomUUID(), 'Team #' + (teamsStore.list.length + 1), []);
@@ -76,7 +100,22 @@
 </script>
 
 <div class="step-content" in:slide>
-	<button onclick={addPlayer} class="btn btn-primary">Ajouter un Joueur</button>
+	<button onclick={addPlayers} class="btn btn-primary">Ajouter un Joueur</button>
+
+	{#if isSelectingPlayers}
+		<MultiSelector
+			id="playerSelect"
+			bind:value={selectedPlayers}
+			label="Sélection de joueurs"
+			options={regularPlayers.map((p: Player) => p.id)}
+			optionsLabel={regularPlayers.map((p: Player) => p.name)}
+		/>
+		<div class="action">
+			<button onclick={() => selectPlayer()} class="btn btn-primary">Valider</button>
+			<button onclick={() => addPlayer()} class="btn btn-primary">Nouveau joueur</button>
+		</div>
+	{/if}
+
 	<div class="action">
 		<span role="none" class="dice-icon" onclick={createTeams}>🎲</span>
 		<span style="width: 85%"

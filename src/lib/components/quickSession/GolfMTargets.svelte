@@ -113,8 +113,9 @@
 	const displayDistance = (target: Target) => {
 		if (target.start_pos && target.end_pos) {
 			const distance = Math.round(calculateDistance(target.start_pos, target.end_pos));
-			alert('Calcul de la distance : ' + distance);
-		} else alert("Veuillez saisir les coordonnées de départ et d'arrivée");
+			if (distance) return distance + ' m';
+			else return '???';
+		} else return '???';
 	};
 
 	const selectCourse = () => {
@@ -231,7 +232,7 @@
 						placeholder="Description du cadre de la cible ..."
 						bind:value={target.description}
 					/>
-					<button onclick={() => displayDistance(target)}>Distance</button>
+					Distance : {displayDistance(target)}
 					<ParamTextArea
 						label="Règles spécifiques"
 						placeholder="Les parterres de fleurs sont hors limite ..."
@@ -239,7 +240,7 @@
 					/>
 
 					<button onclick={() => setPosition('start', target)} class:active={target.start_pos}>
-						{target.start_pos ? '🚩 Départ fixé' : '📍 Fixer Départ'}
+						{target.start_pos.lat ? '🚩 Départ fixé. Redéfinir ?' : '📍 Fixer le départ'}
 					</button>
 					<ParamTextArea
 						label="Emplacement de départ"
@@ -248,7 +249,7 @@
 					/>
 
 					<button onclick={() => setPosition('end', target)} class:active={target.end_pos}>
-						{target.end_pos ? '🎯 Arrivée fixée' : '📍 Fixer Arrivée'}
+						{target.end_pos.lat ? '🎯 Arrivée fixée. Redéfinir ?' : "📍 Fixer l'arrivée"}
 					</button>
 					<ParamTextArea
 						label="Emplacement de la cible"

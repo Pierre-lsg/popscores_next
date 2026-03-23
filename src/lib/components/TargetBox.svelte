@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Target } from '$lib/types/targetType';
 	import Map from '$lib/ui/Map.svelte';
+	import { calculateDistance } from '$lib/utils/sharedFunction';
 
 	interface Props {
 		target: Target;
@@ -8,6 +9,14 @@
 	}
 
 	let { target = {} as Target, showDetails = $bindable(true) }: Props = $props();
+
+	const displayDistance = (target: Target) => {
+		if (target.start_pos && target.end_pos) {
+			const distance = Math.round(calculateDistance(target.start_pos, target.end_pos));
+			if (distance) return distance + ' m';
+			else return '???';
+		} else return '???';
+	};
 </script>
 
 <div class="container">
@@ -16,6 +25,7 @@
 		<ul>
 			<li>Par : {target.par}</li>
 			<li>Règles : {target.rule}</li>
+			<li>Distance : {displayDistance(target)}</li>
 		</ul>
 		{#if target.description.trim() !== ''}
 			<h4>Description :</h4>

@@ -13,15 +13,19 @@
 
 	let isDragging: boolean = $state(false);
 	let isSortPlayerAsc: boolean = true;
-	let isSelectedPlayers: boolean = $state(false);
+	let isSelectingPlayers: boolean = $state(false);
 	let selectedPlayers: string[] = $state([]);
 
-	let regularPlayers = $state(regularsStore.list);
+	let regularPlayers = $derived(regularsStore.list.filter((p) => !playersStore.exist(p)));
 
-	let editingId = $state<string | null>(null);
+	const addPlayers = () => {
+		if (regularPlayers.length !== 0) isSelectingPlayers = !isSelectingPlayers;
+		else playersStore.add('Joueur #' + (playersStore.list.length + 1));
+	};
 
 	const addPlayer = () => {
 		playersStore.add('Joueur #' + (playersStore.list.length + 1));
+		isSelectingPlayers = false;
 	};
 
 	const handleRemoveDrop = (e: CustomEvent<{ items: any[] }>) => {
@@ -29,6 +33,7 @@
 		if (removedItem) {
 			playersStore.list = playersStore.list.filter((h) => h.id !== removedItem.id);
 		}
+		selectedPlayers = [];
 		isDragging = false;
 	};
 
@@ -45,14 +50,6 @@
 		isSortPlayerAsc = !isSortPlayerAsc;
 	};
 
-	const editPlayerName = (id: string) => {
-		editingId = id;
-	};
-
-	const saveName = (e: Event) => {
-		editingId = null;
-	};
-
 	const selectPlayer = () => {
 		selectedPlayers.forEach((pId) => {
 			if (!playersStore.list.some((p) => p.id === pId)) {
@@ -60,20 +57,14 @@
 				if (aPlayer) playersStore.load(aPlayer);
 			}
 		});
-		regularPlayers = regularPlayers.filter((p) => !selectedPlayers.includes(p.id));
-		isSelectedPlayers = true;
-	};
-
-	const focus = (node: HTMLInputElement) => {
-		node.focus();
-		node.select();
+		isSelectingPlayers = false;
 	};
 </script>
 
 <div class="step-content" in:slide>
-	<button onclick={addPlayer} class="btn btn-primary">Ajouter un Joueur</button>
+	<button onclick={addPlayers} class="btn btn-primary">Ajouter un Joueur</button>
 
-	{#if !isSelectedPlayers}
+	{#if isSelectingPlayers}
 		<MultiSelector
 			id="playerSelect"
 			bind:value={selectedPlayers}
@@ -81,10 +72,10 @@
 			options={regularPlayers.map((p: Player) => p.id)}
 			optionsLabel={regularPlayers.map((p: Player) => p.name)}
 		/>
-
-		<button onclick={() => selectPlayer()} class="btn btn-primary">Valider la sélection</button>
-	{:else}
-		<span role="none" onclick={() => (isSelectedPlayers = false)}>charger d'autres joueurs</span>
+		<div class="action">
+			<button onclick={() => selectPlayer()} class="btn btn-primary">Valider</button>
+			<button onclick={() => addPlayer()} class="btn btn-primary">Nouveau joueur</button>
+		</div>
 	{/if}
 
 	<div class="card-list">

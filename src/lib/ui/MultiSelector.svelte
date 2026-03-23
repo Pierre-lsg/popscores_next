@@ -57,7 +57,7 @@
 
 <style>
 	.multi-select-container {
-		width: 100%;
+		width: 94%;
 		background: var(--bg-card);
 		border-radius: 8px;
 		margin-bottom: 0.5rem;

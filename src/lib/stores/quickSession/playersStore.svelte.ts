@@ -138,6 +138,15 @@ class PlayersStore {
 	}
 
 	/**
+	 * Loads an external Player to the list.
+	 *
+	 * @param aPlayer - Player
+	 */
+	exist(aPlayer: Player) {
+		return this.list.find((p) => p.id === aPlayer.id) ? true : false;
+	}
+
+	/**
 	 * Resets the list of players and removes any saved data from localStorage
 	 */
 	reset() {

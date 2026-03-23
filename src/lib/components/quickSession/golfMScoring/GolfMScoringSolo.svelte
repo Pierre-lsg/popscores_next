@@ -23,7 +23,9 @@
 	let targets = $derived(targetsStore.list);
 	let players = $derived(playersStore.list);
 
-	let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
+	// let activeTargetIndex = $derived(gameStatus.currentTargetIndex);
+	let activeTargetIndex = $state(0);
+
 	let rankedPlayers = $derived(getRankedPlayers(players, targets));
 
 	let currentTarget = $derived(targets[activeTargetIndex]);
@@ -80,6 +82,19 @@
 		updatingName = updatedField === 'name' ? !updatingName : false;
 	};
 
+	const deleteTarget = () => {
+		const targetIndex = activeTargetIndex;
+		if (isFirstTarget === isLastTarget) {
+			alert('Un parcours doit contenir au moins un trou');
+			return;
+		}
+		if (isLastTarget) activeTargetIndex = activeTargetIndex - 1;
+
+		if (confirm('Voulez-vous annuler la cible ?')) {
+			targetsStore.remove(targetIndex);
+		}
+	};
+
 	const updateTargetRule = () => {
 		if (
 			!confirm("La règle 'Bonus' nécessite de réinitialiser les scores.\n Voulez-vous continuer ?")
@@ -98,15 +113,19 @@
 	});
 </script>
 
-<div class="step-content unselectable">
-	<div
-		role="none"
-		onpointerdown={() => (showRanking = true)}
-		onpointerup={() => (showRanking = false)}
-		onpointerleave={() => (showRanking = false)}
-		ontouchend={() => (showRanking = false)}
-	>
-		🔥 Provisoire
+<div class="step-content">
+	<div class="action">
+		<div
+			class="unselectable"
+			role="none"
+			onpointerdown={() => (showRanking = true)}
+			onpointerup={() => (showRanking = false)}
+			onpointerleave={() => (showRanking = false)}
+			ontouchend={() => (showRanking = false)}
+		>
+			🔥 Provisoire
+		</div>
+		<div role="none" onclick={() => deleteTarget()} class="btn-delete-small">X</div>
 	</div>
 	{#if showRanking}
 		<PlayerScoreOrder {rankedPlayers} {targets} />
