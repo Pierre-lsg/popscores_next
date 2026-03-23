@@ -43,7 +43,7 @@
 		<a class="card" href={base + '/history'}>
 			<span class="icon">📜</span>
 			<h3>Historique</h3>
-			<p>Revoir les sessions précédentes</p>
+			<p>Sessions, joueurs et parcours connus</p>
 		</a>
 
 		<a class="card disabled" href="/">

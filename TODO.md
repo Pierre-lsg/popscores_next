@@ -28,3 +28,8 @@
 13. Supprimer les options et informations inutiles
 14. Supprimer les cibles non rattachées à au moins une compétition
 15. ~~Ajouter la notion de championnat dans la table utilisateurs~~
+
+## Quick session
+
+1. Permettre de lister les joueurs et parcours
+2. Permettre de partager par lien

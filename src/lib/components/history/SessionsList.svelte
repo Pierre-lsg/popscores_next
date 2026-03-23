@@ -1,0 +1,131 @@
+<script lang="ts">
+	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
+	import type { SessionArchive } from '$lib/types/sessionType';
+	import { historyService } from '$lib/utils/pocketbase/history2Cloud';
+	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { onMount } from 'svelte';
+
+	let allSessions: SessionArchive[] = $state([]);
+	let loading = $state(true);
+	let knownSessionsId: string[] = $derived(historyStore.list.map((session) => session.id));
+	let filteredSessions: SessionArchive[] = $derived(
+		allSessions.filter((sessionArchive) => !knownSessionsId.includes(sessionArchive.id))
+	);
+
+	let { title = '', currentSession = $bindable('') } = $props<{
+		title?: string;
+		currentSession: string;
+	}>();
+
+	onMount(async () => {
+		if ($user) {
+			allSessions = await historyService.getAllSessionArchives();
+			loading = false;
+		}
+	});
+
+	const removeSession = (id: string) => {
+		historyStore.removeGame(id);
+	};
+
+	const loadSessionfromCloud = (index: number) => {
+		const aSession = historyStore.list.filter((s) => s.id === filteredSessions[index].id);
+		if (aSession.length == 0) {
+			if (confirm('Voulez-vous importer la session ?')) {
+				const newArchive = filteredSessions[index];
+				historyStore.archiveGame(newArchive);
+			}
+		}
+	};
+</script>
+
+<div class="history-list">
+	<h2>{title}</h2>
+	{#each historyStore.list as session, i}
+		<button class="session-card" onclick={() => (currentSession = session.id)}>
+			<div class="details">
+				{session.settings.locationName}
+			</div>
+			<div class="details">
+				{#if session.settings.regulation.teamGame}👥{:else}👤{/if}
+			</div>
+			<div>{session.settings.sessionBeginning}</div>
+			<div class="icon">📜</div>
+		</button>
+		<button onclick={() => removeSession(session.id)}> 🗑️ </button>
+	{:else}
+		<p>Aucune session archivée pour le moment. ⛳</p>
+	{/each}
+
+	{#if $user}
+		<h3>Sessions disponibles sur le Cloud</h3>
+
+		{#if loading}
+			<p>Chargement ...</p>
+		{:else}
+			{#each filteredSessions as session, i}
+				<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
+					<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
+				</button>
+			{/each}
+		{/if}
+	{/if}
+</div>
+
+<style>
+	.history-list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 16px;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.session-card {
+		display: flex;
+		align-items: center;
+		background: var(--bg-card);
+		border: 1px solid #e0e0e0;
+		border-radius: 12px;
+		padding: 15px;
+		text-align: left;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+		width: 100%;
+		color: inherit;
+		font-family: inherit;
+	}
+
+	.session-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		border-color: var(--border-color);
+	}
+
+	.session-card:active {
+		transform: translateY(0);
+		background-color: #f8f9fa;
+	}
+
+	.details {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.icon {
+		font-size: 1.5rem;
+		margin-left: 10px;
+		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+	}
+
+	/* Effet "vide" */
+	p {
+		text-align: center;
+		color: #95a5a6;
+		margin-top: 40px;
+		font-style: italic;
+	}
+</style>
