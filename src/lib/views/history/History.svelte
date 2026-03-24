@@ -2,9 +2,26 @@
 	import SessionsList from '$lib/components/history/SessionsList.svelte';
 	import SessionDetails from '$lib/components/history/SessionDetails.svelte';
 	import CoursesList from '$lib/components/history/CoursesList.svelte';
+	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
+	import { shareService } from '$lib/utils/shareService';
+	import { onMount } from 'svelte';
+	import CourseDetails from '$lib/components/history/CourseDetails.svelte';
 
 	let option: string = $state('');
 	let currentSession: string = $state('');
+	let currentCourse: string = $state('');
+
+	onMount(() => {
+		const importedCourseData = shareService.loadCourseFromUrl();
+		if (importedCourseData) {
+			if (confirm('Un parcoursa été trouvé via ce lien. Voulez-vous le récéupérer ?')) {
+				if (coursesStore.exist(importedCourseData.course.id)) alert('Le parcours existe déjà !');
+				else coursesStore.load(importedCourseData.course);
+
+				window.history.replaceState({}, '', window.location.pathname);
+			}
+		}
+	});
 </script>
 
 {#if option === ''}
@@ -47,7 +64,13 @@
 {#if option === 'courses'}
 	<div class="mobile-wizard">
 		<button onclick={() => (option = '')}>Retour</button>
-		<CoursesList title="Liste des parcours" currentCourse="" />
+		{#if currentCourse === ''}
+			<!-- Liste des parcours enregistrés en local -->
+			<CoursesList title="Liste des parcours" bind:currentCourse />
+		{:else}
+			<!-- Details du parcours	 -->
+			<CourseDetails title="Liste des parcours" bind:currentCourse />
+		{/if}
 	</div>
 {/if}
 

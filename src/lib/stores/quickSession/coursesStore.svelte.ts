@@ -77,14 +77,16 @@ class CoursesStore {
 	 * @param id - ID of the Course to remove
 	 */
 	find(id: string): Course | undefined {
-		return this.list.find((t) => t.id === id);
+		return this.list.find((c) => c.id === id);
 	}
 
 	/**
-	 * Vérifie si une partie existe dans l'historique
+	 * Exist a Course in the list.
+	 *
+	 * @param id - ID of the Course to remove
 	 */
-	isCourseExisted(id: string) {
-		return this.list.some((course) => course.id === id);
+	exist(id: string): boolean {
+		return this.list.some((c) => c.id === id);
 	}
 
 	/**

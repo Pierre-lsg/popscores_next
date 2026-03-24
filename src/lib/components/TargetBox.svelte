@@ -47,7 +47,7 @@
 			<Map start_pos={target.start_pos} end_pos={target.end_pos} />
 		{/if}
 
-		<button onclick={() => (showDetails = false)}>Close</button>
+		<button onclick={() => (showDetails = false)}>Fermer</button>
 	</div>
 </div>
 

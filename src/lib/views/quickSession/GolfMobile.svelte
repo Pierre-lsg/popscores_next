@@ -12,8 +12,6 @@
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 
-	import { shareService } from '$lib/utils/shareService';
-
 	import Toast from '$lib/ui/Toast.svelte';
 	import GolfHeader from '$lib/ui/GolfHeader.svelte';
 	import type { Course } from '$lib/types/courseType';
@@ -46,16 +44,8 @@
 	});
 
 	onMount(() => {
-		/*const importedData = shareService.loadFromUrl();
-		if (importedData) {
-			if (confirm('Une partie a été trouvée via ce lien. Voulez-vous charger les scores ?')) {
-				playersStore.list = importedData.players;
-				targetsStore.list = importedData.targets;
-				window.history.replaceState({}, '', window.location.pathname);
-			}
-		}*/
 		isSessionHistorised = historyStore.isGameHistorized(sessionSettingsStore.settings.id);
-		isCourseSaved = coursesStore.isCourseExisted(sessionSettingsStore.settings.id);
+		isCourseSaved = coursesStore.exist(sessionSettingsStore.settings.id);
 
 		if (gameStatus.status === 'setup') nextCard(Step.session);
 		else if (gameStatus.status === 'in_progress') nextCard(Step.scoring);
@@ -151,18 +141,6 @@
 	const showScoring = () => {
 		if (targetsStore.list.length) nextCard(Step.scoring);
 		else alert('Veuillez saisir une cible');
-	};
-
-	const copyShareLink = async () => {
-		try {
-			const link = shareService.generateLink(playersStore.list, targetsStore.list);
-			await navigator.clipboard.writeText(link);
-
-			// On déclenche le toast !
-			toastStore.show('🔗 Lien de partage copié !');
-		} catch (err) {
-			toastStore.show('❌ Erreur lors de la copie');
-		}
 	};
 </script>
 

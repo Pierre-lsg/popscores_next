@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
-	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
-	import type { SessionArchive } from '$lib/types/sessionType';
-	import { historyService } from '$lib/utils/pocketbase/history2Cloud';
+	import type { Course } from '$lib/types/courseType';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { courseService } from '$lib/utils/pocketbase/courses2Cloud';
+	import { shareService } from '$lib/utils/shareService';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { onMount } from 'svelte';
 
-	let allSessions: SessionArchive[] = $state([]);
+	let allCourses: Course[] = $state([]);
 	let loading = $state(true);
-	let knownSessionsId: string[] = $derived(historyStore.list.map((session) => session.id));
-	let filteredSessions: SessionArchive[] = $derived(
-		allSessions.filter((sessionArchive) => !knownSessionsId.includes(sessionArchive.id))
+	let knownCoursesId: string[] = $derived(coursesStore.list.map((course) => course.id));
+	let filteredCourses: Course[] = $derived(
+		allCourses.filter((course) => !knownCoursesId.includes(course.id))
 	);
 
 	let { title = '', currentCourse = $bindable('') } = $props<{
@@ -20,7 +21,7 @@
 
 	onMount(async () => {
 		if ($user) {
-			allSessions = await historyService.getAllSessionArchives();
+			allCourses = await courseService.getAllCourses();
 			loading = false;
 		}
 	});
@@ -29,40 +30,55 @@
 		coursesStore.remove(id);
 	};
 
-	const loadSessionfromCloud = (index: number) => {
-		const aSession = historyStore.list.filter((s) => s.id === filteredSessions[index].id);
-		if (aSession.length == 0) {
-			if (confirm('Voulez-vous importer la session ?')) {
-				const newArchive = filteredSessions[index];
-				historyStore.archiveGame(newArchive);
+	const loadCoursefromCloud = (index: number) => {
+		const aCourse = coursesStore.list.filter((c) => c.id === filteredCourses[index].id);
+		if (aCourse.length == 0) {
+			if (confirm('Voulez-vous importer le parcours ?')) {
+				const newCourse = filteredCourses[index];
+				coursesStore.load(newCourse);
 			}
+		}
+	};
+
+	const copyShareLink = async (course: Course) => {
+		try {
+			const link = shareService.generateCourseLink(course);
+			await navigator.clipboard.writeText(link);
+
+			// On déclenche le toast !
+			toastStore.show('🔗 Lien de partage copié !');
+		} catch (err) {
+			toastStore.show('❌ Erreur lors de la copie');
 		}
 	};
 </script>
 
-<div class="history-list">
+<div class="course-list">
 	<h2>{title}</h2>
 	{#each coursesStore.list as course, i}
-		<button class="session-card" onclick={() => (currentCourse = course.id)}>
+		<button class="course-card" onclick={() => (currentCourse = course.id)}>
 			<div class="details">
 				{course.name}
 			</div>
 			<div class="icon">📜</div>
 		</button>
-		<button onclick={() => removeCourse(course.id)}> 🗑️ </button>
+		<div class="action">
+			<button onclick={() => removeCourse(course.id)}> 🗑️ </button>
+			<button onclick={() => copyShareLink(course)}>🔗 Partager</button>
+		</div>
 	{:else}
-		<p>Aucune session archivée pour le moment. ⛳</p>
+		<p>Aucune parcours archivé pour le moment. ⛳</p>
 	{/each}
 
 	{#if $user}
-		<h3>Sessions disponibles sur le Cloud</h3>
+		<h3>Parcours disponibles dans le Cloud</h3>
 
 		{#if loading}
 			<p>Chargement ...</p>
 		{:else}
-			{#each filteredSessions as session, i}
-				<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
-					<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
+			{#each filteredCourses as course, i}
+				<button class="course-card" onclick={() => loadCoursefromCloud(i)}>
+					<div>{course.name}</div>
 				</button>
 			{/each}
 		{/if}
@@ -70,7 +86,7 @@
 </div>
 
 <style>
-	.history-list {
+	.course-list {
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
@@ -79,7 +95,7 @@
 		margin: 0 auto;
 	}
 
-	.session-card {
+	.course-card {
 		display: flex;
 		align-items: center;
 		background: var(--bg-card);
@@ -95,13 +111,13 @@
 		font-family: inherit;
 	}
 
-	.session-card:hover {
+	.course-card:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 		border-color: var(--border-color);
 	}
 
-	.session-card:active {
+	.course-card:active {
 		transform: translateY(0);
 		background-color: #f8f9fa;
 	}
