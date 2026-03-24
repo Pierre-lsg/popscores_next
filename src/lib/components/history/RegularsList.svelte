@@ -1,124 +1,84 @@
 <script lang="ts">
-	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
-	import type { SessionArchive } from '$lib/types/sessionType';
-	import { historyService } from '$lib/utils/pocketbase/history2Cloud';
-	import { user } from '$lib/utils/pocketbase/pocketBase';
-	import { onMount } from 'svelte';
+	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { shareService } from '$lib/utils/shareService';
+	import TextField from '$lib/ui/TextField.svelte';
 
-	let allSessions: SessionArchive[] = $state([]);
-	let loading = $state(true);
-	let knownSessionsId: string[] = $derived(historyStore.list.map((session) => session.id));
-	let filteredSessions: SessionArchive[] = $derived(
-		allSessions.filter((sessionArchive) => !knownSessionsId.includes(sessionArchive.id))
-	);
-
-	let { title = '', currentSession = $bindable('') } = $props<{
+	let { title = '' } = $props<{
 		title?: string;
-		currentSession: string;
 	}>();
 
-	onMount(async () => {
-		if ($user) {
-			allSessions = await historyService.getAllSessionArchives();
-			loading = false;
-		}
-	});
+	let isEditing: boolean[] = $state([]);
+	let checkedRegulars = $state(regularsStore.list);
 
-	const removeSession = (id: string) => {
-		historyStore.removeGame(id);
+	const removeRegular = (id: string) => {
+		if (confirm('Voulez-vous supprimer ce joueur ?')) regularsStore.remove(id);
 	};
 
-	const loadSessionfromCloud = (index: number) => {
-		const aSession = historyStore.list.filter((s) => s.id === filteredSessions[index].id);
-		if (aSession.length == 0) {
-			if (confirm('Voulez-vous importer la session ?')) {
-				const newArchive = filteredSessions[index];
-				historyStore.archiveGame(newArchive);
-			}
+	const copyShareLink = async () => {
+		try {
+			const link = shareService.generateRegularsLink(checkedRegulars);
+			await navigator.clipboard.writeText(link);
+
+			// On déclenche le toast !
+			toastStore.show('🔗 Lien de partage copié !');
+		} catch (err) {
+			toastStore.show('❌ Erreur lors de la copie');
 		}
 	};
 </script>
 
-<div class="history-list">
+<div class="regulars-list">
 	<h2>{title}</h2>
-	{#each historyStore.list as session, i}
-		<button class="session-card" onclick={() => (currentSession = session.id)}>
-			<div class="details">
-				{session.settings.locationName}
+	{#each regularsStore.list as regular, i}
+		<div class="regular-item">
+			<input
+				type="checkbox"
+				value={regular}
+				id={regular.id}
+				bind:group={checkedRegulars}
+				class="checkbox"
+			/>
+			<div class="content">
+				{#if isEditing[i]}
+					<TextField bind:value={regular.name} />
+				{:else}
+					{regular.name}
+				{/if}
 			</div>
-			<div class="details">
-				{#if session.settings.regulation.teamGame}👥{:else}👤{/if}
-			</div>
-			<div>{session.settings.sessionBeginning}</div>
-			<div class="icon">📜</div>
-		</button>
-		<button onclick={() => removeSession(session.id)}> 🗑️ </button>
+			<div role="none" onclick={() => (isEditing[i] = !isEditing[i])} class="handle">✏️</div>
+			<div role="none" onclick={() => removeRegular(regular.id)} class="btn-delete-small">X</div>
+		</div>
 	{:else}
-		<p>Aucune session archivée pour le moment. ⛳</p>
+		<p>Aucune joueur régulier connu. 👤</p>
 	{/each}
 
-	{#if $user}
-		<h3>Sessions disponibles sur le Cloud</h3>
-
-		{#if loading}
-			<p>Chargement ...</p>
-		{:else}
-			{#each filteredSessions as session, i}
-				<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
-					<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
-				</button>
-			{/each}
-		{/if}
-	{/if}
+	<button onclick={() => copyShareLink()}>Partager la liste</button>
 </div>
 
 <style>
-	.history-list {
+	.checkbox {
+		width: 25px;
+		height: 25px;
+	}
+
+	.regulars-list {
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		padding: 16px;
 		max-width: 600px;
 		margin: 0 auto;
 	}
 
-	.session-card {
+	.regular-item {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		background: var(--bg-card);
-		border: 1px solid #e0e0e0;
-		border-radius: 12px;
-		padding: 15px;
-		text-align: left;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-		width: 100%;
-		color: inherit;
-		font-family: inherit;
-	}
-
-	.session-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		border-color: var(--border-color);
-	}
-
-	.session-card:active {
-		transform: translateY(0);
-		background-color: #f8f9fa;
-	}
-
-	.details {
-		flex-grow: 1;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.icon {
-		font-size: 1.5rem;
-		margin-left: 10px;
-		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		padding: 0.5rem;
+		touch-action: shadow;
 	}
 
 	/* Effet "vide" */

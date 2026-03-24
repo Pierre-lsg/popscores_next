@@ -51,7 +51,7 @@
 
 <div>
 	<div class="action">
-		<button onclick={() => retourHistorique()}>Back</button>
+		<button onclick={() => retourHistorique()}>Retour Liste</button>
 		{#if $user}
 			<button onclick={() => saveCourseToCloud()}>Enregistrer dans le Cloud</button>
 		{/if}

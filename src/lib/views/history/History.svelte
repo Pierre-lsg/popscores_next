@@ -6,6 +6,8 @@
 	import { shareService } from '$lib/utils/shareService';
 	import { onMount } from 'svelte';
 	import CourseDetails from '$lib/components/history/CourseDetails.svelte';
+	import RegularsList from '$lib/components/history/RegularsList.svelte';
+	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
 
 	let option: string = $state('');
 	let currentSession: string = $state('');
@@ -14,12 +16,20 @@
 	onMount(() => {
 		const importedCourseData = shareService.loadCourseFromUrl();
 		if (importedCourseData) {
-			if (confirm('Un parcoursa été trouvé via ce lien. Voulez-vous le récéupérer ?')) {
+			if (confirm('Un parcours a été trouvé via ce lien. Voulez-vous le récéupérer ?')) {
 				if (coursesStore.exist(importedCourseData.course.id)) alert('Le parcours existe déjà !');
 				else coursesStore.load(importedCourseData.course);
 
 				window.history.replaceState({}, '', window.location.pathname);
 			}
+		}
+
+		const importedRegularsData = shareService.loadRegularsFromUrl();
+		if (importedRegularsData && importedRegularsData.length !== 0) {
+			if (confirm('Une liste de joueurs a été trouvé via ce lien. Voulez-vous les récéupérer ?'))
+				regularsStore.loads(importedRegularsData);
+
+			window.history.replaceState({}, '', window.location.pathname);
 		}
 	});
 </script>
@@ -77,7 +87,7 @@
 {#if option === 'players'}
 	<div class="mobile-wizard">
 		<button onclick={() => (option = '')}>Retour</button>
-		Coming soon ...
+		<RegularsList title="Liste des joueurs réguliers" />
 	</div>
 {/if}
 

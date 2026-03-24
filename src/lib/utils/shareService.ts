@@ -60,13 +60,13 @@ export const shareService = {
 	},
 
 	// Generate link for players
-	generatePlayersLink: (players: Player[]): string => {
-		return handleDataForUrl(players, 'p', 'p');
+	generateRegularsLink: (regulars: Player[]): string => {
+		return handleDataForUrl(regulars, 'r', 'r');
 	},
 
 	// Load players from URL
-	loadPlayersFromUrl: (): { players: Player[] } | [] => {
-		const players = handleDataFromUrl<Player[]>('p', 'p');
-		return players ? { players } : [];
+	loadRegularsFromUrl: (): Player[] | [] => {
+		const regulars = handleDataFromUrl<Player[]>('r', 'r');
+		return regulars ? regulars : [];
 	}
 };
