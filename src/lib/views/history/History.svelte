@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import SessionsList from '$lib/components/history/SessionsList.svelte';
 	import SessionDetails from '$lib/components/history/SessionDetails.svelte';
 	import CoursesList from '$lib/components/history/CoursesList.svelte';
@@ -8,6 +9,7 @@
 	import CourseDetails from '$lib/components/history/CourseDetails.svelte';
 	import RegularsList from '$lib/components/history/RegularsList.svelte';
 	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
+	import { navContext } from '../../../lib/nav.svelte.ts';
 
 	let option: string = $state('');
 	let currentSession: string = $state('');
@@ -31,9 +33,22 @@
 
 			window.history.replaceState({}, '', window.location.pathname);
 		}
+
+		navContext.headerAction = returnButton;
+		return () => (navContext.headerAction = null);
 	});
 </script>
 
+<!-- Navigation -->
+{#snippet returnButton()}
+	{#if currentCourse !== '' || currentSession !== ''}
+		<a class="btn btn-back" href={base + '/history/'}>📜 Accueil</a>
+	{:else}
+		<a class="btn btn-back" href={base + '/'}>🏠 Accusseil</a>
+	{/if}
+{/snippet}
+
+<!-- Application -->
 {#if option === ''}
 	<div class="hub-container">
 		<div class="grid-container">
@@ -54,6 +69,10 @@
 				<h3>Joueurs</h3>
 				<p>Liste et partage des joueurs réguliers</p>
 			</div>
+			<a class="card" href={base + '/'}>
+				<span class="icon">🏠</span>
+				<h3>Retour Accueil</h3>
+			</a>
 		</div>
 	</div>
 {/if}

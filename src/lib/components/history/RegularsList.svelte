@@ -3,6 +3,7 @@
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { shareService } from '$lib/utils/shareService';
 	import TextField from '$lib/ui/TextField.svelte';
+	import QRCode from '$lib/ui/QRCode.svelte';
 
 	let { title = '' } = $props<{
 		title?: string;
@@ -10,6 +11,7 @@
 
 	let isEditing: boolean[] = $state([]);
 	let checkedRegulars = $state(regularsStore.list);
+	let qrDataPlayers: string = $state('');
 
 	const removeRegular = (id: string) => {
 		if (confirm('Voulez-vous supprimer ce joueur ?')) regularsStore.remove(id);
@@ -19,6 +21,7 @@
 		try {
 			const link = shareService.generateRegularsLink(checkedRegulars);
 			await navigator.clipboard.writeText(link);
+			qrDataPlayers = link;
 
 			// On déclenche le toast !
 			toastStore.show('🔗 Lien de partage copié !');
@@ -52,6 +55,11 @@
 	{:else}
 		<p>Aucune joueur régulier connu. 👤</p>
 	{/each}
+	{#if qrDataPlayers !== ''}
+		<div role="none" onclick={() => (qrDataPlayers = '')}>
+			<QRCode data={qrDataPlayers} size={400} />
+		</div>
+	{/if}
 
 	<button onclick={() => copyShareLink()}>Partager la liste</button>
 </div>

@@ -15,6 +15,7 @@
 	import NetworkStatus from '$lib/ui/NetworkStatus.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
 	import { selection } from '$lib/stores/selection';
+	import { navContext } from '../lib/nav.svelte.ts';
 
 	let { children } = $props();
 
@@ -49,8 +50,8 @@
 <main>
 	<div class="top-bar">
 		<div>
-			{#if $page.url.pathname.includes('/championship/') && $page.url.pathname !== '/championship/'}
-				<a class="btn btn-back" href="{base}/championship/{selection.currentId}">👑 Accueil</a>
+			{#if navContext.headerAction}
+				{@render navContext.headerAction()}
 			{:else}
 				<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 			{/if}

@@ -6,6 +6,7 @@
 	import { shareService } from '$lib/utils/shareService';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { onMount } from 'svelte';
+	import QRCode from '$lib/ui/QRCode.svelte';
 
 	let allCourses: Course[] = $state([]);
 	let loading = $state(true);
@@ -13,6 +14,7 @@
 	let filteredCourses: Course[] = $derived(
 		allCourses.filter((course) => !knownCoursesId.includes(course.id))
 	);
+	let qrDataCourse: string = $state('');
 
 	let { title = '', currentCourse = $bindable('') } = $props<{
 		title?: string;
@@ -44,6 +46,7 @@
 		try {
 			const link = shareService.generateCourseLink(course);
 			await navigator.clipboard.writeText(link);
+			qrDataCourse = link;
 
 			// On déclenche le toast !
 			toastStore.show('🔗 Lien de partage copié !');
@@ -55,6 +58,11 @@
 
 <div class="course-list">
 	<h2>{title}</h2>
+	{#if qrDataCourse !== ''}
+		<div role="none" onclick={() => (qrDataCourse = '')}>
+			<QRCode data={qrDataCourse} size={400} />
+		</div>
+	{/if}
 	{#each coursesStore.list as course, i}
 		<button class="course-card" onclick={() => (currentCourse = course.id)}>
 			<div class="details">

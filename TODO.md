@@ -32,4 +32,4 @@
 ## Quick session
 
 1. Permettre de lister les joueurs et parcours
-2. Permettre de partager par lien
+2. Permettre de partager par lien (transformer en QR code)

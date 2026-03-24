@@ -54,9 +54,10 @@
 		bind:value={appSettings.values.clubName}
 		placeholder="Nom du club"
 	/>
+	<!--
 	<Stepper label="Mon Index (HCP)" bind:value={appSettings.values.hcp} min={0} />
 	<Toggle label="Calcul Stableford" bind:checked={appSettings.values.useStableford} />
-
+	-->
 	<h2>Paramètres de sessions de golf</h2>
 
 	<Toggle label="Malus fixe en cas de X" bind:checked={appSettings.values.hasCrossAFixedPenalty} />
