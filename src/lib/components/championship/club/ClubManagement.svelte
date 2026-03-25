@@ -5,6 +5,10 @@
 	import TeamsManagement from './TeamsManagement.svelte';
 	import type { Club } from '$lib/types/clubType';
 	import type { Championship } from '$lib/types/championshipType';
+	import { navContext } from '$lib/utils/nav.svelte';
+	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
+	import { selection } from '$lib/stores/selection';
 
 	let { currentClub = $bindable(''), championship } = $props<{
 		currentClub: string;
@@ -27,9 +31,20 @@
 		isShowingTeams = !isShowingTeams;
 		teamsDisp = isShowingTeams ? 'réduire' : 'développer';
 	};
+
+	onMount(() => {
+		navContext.headerAction = returnButton;
+		return () => (navContext.headerAction = prevReturnButton);
+	});
 </script>
 
-<button onclick={() => (currentClub = '')} class="subnav"> Retour à la liste des clubs </button>
+{#snippet returnButton()}
+	<div class="btn btn-back" role="none" onclick={() => (currentClub = '')}>👥 Accueil</div>
+{/snippet}
+
+{#snippet prevReturnButton()}
+	<a class="btn btn-back" href={base + '/championship/' + selection.currentId + '/'}>👑 Accueil</a>
+{/snippet}
 
 <h2>Club : {club.name}</h2>
 

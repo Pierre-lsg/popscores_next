@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Param from '$lib/ui/Param.svelte';
-	import Selector from '$lib/ui/Selector.svelte';
 	import MultiSelector from '$lib/ui/MultiSelector.svelte';
 
 	import type { Player } from '$lib/types/playerType';

@@ -9,7 +9,6 @@
 	import type { Club } from '$lib/types/clubType';
 	import type { Player } from '$lib/types/playerType';
 	import type { Team } from '$lib/types/teamType';
-	import { onMount } from 'svelte';
 
 	let { currentClub = $bindable('') } = $props<{
 		currentClub: string;
@@ -64,10 +63,10 @@
 </script>
 
 {#if !isEditingTeam && !creatingNewTeam}
-	<div class="teams-list">
+	<div class="item-list">
 		{#each teams as team, i}
-			<div role="none" class="team-item" onclick={() => editTeam(i)}>
-				<div role="none" class="team-card">
+			<div role="none" class="item-details" onclick={() => editTeam(i)}>
+				<div role="none" class="team-card item-card">
 					<div class="details">
 						{team.name}
 					</div>
@@ -86,7 +85,7 @@
 	<!-- Form for team's editing -->
 	{#each teams as team, i}
 		{#if editingTeam[i]}
-			<div class="team-form">
+			<div class="item-form">
 				<TeamEditing {currentClub} {team} {clubPlayers} />
 				<div class="action">
 					<button onclick={() => editTeam(i)}> Valider </button>
@@ -107,7 +106,7 @@
 {/if}
 
 {#if creatingNewTeam}
-	<div class="team-form">
+	<div class="item-form">
 		<h3 style="margin-top: 0">Nouvelle équipe 👥</h3>
 		<Param
 			label="Nom de l'équipe"
@@ -124,47 +123,13 @@
 {/if}
 
 <style>
-	.teams-list {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		margin: 0rem;
-	}
-
-	.team-item {
-		display: flex;
-		flex-direction: column;
-		width: 95%;
-		margin-bottom: 1rem;
-	}
-
 	.team-card {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: space-between;
 		width: 100%;
-		background-color: var(--bg-card);
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		cursor: pointer;
-		margin: 0 0.5rem 0 0;
 	}
 
 	.team-card:hover {
 		transform: translateY(-5px);
 		border-color: var(--border-color);
-	}
-
-	.team-form {
-		border: 1px var(--primary) solid;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-	}
-
-	.team-form {
-		border: 1px var(--primary) solid;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
 	}
 
 	.details {

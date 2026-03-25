@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { navContext } from '../lib/nav.svelte.ts';
+	import { navContext } from '$lib/utils/nav.svelte';
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import Hub from '$lib/views/Hub.svelte';

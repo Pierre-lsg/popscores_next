@@ -20,6 +20,7 @@
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
+	import Loader from '$lib/ui/Loader.svelte';
 
 	let isTeamGame: boolean = sessionSettingsStore.settings.regulation.teamGame;
 
@@ -271,7 +272,9 @@
 	{/if}
 
 	{#if loadingGps}
-		<div class="splash-screen">Looking for position ...</div>
+		<div class="box-screen splash-screen">
+			<Loader message="Recherche de position GPS ..." />
+		</div>
 	{/if}
 {/each}
 
@@ -322,22 +325,5 @@
 		border-bottom: 2px solid var(--primary);
 		outline: none;
 		color: var(--primary);
-	}
-
-	.splash-screen {
-		display: flex;
-		flex-direction: column;
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 999;
-		align-items: center;
-		justify-content: center;
-		height: 100vh;
-		width: 100vw;
-		margin: 0;
-		background-color: rgba(0, 0, 0, 0.8);
-		color: white;
-		font-size: xx-large;
 	}
 </style>

@@ -18,8 +18,8 @@
 	let teams = teamsChampionshipStore.list.filter((team) => club.teamsId.includes(team.id));
 </script>
 
-<div class="container">
-	<div class="displayed-box">
+<div class="box-screen">
+	<div class="content-box">
 		<div style="text-align: center;">{club.name}</div>
 		<p>Joueurs :</p>
 		{formatList(players.map((p) => p.name))}
@@ -36,31 +36,3 @@
 		}
 	}}
 />
-
-<style>
-	.container {
-		display: flex;
-		flex-direction: column;
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 999;
-		align-items: center;
-		justify-content: center;
-		height: 100vh;
-		width: 100vw;
-		margin: 0;
-		background-color: rgba(0, 0, 0, 0.6);
-	}
-
-	.displayed-box {
-		display: flex;
-		flex-direction: column;
-		background-color: var(--bg-card);
-		justify-content: center;
-		min-height: 30vh;
-		max-height: 80vh;
-		width: 100vw;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-	}
-</style>

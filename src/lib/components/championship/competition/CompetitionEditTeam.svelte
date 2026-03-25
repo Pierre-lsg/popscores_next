@@ -41,7 +41,7 @@
 	};
 </script>
 
-<div class="team-form">
+<div class="item-form">
 	<h4>Modifier l'équipe "{team.name}"</h4>
 	<Param
 		label="Nom de l'équipe"

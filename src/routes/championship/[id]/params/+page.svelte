@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ChampionshipParams from '$lib/views/championship/ChampionshipParams.svelte';
 	import { securityCheck } from '$lib/utils/security';
-	import { navContext } from '$lib/nav.svelte';
+	import { navContext } from '$lib/utils/nav.svelte';
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import { selection } from '$lib/stores/selection';

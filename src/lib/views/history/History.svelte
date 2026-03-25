@@ -9,7 +9,7 @@
 	import CourseDetails from '$lib/components/history/CourseDetails.svelte';
 	import RegularsList from '$lib/components/history/RegularsList.svelte';
 	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
-	import { navContext } from '../../nav.svelte.ts';
+	import { navContext } from '../../utils/nav.svelte.ts';
 
 	let option: string = $state('');
 	let currentSession: string = $state('');
@@ -34,7 +34,7 @@
 			window.history.replaceState({}, '', window.location.pathname);
 		}
 
-		// navigation
+		// navigationS
 		navContext.headerAction = returnButton;
 		return () => (navContext.headerAction = null);
 	});

@@ -148,10 +148,10 @@
 <h2>Compétitions</h2>
 {#if !addNewCompetition}
 	{#if !isEditingCompetition}
-		<div class="competitions-list">
+		<div class="item-list">
 			{#each competitions as competition, i}
-				<div class="competition-item">
-					<div role="none" class="competition-card" onclick={() => loadingCompetition(competition)}>
+				<div class="item-details">
+					<div role="none" class="item-card" onclick={() => loadingCompetition(competition)}>
 						<div class="details">
 							{competition.name}
 						</div>
@@ -172,7 +172,7 @@
 
 	{#each competitions as competition, i}
 		{#if editCompetition[i]}
-			<div class="competition-form">
+			<div class="item-form">
 				<h3>Modifier la Compétition</h3>
 				<Param
 					label="⛳ Nom de la compétition"
@@ -216,7 +216,7 @@
 		{/if}
 	{/if}
 {:else}
-	<div class="competition-form">
+	<div class="item-form">
 		<h3 style="margin-top: 0">Nouvelle Compétition</h3>
 		<Param
 			label="⛳ Nom de la compétition"
@@ -263,37 +263,6 @@
 {/if}
 
 <style>
-	.competitions-list {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		margin: 0rem;
-	}
-
-	.competition-item {
-		display: flex;
-		flex-direction: column;
-		width: 95%;
-		margin-bottom: 1rem;
-	}
-
-	.competition-card {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: space-between;
-		width: 100%;
-		background-color: var(--bg-card);
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		cursor: pointer;
-		margin: 0 0.5rem 0 0;
-	}
-
-	.competition-card:hover {
-		transform: translateY(-5px);
-		border-color: var(--border-color);
-	}
-
 	.details {
 		align-items: center;
 		margin: 0.5rem;
@@ -304,11 +273,5 @@
 		margin: 0.5rem;
 		font-size: 24px;
 		color: #2c3e50;
-	}
-
-	.competition-form {
-		border: 1px var(--primary) solid;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
 	}
 </style>

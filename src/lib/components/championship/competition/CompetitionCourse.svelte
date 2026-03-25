@@ -156,7 +156,7 @@
 		<div>&nbsp;</div>
 		{#each course?.targets as target, i}
 			{#if editingTarget[i]}
-				<div class="target-form">
+				<div class="item-form">
 					<Param
 						label="⛳ Nom de la cible"
 						type="text"
@@ -191,12 +191,6 @@
 </div>
 
 <style>
-	.target-form {
-		border: 1px var(--primary) solid;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-	}
-
 	.param-container {
 		display: flex;
 		align-items: center;

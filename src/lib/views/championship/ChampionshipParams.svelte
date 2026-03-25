@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
-	import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 	import { selection } from '$lib/stores/selection';
 
-	import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
 	import type { User } from '$lib/types/userType';
 
 	import Param from '$lib/ui/Param.svelte';

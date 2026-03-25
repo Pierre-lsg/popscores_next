@@ -5,7 +5,6 @@
 	import { pwaInfo } from 'virtual:pwa-info';
 	import { page } from '$app/stores';
 	import ThemeSelector from '$lib/ui/ThemeSelector.svelte';
-	import NetworkBanner from '$lib/ui/NetworkBanner.svelte';
 	import Toast from '$lib/ui/Toast.svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
 	import { checkDataVersion, CURRENT_VERSION } from '$lib/utils/migration';
@@ -14,7 +13,7 @@
 	import StatusSignal from '$lib/ui/InfoStatus.svelte';
 	import NetworkStatus from '$lib/ui/NetworkStatus.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
-	import { navContext } from '../lib/nav.svelte.ts';
+	import { navContext } from '$lib/utils/nav.svelte';
 
 	let { children } = $props();
 
@@ -22,10 +21,9 @@
 
 	const logoutAndPurge = () => {
 		user.set(null);
-		localStorage.clear(); // Clear all local storage items
+		localStorage.clear();
 		pb.authStore.clear();
 		goto(base + '/');
-		//		window.location.href = '/';
 	};
 
 	onMount(() => {
@@ -43,7 +41,6 @@
 	<link rel="icon" href="{base}/favicon.ico" />
 </svelte:head>
 
-<!--<NetworkBanner />-->
 <Toast />
 
 <main>

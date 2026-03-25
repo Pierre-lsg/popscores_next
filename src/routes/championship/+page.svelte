@@ -3,6 +3,7 @@
 	import { base } from '$app/paths';
 
 	import Selector from '$lib/ui/Selector.svelte';
+	import Loader from '$lib/ui/Loader.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { securityCheck } from '$lib/utils/security';
@@ -141,7 +142,9 @@
 </div>
 
 {#if loadingChampionship}
-	<div class="splash-screen">Loading championship ...</div>
+	<div class="splash-screen box-screen">
+		<Loader message="Chargement du championnat ..." />
+	</div>
 {/if}
 
 <style>
@@ -164,38 +167,9 @@
 		font-size: 2.5rem;
 	}
 
-	h2 {
-		margin-bottom: 1rem;
-		color: var(--primary);
-		text-align: center;
-	}
-
-	h2:not(:first-child) {
-		border-top: var(--primary) 2px solid;
-		padding-top: 1rem;
-		margin-top: 2rem;
-	}
-
 	.settings-page {
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
-	}
-
-	.splash-screen {
-		display: flex;
-		flex-direction: column;
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 999;
-		align-items: center;
-		justify-content: center;
-		height: 100vh;
-		width: 100vw;
-		margin: 0;
-		background-color: rgba(0, 0, 0, 0.8);
-		color: white;
-		font-size: xx-large;
 	}
 </style>

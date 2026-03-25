@@ -149,6 +149,82 @@ h2:not(:first-child) {
 }
 
 /*----------------------------*/
+/* Boxes classes              */
+/*----------------------------*/
+
+.box-screen {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	width: 100vw;
+	margin: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.content-box {
+	display: flex;
+	flex-direction: column;
+	background-color: var(--bg-card);
+	justify-content: center;
+	min-height: 30vh;
+	max-height: 90vh; /* limit the height to 90% of the viewport */
+	overflow-y: auto; /* add a vertical scrollbar if needed */
+	width: 100vw;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.splash-screen {
+	color: white;
+	font-size: large;
+}
+
+/*----------------------------*/
+/* Items & Forms classes      */
+/*----------------------------*/
+
+.item-form {
+	border: 1px var(--primary) solid;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+}
+
+.item-list {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.item-details {
+	display: flex;
+	flex-direction: column;
+	width: 95%;
+	margin-bottom: 1rem;
+}
+
+.item-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	background-color: var(--bg-card);
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	margin: 0 0.5rem 0 0;
+	box-sizing: border-box;
+}
+
+.item-card:hover {
+	transform: translateY(-5px);
+	border-color: var(--border-color);
+}
+
+/*----------------------------*/
 /* Main classes               */
 /*----------------------------*/
 /* Boutons génériques */

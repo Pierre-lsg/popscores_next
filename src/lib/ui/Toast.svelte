@@ -10,7 +10,8 @@
 		onclick={() => toastStore.dismiss()}
 	>
 		{toastStore.message}
-	</button>{/if}
+	</button>
+{/if}
 
 <style>
 	.toast-button {

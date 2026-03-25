@@ -32,7 +32,7 @@ class TeamsStore {
 	 * @param playersId[] - A collection of player's id
 	 */
 	add(id: string, name: string, playersId: string[]) {
-		this.list.push({ id, name, playersId });
+		this.list.push({ id, name, playersId, clubId: '', sessionId: '' });
 	}
 
 	/**

@@ -90,10 +90,10 @@
 </script>
 
 {#if !isEditingPlayer && !isCreatingNewPlayer}
-	<div class="players-list">
+	<div class="item-list">
 		{#each players as player, i}
-			<div role="none" class="player-item" onclick={() => editPlayer(player, i)}>
-				<div style="background-image: url({photo});" class="player-card">
+			<div role="none" class="item-details" onclick={() => editPlayer(player, i)}>
+				<div style="background-image: url({photo});" class="item-card player-card">
 					<div class="details">
 						<div>{player.name}</div>
 						<div>{player.surname}</div>
@@ -119,7 +119,7 @@
 {:else}
 	{#each players as player, i}
 		{#if editingPlayer[i]}
-			<div class="player-form">
+			<div class="item-form">
 				<h3 style="margin-top: 0">Modifier le joueur 👤</h3>
 				<Param
 					label="Nom du joueur"
@@ -152,7 +152,7 @@
 {/if}
 
 {#if isCreatingNewPlayer}
-	<div class="player-form">
+	<div class="item-form">
 		<h3 style="margin-top: 0">Nouveau joueur 👤</h3>
 		<Param
 			label="Nom du joueur"
@@ -176,7 +176,7 @@
 {/if}
 
 {#if isFindingCloudPlayer}
-	<div class="player-form">
+	<div class="item-form">
 		<h3 style="margin-top: 0">Autres joueurs du Cloud 👤</h3>
 		{#each cloudPlayers as player}
 			<div class="action">
@@ -187,44 +187,12 @@
 {/if}
 
 <style>
-	.players-list {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		margin: 0rem;
-	}
-
-	.player-item {
-		display: flex;
-		flex-direction: column;
-		width: 95%;
-		margin-bottom: 1rem;
-	}
-
 	.player-card {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
 		justify-content: space-around;
 		width: 100%;
 		height: 150px;
-		background-color: var(--bg-card);
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		cursor: pointer;
-		margin: 0 0.5rem 0 0;
 		background-size: contain;
 		background-repeat: no-repeat;
-	}
-
-	.player-card:hover {
-		transform: translateY(-5px);
-		border-color: var(--border-color);
-	}
-
-	.player-form {
-		border: 1px var(--primary) solid;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
 	}
 
 	.details {

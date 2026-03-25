@@ -19,8 +19,8 @@
 	};
 </script>
 
-<div class="container">
-	<div class="target-box">
+<div class="box-screen">
+	<div class="content-box">
 		<h2>{target.name}</h2>
 		<ul>
 			<li>Par : {target.par}</li>
@@ -59,30 +59,5 @@
 	.details {
 		margin: 0.2rem 0.2rem 0.5rem 0.2rem;
 		background-color: var(--primary-light);
-	}
-
-	.container {
-		display: flex;
-		flex-direction: column;
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 999;
-		align-items: center;
-		justify-content: center;
-		height: 100vh;
-		width: 100vw;
-		margin: 0;
-		background-color: rgba(0, 0, 0, 0.6);
-	}
-
-	.target-box {
-		display: flex;
-		flex-direction: column;
-		background-color: var(--bg-card);
-		justify-content: center;
-		min-height: 30vh;
-		width: 100vw;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 	}
 </style>

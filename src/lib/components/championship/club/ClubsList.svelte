@@ -116,10 +116,10 @@
 <h2>Clubs</h2>
 
 {#if !isEditingClub && !addNewClub}
-	<div class="clubs-list">
+	<div class="item-list">
 		{#each clubs as club, i}
-			<div class="club-item">
-				<div role="none" class="club-card" onclick={() => (currentClub = club.id)}>
+			<div class="item-details">
+				<div role="none" class="item-card" onclick={() => (currentClub = club.id)}>
 					<div class="details">
 						{club.name}
 					</div>
@@ -137,8 +137,8 @@
 
 		<!-- Sans club -->
 		<!--
-		<div class="club-item">
-			<div role="none" class="club-card" onclick={() => (currentClub = 'no_club')}>
+		<div class="item-details">
+			<div role="none" class="item-card" onclick={() => (currentClub = 'no_club')}>
 				<div class="details">Sans club</div>
 				<div style="font-size: smaller;">Equipes et joueurs sans non affiliés à un club</div>
 				<div class="icon">❓</div>
@@ -169,7 +169,7 @@
 <!-- Interface édition de club -->
 {#each clubs as club, i}
 	{#if editClub[i]}
-		<div class="club-form">
+		<div class="item-form">
 			<h3>Modifier le Club</h3>
 			{#if club.name !== 'sans club'}
 				<Param
@@ -198,7 +198,7 @@
 
 <!-- Interface création de club -->
 {#if addNewClub}
-	<div class="club-form">
+	<div class="item-form">
 		<h3>Nouveau Club</h3>
 		<Param
 			label="⛳ Nom du club"
@@ -226,43 +226,6 @@
 {/if}
 
 <style>
-	.club-form {
-		border: 1px var(--primary) solid;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-	}
-
-	.clubs-list {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-	}
-
-	.club-item {
-		display: flex;
-		flex-direction: column;
-		width: 180px;
-		margin-bottom: 1rem;
-		box-sizing: border-box;
-	}
-
-	.club-card {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: space-between;
-		background-color: var(--bg-card);
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		cursor: pointer;
-		margin: 0 0.5rem 0 0;
-		box-sizing: border-box;
-	}
-
-	.club-card:hover {
-		transform: translateY(-5px);
-		border-color: var(--border-color);
-	}
-
 	.details {
 		align-items: center;
 		box-sizing: border-box;

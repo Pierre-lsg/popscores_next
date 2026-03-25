@@ -2,7 +2,6 @@
 	import ClubsList from '$lib/components/championship/club/ClubsList.svelte';
 	import ClubManagement from '$lib/components/championship/club/ClubManagement.svelte';
 	import ClubManagementNoClub from '$lib/components/championship/club/ClubManagementNoClub.svelte';
-	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 	import { selection } from '$lib/stores/selection';
 

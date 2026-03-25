@@ -10,7 +10,6 @@
 	import { flysChampionshipStore } from '$lib/stores/championship/flysChampionshipStore.svelte';
 	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
-	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
 
 	import { onMount } from 'svelte';
