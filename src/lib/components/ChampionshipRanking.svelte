@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '$lib/styles/golfScoring.css';
-	import type { Championship } from '$lib/types/championshipType';
 	import type { Ranking } from '$lib/types/championshipType';
 
 	import { onMount } from 'svelte';

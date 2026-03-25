@@ -131,9 +131,9 @@
 </script>
 
 <div class="step-content" in:slide>
-	<button onclick={() => addTarget()} class="btn btn-primary">Ajouter une cible ≡</button>
+	<button onclick={() => addTarget()} class="btnG btn-primary">Ajouter une cible ≡</button>
 	{#if !isCourseSelected}
-		<button onclick={() => selectCourse()} class="btn btn-primary"
+		<button onclick={() => selectCourse()} class="btnG btn-primary"
 			>Sélectionner un précédent parcours ≡</button
 		>
 	{/if}
@@ -284,7 +284,7 @@
 		border-radius: 0.5rem;
 	}
 
-	.btn {
+	.btnG {
 		width: 100%;
 		-webkit-tap-highlight-color: transparent;
 		user-select: none;

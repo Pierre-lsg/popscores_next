@@ -9,7 +9,7 @@
 	import CourseDetails from '$lib/components/history/CourseDetails.svelte';
 	import RegularsList from '$lib/components/history/RegularsList.svelte';
 	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
-	import { navContext } from '../../../lib/nav.svelte.ts';
+	import { navContext } from '../../nav.svelte.ts';
 
 	let option: string = $state('');
 	let currentSession: string = $state('');
@@ -34,6 +34,7 @@
 			window.history.replaceState({}, '', window.location.pathname);
 		}
 
+		// navigation
 		navContext.headerAction = returnButton;
 		return () => (navContext.headerAction = null);
 	});
@@ -41,14 +42,14 @@
 
 <!-- Navigation -->
 {#snippet returnButton()}
-	{#if currentCourse !== '' || currentSession !== ''}
-		<a class="btn btn-back" href={base + '/history/'}>📜 Accueil</a>
+	{#if option === ''}
+		<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 	{:else}
-		<a class="btn btn-back" href={base + '/'}>🏠 Accusseil</a>
+		<div class="btn btn-back" onclick={() => (option = '')} role="none">📜 Accueil</div>
 	{/if}
 {/snippet}
 
-<!-- Application -->
+<!-- Métier -->
 {#if option === ''}
 	<div class="hub-container">
 		<div class="grid-container">
@@ -79,7 +80,6 @@
 
 {#if option === 'sessions'}
 	<div class="mobile-wizard">
-		<button onclick={() => (option = '')}>Retour</button>
 		{#if currentSession === ''}
 			<!-- Liste des sessions historisées en local -->
 			<SessionsList title="👥 Liste des sessions passées" bind:currentSession />
@@ -92,7 +92,6 @@
 
 {#if option === 'courses'}
 	<div class="mobile-wizard">
-		<button onclick={() => (option = '')}>Retour</button>
 		{#if currentCourse === ''}
 			<!-- Liste des parcours enregistrés en local -->
 			<CoursesList title="Liste des parcours" bind:currentCourse />
@@ -105,7 +104,6 @@
 
 {#if option === 'players'}
 	<div class="mobile-wizard">
-		<button onclick={() => (option = '')}>Retour</button>
 		<RegularsList title="Liste des joueurs réguliers" />
 	</div>
 {/if}

@@ -1,17 +1,16 @@
 <script lang="ts">
 	import QRCode from 'qrcode';
-	import { onMount } from 'svelte';
 
 	interface Props {
-		data: string; // L'URL ou le texte à encoder
-		size?: number; // Taille en pixels
-		color?: string; // Couleur des modules
+		data: string;
+		size?: number;
+		color?: string;
 	}
 
 	let { data, size = 200, color = '#000000' }: Props = $props();
 	let canvas: HTMLCanvasElement | undefined = $state();
 
-	// On utilise un effet pour régénérer le QR Code si la donnée change
+	// https://www.npmjs.com/package/qrcode#qr-code-options
 	$effect(() => {
 		if (canvas && data) {
 			QRCode.toCanvas(
@@ -42,7 +41,7 @@
 		display: flex;
 		justify-content: center;
 		padding: 1rem;
-		background: white; /* Fond blanc important pour le flashage */
+		background: white;
 		border-radius: 12px;
 		width: fit-content;
 		margin: 0 auto;

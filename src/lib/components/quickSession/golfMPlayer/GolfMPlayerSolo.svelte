@@ -62,7 +62,7 @@
 </script>
 
 <div class="step-content" in:slide>
-	<button onclick={addPlayers} class="btn btn-primary">Ajouter un Joueur</button>
+	<button onclick={addPlayers} class="btnG btn-primary">Ajouter un Joueur</button>
 
 	{#if isSelectingPlayers}
 		<MultiSelector
@@ -73,8 +73,8 @@
 			optionsLabel={regularPlayers.map((p: Player) => p.name)}
 		/>
 		<div class="action">
-			<button onclick={() => selectPlayer()} class="btn btn-primary">Valider</button>
-			<button onclick={() => addPlayer()} class="btn btn-primary">Nouveau joueur</button>
+			<button onclick={() => selectPlayer()} class="btnG btn-primary">Valider</button>
+			<button onclick={() => addPlayer()} class="btnG btn-primary">Nouveau joueur</button>
 		</div>
 	{/if}
 

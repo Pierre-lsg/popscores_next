@@ -14,7 +14,6 @@
 	import StatusSignal from '$lib/ui/InfoStatus.svelte';
 	import NetworkStatus from '$lib/ui/NetworkStatus.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
-	import { selection } from '$lib/stores/selection';
 	import { navContext } from '../lib/nav.svelte.ts';
 
 	let { children } = $props();

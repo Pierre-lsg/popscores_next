@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
-	import ChampionshipRanking from '$lib/components/ChampionshipRanking.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { onMount } from 'svelte';
@@ -10,8 +8,6 @@
 	let { currentChampionship = $bindable() } = $props<{
 		currentChampionship: Championship;
 	}>();
-
-	let showResults: boolean = $state(false);
 
 	const changeChampionship = () => {
 		if (
