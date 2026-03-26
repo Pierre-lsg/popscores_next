@@ -123,8 +123,10 @@
 					unselectedOption="-- choisir un championnat --"
 				/>
 
-				<button disabled={selectedChampionshipId === ''} onclick={() => loadChampionship()}
-					>Sélectionner</button
+				<button
+					disabled={selectedChampionshipId === ''}
+					onclick={() => loadChampionship()}
+					class="btn btn-primary">Sélectionner</button
 				>
 			{:else}
 				Aucun championnat n'est disponible ...

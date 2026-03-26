@@ -164,6 +164,15 @@ class PlayersChampionshipStore {
 	}
 
 	/**
+	 * Find players from a club.
+	 *
+	 * @param id - ID of the Player to remove
+	 */
+	findByClub(id: string): Player[] | [] {
+		return [...this.list].filter((p) => p.clubId === id);
+	}
+
+	/**
 	 * Resets the list of players and clears the local storage.
 	 */
 	reset() {

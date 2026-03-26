@@ -34,8 +34,8 @@
 			<Param label="Identifiant" type="text" bind:value={username} placeholder="Identifiant" />
 			<Password label="Mot de passe" bind:value={password} />
 			<div class="action">
-				<button onclick={() => login()}>Se connecter</button>
-				<button onclick={() => (isConnecting = false)}>Annuler</button>
+				<button onclick={() => login()} class="btn btn-primary">Se connecter</button>
+				<button onclick={() => (isConnecting = false)} class="btn">Annuler</button>
 			</div>
 		</div>
 	</div>

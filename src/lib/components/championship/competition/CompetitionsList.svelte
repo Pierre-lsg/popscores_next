@@ -252,11 +252,11 @@
 	</div>
 {/if}
 
-<h3>Competitions disponibles sur le Cloud</h3>
-
 {#if loading}
+	<h3>Competitions disponibles sur le Cloud</h3>
 	<p>Chargement ...</p>
-{:else}
+{:else if filteredCompetitions.length > 0}
+	<h3>Competitions disponibles sur le Cloud</h3>
 	{#each filteredCompetitions as c, i}
 		<button onclick={() => loadCompetitionfromCloud(i)}>
 			<div>{c.name} - {c.startDate}</div>

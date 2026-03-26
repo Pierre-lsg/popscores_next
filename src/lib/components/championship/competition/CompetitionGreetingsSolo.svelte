@@ -115,7 +115,7 @@
 	</div>
 
 	{#if rankedPlayers[0].isTie && !isShowingPlayoff}
-		<button onclick={() => preparePlayoff()}>Préparer le playoff</button>
+		<button onclick={() => preparePlayoff()} class="btn btn-primary">Préparer le playoff</button>
 		<p>Ajout d'un trou supplémentaire</p>
 		<p>Score saisie, uniquement pour les équipes ou joueurs à départager</p>
 	{/if}
@@ -131,11 +131,11 @@
 		<PlayerScoreCardByTarget {rankedPlayers} {targets} />
 	{/if}
 
-	<!-- Classement virtuel par équipe -->
+	<!-- Classement virtuel par équipe
 	<p>si compétition demande un calcul par équipe</p>
 	<p>Les deux meilleurs joueurs d'un club sont associés pour former une équipe</p>
 	<p>un classement équipe est alors calculé</p>
-	<!-- -->
+	-->
 
 	{#if rules && rules.doubleRanking}
 		<div>

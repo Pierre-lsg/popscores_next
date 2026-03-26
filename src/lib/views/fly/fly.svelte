@@ -81,7 +81,7 @@
 {#if currentCompetition}
 	{#if flys.length === 0}
 		<p>Aucun fly n'est à surveiller ...</p>
-		<button onclick={() => loadCompetition()}>Récupérer des flys</button>
+		<button onclick={() => loadCompetition()} class="btn btn-primary">Récupérer des flys</button>
 	{:else if currentFly}
 		{#if isCompetitionTeam(currentCompetition)}
 			<CompetitionScoringEditTeams bind:currentCompetition bind:currentFly />
@@ -104,7 +104,8 @@
 	{/if}
 {:else}
 	<p>Aucune compétition n'est accessible ...</p>
-	<button onclick={() => loadCompetition()}>Récupérer la compétition</button>
+	<button onclick={() => loadCompetition()} class="btn btn-primary">Récupérer la compétition</button
+	>
 {/if}
 
 <style>

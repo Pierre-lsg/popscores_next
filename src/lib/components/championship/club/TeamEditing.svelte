@@ -40,14 +40,6 @@
 		});
 	};
 
-	// Function to handle selecting a player and adding it to the team
-	const selectPlayer = () => {
-		let player = clubPlayers.find((p: Player) => p.id === playerId);
-		if (player) player.teamId = team.id;
-		team.playersId.push(playerId);
-		isSelectVisible = false;
-	};
-
 	const displayPlayer = (playerId: string) => {
 		let player = clubPlayers.find((p: Player) => p.id === playerId);
 		if (player) return player.name;

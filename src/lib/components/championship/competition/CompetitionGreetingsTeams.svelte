@@ -104,7 +104,7 @@
 <div>
 	{#if rankedTeams[0].isTie && !isShowingPlayoff && playoffTeams}
 		<p>Nous avons une égalité entre {formatList(playoffTeams.map((t) => t.name))}</p>
-		<button onclick={() => preparePlayoff()}>Préparer le playoff</button>
+		<button onclick={() => preparePlayoff()} class="btn btn-primary">Préparer le playoff</button>
 		<p>Ajout d'un trou supplémentaire</p>
 		<p>Score saisie, uniquement pour les équipes ou joueurs à départager</p>
 	{/if}

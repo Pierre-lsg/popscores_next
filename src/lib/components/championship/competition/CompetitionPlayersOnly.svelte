@@ -65,9 +65,11 @@
 			newPlayersClub = clubsStore.list.find((c) => c.name === 'sans club')?.id || '';
 		}
 
-		playersChampionshipStore.add(newPlayersName, '', '', newPlayersClub);
+		const aPlayer = playersChampionshipStore.add(newPlayersName, '', '', newPlayersClub);
 		engageClub(newPlayersClub);
+		clubsStore.addPlayer(newPlayersClub, aPlayer.id);
 		newPlayersName = newPlayersClub = '';
+		addingPlayer = false;
 	};
 
 	const engageClub = (clubId: string | undefined) => {
@@ -105,42 +107,50 @@
 		<p>Aucun joueur n'est engagé dans la compétition</p>
 	{/if}
 
-	<h3>Joueurs disponibles</h3>
-	<Selector
-		id="selectClub"
-		bind:value={clubFilter}
-		label="Club"
-		options={clubs.map((club) => club.id)}
-		optionsLabel={clubs.map((club) => club.name)}
-		unselectedOption="-- Tous les clubs --"
-	/>
-	<Param label="Nom" bind:value={nameFilter} oneline={true} />
-	{#if filteredPlayers.length > 0}
-		{#each filteredPlayers as player, i}
-			<div role="none" onclick={() => engagePlayer(i)} class="selectable-item">
-				{player.name} - ({getClubName(player.clubId || '')})
-			</div>
-		{/each}
-	{:else}
-		<p>Aucun joueur n'est disponible.</p>
-		<p>Veuillez créer de nouveaux joueurs ou alléger les filtres ...</p>
-	{/if}
+	<hr />
 
-	<h3>
-		Ajouter un nouveau joueur ... <button onclick={() => (addingPlayer = !addingPlayer)}
-			>&nbsp;+&nbsp;</button
-		>
-	</h3>
-	{#if addingPlayer}
-		<Param label="Nom" bind:value={newPlayersName} />
+	{#if !addingPlayer}
+		<h3>Joueurs disponibles</h3>
 		<Selector
 			id="selectClub"
-			bind:value={newPlayersClub}
+			bind:value={clubFilter}
 			label="Club"
 			options={clubs.map((club) => club.id)}
 			optionsLabel={clubs.map((club) => club.name)}
+			unselectedOption="-- Tous les clubs --"
 		/>
-		<button onclick={addPlayer}>Valider</button>
-		<button onclick={() => (addingPlayer = false)}>Annuler</button>
+		<Param label="Nom" bind:value={nameFilter} oneline={true} />
+		{#if filteredPlayers.length > 0}
+			{#each filteredPlayers as player, i}
+				<div role="none" onclick={() => engagePlayer(i)} class="selectable-item">
+					{player.name} - ({getClubName(player.clubId || '')})
+				</div>
+			{/each}
+		{:else}
+			<p>Aucun joueur n'est disponible.</p>
+			<p>Veuillez créer de nouveaux joueurs ou alléger les filtres ...</p>
+		{/if}
+
+		<hr />
+		<button onclick={() => (addingPlayer = !addingPlayer)} class="btn btn-primary"
+			>Ajouter un nouveau joueur ...
+		</button>
+	{:else}
+		<h3>Nouveau joueur</h3>
+
+		<div class="item-form">
+			<Param label="Nom" bind:value={newPlayersName} />
+			<Selector
+				id="selectClub"
+				bind:value={newPlayersClub}
+				label="Club"
+				options={clubs.map((club) => club.id)}
+				optionsLabel={clubs.map((club) => club.name)}
+			/>
+			<div class="action">
+				<button onclick={addPlayer} class="btn btn-primary">Valider</button>
+				<button onclick={() => (addingPlayer = false)} class="btn">Annuler</button>
+			</div>
+		</div>
 	{/if}
 </div>

@@ -28,6 +28,7 @@
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import TargetBox from '$lib/components/TargetBox.svelte';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -59,6 +60,7 @@
 	let isOnline: boolean = $state(true);
 	let isSelectingTarget: boolean = $state(false);
 	let selectedTarget: string = $state('');
+	let showDetails: boolean = $state(false);
 
 	$effect(() => {
 		if (networkStatus.isOnline) isOnline = true;
@@ -156,16 +158,16 @@
 
 <div>
 	<div class="action">
-		<button onclick={() => (currentFly = undefined)}>Retour</button>
+		<button onclick={() => (currentFly = undefined)} class="btn">Retour</button>
 		{#if isCourseEnded && currentFly.status === 'in_progress'}
-			<button onclick={() => validateFly()}
-				>Valider{isOnline ? ' et transmettre ' : ' '}le fly</button
-			>
+			<button onclick={() => validateFly()} class="btn btn-primary">
+				Valider{isOnline ? ' et transmettre ' : ' '}le fly
+			</button>
 		{/if}
 		{#if isCourseEnded && (currentFly.status === 'validated' || currentFly.status === 'finished')}
-			<button onclick={() => validateFly()}
-				>Corriger{isOnline ? ' et transmettre ' : ' '}le fly</button
-			>
+			<button onclick={() => validateFly()} class="btn btn-primary">
+				Corriger{isOnline ? ' et transmettre ' : ' '}le fly
+			</button>
 		{/if}
 	</div>
 	<!-- Saisie des résultats d'une cible pour un fly -->
@@ -191,14 +193,19 @@
 					/>
 				{/if}
 				<div class="target-details">
-					<span>{currentTarget.rule}</span>
+					<span class="par-badge">{currentTarget.rule}</span>
 					{#if currentTarget.rule !== 'Bonus'}
-						<span>PAR {currentTarget.par}</span>
+						<span class="par-badge">PAR {currentTarget.par}</span>
 					{/if}
+					<span role="none" class="par-badge" onclick={() => (showDetails = !showDetails)}>?</span>
 				</div>
 			</div>
 			<button class="btn-target" onclick={() => showNextTarget()}>▶</button>
 		</header>
+
+		{#if showDetails}
+			<TargetBox target={currentTarget} bind:showDetails />
+		{/if}
 
 		<div class="scores-grid">
 			<table>

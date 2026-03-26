@@ -39,6 +39,11 @@
 	};
 </script>
 
+<button
+	onclick={() => alert("Pas développé. Va dans paramètre, 'Sauvegarde Serveur'")}
+	class="btn btn-primary">Publier</button
+>
+
 <h3>Classement par joueur</h3>
 <table>
 	<thead>

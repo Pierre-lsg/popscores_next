@@ -25,7 +25,9 @@
 		<ul>
 			<li>Par : {target.par}</li>
 			<li>Règles : {target.rule}</li>
-			<li>Distance : {displayDistance(target)}</li>
+			{#if target.start_pos.lat}
+				<li>Distance : {displayDistance(target)}</li>
+			{/if}
 		</ul>
 		{#if target.description.trim() !== ''}
 			<h4>Description :</h4>

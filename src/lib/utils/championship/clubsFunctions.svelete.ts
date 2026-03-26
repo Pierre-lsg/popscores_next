@@ -33,6 +33,7 @@ export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 		// Lister et sauver les joueurs
 		for (let playerId of club.playersId) {
 			const aPlayer: Player | undefined = playersChampionshipStore.find(playerId);
+			console.log(aPlayer);
 			if (aPlayer) {
 				try {
 					playerService.savePlayer(aPlayer);

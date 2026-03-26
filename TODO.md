@@ -13,6 +13,7 @@
 
 ## Améliorations
 
+0. Ajouter l'option 'publier' sur le classement compétition et le classement championnat pour permettre l'accès sur le site
 1. ~~Accès aux championnats profil csMgr, autoriser l'accès aux champions à l'état 'setup'~~
 2. Ne pas afficher le bouton 'Changer de championnat' si un seul championnat est disponible (local et Cloud)
 3. ~~Permettre la multisélection avec le composant MultiSelector lors de la création d'une équipe~~
@@ -28,6 +29,8 @@
 13. Supprimer les options et informations inutiles
 14. Supprimer les cibles non rattachées à au moins une compétition
 15. ~~Ajouter la notion de championnat dans la table utilisateurs~~
+16. Une fois la compétition lancée les flys ne peuvent etre modifié
+17. Au mieux des joueurs et équipes 'sans club' seront ajoutables par le responsable de la carte de score
 
 ## Quick session
 

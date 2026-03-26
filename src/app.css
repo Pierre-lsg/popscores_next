@@ -43,7 +43,7 @@
 	--bg-ui: #ffffff;
 	--bg-card: #ffffff;
 	--text-main: #000000;
-	--border-color: #000000;
+	--border-color: #060606;
 }
 
 /* Thème Chaleureux (Warm) */
@@ -441,6 +441,7 @@ h2:not(:first-child) {
 	position: sticky;
 	top: 56px;
 	z-index: 999;
+	border: 3px solid var(--border-color);
 }
 
 .selectable-item {

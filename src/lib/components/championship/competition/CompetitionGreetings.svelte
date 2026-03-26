@@ -13,10 +13,6 @@
 <div>
 	<CompetitionMenu bind:currentCompetition />
 	<h2>Valider la compétition et partager</h2>
-	<p>Puisqu'on toutes les cartes de scores</p>
-	<p>Calculer et afficher le résultat final</p>
-	<p>En cas d'égalité sur les 3 premières places, ajouter une cible pour départager</p>
-	<p>Calculer le classement du championnat</p>
 
 	{#if isCompetitionTeam(currentCompetition)}
 		<!-- Compétition en équipe -->

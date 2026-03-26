@@ -13,6 +13,7 @@
 	import { getSupervisors } from '$lib/utils/championship/championshipFunctions.svelte';
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/types/userType';
+	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
 
 	let {
 		currentCompetition = $bindable(),
@@ -32,8 +33,11 @@
 	let isAttachingSupervisor: boolean[] = $state([]);
 
 	const validating = () => {
-		currentCompetition.status = 'finished';
-		currentCompetition.step = 'welcome';
+		if (confirm('Validez-vous les résultats')) {
+			currentCompetition.status = 'finished';
+			currentCompetition.step = 'welcome';
+			competitionService.saveCompetition(currentCompetition, championship.id);
+		}
 	};
 
 	const loadingFly = (fly: Fly) => {
@@ -102,7 +106,7 @@
 	</div>
 
 	{#if allFlysCompleted}
-		<button onclick={validating} class="subnav"> Valider l'ensemble des cartes </button>
+		<button onclick={validating} class="btn btn-primary"> Valider l'ensemble des cartes </button>
 	{/if}
 </div>
 

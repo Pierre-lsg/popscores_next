@@ -10,6 +10,7 @@
 	import CompetitionStarting from './CompetitionStarting.svelte';
 	import CompetitionGreetings from './CompetitionGreetings.svelte';
 	import CompetitionSummary from './CompetitionSummary.svelte';
+	import CompetitionRunning from './CompetitionRunning.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 
@@ -28,8 +29,7 @@
 			<CompetitionSummary bind:currentCompetition bind:championship />
 		{/if}
 		{#if currentCompetition.status === 'in_progress'}
-			Compétition en cours. Vous pouvez saisir les scores, observer le déroulement ou récupérer les
-			cartes de score.
+			<CompetitionRunning bind:currentCompetition bind:championship />
 		{/if}
 		{#if currentCompetition.status === 'finished'}
 			Compétition en terminé. Calculons le podium

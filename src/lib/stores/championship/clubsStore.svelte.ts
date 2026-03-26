@@ -64,6 +64,34 @@ class ClubsStore {
 	}
 
 	/**
+	 * Add player to a club's player's list.
+	 *
+	 * @param clubId - club's id
+	 * @param aPlayerId - player's id
+	 */
+	addPlayer(aClubId: string, aPlayerId: string) {
+		console.log('club', aClubId, 'player', aPlayerId);
+		let aClub = this.list.find((c) => c.id === aClubId);
+		if (aClub) {
+			console.log('deeper');
+			if (!aClub.playersId.includes(aPlayerId)) aClub.playersId.push(aPlayerId);
+		}
+	}
+
+	/**
+	 * Add team to a club's team's list.
+	 *
+	 * @param clubId - club's id
+	 * @param aTeamId - team's id
+	 */
+	addTeam(aClubId: string, aTeamId: string) {
+		let aClub = this.list.find((c) => c.id === aClubId);
+		if (aClub) {
+			if (!aClub.teamsId.includes(aTeamId)) aClub.teamsId.push(aTeamId);
+		}
+	}
+
+	/**
 	 * Loads an external club to the list.
 	 *
 	 * @param aClub - club

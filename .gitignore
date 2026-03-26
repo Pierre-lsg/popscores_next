@@ -8,6 +8,7 @@ node_modules
 /.svelte-kit
 /build
 /dist
+/popscores_next
 
 # OS
 .DS_Store

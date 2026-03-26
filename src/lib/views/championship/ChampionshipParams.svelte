@@ -32,7 +32,8 @@
 	};
 </script>
 
-<button onclick={() => saveChampionshipToCloud()}>Sauvegarde Serveur</button>
+<button onclick={() => saveChampionshipToCloud()} class="btn btn-primary">Sauvegarde Serveur</button
+>
 
 <div class="settings-page">
 	{#if championship}

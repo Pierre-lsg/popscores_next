@@ -38,7 +38,6 @@
 		selectedPlayers = [];
 		isSelectingPlayers = false;
 	};
-	$inspect(regularPlayers);
 
 	const addTeam = () => {
 		teamsStore.add(crypto.randomUUID(), 'Team #' + (teamsStore.list.length + 1), []);

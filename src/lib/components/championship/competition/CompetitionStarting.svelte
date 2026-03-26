@@ -126,7 +126,7 @@
 	const displaySupervisor = (fly: Fly) => {
 		let supervisor = supervisors.find((s) => s.id === fly.supervisorId);
 		if (supervisor) return supervisor.name;
-		else return '';
+		else return '((arbitre à définir))';
 	};
 
 	onMount(async () => {
@@ -197,7 +197,12 @@
 					{@render addSupervisor(fly, i)}
 				</div>
 			{/each}
-			<button onclick={() => calculateFlys()}>Recalculer les flys</button>
+			<div class="action">
+				<button onclick={() => calculateFlys()} class="btn btn-secondary"
+					>Recalculer les flys</button
+				>
+				<button onclick={() => (showBox = true)} class="btn">Voir le résumé</button>
+			</div>
 		{:else}
 			<!-- Compétition individuelle -->
 			{#each flys as fly, i}
@@ -223,33 +228,34 @@
 					{@render addSupervisor(fly, i)}
 				</div>
 			{/each}
-			<button onclick={() => calculateFlys()}>Recalculer les flys</button>
+			<div class="action">
+				<button onclick={() => calculateFlys()} class="btn btn-secondary"
+					>Recalculer les flys</button
+				>
+				<button onclick={() => (showBox = true)} class="btn">Voir le résumé</button>
+			</div>
 		{/if}
 	{:else}
 		<p>Les flys ne sont pas définis</p>
-		<button onclick={() => calculateFlys()}>Calculer les flys</button>
+		<div class="action">
+			<button onclick={() => calculateFlys()} class="btn btn-primary">Calculer les flys</button>
+			<button onclick={() => (showBox = true)} class="btn">Voir le résumé</button>
+		</div>
 	{/if}
-
-	<button onclick={() => (showBox = true)}>Voir le résumé</button>
 
 	{#if showBox}
 		<CompetitionSummaryBox {currentCompetition} {championship} bind:showBox />
 	{/if}
 	{#if courseCompetition && courseCompetition?.targets.length > 0}
+		<p>Si ce n'est pas fait, veuillez définir les arbitres</p>
 		{#if flys.length > 0}
-			<button onclick={start}> Lancer la compétition </button>
+			<button onclick={start} class="btn btn-primary"> Lancer la compétition </button>
 		{/if}
 	{:else}
 		<button onclick={() => (currentCompetition.step = 'course')}
 			>Veuillez définir le parcours ...</button
 		>
 	{/if}
-
-	<p>Une fois la compétition lancée les flys ne peuvent etre modifié</p>
-	<p>
-		Au mieux des joueurs et équipes 'sans club' seront ajoutables par le responsable de la carte de
-		score
-	</p>
 </div>
 
 <style>

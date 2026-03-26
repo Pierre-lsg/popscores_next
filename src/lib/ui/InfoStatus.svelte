@@ -2,8 +2,6 @@
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
 
 	let showCsStatus: boolean = $state(false);
-
-	$inspect(showCsStatus);
 </script>
 
 <div class="status-wrapper">
@@ -53,7 +51,7 @@
 			!(e.target as Element).closest('.content-box') &&
 			(e.target as Element).closest('.box-screen')
 		) {
-			showCsStatus = !showCsStatus;
+			showCsStatus = false;
 		}
 	}}
 />

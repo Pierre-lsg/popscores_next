@@ -52,6 +52,7 @@
 		// Todo : fix this. It should the derived runes which recalculate this
 		players = pcs.list.filter((p) => p.clubId === currentClub);
 		editingPlayer.fill(false);
+		isEditingPlayer = false;
 	};
 
 	// Function to toggle editing of a player
@@ -86,6 +87,7 @@
 
 	onMount(() => {
 		refrechCloudPlayers();
+		//club.playersId = players.map((p) => p.id);
 	});
 </script>
 

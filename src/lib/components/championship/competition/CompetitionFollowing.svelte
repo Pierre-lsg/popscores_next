@@ -26,7 +26,7 @@
 
 	{#each scoreCards as scoreCard}
 		{#if isCompetitionTeam(currentCompetition)}
-			Fly #{scoreCard.fly.order}
+			<h3>Fly #{scoreCard.fly.order}</h3>
 			<TeamScoreCard
 				rankedTeams={scoreCard.rankedTeams}
 				targets={scoreCard.targets}
@@ -34,8 +34,15 @@
 				settings={scoreCard.regulation}
 			/>
 		{:else}
-			Fly #{scoreCard.fly.order}
+			<h3>Fly #{scoreCard.fly.order}</h3>
 			<PlayerScoreCard rankedPlayers={scoreCard.rankedPlayers} targets={scoreCard.targets} />
 		{/if}
 	{/each}
 </div>
+
+<style>
+	h3 {
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+</style>

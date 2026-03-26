@@ -67,9 +67,11 @@
 			newTeamsClub = clubsStore.list.find((c) => c.name === 'sans club')?.id || '';
 		}
 
-		teamsChampionshipStore.add(newTeamsName, newTeamsClub);
-		addingTeam = false;
+		const aTeam = teamsChampionshipStore.add(newTeamsName, newTeamsClub);
 		engageClub(newTeamsClub);
+		clubsStore.addTeam(newTeamsClub, aTeam.id);
+		newTeamsName = newTeamsClub = '';
+		addingTeam = false;
 	};
 
 	const engageClub = (clubId: string | undefined) => {
@@ -137,58 +139,69 @@
 		{/if}
 	{/each}
 
-	<h3>Equipes disponibles</h3>
-	<Selector
-		id="selectClub"
-		bind:value={clubFilter}
-		label="Club"
-		options={clubs.map((club) => club.id)}
-		optionsLabel={clubs.map((club) => club.name)}
-		unselectedOption="-- Choisis un club --"
-	/>
-	<Param label="Nom" bind:value={nameFilter} oneline={true} />
-	{#if filteredTeams.length > 0}
-		{#each filteredTeams as team, i}
-			<div style="display: flex">
-				<span role="none" onclick={() => engageTeam(i)} class="selectable-item">
-					<TeamCard
-						{team}
-						players={playersChampionshipStore.list}
-						playersPerTeam={rules.regulation.playersPerTeam || 2}
-					/>
-				</span>
-				<span class="edit-team" role="none" onclick={() => editAvailableTeam(i)}>✏️</span>
-			</div>
-		{/each}
-	{:else}
-		<p>Aucune équipe n'est disponible.</p>
-		<p>Veuillez créer ou définir de nouvelles équipes ou alléger les filtres ...</p>
-	{/if}
+	<hr />
 
-	{#each filteredTeams as team, i}
-		{#if editingAvailableTeam[i]}
-			<CompetitionEditTeam
-				{team}
-				players={playersChampionshipStore.list}
-				playersPerTeam={rules.regulation.playersPerTeam || 2}
-			/>
-		{/if}
-	{/each}
-
-	<h3>
-		Ajouter une équipe ... <button onclick={() => (addingTeam = !addingTeam)}>&nbsp;+&nbsp;</button>
-	</h3>
-	{#if addingTeam}
-		<Param label="Nom" bind:value={newTeamsName} />
+	{#if !addingTeam}
+		<h3>Equipes disponibles</h3>
 		<Selector
 			id="selectClub"
-			bind:value={newTeamsClub}
+			bind:value={clubFilter}
 			label="Club"
 			options={clubs.map((club) => club.id)}
 			optionsLabel={clubs.map((club) => club.name)}
+			unselectedOption="-- Choisis un club --"
 		/>
-		<button onclick={addTeam}>Valider</button>
-		<button onclick={() => (addingTeam = false)}>Annuler</button>
+		<Param label="Nom" bind:value={nameFilter} oneline={true} />
+		{#if filteredTeams.length > 0}
+			{#each filteredTeams as team, i}
+				<div style="display: flex">
+					<span role="none" onclick={() => engageTeam(i)} class="selectable-item">
+						<TeamCard
+							{team}
+							players={playersChampionshipStore.list}
+							playersPerTeam={rules.regulation.playersPerTeam || 2}
+						/>
+					</span>
+					<span class="edit-team" role="none" onclick={() => editAvailableTeam(i)}>✏️</span>
+				</div>
+			{/each}
+		{:else}
+			<p>Aucune équipe n'est disponible.</p>
+			<p>Veuillez créer ou définir de nouvelles équipes ou alléger les filtres ...</p>
+		{/if}
+
+		{#each filteredTeams as team, i}
+			{#if editingAvailableTeam[i]}
+				<CompetitionEditTeam
+					{team}
+					players={playersChampionshipStore.list}
+					playersPerTeam={rules.regulation.playersPerTeam || 2}
+				/>
+			{/if}
+		{/each}
+
+		<hr />
+
+		<button onclick={() => (addingTeam = !addingTeam)} class="btn btn-primary"
+			>Ajouter une équipe ...
+		</button>
+	{:else}
+		<h3>Nouvelle équipe</h3>
+
+		<div class="item-form">
+			<Param label="Nom" bind:value={newTeamsName} />
+			<Selector
+				id="selectClub"
+				bind:value={newTeamsClub}
+				label="Club"
+				options={clubs.map((club) => club.id)}
+				optionsLabel={clubs.map((club) => club.name)}
+			/>
+			<div class="action">
+				<button onclick={addTeam} class="btn btn-primary">Valider</button>
+				<button onclick={() => (addingTeam = false)} class="btn">Annuler</button>
+			</div>
+		</div>
 	{/if}
 </div>
 
