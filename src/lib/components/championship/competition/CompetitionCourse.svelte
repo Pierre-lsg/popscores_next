@@ -41,6 +41,7 @@
 			if (tempCourse) course = tempCourse;
 			else {
 				course = coursesChampionshipStore.new();
+				course.name = currentCompetition.name;
 				currentCompetition.courseId = course.id;
 			}
 			targets = course.targets;

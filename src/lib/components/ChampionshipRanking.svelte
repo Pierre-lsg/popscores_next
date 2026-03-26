@@ -40,7 +40,7 @@
 </script>
 
 <button
-	onclick={() => alert("Pas développé. Va dans paramètre, 'Sauvegarde Serveur'")}
+	onclick={() => alert("Pas développé. Va dans paramètres, 'Sauvegarde Serveur'")}
 	class="btn btn-primary">Publier</button
 >
 
