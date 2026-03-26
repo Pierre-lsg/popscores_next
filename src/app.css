@@ -19,7 +19,7 @@
 /* Thème Moderne (Dark Mode) */
 [data-theme='modern'] {
 	/* Couleurs principales */
-	--primary: #4d624d;
+	--primary: #4d4d4d;
 	--primary-light: #e8f5e9;
 	--secondary: #546e7a;
 
@@ -215,7 +215,6 @@ h2:not(:first-child) {
 	border-radius: 8px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	cursor: pointer;
-	margin: 0 0.5rem 0 0;
 	box-sizing: border-box;
 }
 
@@ -229,7 +228,6 @@ h2:not(:first-child) {
 /*----------------------------*/
 /* Boutons génériques */
 .btn {
-	padding: 0.6rem 1.2rem;
 	border-radius: 6px;
 	border: none;
 	font-weight: 600;
@@ -489,5 +487,5 @@ h2:not(:first-child) {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin: 0 0.5rem 0 0;
+	/* margin: 0 0.5rem 0 0; */
 }

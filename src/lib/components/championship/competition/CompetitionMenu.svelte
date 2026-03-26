@@ -30,28 +30,28 @@
 			{#if currentCompetition.status === 'setup'}
 				<button
 					onclick={() => (currentCompetition.step = 'settings')}
-					class="subnav"
+					class="subnav btn btn-primary"
 					disabled={disablingMenu('settings', currentCompetition.step)}
 				>
 					Définir les règles
 				</button>
 				<button
 					onclick={() => (currentCompetition.step = 'course')}
-					class="subnav"
+					class="subnav btn btn-primary"
 					disabled={disablingMenu('course', currentCompetition.step)}
 				>
 					Définir le parcours
 				</button>
 				<button
 					onclick={() => (currentCompetition.step = 'players')}
-					class="subnav"
+					class="subnav btn btn-primary"
 					disabled={disablingMenu('players', currentCompetition.step)}
 				>
 					Lister les participants
 				</button>
 				<button
 					onclick={() => (currentCompetition.step = 'starting')}
-					class="subnav"
+					class="subnav btn btn-primary"
 					disabled={disablingMenu('starting', currentCompetition.step)}
 				>
 					Démarrer la compétition
@@ -61,21 +61,21 @@
 			{#if currentCompetition.status === 'in_progress'}
 				<button
 					onclick={() => (currentCompetition.step = 'course')}
-					class="subnav"
+					class="subnav btn btn-primary"
 					disabled={disablingMenu('course', currentCompetition.step)}
 				>
 					Modifier le parcours
 				</button>
 				<button
 					onclick={() => (currentCompetition.step = 'scoring')}
-					class="subnav"
+					class="subnav btn btn-primary"
 					disabled={disablingMenu('scoring', currentCompetition.step)}
 				>
 					Saisir les scores
 				</button>
 				<button
 					onclick={() => (currentCompetition.step = 'following')}
-					class="subnav"
+					class="subnav btn btn-primary"
 					disabled={disablingMenu('following', currentCompetition.step)}
 				>
 					Suivre la compétition
@@ -85,19 +85,22 @@
 			{#if currentCompetition.status === 'finished'}
 				<button
 					onclick={() => (currentCompetition.step = 'greeting')}
-					class="subnav"
+					class="subnav btn btn-primary"
 					disabled={disablingMenu('greeting', currentCompetition.step)}
 				>
 					Afficher le podium
 				</button>
-				<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav">
+				<button
+					onclick={() => (currentCompetition.step = 'welcome')}
+					class="subnav btn btn-primary"
+				>
 					Boire une bière
 				</button>
 			{/if}
-			<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav">
+			<button onclick={() => (currentCompetition.step = 'welcome')} class="subnav btn btn-primary">
 				Retour à l'accueil de la compétition
 			</button>
-			<button onclick={() => (currentCompetition = undefined)} class="subnav">
+			<button onclick={() => (currentCompetition = undefined)} class="subnav btn btn-primary">
 				Retour à la liste des compétitions
 			</button>
 		</div>

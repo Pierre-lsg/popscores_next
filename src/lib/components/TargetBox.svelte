@@ -51,6 +51,19 @@
 	</div>
 </div>
 
+<svelte:window
+	onclick={(e) => {
+		// If click out of the display area, leave it
+		if (
+			e.target &&
+			!(e.target as Element).closest('.content-box') &&
+			(e.target as Element).closest('.box-screen')
+		) {
+			showDetails = false;
+		}
+	}}
+/>
+
 <style>
 	h4 {
 		margin: 0;
@@ -58,6 +71,7 @@
 
 	.details {
 		margin: 0.2rem 0.2rem 0.5rem 0.2rem;
-		background-color: var(--primary-light);
+		background-color: var(--bg-card);
+		color: var(--text-main);
 	}
 </style>

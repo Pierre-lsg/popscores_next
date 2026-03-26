@@ -88,8 +88,8 @@
 			<div class="item-form">
 				<TeamEditing {currentClub} {team} {clubPlayers} />
 				<div class="action">
-					<button onclick={() => editTeam(i)}> Valider </button>
-					<button onclick={() => removeTeam(team)}> 🗑️ Supprimer</button>
+					<button onclick={() => editTeam(i)} class="btn btn-primary"> Valider </button>
+					<button onclick={() => removeTeam(team)} class="btn"> 🗑️ Supprimer</button>
 				</div>
 			</div>
 		{/if}
@@ -102,7 +102,9 @@
 
 <!-- Adding a new team-->
 {#if !isEditingTeam && !creatingNewTeam}
-	<button onclick={() => (creatingNewTeam = true)}>Ajouter une nouvelle équipe</button>
+	<button onclick={() => (creatingNewTeam = true)} class="btn btn-primary"
+		>Ajouter une nouvelle équipe</button
+	>
 {/if}
 
 {#if creatingNewTeam}
@@ -116,8 +118,8 @@
 			placeholder="Nom de l'équipe"
 		/>
 		<div class="action">
-			<button onclick={addNewTeam}>Créer</button>
-			<button onclick={() => (creatingNewTeam = false)}>Annuler</button>
+			<button onclick={addNewTeam} class="btn btn-primary">Créer</button>
+			<button onclick={() => (creatingNewTeam = false)} class="btn">Annuler</button>
 		</div>
 	</div>
 {/if}

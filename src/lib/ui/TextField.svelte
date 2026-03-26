@@ -20,7 +20,7 @@
 	};
 </script>
 
-<div>
+<div class="text-field">
 	{#if isEditing}
 		<input
 			class="input-field"
@@ -36,7 +36,19 @@
 	{/if}
 </div>
 
+<svelte:window
+	onclick={(e) => {
+		if (e.target && !(e.target as Element).closest('.text-field')) {
+			isEditing = false;
+		}
+	}}
+/>
+
 <style>
+	.text-field {
+		color: inherit;
+	}
+
 	.value-zone {
 		min-width: 50px;
 		border: 2px var(--bg-card) solid;

@@ -68,7 +68,7 @@
 			<div class="details">
 				{course.name}
 			</div>
-			<div class="icon">📜</div>
+			<div class="icon">⛳</div>
 		</button>
 		<div class="action">
 			<button onclick={() => removeCourse(course.id)}> 🗑️ </button>
@@ -98,8 +98,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		padding: 16px;
-		max-width: 600px;
+		width: 100%;
 		margin: 0 auto;
 	}
 

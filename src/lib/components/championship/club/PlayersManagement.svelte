@@ -109,9 +109,11 @@
 	{/if}
 
 	{#if !editingPlayer.some(Boolean) && !isCreatingNewPlayer}
-		<button onclick={() => (isCreatingNewPlayer = true)}>Ajouter un nouveau joueur</button>
+		<button onclick={() => (isCreatingNewPlayer = true)} class="btn btn-primary"
+			>Ajouter un nouveau joueur</button
+		>
 		{#if cloudPlayers.length > 0}
-			<button onclick={() => (isFindingCloudPlayer = true)}
+			<button onclick={() => (isFindingCloudPlayer = true)} class="btn btn-secondary"
 				>Rechercher un joueur dans le Cloud</button
 			>
 		{/if}
@@ -143,8 +145,8 @@
 					optionsLabel={clubsStore.list.map((club) => club.name)}
 				/>
 				<div class="action">
-					<button onclick={() => editPlayer(player, i)}> Valider </button>
-					<button onclick={() => removePlayer(player.id)}> 🗑️ Supprimer</button>
+					<button onclick={() => editPlayer(player, i)} class="btn btn-primary"> Valider </button>
+					<button onclick={() => removePlayer(player.id)} class="btn"> 🗑️ Supprimer</button>
 				</div>
 			</div>
 		{/if}
@@ -169,8 +171,8 @@
 		/>
 		<Param label="Surnom" type="text" bind:value={playerNickname} placeholder="Surnom" />
 		<div class="action">
-			<button onclick={addNewPlayer}>Créer</button>
-			<button onclick={() => (isCreatingNewPlayer = false)}>Annuler</button>
+			<button onclick={addNewPlayer} class="btn btn-primary">Créer</button>
+			<button onclick={() => (isCreatingNewPlayer = false)} class="btn">Annuler</button>
 		</div>
 	</div>
 {/if}
@@ -180,7 +182,8 @@
 		<h3 style="margin-top: 0">Autres joueurs du Cloud 👤</h3>
 		{#each cloudPlayers as player}
 			<div class="action">
-				{player.name} <button onclick={() => downloadPlayer(player)}>Rapatrier</button>
+				{player.name}
+				<button onclick={() => downloadPlayer(player)} class="btn btn-primary">Rapatrier</button>
 			</div>
 		{/each}
 	</div>

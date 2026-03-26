@@ -18,10 +18,8 @@
 	}>();
 
 	onMount(async () => {
-		if ($user) {
-			allSessions = await historyService.getAllSessionArchives();
-			loading = false;
-		}
+		allSessions = await historyService.getAllSessionArchives();
+		loading = false;
 	});
 
 	const removeSession = (id: string) => {
@@ -42,33 +40,34 @@
 <div class="history-list">
 	<h2>{title}</h2>
 	{#each historyStore.list as session, i}
-		<button class="session-card" onclick={() => (currentSession = session.id)}>
-			<div class="details">
-				{session.settings.locationName}
-			</div>
-			<div class="details">
-				{#if session.settings.regulation.teamGame}👥{:else}👤{/if}
-			</div>
-			<div>{session.settings.sessionBeginning}</div>
-			<div class="icon">📜</div>
-		</button>
-		<button onclick={() => removeSession(session.id)}> 🗑️ </button>
+		<div class="action">
+			<button class="session-card" onclick={() => (currentSession = session.id)}>
+				<div class="details">
+					{session.settings.locationName}
+				</div>
+				<div class="details">
+					{#if session.settings.regulation.teamGame}👥{:else}👤{/if}
+				</div>
+				<div>{session.settings.sessionBeginning}</div>
+				<div class="icon">📜</div>
+			</button>
+
+			<button onclick={() => removeSession(session.id)} class="btn btn-delete-small">X</button>
+		</div>
 	{:else}
 		<p>Aucune session archivée pour le moment. ⛳</p>
 	{/each}
 
-	{#if $user}
+	{#if loading}
 		<h3>Sessions disponibles sur le Cloud</h3>
-
-		{#if loading}
-			<p>Chargement ...</p>
-		{:else}
-			{#each filteredSessions as session, i}
-				<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
-					<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
-				</button>
-			{/each}
-		{/if}
+		<p>Chargement ...</p>
+	{:else if filteredSessions.length > 0}
+		<h3>Sessions disponibles sur le Cloud</h3>
+		{#each filteredSessions as session, i}
+			<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
+				<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
+			</button>
+		{/each}
 	{/if}
 </div>
 
@@ -76,9 +75,9 @@
 	.history-list {
 		display: flex;
 		flex-direction: column;
+		justify-content: space-between;
 		gap: 12px;
-		padding: 16px;
-		max-width: 600px;
+		width: 100%;
 		margin: 0 auto;
 	}
 

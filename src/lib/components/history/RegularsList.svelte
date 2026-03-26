@@ -59,9 +59,9 @@
 		<div role="none" onclick={() => (qrDataPlayers = '')}>
 			<QRCode data={qrDataPlayers} size={400} />
 		</div>
+	{:else}
+		<button onclick={() => copyShareLink()} class="btn btn-primary">Partager la liste</button>
 	{/if}
-
-	<button onclick={() => copyShareLink()}>Partager la liste</button>
 </div>
 
 <style>
@@ -75,7 +75,6 @@
 		flex-direction: column;
 		gap: 12px;
 		max-width: 600px;
-		margin: 0 auto;
 	}
 
 	.regular-item {
@@ -87,13 +86,5 @@
 		border-radius: 8px;
 		padding: 0.5rem;
 		touch-action: shadow;
-	}
-
-	/* Effet "vide" */
-	p {
-		text-align: center;
-		color: #95a5a6;
-		margin-top: 40px;
-		font-style: italic;
 	}
 </style>

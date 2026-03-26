@@ -52,14 +52,14 @@
 		width: 100vw;
 		height: 100vh;
 		background: transparent;
-		z-index: 999;
+		z-index: 997;
 	}
 
 	.theme-wrapper {
 		position: fixed;
 		top: 0.1rem;
 		right: 0.5rem;
-		z-index: 1000;
+		z-index: 998;
 	}
 
 	.theme-selector {

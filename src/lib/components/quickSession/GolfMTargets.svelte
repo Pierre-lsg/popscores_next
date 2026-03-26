@@ -21,6 +21,7 @@
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import Loader from '$lib/ui/Loader.svelte';
+	import TextField from '$lib/ui/TextField.svelte';
 
 	let isTeamGame: boolean = sessionSettingsStore.settings.regulation.teamGame;
 
@@ -42,7 +43,7 @@
 
 	// Function to add a new target to targetsStore with specified parameters
 	const addTarget = () => {
-		targetsStore.add(newTargetRule === 'Bonus' ? 0 : 4, newTargetName, newTargetRule);
+		targetsStore.add(newTargetRule === 'Bonus' ? 0 : 4, 'Une cible', newTargetRule);
 		gameStatus.currentTargetIndex = 0;
 		isCourseSelected = true;
 	};
@@ -132,7 +133,9 @@
 </script>
 
 <div class="step-content" in:slide>
-	<button onclick={() => addTarget()} class="btnG btn-primary">Ajouter une cible ≡</button>
+	{#if !isEditing}
+		<button onclick={() => addTarget()} class="btnG btn-primary">Ajouter une cible ≡</button>
+	{/if}
 	{#if !isCourseSelected}
 		<button onclick={() => selectCourse()} class="btnG btn-primary"
 			>Sélectionner un précédent parcours ≡</button
@@ -160,22 +163,7 @@
 			{#each targetsStore.list as target (target.id)}
 				<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
 					<div class="content">
-						{#if editingId === target.id}
-							<input
-								class="name-input"
-								bind:value={target.name}
-								onblur={saveName}
-								onkeydown={(e) => e.key === 'Enter' && saveName(e)}
-								use:focus
-							/>
-						{:else}
-							<button
-								class="content-edit-item invisible-button"
-								onclick={() => editTargetName(target.id)}
-							>
-								{target.name || `Cible ${targetsStore.list.indexOf(target) + 1}`}
-							</button>
-						{/if}
+						<TextField bind:value={target.name} />
 						<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
 						<Selector
 							id="rule{target.id}"

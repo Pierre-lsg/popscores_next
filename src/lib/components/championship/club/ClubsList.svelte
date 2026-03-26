@@ -151,7 +151,9 @@
 		<p>Aucun club enregistré pour le moment. 🏆</p>
 	{/if}
 
-	<button onclick={() => (addNewClub = true)}>Ajouter un nouveau club</button>
+	<button onclick={() => (addNewClub = true)} class="btn btn-primary"
+		>Ajouter un nouveau club</button
+	>
 
 	{#if loading}
 		<h3>Clubs disponibles sur le Cloud</h3>

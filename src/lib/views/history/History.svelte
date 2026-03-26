@@ -44,6 +44,10 @@
 {#snippet returnButton()}
 	{#if option === ''}
 		<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
+	{:else if option === 'sessions' && currentSession !== ''}
+		<div class="btn btn-back" onclick={() => (currentSession = '')} role="none">📄 Accueil</div>
+	{:else if option === 'courses' && currentCourse !== ''}
+		<div class="btn btn-back" onclick={() => (currentCourse = '')} role="none">⛳ Accueil</div>
 	{:else}
 		<div class="btn btn-back" onclick={() => (option = '')} role="none">📜 Accueil</div>
 	{/if}
@@ -82,7 +86,7 @@
 	<div class="mobile-wizard">
 		{#if currentSession === ''}
 			<!-- Liste des sessions historisées en local -->
-			<SessionsList title="👥 Liste des sessions passées" bind:currentSession />
+			<SessionsList title="📄 Liste des sessions passées" bind:currentSession />
 		{:else}
 			<!-- Details de la session	 -->
 			<SessionDetails title="📄 Détails de la session" bind:currentSession />

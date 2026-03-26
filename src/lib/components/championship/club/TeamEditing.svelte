@@ -71,7 +71,7 @@
 	/>
 	<!-- Existing player selection code -->
 	{#if playersAvailable.length > 0}
-		<button onclick={addPlayer}>Ajouter un joueur</button>
+		<button onclick={addPlayer} class="btn btn-primary">Ajouter un joueur</button>
 		{#if isSelectVisible}
 			<MultiSelector
 				id="managerSelect"
@@ -81,15 +81,6 @@
 				optionsLabel={playersAvailable.map((p: Player) => p.name)}
 				onchange={() => confirmPlayersTeam()}
 			/>
-			<!--
-			<Selector
-				bind:value={playerId}
-				options={playersAvailable.map((p: Player) => p.id)}
-				optionsLabel={playersAvailable.map((p: Player) => p.name)}
-				unselectedOption="-- choisir un joueur"
-				onchange={() => selectPlayer()}
-			/>
--->
 		{/if}
 	{/if}
 

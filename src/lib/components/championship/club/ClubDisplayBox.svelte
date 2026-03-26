@@ -31,7 +31,7 @@
 <svelte:window
 	onclick={(e) => {
 		// If click out of the display area, leave it
-		if (e.target && (e.target as Element).closest('.displayed-box')) {
+		if (e.target && (e.target as Element).closest('.box-screen')) {
 			showBox = false;
 		}
 	}}

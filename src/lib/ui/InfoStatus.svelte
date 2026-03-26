@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { messageStore } from '$lib/stores/appEventStore.svelte';
 
-	let showStatus: boolean = $state(false);
+	let showCsStatus: boolean = $state(false);
+
+	$inspect(showCsStatus);
 </script>
 
 <div class="status-wrapper">
@@ -9,11 +11,11 @@
 		role="none"
 		class="nothing"
 		id="flag-status"
-		onclick={() => (showStatus = !showStatus)}
+		onclick={() => (showCsStatus = !showCsStatus)}
 	></div>
 </div>
 
-{#if showStatus}
+{#if showCsStatus}
 	<div class="box-screen">
 		<div class="content-box">
 			{#if messageStore.list.length > 0}
@@ -48,10 +50,10 @@
 		// If click out of the display area, leave it
 		if (
 			e.target &&
-			(e.target as Element).closest('.displayed-box') &&
-			!(e.target as Element).closest('.btn-delete-small')
+			!(e.target as Element).closest('.content-box') &&
+			(e.target as Element).closest('.box-screen')
 		) {
-			showStatus = !showStatus;
+			showCsStatus = !showCsStatus;
 		}
 	}}
 />

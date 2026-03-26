@@ -12,31 +12,12 @@
 	import CompetitionSummary from './CompetitionSummary.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
-	import { navContext } from '$lib/utils/nav.svelte';
-	import { onMount } from 'svelte';
-	import { base } from '$app/paths';
-	import { selection } from '$lib/stores/selection';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 		championship: Championship;
 	}>();
-
-	onMount(() => {
-		navContext.headerAction = returnButton;
-		return () => (navContext.headerAction = prevReturnButton);
-	});
 </script>
-
-{#snippet returnButton()}
-	<div class="btn btn-back" role="none" onclick={() => (currentCompetition = undefined)}>
-		⛳ Accueil
-	</div>
-{/snippet}
-
-{#snippet prevReturnButton()}
-	<a class="btn btn-back" href={base + '/championship/' + selection.currentId + '/'}>👑 Accueil</a>
-{/snippet}
 
 <div>
 	{#if currentCompetition.step === 'welcome'}

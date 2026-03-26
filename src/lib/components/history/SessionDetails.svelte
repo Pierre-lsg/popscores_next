@@ -55,7 +55,6 @@
 
 <div>
 	<div class="action">
-		<button onclick={() => retourHistorique()}>Back</button>
 		{#if $user}
 			<button onclick={() => saveSessionToCloud()}>Enregistrer dans le Cloud</button>
 		{/if}

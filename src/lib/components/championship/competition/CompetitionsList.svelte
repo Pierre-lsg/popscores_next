@@ -202,7 +202,7 @@
 						onchange={() => toggleManagers()}
 					/>
 				{/await}
-				<button onclick={() => editingCompetition(i)}>Terminer</button>
+				<button onclick={() => editingCompetition(i)} class="btn btn-primary">Terminer</button>
 			</div>
 		{/if}
 	{/each}
@@ -212,7 +212,9 @@
 	{/if}
 	{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))}
 		{#if !isEditingCompetition}
-			<button onclick={() => (addNewCompetition = true)}>Ajouter une nouvelle compétition</button>
+			<button onclick={() => (addNewCompetition = true)} class="btn btn-primary"
+				>Ajouter une nouvelle compétition</button
+			>
 		{/if}
 	{/if}
 {:else}
@@ -244,8 +246,8 @@
 			/>
 		{/await}
 		<div class="action">
-			<button onclick={createCompetition}>Créer</button>
-			<button onclick={() => (addNewCompetition = false)}>Annuler</button>
+			<button onclick={createCompetition} class="btn btn-primary">Créer</button>
+			<button onclick={() => (addNewCompetition = false)} class="btn">Annuler</button>
 		</div>
 	</div>
 {/if}
