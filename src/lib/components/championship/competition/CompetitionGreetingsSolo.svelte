@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
+	import type { Championship } from '$lib/types/championshipType';
 	import type { Player, RankedPlayer } from '$lib/types/playerType';
 	import type { Target } from '$lib/types/targetType';
 	import type { Course } from '$lib/types/courseType';
@@ -24,9 +25,11 @@
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
+	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
 
-	let { currentCompetition = $bindable() } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
+		championship: Championship;
 	}>();
 	let players: Player[] = $derived(
 		playersChampionshipStore.list.filter((p) => currentCompetition.playersId.includes(p.id))
@@ -104,6 +107,11 @@
 			});
 		}
 	};
+
+	const publish = () => {
+		currentCompetition.status = 'published';
+		competitionService.saveCompetition(currentCompetition, championship.id);
+	};
 </script>
 
 <div>
@@ -147,6 +155,10 @@
 			<!-- Affichage du classement par équipe-->
 			<TeamScoreCardByTarget {rankedTeams} {targets} {players} {settings} />
 		{/if}
+	{/if}
+
+	{#if currentCompetition.status !== 'published'}
+		<button onclick={() => publish()} class="btn btn-primary">Publier les résultats</button>
 	{/if}
 </div>
 

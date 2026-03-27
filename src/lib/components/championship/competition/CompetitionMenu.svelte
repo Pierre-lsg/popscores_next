@@ -82,7 +82,7 @@
 				</button>
 			{/if}
 
-			{#if currentCompetition.status === 'finished'}
+			{#if currentCompetition.status === 'finished' || currentCompetition.status === 'published'}
 				<button
 					onclick={() => (currentCompetition.step = 'greeting')}
 					class="subnav btn btn-primary"

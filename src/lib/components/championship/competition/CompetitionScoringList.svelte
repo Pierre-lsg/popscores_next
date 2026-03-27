@@ -33,7 +33,7 @@
 	let isAttachingSupervisor: boolean[] = $state([]);
 
 	const validating = () => {
-		if (confirm('Validez-vous les résultats')) {
+		if (confirm('Validez-vous les résultats ?')) {
 			currentCompetition.status = 'finished';
 			currentCompetition.step = 'welcome';
 			competitionService.saveCompetition(currentCompetition, championship.id);

@@ -46,10 +46,10 @@
 			<p>Sessions, joueurs et parcours connus</p>
 		</a>
 
-		<a class="card disabled" href="/">
-			<span class="icon">📈</span>
-			<h3>Stats Pro</h3>
-			<p>Bientôt disponible...</p>
+		<a class="card" href={base + '/ranking'}>
+			<span class="icon">🏆</span>
+			<h3>Résultats</h3>
+			<p>Résultats des différents championnats</p>
 		</a>
 
 		<a class="card" href={base + '/params'}>

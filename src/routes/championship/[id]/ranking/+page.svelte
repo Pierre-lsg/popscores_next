@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ChampionshipRanking from '$lib/components/ChampionshipRanking.svelte';
+	import ChampionshipRanking from '$lib/components/championship/ChampionshipRanking.svelte';
 	import { securityCheck } from '$lib/utils/security';
 	import { navContext } from '$lib/utils/nav.svelte';
 	import { onMount } from 'svelte';

@@ -1,4 +1,4 @@
-export type CompetitionStatus = 'setup' | 'in_progress' | 'finished';
+export type CompetitionStatus = 'setup' | 'in_progress' | 'finished' | 'published';
 export type CompetitionStep =
 	| 'settings'
 	| 'course'

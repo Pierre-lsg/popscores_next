@@ -1,6 +1,6 @@
 import type { MarkedPointScale } from './markedPointScaleType';
 
-export type ChampionshipStatus = 'setup' | 'in_progress' | 'finished';
+export type ChampionshipStatus = 'setup' | 'in_progress' | 'finished' | 'archived';
 
 export interface Ranking {
 	id: string;

@@ -31,7 +31,7 @@
 		{#if currentCompetition.status === 'in_progress'}
 			<CompetitionRunning bind:currentCompetition bind:championship />
 		{/if}
-		{#if currentCompetition.status === 'finished'}
+		{#if currentCompetition.status === 'finished' || currentCompetition.status === 'published'}
 			Compétition en terminé. Calculons le podium
 		{/if}
 	{/if}
@@ -63,9 +63,9 @@
 		{/if}
 	{/if}
 
-	{#if currentCompetition.status === 'finished'}
+	{#if currentCompetition.status === 'finished' || currentCompetition.status === 'published'}
 		{#if currentCompetition.step === 'greeting'}
-			<CompetitionGreetings bind:currentCompetition />
+			<CompetitionGreetings bind:currentCompetition bind:championship />
 		{/if}
 		{#if currentCompetition.step === 'welcome'}
 			🍺🍺🍺🍺🍺🍺

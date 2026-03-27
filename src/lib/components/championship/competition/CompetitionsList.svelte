@@ -158,7 +158,7 @@
 						<div>{competition.startDate.split('-').reverse().join('/')}</div>
 						<div class="icon">⛳</div>
 					</div>
-					{#if competition.status !== 'finished' || competition.startDate >= today}
+					{#if (competition.status !== 'finished' && competition.status !== 'published') || competition.startDate >= today}
 						<div class="action">
 							<button onclick={() => removeCompetition(competition)}> 🗑️ </button>
 							<button onclick={() => editingCompetition(i)}>✏️</button>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
+	import type { Championship } from '$lib/types/championshipType';
 	import type { Course } from '$lib/types/courseType';
 	import type { Target } from '$lib/types/targetType';
 	import type { Player } from '$lib/types/playerType';
@@ -20,9 +21,11 @@
 	import { onMount } from 'svelte';
 	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
+	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
 
-	let { currentCompetition = $bindable() } = $props<{
+	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
+		championship: Championship;
 	}>();
 	let course: Course | undefined = $derived(
 		coursesChampionshipStore.find(currentCompetition.courseId)
@@ -96,6 +99,11 @@
 		}
 	};
 
+	const publish = () => {
+		currentCompetition.status = 'published';
+		competitionService.saveCompetition(currentCompetition, championship.id);
+	};
+
 	onMount(() => {
 		checkPlayoff();
 	});
@@ -118,4 +126,8 @@
 
 	<!-- Affichage de la carte de score -->
 	<TeamScoreCardByTarget {rankedTeams} {targets} {players} {settings} />
+
+	{#if currentCompetition.status !== 'published'}
+		<button onclick={() => publish()} class="btn btn-primary">Publier les résultats</button>
+	{/if}
 </div>
