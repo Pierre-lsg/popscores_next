@@ -1,1 +1,0 @@
-import{P as t,Q as S,x as b,K as h,S as k}from"./BPrqcVa6.js";function u(r,i){return r===i||r?.[k]===i}function c(r={},i,a,x){return t(()=>{var f,s;return S(()=>{f=s,s=[],h(()=>{r!==a(...s)&&(i(r,...s),f&&u(a(...f),r)&&i(null,...f))})}),()=>{b(()=>{s&&u(a(...s),r)&&i(null,...s)})}}),r}export{c as b};
