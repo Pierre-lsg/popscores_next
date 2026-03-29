@@ -3,9 +3,12 @@
 	import { user, pb } from '$lib/utils/pocketbase/pocketBase';
 	import Login from '$lib/components/LoginBox.svelte';
 	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
 
 	let appSets = $derived(appSettings.values);
 	let isConnecting: boolean = $state(false);
+	let urlIdent: string = $state('');
+	let urlPass: string = $state('');
 
 	const logout = () => {
 		pb.authStore.clear();
@@ -14,6 +17,16 @@
 	const showConnectBox = () => {
 		isConnecting = true;
 	};
+
+	onMount(() => {
+		const params = new URLSearchParams(window.location.search);
+		console.log(params);
+		if (params !== null) {
+			urlIdent = params.get('ident') || '';
+			urlPass = params.get('pass') || '';
+			if (urlIdent !== '') isConnecting = true;
+		}
+	});
 </script>
 
 <h1>Bienvenue au {appSettings.values.clubName}</h1>
@@ -75,7 +88,11 @@
 </div>
 
 {#if isConnecting}
-	<Login url={appSets.cloudUrl} username={appSets.cloudLogin} bind:isConnecting />
+	{#if urlIdent !== ''}
+		<Login url={appSets.cloudUrl} username={urlIdent} password={urlPass} bind:isConnecting />
+	{:else}
+		<Login url={appSets.cloudUrl} username={appSets.cloudLogin} bind:isConnecting />
+	{/if}
 {/if}
 
 <style>

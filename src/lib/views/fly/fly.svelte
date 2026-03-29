@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Fly } from '$lib/types/flyType';
+	import type { Team } from '$lib/types/teamType';
 	import '$lib/styles/golfScoring.css';
 
 	import CompetitionScoringEditSolo from '$lib/components/championship/competition/CompetitionScoringEditSolo.svelte';
@@ -29,19 +30,19 @@
 	let currentFly: Fly | undefined = $state();
 	let flys: Fly[] = $state([]);
 
+	const listTeamPlayers = (team: Team) => {
+		let playerList: string[] = [];
+		team.playersId.forEach((aPlayerId) => {
+			playerList.push(playersChampionshipStore.find(aPlayerId)?.name || '👻');
+		});
+		return formatList(playerList);
+	};
+
 	const listCompetitors = (fly: Fly) => {
 		let compList: string[] = [];
-		if (currentCompetition) {
-			if (isCompetitionTeam(currentCompetition)) {
-				fly.teamsId.forEach((teamId) => {
-					compList.push(teamsCompetitionStore.list.find((t) => t.id === teamId)?.name || '');
-				});
-			} else {
-				fly.playersId.forEach((playerId) => {
-					compList.push(playersChampionshipStore.list.find((t) => t.id === playerId)?.name || '');
-				});
-			}
-		}
+		fly.playersId.forEach((playerId) => {
+			compList.push(playersChampionshipStore.list.find((t) => t.id === playerId)?.name || '');
+		});
 		return formatList(compList);
 	};
 
@@ -95,7 +96,21 @@
 				<div class="fly-item">
 					<div role="none" class="fly-card" onclick={() => (currentFly = fly)}>
 						<span style="font-size: larger">Fly #{fly.order} </span>
-						<span style="font-size: smaller">{listCompetitors(fly)}</span>
+						{#if isCompetitionTeam(currentCompetition)}
+							<ul>
+								{#each fly.teamsId as teamId}
+									{@const aTeam = teamsCompetitionStore.list.find((t) => t.id === teamId)}
+									{#if aTeam}
+										<li>
+											<span style="font-size: smaller">{aTeam.name} ({listTeamPlayers(aTeam)})</span
+											>
+										</li>
+									{/if}
+								{/each}
+							</ul>
+						{:else}
+							<span style="font-size: smaller">{listCompetitors(fly)}</span>
+						{/if}
 						<span style="font-size: smaller">{fly.status || 'inconnu'}</span>
 					</div>
 				</div>

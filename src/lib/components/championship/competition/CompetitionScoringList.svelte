@@ -2,6 +2,9 @@
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Championship } from '$lib/types/championshipType';
 	import type { Fly } from '$lib/types/flyType';
+	import type { Team } from '$lib/types/teamType';
+	import QRCode from '$lib/ui/QRCode.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
@@ -32,6 +35,8 @@
 	let supervisors: User[] = $state([]);
 	let isAttachingSupervisor: boolean[] = $state([]);
 
+	let qrRefereeConnect: string = $state('');
+
 	const validating = () => {
 		if (confirm('Validez-vous les résultats ?')) {
 			currentCompetition.status = 'finished';
@@ -44,17 +49,19 @@
 		currentFly = fly;
 	};
 
+	const listTeamPlayers = (team: Team) => {
+		let playerList: string[] = [];
+		team.playersId.forEach((aPlayerId) => {
+			playerList.push(playersChampionshipStore.find(aPlayerId)?.name || '👻');
+		});
+		return formatList(playerList);
+	};
+
 	const listCompetitors = (fly: Fly) => {
 		let compList: string[] = [];
-		if (isCompetitionTeam(currentCompetition)) {
-			fly.teamsId.forEach((teamId) => {
-				compList.push(teamsCompetitionStore.list.find((t) => t.id === teamId)?.name || '');
-			});
-		} else {
-			fly.playersId.forEach((playerId) => {
-				compList.push(playersChampionshipStore.list.find((t) => t.id === playerId)?.name || '');
-			});
-		}
+		fly.playersId.forEach((playerId) => {
+			compList.push(playersChampionshipStore.list.find((t) => t.id === playerId)?.name || '');
+		});
 		return formatList(compList);
 	};
 
@@ -62,6 +69,22 @@
 		let supervisor = supervisors.find((s) => s.id === fly.supervisorId);
 		if (supervisor) return supervisor.name;
 		else return '';
+	};
+
+	const editQrConnect = async (fly: Fly) => {
+		try {
+			let refereeLogin: string = 'toto';
+			let refereePass: string = 'totototo';
+
+			qrRefereeConnect = `${window.location.origin}/?ident=${refereeLogin}&pass=${refereePass}`;
+			await navigator.clipboard.writeText(qrRefereeConnect);
+			qrRefereeConnect = qrRefereeConnect;
+
+			// On déclenche le toast !
+			toastStore.show('🔗 Lien de partage copié !');
+		} catch (err) {
+			toastStore.show('❌ Erreur lors de la copie');
+		}
 	};
 
 	onMount(async () => {
@@ -81,7 +104,20 @@
 			<div class="fly-item">
 				<div role="none" class="fly-card" onclick={() => loadingFly(fly)}>
 					<span style="font-size: larger">Fly #{fly.order} </span>
-					<span style="font-size: smaller">{listCompetitors(fly)}</span>
+					{#if isCompetitionTeam(currentCompetition)}
+						<ul>
+							{#each fly.teamsId as teamId}
+								{@const aTeam = teamsCompetitionStore.list.find((t) => t.id === teamId)}
+								{#if aTeam}
+									<li>
+										<span style="font-size: smaller">{aTeam.name} ({listTeamPlayers(aTeam)})</span>
+									</li>
+								{/if}
+							{/each}
+						</ul>
+					{:else}
+						<span style="font-size: smaller">{listCompetitors(fly)}</span>
+					{/if}
 					<span style="font-size: smaller">🌟 {displaySupervisor(fly)} 🌟</span>
 					<span style="font-size: smaller">{fly.status || 'inconnu'}</span>
 				</div>
@@ -89,7 +125,8 @@
 					<button onclick={() => (isAttachingSupervisor[i] = !isAttachingSupervisor[i])}>
 						🌟
 					</button>
-					<button onclick={() => alert('Récupérer résultats du Cloud ...')}> ☁️ </button>
+					<button onclick={() => editQrConnect(fly)}> 🚪 </button>
+					<button onclick={() => alert('Todo : récupérer résultats du Cloud ...')}> 🔍 </button>
 				</div>
 				{#if isAttachingSupervisor[i]}
 					<Selector
@@ -104,6 +141,12 @@
 			</div>
 		{/each}
 	</div>
+
+	{#if qrRefereeConnect !== ''}
+		<div role="none" onclick={() => (qrRefereeConnect = '')}>
+			<QRCode data={qrRefereeConnect} size={400} />
+		</div>
+	{/if}
 
 	{#if allFlysCompleted}
 		<button onclick={validating} class="btn btn-primary"> Valider l'ensemble des cartes </button>

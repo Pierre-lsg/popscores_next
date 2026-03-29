@@ -6,11 +6,12 @@
 	interface Props {
 		url: string;
 		username: string;
+		password?: string;
 		isConnecting: boolean;
 	}
 
-	let { url = '', username = '', isConnecting = $bindable(true) }: Props = $props();
-	let password: string = $state('');
+	let { url = '', username = '', password = '', isConnecting = $bindable(true) }: Props = $props();
+	//let password: string = $state('');
 
 	const login = async () => {
 		if (username && !username.includes('@')) {
