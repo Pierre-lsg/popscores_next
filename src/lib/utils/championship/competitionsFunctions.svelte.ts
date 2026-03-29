@@ -590,8 +590,8 @@ export const startCompetition = async (
 			const aTeam = teamsCompetitionStore.find(teamId);
 			if (aTeam) {
 				aTeam.sessionId = currentCompetition.id;
-				teamsCompetitionStore.findByIdAndSession(aTeam.id, aTeam.sessionId || '');
-				teamsCompetitionStore.load(aTeam);
+				//teamsCompetitionStore.findByIdAndSession(aTeam.id, aTeam.sessionId || '');
+				//teamsCompetitionStore.load(aTeam);
 			}
 		});
 		//teamsCompetitionStore.find

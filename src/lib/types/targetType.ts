@@ -6,6 +6,8 @@ export const collectiveRules = [
 	'Greensome',
 	'Chapman',
 	'Foursome',
+	'4-balls',
+	'Team_Bonus',
 	'Bonus',
 	'Individuel'
 ];
@@ -14,6 +16,8 @@ export type collectiveRule =
 	| 'Greensome'
 	| 'Chapman'
 	| 'Foursome'
+	| '4-balls'
+	| 'Team_Bonus'
 	| 'Bonus'
 	| 'Individuel';
 

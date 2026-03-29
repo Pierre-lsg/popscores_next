@@ -39,9 +39,11 @@
 	let updatingRule: boolean = $state(false);
 	let updatingName: boolean = $state(false);
 
-	let minTrys = $derived(currentTarget?.rule === 'Bonus' ? -3 : 0);
+	let minTrys = $derived(
+		currentTarget?.rule === 'Bonus' || currentTarget?.rule === 'Team_Bonus' ? -3 : 0
+	);
 	let maxTrys = $derived(
-		currentTarget?.rule === 'Bonus'
+		currentTarget?.rule === 'Bonus' || currentTarget?.rule === 'Team_Bonus'
 			? 0
 			: settings.regulation.hasCrossAFixedPenalty
 				? settings.regulation.malusValue
@@ -112,7 +114,8 @@
 			currentTarget.rule = 'Individuel';
 			return;
 		}
-		currentTarget.par = currentTarget.rule === 'Bonus' ? 0 : 4;
+		currentTarget.par =
+			currentTarget.rule === 'Bonus' || currentTarget.rule === 'Team_Bonus' ? 0 : 4;
 		players.forEach((player) => {
 			playersStore.updateScore(player.id, currentTarget.id, currentTarget.par);
 		});
@@ -161,7 +164,7 @@
 				<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('rule')}
 					>{currentTarget.rule}</span
 				>
-				{#if currentTarget.rule !== 'Bonus'}
+				{#if currentTarget.rule !== 'Bonus' && currentTarget.rule !== 'Team_Bonus'}
 					<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('par')}
 						>PAR {currentTarget.par}</span
 					>
@@ -181,7 +184,7 @@
 			label="Modification du Par : "
 			bind:value={currentTarget.par}
 			min={0}
-			disabled={currentTarget.rule === 'Bonus'}
+			disabled={currentTarget.rule === 'Bonus' || currentTarget.rule === 'Team_Bonus'}
 		/>
 	{/if}
 

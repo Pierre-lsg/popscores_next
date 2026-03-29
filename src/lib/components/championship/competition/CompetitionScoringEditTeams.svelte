@@ -60,9 +60,11 @@
 	let currentTarget: Target | undefined = $derived(targets[activeTargetIndex]);
 	let isFirstTarget = $derived(activeTargetIndex === 0);
 	let isLastTarget = $derived(activeTargetIndex === targets.length - 1);
-	let minTrys = $derived(currentTarget?.rule === 'Bonus' ? -3 : 0);
+	let minTrys = $derived(
+		currentTarget?.rule === 'Bonus' || currentTarget?.rule === 'Team_Bonus' ? -3 : 0
+	);
 	let maxTrys = $derived(
-		currentTarget?.rule === 'Bonus'
+		currentTarget?.rule === 'Bonus' || currentTarget?.rule === 'Team_Bonus'
 			? 0
 			: rules?.regulation.hasCrossAFixedPenalty
 				? rules?.regulation.malusValue
@@ -216,7 +218,7 @@
 				{/if}
 				<div class="target-details">
 					<span class="par-badge">{currentTarget.rule}</span>
-					{#if currentTarget.rule !== 'Bonus'}
+					{#if currentTarget.rule !== 'Bonus' && currentTarget.rule !== 'Team_Bonus'}
 						<span class="par-badge">PAR {currentTarget.par}</span>
 					{/if}
 					<span role="none" class="par-badge" onclick={() => (showDetails = !showDetails)}>?</span>

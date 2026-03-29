@@ -62,7 +62,9 @@
 						{@const score = player.player.scores[target.id]}
 						<td class={getScoreClass(score, target)}>
 							<div class="shape">
-								{target.rule === 'Bonus' && score === 0 ? '-' : score}
+								{(target.rule === 'Bonus' || target.rule === 'Team_Bonus') && score === 0
+									? '-'
+									: score}
 							</div>
 						</td>
 					{/each}

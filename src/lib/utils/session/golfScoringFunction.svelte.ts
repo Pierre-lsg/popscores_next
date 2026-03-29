@@ -137,6 +137,9 @@ export const calculateTeamScore = (
 				case 'Bonus':
 					ghostValue = 0;
 					break;
+				case 'Team_Bonus':
+					ghostValue = 0;
+					break;
 				case 'Individuel':
 					if (settings.usePenalizingGhost) {
 						if (settings.hasCrossAFixedPenalty) ghostValue = settings.malusValue;
@@ -287,7 +290,7 @@ export const exportTSCToCSV = (
 // Retourne la classe CSS associée au score pour le style
 export const getScoreClass = (score: number, target: Target) => {
 	if (score === 0) return ''; // Pas encore joué
-	if (target.rule === 'Bonus') return 'score-bonus';
+	if (target.rule === 'Bonus' || target.rule === 'Team_Bonus') return 'score-bonus';
 
 	const diff = score - target.par;
 

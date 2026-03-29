@@ -121,13 +121,18 @@
 								<TextField bind:value={target.name} />
 							</span>
 							<span class="target-par">
-								<Stepper bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
+								<Stepper
+									bind:value={target.par}
+									min={0}
+									disabled={target.rule === 'Bonus' || target.rule === 'Team_Bonus'}
+								/>
 							</span>
 							<span class="target-rule">
 								<Selector
 									id="rule{target.id}"
 									bind:value={target.rule}
-									onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+									onchange={() =>
+										(target.par = target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
 									options={ruleOptions}
 								/>
 							</span>
@@ -172,7 +177,8 @@
 						id="rule{target.id}"
 						bind:value={target.rule}
 						options={ruleOptions}
-						onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+						onchange={() =>
+							(target.par = target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
 					/>
 					<p class="param-container">
 						Autres params à définir plus tard (départ, arrivée, GPS photos, ...)

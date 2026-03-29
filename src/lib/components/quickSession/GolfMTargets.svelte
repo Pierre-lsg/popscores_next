@@ -43,7 +43,11 @@
 
 	// Function to add a new target to targetsStore with specified parameters
 	const addTarget = () => {
-		targetsStore.add(newTargetRule === 'Bonus' ? 0 : 4, 'Une cible', newTargetRule);
+		targetsStore.add(
+			newTargetRule === 'Bonus' || newTargetRule === 'Team_Bonus' ? 0 : 4,
+			'Une cible',
+			newTargetRule
+		);
 		gameStatus.currentTargetIndex = 0;
 		isCourseSelected = true;
 	};
@@ -164,11 +168,17 @@
 				<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
 					<div class="content">
 						<TextField bind:value={target.name} />
-						<Stepper label="" bind:value={target.par} min={0} disabled={target.rule === 'Bonus'} />
+						<Stepper
+							label=""
+							bind:value={target.par}
+							min={0}
+							disabled={target.rule === 'Bonus' || target.rule === 'Team_Bonus'}
+						/>
 						<Selector
 							id="rule{target.id}"
 							bind:value={target.rule}
-							onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+							onchange={() =>
+								(target.par = target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
 							options={ruleOptions}
 						/>
 						<span
@@ -212,7 +222,8 @@
 				id="rule{target.id}"
 				bind:value={target.rule}
 				options={ruleOptions}
-				onchange={() => (target.par = target.rule === 'Bonus' ? 0 : 4)}
+				onchange={() =>
+					(target.par = target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
 			/>
 			<div class="hole-card">
 				<div class="flex gap-2">
