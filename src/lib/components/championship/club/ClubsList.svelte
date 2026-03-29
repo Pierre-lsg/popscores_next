@@ -40,7 +40,7 @@
 	};
 
 	const removeClub = (id: string) => {
-		if (confirm('Voulez-vous vraiment supprimer ce club ?')) {
+		if (confirm('Voulez-vous vraiment supprimer cette association ?')) {
 			clubsStore.remove(id);
 		}
 	};
@@ -80,7 +80,7 @@
 		// If club doesn't exist
 		const aClub = clubsStore.list.filter((c) => c.id === filteredClubs[index].id);
 		if (aClub.length == 0) {
-			if (confirm('Voulez-vous importer le club ?')) {
+			if (confirm("Voulez-vous importer l'association ?")) {
 				const newClub = {
 					id: filteredClubs[index].id,
 					name: filteredClubs[index].name,
@@ -99,11 +99,11 @@
 	onMount(async () => {
 		// Check if 'sans club' is available
 		if (
-			!clubsStore.list.find((c) => c.name === 'sans club' && c.championshipId === championship.id)
+			!clubsStore.list.find((c) => c.name === 'hors asso' && c.championshipId === championship.id)
 		)
 			// if not, create it
 			clubsStore.add(
-				'sans club',
+				'hors asso',
 				'Liste des joueurs et équipes non affiliées à une association',
 				championship.id
 			);
@@ -113,7 +113,7 @@
 	});
 </script>
 
-<h2>Clubs</h2>
+<h2>Associations</h2>
 
 {#if !isEditingClub && !addNewClub}
 	<div class="item-list">
@@ -148,18 +148,18 @@
 	</div>
 
 	{#if clubs.length === 0}
-		<p>Aucun club enregistré pour le moment. 🏆</p>
+		<p>Aucune association enregistrée pour le moment. 🏆</p>
 	{/if}
 
 	<button onclick={() => (addNewClub = true)} class="btn btn-primary"
-		>Ajouter un nouveau club</button
+		>Ajouter une nouvelle association</button
 	>
 
 	{#if loading}
-		<h3>Clubs disponibles sur le Cloud</h3>
+		<h3>Associations disponibles sur le Cloud</h3>
 		<p>Chargement ...</p>
 	{:else}
-		<h3>Clubs disponibles sur le Cloud</h3>
+		<h3>Associations disponibles sur le Cloud</h3>
 		{#each filteredClubs as c, i}
 			<button onclick={() => loadClubfromCloud(i)}>
 				<div>{c.name} - {c.description?.slice(0, 30)}</div>
@@ -173,26 +173,26 @@
 	{#if editClub[i]}
 		<div class="item-form">
 			<h3>Modifier le Club</h3>
-			{#if club.name !== 'sans club'}
+			{#if club.name !== 'hors asso'}
 				<Param
-					label="⛳ Nom du club"
+					label="⛳ Nom de l'association"
 					type="text"
 					bind:value={club.name}
-					placeholder="Nom du club"
+					placeholder="Nom de l'association"
 					focus={true}
 				/>
 			{:else}
-				<h3>Sans club</h3>
+				<h3>Hors association</h3>
 			{/if}
 			<Param
-				label="⛳ Description du club"
+				label="⛳ Description de l'association"
 				type="text"
 				bind:value={club.description}
-				placeholder="Description du club"
+				placeholder="Description de l'association"
 			/>
 			<Toggle label="Est membre de la Fédération" bind:checked={club.isMember} />
 			<div class="action">
-				<button onclick={() => editingClub(i)}>Valider</button>
+				<button onclick={() => editingClub(i)} class="btn btn-primary">Valider</button>
 			</div>
 		</div>
 	{/if}
@@ -201,24 +201,24 @@
 <!-- Interface création de club -->
 {#if addNewClub}
 	<div class="item-form">
-		<h3>Nouveau Club</h3>
+		<h3>Nouvelle association</h3>
 		<Param
-			label="⛳ Nom du club"
+			label="⛳ Nom de l'association"
 			type="text"
 			bind:value={clubName}
-			placeholder="Nom du club"
+			placeholder="Nom de l'association"
 			focus={true}
 		/>
 		<Param
-			label="⛳ Description du club"
+			label="⛳ Description de l'association"
 			type="text"
 			bind:value={clubDescription}
-			placeholder="Description du club"
+			placeholder="Description de l'association"
 		/>
 		<Toggle label="Est membre de la Fédération" bind:checked={isFederationMember} />
 		<div class="action">
-			<button onclick={createClub}>Créer</button>
-			<button onclick={() => (addNewClub = false)}>Annuler</button>
+			<button onclick={createClub} class="btn btn-primary">Créer</button>
+			<button onclick={() => (addNewClub = false)} class="btn">Annuler</button>
 		</div>
 	</div>
 {/if}

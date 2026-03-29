@@ -3,15 +3,15 @@
 	import type { Competition } from '$lib/types/competitionType';
 	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
-	import Selector from '$lib/ui/Selector.svelte';
 	import RankingChampionship from '$lib/components/ranking/RankingChampionship.svelte';
+	import RankingCompetition from '$lib/components/ranking/RankingCompetition.svelte';
 
 	const championships = $state(championshipService.getAllChampionships());
 	let aChampionship: Championship = $state({} as Championship);
 	let showChampionshipRanking: boolean = $state(false);
 
 	const competitions = $derived(competitionService.getCompetitionsByChampionship(aChampionship.id));
-	let aCompetition: string = $state('');
+	let aCompetition: Competition = $state({} as Competition);
 	let showCompetitionRanking: boolean = $state(false);
 </script>
 
@@ -25,7 +25,9 @@
 
 			<select id="championshipSelect" bind:value={aChampionship}>
 				{#each championships as championship}
-					<option value={championship}>{championship.name}</option>
+					{#if championship.status !== 'archived' && championship.status !== 'setup'}
+						<option value={championship}>{championship.name}</option>
+					{/if}
 				{/each}
 			</select>
 		</div>
@@ -51,16 +53,20 @@
 		{#await competitions}
 			<p>Chargement des compétitions</p>
 		{:then competitions}
-			<Selector
-				id="competitionSelect"
-				bind:value={aCompetition}
-				label="Liste des compétitions"
-				options={competitions.map((c) => c.id)}
-				optionsLabel={competitions.map((c) => c.name)}
-			/>
+			<div class="select-container">
+				<label for="competitionSelect">Liste des compétitions</label>
+
+				<select id="competitionSelect" bind:value={aCompetition}>
+					{#each competitions as competition}
+						{#if competition.status === 'published'}
+							<option value={competition}>{competition.name}</option>
+						{/if}
+					{/each}
+				</select>
+			</div>
 		{/await}
 
-		{#if aCompetition}
+		{#if aCompetition.id}
 			<button
 				class="btn btn-primary"
 				onclick={() => (showCompetitionRanking = !showCompetitionRanking)}
@@ -69,7 +75,9 @@
 			</button>
 
 			{#if showCompetitionRanking}
-				Classement de la compétition
+				<div>
+					<RankingCompetition competition={aCompetition} />
+				</div>
 			{/if}
 		{/if}
 	{/if}

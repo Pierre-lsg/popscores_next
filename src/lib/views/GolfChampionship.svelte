@@ -38,7 +38,7 @@
 			<a class="card" href="{base}/championship/{currentChampionship.id}/players">
 				<span class="icon">👥</span>
 				<h3>Participants</h3>
-				<p>Clubs, équipes et joueurs Participants</p>
+				<p>Assos, équipes et joueurs Participants</p>
 			</a>
 		{/if}
 

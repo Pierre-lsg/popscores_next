@@ -60,7 +60,7 @@
 <button onclick={() => (currentClub = '')} class="subnav"> Retour à la liste des clubs </button>
 
 {#if players.length > 0}
-	<h3>Liste des joueurs sans club</h3>
+	<h3>Liste des joueurs hors asso</h3>
 	<button onclick={() => (isAttachingPlayer = true)}>Rattacher à un club</button>
 	{#if isAttachingPlayer}
 		<div>
@@ -96,7 +96,7 @@
 {/if}
 
 {#if teams.length > 0}
-	<h3>Liste des équipes sans club</h3>
+	<h3>Liste des équipes hors asso</h3>
 	<button onclick={() => (isAttachingTeam = true)}>Rattacher à un club</button>
 	{#if isAttachingTeam}
 		<div>

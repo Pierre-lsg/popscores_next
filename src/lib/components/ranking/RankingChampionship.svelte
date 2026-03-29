@@ -53,7 +53,7 @@
 	<thead>
 		<tr>
 			<th>Position</th>
-			<th>Nom du Club</th>
+			<th>Nom de l'asso</th>
 			<th>Score</th>
 			<th>Détails</th>
 		</tr>

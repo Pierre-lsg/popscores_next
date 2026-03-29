@@ -64,7 +64,7 @@
 
 	const addTeam = () => {
 		if (newTeamsClub === '') {
-			newTeamsClub = clubsStore.list.find((c) => c.name === 'sans club')?.id || '';
+			newTeamsClub = clubsStore.list.find((c) => c.name === 'hors asso')?.id || '';
 		}
 
 		const aTeam = teamsChampionshipStore.add(newTeamsName, newTeamsClub);
@@ -146,10 +146,10 @@
 		<Selector
 			id="selectClub"
 			bind:value={clubFilter}
-			label="Club"
+			label="Asso"
 			options={clubs.map((club) => club.id)}
 			optionsLabel={clubs.map((club) => club.name)}
-			unselectedOption="-- Choisis un club --"
+			unselectedOption="-- Choisis une asso --"
 		/>
 		<Param label="Nom" bind:value={nameFilter} oneline={true} />
 		{#if filteredTeams.length > 0}
@@ -193,7 +193,7 @@
 			<Selector
 				id="selectClub"
 				bind:value={newTeamsClub}
-				label="Club"
+				label="Asso"
 				options={clubs.map((club) => club.id)}
 				optionsLabel={clubs.map((club) => club.name)}
 			/>

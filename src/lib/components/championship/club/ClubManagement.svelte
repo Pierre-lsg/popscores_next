@@ -46,7 +46,7 @@
 	<a class="btn btn-back" href={base + '/championship/' + selection.currentId + '/'}>👑 Accueil</a>
 {/snippet}
 
-<h2>Club : {club.name}</h2>
+<h2>Asso : {club.name}</h2>
 
 <div>
 	Liste des joueurs

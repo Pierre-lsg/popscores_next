@@ -62,7 +62,7 @@
 
 	const addPlayer = () => {
 		if (newPlayersClub === '') {
-			newPlayersClub = clubsStore.list.find((c) => c.name === 'sans club')?.id || '';
+			newPlayersClub = clubsStore.list.find((c) => c.name === 'hors asso')?.id || '';
 		}
 
 		const aPlayer = playersChampionshipStore.add(newPlayersName, '', '', newPlayersClub);
@@ -114,10 +114,10 @@
 		<Selector
 			id="selectClub"
 			bind:value={clubFilter}
-			label="Club"
+			label="Asso"
 			options={clubs.map((club) => club.id)}
 			optionsLabel={clubs.map((club) => club.name)}
-			unselectedOption="-- Tous les clubs --"
+			unselectedOption="-- Toutes les asso --"
 		/>
 		<Param label="Nom" bind:value={nameFilter} oneline={true} />
 		{#if filteredPlayers.length > 0}
@@ -143,7 +143,7 @@
 			<Selector
 				id="selectClub"
 				bind:value={newPlayersClub}
-				label="Club"
+				label="Asso"
 				options={clubs.map((club) => club.id)}
 				optionsLabel={clubs.map((club) => club.name)}
 			/>

@@ -10,6 +10,7 @@
 6. ~~Lorsqu'on modifie un championnat, il faut aussi injecter les échelles de classement~~ (championships2Cloud : championshipService.save)
 7. ~~Calcul du résultat erroné en individuel.~~ Les résultats du joueurs étaient récupérés après le calcul du classement
 8. ~~Problème des liens (href) si non à la racine d'un domaine~~
+9. Parler d'association et non de club
 
 ## Améliorations
 
@@ -32,6 +33,10 @@
 16. ~~Ajouter la notion de championnat dans la table utilisateurs~~
 17. Une fois la compétition lancée les flys ne peuvent etre modifié
 18. Au mieux des joueurs et équipes 'sans club' seront ajoutables par le responsable de la carte de score
+19. Autoriser l'accès aux parcours de compétition même sans être connecté
+20. Sauvegarde association depuis l'écran ClubManagement
+21. Ajouter les noms des joueurs sur les flys lors de l'affichage
+22. Règle Bonus équipe règle par équipe par équipe
 
 ## Quick session
 
