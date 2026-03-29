@@ -1,0 +1,1 @@
+import{p as t}from"./CfzV0Ldr.js";import{c as i}from"./BrXY1Bkp.js";const a={get currentId(){return t.params.id||t.url.searchParams.get("id")},get currentChampionship(){const r=this.currentId;return r&&i.list.find(e=>e.id===r)||null}};export{a as s};
