@@ -40,8 +40,6 @@ import { championshipService } from '../pocketbase/championships2Cloud';
 export const getSupervisors = async (cs: Championship) => {
 	let supervisors: User[] = await userService.getUsersByRoleAndChampionship('marshall', cs.id);
 
-	supervisors = supervisors.filter((s) => cs.supervisorsId.includes(s.id));
-
 	return supervisors;
 };
 

@@ -5,4 +5,5 @@ export interface User {
 	verified: boolean;
 	name: string;
 	roles: string[];
+	password: string;
 }

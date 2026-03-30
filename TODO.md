@@ -15,7 +15,7 @@
 ## Améliorations
 
 0. Ajouter l'option 'publier' sur le classement compétition et le classement championnat pour permettre l'accès sur le site
-1. Ajouter l'option pour permettre la connexion des arbitres par QRCode.
+1. ~~Ajouter l'option pour permettre la connexion des arbitres par QRCode.~~
 2. ~~Accès aux championnats profil csMgr, autoriser l'accès aux champions à l'état 'setup'~~
 3. Ne pas afficher le bouton 'Changer de championnat' si un seul championnat est disponible (local et Cloud)
 4. ~~Permettre la multisélection avec le composant MultiSelector lors de la création d'une équipe~~

@@ -18,11 +18,12 @@ export const userService = {
 			cloudUsers.forEach((u) =>
 				users.push({
 					id: u.id,
-					email: '',
+					email: u.email,
 					emailVisibility: false,
 					verified: true,
 					name: u.name,
-					roles: []
+					roles: [],
+					password: ''
 				})
 			);
 		}
@@ -38,11 +39,12 @@ export const userService = {
 			cloudUsers.forEach((u) =>
 				users.push({
 					id: u.id,
-					email: '',
+					email: u.email,
 					emailVisibility: false,
 					verified: true,
 					name: u.name,
-					roles: []
+					roles: [],
+					password: ''
 				})
 			);
 		}
@@ -58,11 +60,12 @@ export const userService = {
 			cloudUsers.forEach((u) =>
 				users.push({
 					id: u.id,
-					email: '',
+					email: u.email,
 					emailVisibility: false,
 					verified: true,
 					name: u.name,
-					roles: []
+					roles: [],
+					password: ''
 				})
 			);
 		}

@@ -24,6 +24,7 @@
 	onMount(async () => {
 		if ($user) {
 			allCourses = await courseService.getAllCourses();
+			allCourses = allCourses.filter((c) => c.name !== '');
 			loading = false;
 		}
 	});

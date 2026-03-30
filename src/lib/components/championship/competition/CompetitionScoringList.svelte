@@ -17,6 +17,7 @@
 	import { onMount } from 'svelte';
 	import type { User } from '$lib/types/userType';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
+	import { refereesStore } from '$lib/stores/championship/refereeChampionshipStore.svelte';
 
 	let {
 		currentCompetition = $bindable(),
@@ -73,17 +74,24 @@
 
 	const editQrConnect = async (fly: Fly) => {
 		try {
-			let refereeLogin: string = 'toto';
-			let refereePass: string = 'totototo';
+			let refereeLogin: string = refereesStore.find(fly.supervisorId)?.email || '';
+			let refereePass: string = refereesStore.find(fly.supervisorId)?.password || '';
+
+			if (!refereeLogin) {
+				throw new Error('❌ Login du arbitre manquant');
+			}
+
+			if (!refereePass) {
+				throw new Error("❌ Mot de passe de l'arbitre manquant");
+			}
 
 			qrRefereeConnect = `${window.location.origin}/?ident=${refereeLogin}&pass=${refereePass}`;
 			await navigator.clipboard.writeText(qrRefereeConnect);
-			qrRefereeConnect = qrRefereeConnect;
 
 			// On déclenche le toast !
 			toastStore.show('🔗 Lien de partage copié !');
 		} catch (err) {
-			toastStore.show('❌ Erreur lors de la copie');
+			toastStore.show(err instanceof Error ? err.message : String(err));
 		}
 	};
 
