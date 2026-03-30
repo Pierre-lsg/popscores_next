@@ -29,7 +29,7 @@
 	});
 </script>
 
-<h1>Bienvenue au {appSettings.values.clubName}</h1>
+<h1>{appSettings.values.clubName}</h1>
 
 <div class="hub-container">
 	<div class="grid-container">

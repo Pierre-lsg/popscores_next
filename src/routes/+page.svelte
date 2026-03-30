@@ -6,6 +6,8 @@
 
 	onMount(() => {
 		navContext.headerAction = returnButton;
+		navContext.title = 'Popscores';
+
 		return () => (navContext.headerAction = null);
 	});
 </script>

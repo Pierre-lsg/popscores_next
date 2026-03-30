@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { selection } from '$lib/stores/selection';
 	import { goto } from '$app/navigation';
+	import { navContext } from '$lib/utils/nav.svelte';
 
 	let currentChampionship: Championship | undefined = $state(
 		championshipStore.list.find((c) => c.id === selection.currentId)
@@ -14,6 +15,8 @@
 
 	onMount(async () => {
 		securityCheck();
+
+		navContext.title = 'Championnat';
 
 		if (!currentChampionship) goto(base + '/championship');
 	});

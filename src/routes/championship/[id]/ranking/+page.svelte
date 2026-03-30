@@ -10,7 +10,8 @@
 		securityCheck();
 
 		navContext.headerAction = returnButton;
-		return () => (navContext.headerAction = null);
+		navContext.title = 'Classement';
+		return () => ((navContext.headerAction = null), (navContext.title = ''));
 	});
 </script>
 

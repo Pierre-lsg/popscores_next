@@ -20,8 +20,8 @@
 <style>
 	.status-wrapper {
 		position: fixed;
-		top: 2.7rem;
-		right: 5.5rem;
+		top: 2.4rem;
+		right: 4.5rem;
 		z-index: 999;
 	}
 </style>

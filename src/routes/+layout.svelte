@@ -45,12 +45,22 @@
 
 <main>
 	<div class="top-bar">
-		<div>
-			{#if navContext.headerAction}
-				{@render navContext.headerAction()}
-			{:else}
-				<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
-			{/if}
+		<div class="nav-wrapper">
+			<div style="width: 105px">
+				{#if navContext.headerAction}
+					{@render navContext.headerAction()}
+				{:else}
+					<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
+				{/if}
+			</div>
+			<div class="title">
+				{#if navContext.title && navContext.title !== ''}
+					{navContext.title}
+				{:else}
+					Popscores
+				{/if}
+			</div>
+			<div style="width: 95px">&nbsp;</div>
 		</div>
 		{#if $page.url.pathname.includes('/championship/')}
 			<NetworkStatus />
@@ -77,13 +87,20 @@
 		display: flex;
 		justify-content: space-between;
 		position: sticky;
-		height: 7vh;
 		z-index: 999;
+		height: 65px;
 		top: 0;
 		align-items: center;
 		margin-bottom: 0.5rem;
 		width: 100%;
 		background-color: var(--bg-card);
+	}
+
+	.nav-wrapper {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		width: 100%;
 	}
 
 	.wrapper {
@@ -92,6 +109,15 @@
 		max-width: 1200px;
 		padding: 0 0.5rem 0.5rem 0.5rem;
 		margin-bottom: 3vh;
+	}
+
+	.title {
+		align-items: center;
+		text-align: center;
+		width: 14rem;
+		color: var(--primary);
+		font-size: 1.5rem;
+		font-weight: bold;
 	}
 
 	footer {

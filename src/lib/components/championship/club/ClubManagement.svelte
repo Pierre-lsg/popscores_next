@@ -39,7 +39,7 @@
 </script>
 
 {#snippet returnButton()}
-	<div class="btn btn-back" role="none" onclick={() => (currentClub = '')}>👥 Accueil</div>
+	<span class="btn btn-back" role="none" onclick={() => (currentClub = '')}>👥 Accueil</span>
 {/snippet}
 
 {#snippet prevReturnButton()}

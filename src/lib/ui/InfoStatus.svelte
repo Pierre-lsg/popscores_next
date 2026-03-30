@@ -66,8 +66,8 @@
 
 	.status-wrapper {
 		position: fixed;
-		top: 0.7rem;
-		right: 5.5rem;
+		top: 0.5rem;
+		right: 4.5rem;
 		z-index: 1000;
 	}
 

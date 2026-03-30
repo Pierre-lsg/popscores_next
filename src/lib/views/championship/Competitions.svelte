@@ -15,7 +15,8 @@
 
 	onMount(() => {
 		navContext.headerAction = returnButton;
-		return () => (navContext.headerAction = null);
+		navContext.title = 'Championnat';
+		return () => ((navContext.headerAction = null), (navContext.title = ''));
 	});
 </script>
 
@@ -24,9 +25,9 @@
 		<a class="btn btn-back" href={base + '/championship/' + selection.currentId + '/'}>👑 Accueil</a
 		>
 	{:else}
-		<div class="btn btn-back" role="none" onclick={() => (currentCompetition = undefined)}>
+		<span class="btn btn-back" role="none" onclick={() => (currentCompetition = undefined)}>
 			⛳ Accueil
-		</div>
+		</span>
 	{/if}
 {/snippet}
 

@@ -45,11 +45,11 @@
 	{#if option === ''}
 		<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 	{:else if option === 'sessions' && currentSession !== ''}
-		<div class="btn btn-back" onclick={() => (currentSession = '')} role="none">📄 Accueil</div>
+		<span class="btn btn-back" onclick={() => (currentSession = '')} role="none">📄 Accueil</span>
 	{:else if option === 'courses' && currentCourse !== ''}
-		<div class="btn btn-back" onclick={() => (currentCourse = '')} role="none">⛳ Accueil</div>
+		<span class="btn btn-back" onclick={() => (currentCourse = '')} role="none">⛳ Accueil</span>
 	{:else}
-		<div class="btn btn-back" onclick={() => (option = '')} role="none">📜 Accueil</div>
+		<span class="btn btn-back" onclick={() => (option = '')} role="none">📜 Accueil</span>
 	{/if}
 {/snippet}
 

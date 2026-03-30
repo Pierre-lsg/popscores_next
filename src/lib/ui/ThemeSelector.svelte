@@ -57,8 +57,8 @@
 
 	.theme-wrapper {
 		position: fixed;
-		top: 0.1rem;
-		right: 0.5rem;
+		top: 0rem;
+		right: 0rem;
 		z-index: 998;
 	}
 

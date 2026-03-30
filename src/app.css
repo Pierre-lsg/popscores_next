@@ -327,7 +327,7 @@ h2:not(:first-child) {
 	border: none;
 	color: var(--text-main);
 	cursor: pointer;
-	padding: 0.5rem 1rem;
+	padding: 0.4rem 0.4rem;
 	font-size: 0.9rem;
 	font-weight: bold;
 }
