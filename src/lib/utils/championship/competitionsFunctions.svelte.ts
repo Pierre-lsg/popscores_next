@@ -28,7 +28,7 @@ import { regulationService } from '../pocketbase/regulations2Cloud ';
 import { competitionService } from '../pocketbase/competitions2Cloud';
 import { flyService } from '../pocketbase/flys2Cloud';
 import { clubService } from '../pocketbase/clubs2Cloud';
-import { resultService } from '../pocketbase/Result2Cloud';
+import { resultService } from '../pocketbase/results2Cloud';
 import type { Result } from '$lib/types/resultType';
 import type { Target } from '$lib/types/targetType';
 import { scoreCardService } from '../pocketbase/scoreCards2Cloud';

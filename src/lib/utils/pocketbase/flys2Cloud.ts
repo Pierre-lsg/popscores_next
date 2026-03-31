@@ -11,7 +11,7 @@ export const flyService = {
 
 	getFlysByCompetition: async (competitionId: string) => {
 		const flys = await db.getFullList('flys', { filter: `competition ~ "${competitionId}"` });
-		return flys.map((team) => team.data) as Fly[];
+		return flys.map((fly) => fly.data) as Fly[];
 	},
 
 	getById: (id: string) => db.getOne('flys', id, {}),

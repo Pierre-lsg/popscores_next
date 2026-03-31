@@ -199,6 +199,11 @@ h2:not(:first-child) {
 	grid-template-columns: repeat(2, 1fr);
 }
 
+.item-list-oneline {
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+}
+
 .item-details {
 	display: flex;
 	flex-direction: column;

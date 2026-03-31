@@ -25,7 +25,7 @@
 	});
 </script>
 
-<h2>Championnat {currentChampionship.name}</h2>
+<h2>{currentChampionship.name || 'Championnat'}</h2>
 
 <div class="hub-container">
 	<div class="grid-container">

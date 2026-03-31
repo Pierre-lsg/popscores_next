@@ -11,7 +11,7 @@
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
 
-	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
+	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
 	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
 	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
@@ -70,6 +70,7 @@
 	const showNextTarget = () => {
 		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
 			currentFly.status = 'in_progress';
+			if (isOnline) saveProgressToCloud();
 			if (activeTargetIndex < targets.length - 1) activeTargetIndex++;
 			else activeTargetIndex = 0;
 			initScoresPlayerOnTarget();
@@ -91,6 +92,7 @@
 	const showPrevTarget = () => {
 		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
 			currentFly.status = 'in_progress';
+			if (isOnline) saveProgressToCloud();
 			if (activeTargetIndex > 0) activeTargetIndex--;
 			else activeTargetIndex = targets.length - 1;
 			initScoresPlayerOnTarget();
@@ -98,16 +100,11 @@
 		}
 	};
 
-	const initScoresPlayerOnTarget = () => {
-		players.forEach((player) => {
-			if (currentTarget)
-				if (player.scores[currentTarget.id] === undefined) {
-					player.scores[currentTarget.id] = currentTarget.par;
-				}
-		});
-	};
-
-	const validateFly = () => {
+	const saveProgressToCloud = () => {
+		if (isOnline) {
+			flyService.saveFly(currentFly);
+			messageStore.remove('sendFly');
+		}
 		// Sauver les scores dans le ResultStore
 		players.forEach((player) => {
 			let result = resultsCompetitionStore.find(currentCompetition.id, player.id);
@@ -122,6 +119,19 @@
 				resultService.saveResult(result);
 			}
 		});
+	};
+
+	const initScoresPlayerOnTarget = () => {
+		players.forEach((player) => {
+			if (currentTarget)
+				if (player.scores[currentTarget.id] === undefined) {
+					player.scores[currentTarget.id] = currentTarget.par;
+				}
+		});
+	};
+
+	const validateFly = () => {
+		saveProgressToCloud();
 		// transmettre la carte de score
 		if (isOnline)
 			cloudSaveScoreCard(

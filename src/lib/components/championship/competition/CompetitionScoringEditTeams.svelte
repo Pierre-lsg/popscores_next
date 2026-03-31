@@ -15,7 +15,7 @@
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
 
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
-	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
+	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
 	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
 	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
 
@@ -84,6 +84,7 @@
 	const showNextTarget = () => {
 		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
 			currentFly.status = 'in_progress';
+			if (isOnline) saveProgressToCloud();
 			if (activeTargetIndex < targets.length - 1) activeTargetIndex++;
 			else activeTargetIndex = 0;
 			initScoresPlayerOnTarget();
@@ -105,11 +106,33 @@
 	const showPrevTarget = () => {
 		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
 			currentFly.status = 'in_progress';
+			if (isOnline) saveProgressToCloud();
 			if (activeTargetIndex > 0) activeTargetIndex--;
 			else activeTargetIndex = targets.length - 1;
 			initScoresPlayerOnTarget();
 			if (!isCourseEnded) if (checkAllTargetsValidated()) isCourseEnded = true;
 		}
+	};
+
+	const saveProgressToCloud = () => {
+		if (isOnline) {
+			flyService.saveFly(currentFly);
+			messageStore.remove('sendFly');
+		}
+		// Sauver les scores dans le ResultStore
+		players.forEach((player) => {
+			let result = resultsCompetitionStore.find(currentCompetition.id, player.id);
+			if (result) {
+				result.scores = player.scores;
+			} else {
+				result = resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
+			}
+			// Sauver le résultat dans le Cloud si c'est possible
+			if (isOnline) {
+				playerService.savePlayer(player);
+				resultService.saveResult(result);
+			}
+		});
 	};
 
 	const initScoresPlayerOnTarget = () => {
@@ -131,20 +154,7 @@
 	};
 
 	const validateFly = () => {
-		// Sauver les scores dans le ResultStore
-		players.forEach((player) => {
-			let result = resultsCompetitionStore.find(currentCompetition.id, player.id);
-			if (result) {
-				result.scores = player.scores;
-			} else {
-				result = resultsCompetitionStore.add(currentCompetition.id, player.id, player.scores);
-			}
-			// Sauver le résultat dans le Cloud si c'est possible
-			if (isOnline) {
-				playerService.savePlayer(player);
-				resultService.saveResult(result);
-			}
-		});
+		saveProgressToCloud();
 		// Transmettre la carte de score
 		if (isOnline)
 			cloudSaveScoreCard(

@@ -10,7 +10,7 @@
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
-	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
+	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
 	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
 

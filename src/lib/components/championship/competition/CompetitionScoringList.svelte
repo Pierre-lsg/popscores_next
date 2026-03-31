@@ -78,7 +78,7 @@
 			let refereePass: string = refereesStore.find(fly.supervisorId)?.password || '';
 
 			if (!refereeLogin) {
-				throw new Error('❌ Login du arbitre manquant');
+				throw new Error("❌ Login de l'arbitre manquant");
 			}
 
 			if (!refereePass) {
@@ -134,7 +134,9 @@
 						🌟
 					</button>
 					<button onclick={() => editQrConnect(fly)}> 🚪 </button>
-					<button onclick={() => alert('Todo : récupérer résultats du Cloud ...')}> 🔍 </button>
+					<button onclick={() => alert('Todo : récupérer résultats/players du Cloud ...')}>
+						🔍
+					</button>
 				</div>
 				{#if isAttachingSupervisor[i]}
 					<Selector

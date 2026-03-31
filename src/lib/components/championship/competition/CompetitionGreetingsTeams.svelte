@@ -14,7 +14,7 @@
 	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
-	import { resultService } from '$lib/utils/pocketbase/Result2Cloud';
+	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
 
