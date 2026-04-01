@@ -29,7 +29,6 @@
 	onMount(async () => {
 		allScoreCards = await scoreCardService.getScoreCardByCompetition(competition.id);
 		if (allScoreCards) {
-			console.log('allScoreCards', allScoreCards);
 			settings = allScoreCards[0].regulation;
 			targets = allScoreCards[0].targets;
 			allScoreCards.forEach((sc) => {
