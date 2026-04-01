@@ -35,6 +35,24 @@ export const db = {
 		}
 	},
 
+	// Supprimer un record
+	async delete(collectionName: string, id: string) {
+		try {
+			// 1. Recherche de l'enregistrement existant avec ce filtre
+			const existingItem = await pb.collection(collectionName).getList(1, 1, { requestKey: null });
+			const existing = existingItem.items[0];
+
+			//2. S'il existe on le supprime
+			if (existing) {
+				const options = { requestKey: null };
+				return await pb.collection(collectionName).delete(id, options);
+			}
+		} catch (err) {
+			console.error(`Erreur delete sur ${collectionName} :`, err);
+			throw err;
+		}
+	},
+
 	// Créer un record
 	async create(collectionName: string, data: any) {
 		try {

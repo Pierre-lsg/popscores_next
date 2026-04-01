@@ -229,6 +229,36 @@ h2:not(:first-child) {
 }
 
 /*----------------------------*/
+/* Flex items                 */
+/*----------------------------*/
+
+.flex-form {
+	display: flex;
+	flex-direction: column;
+	border: 1px var(--primary) solid;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+}
+
+.flex-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	min-height: 50px; /* Important pour pouvoir redéposer dans une liste vide */
+}
+
+.flex-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: var(--bg-card);
+	border: 1px solid var(--border-color);
+	border-radius: 8px;
+	padding: 0.5rem;
+	touch-action: shadow; /* Aide à la gestion tactile */
+}
+
+/*----------------------------*/
 /* Main classes               */
 /*----------------------------*/
 /* Boutons génériques */
@@ -259,6 +289,14 @@ h2:not(:first-child) {
 
 .btn:active {
 	transform: scale(0.98);
+}
+
+.btn-large {
+	width: 100%;
+	-webkit-tap-highlight-color: transparent;
+	user-select: none;
+	font-weight: bold;
+	font-size: 1.2rem;
 }
 
 .btn-icon {

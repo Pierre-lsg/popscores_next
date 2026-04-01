@@ -22,7 +22,6 @@ export const resultService = {
 	},
 
 	saveResult: (aResult: Result) => {
-		console.log('save result' + aResult.playerId);
 		const resultToSave = {
 			competition: aResult.competitionId,
 			player: aResult.playerId,

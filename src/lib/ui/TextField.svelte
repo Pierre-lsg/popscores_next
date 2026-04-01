@@ -6,6 +6,8 @@
 	}
 
 	let { value = $bindable(''), placeholder = '', focus = false }: Props = $props();
+	const seed: number = Math.round(Math.random() * 100000);
+
 	let isEditing: boolean = $state(false);
 
 	const init = (elt: any) => {
@@ -14,7 +16,7 @@
 
 	const isFinished = (e: KeyboardEvent) => {
 		if (e.key === 'Enter') {
-			isEditing = !isEditing;
+			isEditing = false;
 			// if (onchange) onchange();
 		}
 	};
@@ -25,17 +27,18 @@
 		<input
 			class="input-field"
 			bind:value
-			onblur={() => (isEditing = !isEditing)}
+			onblur={() => (isEditing = false)}
 			onkeydown={(e) => isFinished(e)}
-			onchange={() => (isEditing = !isEditing)}
+			onchange={() => (isEditing = false)}
 		/>
 	{:else}
-		<div role="none" class="value-zone" onclick={() => (isEditing = !isEditing)}>
+		<div role="none" class="value-zone" onclick={() => (isEditing = true)}>
 			{value}
 		</div>
 	{/if}
 </div>
 
+<!--
 <svelte:window
 	onclick={(e) => {
 		if (e.target && !(e.target as Element).closest('.text-field')) {
@@ -43,6 +46,7 @@
 		}
 	}}
 />
+-->
 
 <style>
 	.text-field {

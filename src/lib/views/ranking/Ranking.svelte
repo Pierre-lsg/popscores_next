@@ -38,7 +38,7 @@
 			class="btn btn-primary"
 			onclick={() => (showChampionshipRanking = !showChampionshipRanking)}
 		>
-			Voir les résultats du championnat
+			{showChampionshipRanking ? 'Masquer' : 'Voir'} les résultats du championnat
 		</button>
 
 		{#if showChampionshipRanking}
@@ -71,7 +71,7 @@
 				class="btn btn-primary"
 				onclick={() => (showCompetitionRanking = !showCompetitionRanking)}
 			>
-				<div>Voir les résultats de la compétition</div>
+				<div>{showCompetitionRanking ? 'Masquer' : 'Voir'} les résultats de la compétition</div>
 			</button>
 
 			{#if showCompetitionRanking}

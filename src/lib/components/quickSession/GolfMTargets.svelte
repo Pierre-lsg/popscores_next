@@ -25,9 +25,7 @@
 
 	let isTeamGame: boolean = sessionSettingsStore.settings.regulation.teamGame;
 
-	let editingId = $state<string | null>(null);
 	let isDragging = $state(false);
-	let newTargetName = $state('');
 	let isEditingTarget: boolean[] = $state([]);
 	let isEditing: boolean = $state(false);
 	let loadingGps = $state(false);
@@ -74,16 +72,6 @@
 		isDragging = false;
 	};
 
-	// Function to set editingId to the specified target id for editing its name
-	const editTargetName = (id: string) => {
-		editingId = id;
-	};
-
-	// Function to save the edited name of a target and reset editingId to null
-	const saveName = (e: Event) => {
-		editingId = null;
-	};
-
 	const editTarget = (id: number) => {
 		isEditingTarget[id] = !isEditingTarget[id];
 		for (let i = 0; i < isEditingTarget.length; i++) {
@@ -128,20 +116,14 @@
 		//
 		isSelectingCourse = true;
 	};
-
-	// Focus function for input element to set focus on it and select its text
-	const focus = (node: HTMLInputElement) => {
-		node.focus();
-		node.select();
-	};
 </script>
 
 <div class="step-content" in:slide>
 	{#if !isEditing}
-		<button onclick={() => addTarget()} class="btnG btn-primary">Ajouter une cible ≡</button>
+		<button onclick={() => addTarget()} class="btn-large btn-primary">Ajouter une cible ≡</button>
 	{/if}
 	{#if !isCourseSelected}
-		<button onclick={() => selectCourse()} class="btnG btn-primary"
+		<button onclick={() => selectCourse()} class="btn-large btn-primary"
 			>Sélectionner un précédent parcours ≡</button
 		>
 	{/if}
@@ -152,7 +134,7 @@
 
 	{#if !isEditing}
 		<div
-			class="targets-list"
+			class="flex-list"
 			use:dndzone={{
 				items: targetsStore.list,
 				flipDurationMs,
@@ -165,7 +147,7 @@
 			onfinalize={handleFinalize}
 		>
 			{#each targetsStore.list as target (target.id)}
-				<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
+				<div class="flex-item" animate:flip={{ duration: flipDurationMs }}>
 					<div class="content">
 						<TextField bind:value={target.name} />
 						<Stepper
@@ -208,7 +190,7 @@
 
 {#each targetsStore.list as target, i}
 	{#if isEditingTarget[i]}
-		<div class="target-form">
+		<div class="flex-form">
 			<Param
 				label="⛳ Nom de la cible"
 				type="text"
@@ -276,53 +258,3 @@
 		</div>
 	{/if}
 {/each}
-
-<style>
-	.target-form {
-		display: flex;
-		flex-direction: column;
-		border: 1px var(--primary) solid;
-		padding: 0.5rem;
-		border-radius: 0.5rem;
-	}
-
-	.btnG {
-		width: 100%;
-		-webkit-tap-highlight-color: transparent;
-		user-select: none;
-		font-weight: bold;
-		font-size: 1.2rem;
-	}
-
-	.targets-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		min-height: 50px; /* Important pour pouvoir redéposer dans une liste vide */
-	}
-
-	.target-item {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		background: var(--bg-card);
-		border: 1px solid var(--border-color);
-		border-radius: 8px;
-		padding: 0.5rem;
-		touch-action: shadow; /* Aide à la gestion tactile */
-	}
-
-	.invisible-button,
-	.name-input {
-		background: none;
-		border: none;
-		width: 100%;
-		padding: 0;
-		font: inherit;
-		cursor: pointer;
-		color: inherit;
-		border-bottom: 2px solid var(--primary);
-		outline: none;
-		color: var(--primary);
-	}
-</style>

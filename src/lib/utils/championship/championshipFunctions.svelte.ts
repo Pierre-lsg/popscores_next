@@ -121,7 +121,7 @@ export const calculateChampionship = (aChampionship: Championship) => {
 
 	aChampionship.competitionsId.forEach((cId: string) => {
 		const competition = competitionsStore.find(cId);
-		if (competition && competition.status === 'finished') {
+		if (competition && (competition.status === 'finished' || competition.status === 'published')) {
 			let course: Course | undefined;
 			let targets: Target[] = [];
 			let regulations: Regulations | undefined;

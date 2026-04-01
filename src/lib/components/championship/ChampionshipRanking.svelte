@@ -9,7 +9,11 @@
 	import { calculateChampionship } from '$lib/utils/championship/championshipFunctions.svelte';
 
 	import { formatList } from '$lib/utils/sharedFunction';
+	import { championshipService } from '$lib/utils/pocketbase/championships2Cloud';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
+
+	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { messageStore } from '$lib/stores/appEventStore.svelte';
 	import { selection } from '$lib/stores/selection';
 
 	let championship = $state(championshipStore.list.find((c) => c.id === selection.currentId));
@@ -37,12 +41,19 @@
 			.filter((name) => name !== 'Compétition inconnue');
 		alert(formatList(competitionNames));
 	};
+
+	const publishChampionship = async () => {
+		try {
+			if (championship) championshipService.save(championship);
+			toastStore.show('💾 Résultats publiés ...', 'success');
+			messageStore.remove('modifChamp');
+		} catch (err) {
+			toastStore.show('💾 Echec à la publication ...', 'failure');
+		}
+	};
 </script>
 
-<button
-	onclick={() => alert("Pas développé. Va dans paramètres, 'Sauvegarde Serveur'")}
-	class="btn btn-primary">Publier</button
->
+<button onclick={() => publishChampionship()} class="btn btn-primary">Publier</button>
 
 <h3>Classement par joueur</h3>
 <table>

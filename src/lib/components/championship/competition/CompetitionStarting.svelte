@@ -19,6 +19,7 @@
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { onMount } from 'svelte';
 	import CompetitionSummaryBox from './CompetitionSummaryBox.svelte';
+	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -82,6 +83,7 @@
 
 	const purgePreviousFlys = () => {
 		currentCompetition.flysId.forEach((f: string) => {
+			flyService.deleteFly(f);
 			flysChampionshipStore.remove(f);
 		});
 		currentCompetition.flysId = [];

@@ -21,6 +21,8 @@ export const flyService = {
 		return fly?.data as Fly;
 	},
 
+	deleteFly: (id: string) => db.delete('flys', id),
+
 	saveFly: (aFly: Fly) => {
 		const flyToSave = {
 			id: aFly.id,

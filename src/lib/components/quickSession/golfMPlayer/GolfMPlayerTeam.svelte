@@ -32,7 +32,10 @@
 		selectedPlayers.forEach((pId) => {
 			if (!playersStore.list.some((p) => p.id === pId)) {
 				const aPlayer = regularsStore.find(pId);
-				if (aPlayer) playersStore.load(aPlayer);
+				if (aPlayer) {
+					aPlayer.teamId = '';
+					playersStore.load(aPlayer);
+				} 
 			}
 		});
 		selectedPlayers = [];
@@ -99,7 +102,7 @@
 </script>
 
 <div class="step-content" in:slide>
-	<button onclick={addPlayers} class="btnG btn-primary">Ajouter un Joueur</button>
+	<button onclick={addPlayers} class="btn-large btn-primary">Ajouter un Joueur</button>
 
 	{#if isSelectingPlayers}
 		<MultiSelector
@@ -110,15 +113,15 @@
 			optionsLabel={regularPlayers.map((p: Player) => p.name)}
 		/>
 		<div class="action">
-			<button onclick={() => selectPlayer()} class="btnG btn-primary">Valider</button>
-			<button onclick={() => addPlayer()} class="btnG btn-primary">Nouveau joueur</button>
+			<button onclick={() => selectPlayer()} class="btn-large btn-primary">Valider</button>
+			<button onclick={() => addPlayer()} class="btn-large btn-primary">Nouveau joueur</button>
 		</div>
 	{/if}
 
 	<div class="action">
 		<span role="none" class="dice-icon" onclick={createTeams}>🎲</span>
 		<span style="width: 85%"
-			><button onclick={addTeam} class="btnG btn-primary">Ajouter une équipe</button></span
+			><button onclick={addTeam} class="btn-large btn-primary">Ajouter une équipe</button></span
 		>
 	</div>
 
