@@ -19,6 +19,8 @@
 	import { swipe } from '$lib/utils/swipe';
 	import { slide } from 'svelte/transition';
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import { navContext } from '$lib/utils/nav.svelte';
+
 	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
 	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { onMount } from 'svelte';
@@ -163,8 +165,22 @@
 	onMount(() => {
 		initScoresPlayerOnTarget();
 		if (!isCourseEnded) if (checkAllTargetsValidated()) isCourseEnded = true;
+		navContext.headerAction = returnButton;
+		return () => (navContext.headerAction = returnButtonPrev);
 	});
 </script>
+
+{#snippet returnButton()}
+	<span class="btn btn-back" role="none" onclick={() => (currentFly = undefined)}>
+		⛳ Accueil
+	</span>
+{/snippet}
+
+{#snippet returnButtonPrev()}
+	<span class="btn btn-back" role="none" onclick={() => (currentCompetition = undefined)}>
+		⛳ Accueil
+	</span>
+{/snippet}
 
 <div>
 	<div class="action">

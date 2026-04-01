@@ -123,41 +123,45 @@ export const calculateTeamScore = (
 	settings: Regulation
 ) => {
 	// Pour toutes les cibles du parcours
-	return targets.reduce((sum, target) => {
-		// 1. Récupération des scores réels présents
-		const scores = team.playersId.map((id) => {
-			const p = players.find((p) => p.id === id);
-			return p?.scores[target.id] || 0;
-		});
+	return parseFloat(
+		(
+			targets.reduce((sum, target) => {
+				// 1. Récupération des scores réels présents
+				const scores = team.playersId.map((id) => {
+					const p = players.find((p) => p.id === id);
+					return p?.scores[target.id] || 0;
+				});
 
-		// 2. Injection des fantômes si l'équipe est incomplète
-		while (scores.length < settings.playersPerTeam) {
-			let ghostValue: number;
-			switch (target.rule) {
-				case 'Bonus':
-					ghostValue = 0;
-					break;
-				case 'Team_Bonus':
-					ghostValue = 0;
-					break;
-				case 'Individuel':
-					if (settings.usePenalizingGhost) {
-						if (settings.hasCrossAFixedPenalty) ghostValue = settings.malusValue;
-						else ghostValue = target.par + settings.malusOverPar;
-					} else ghostValue = scores[0];
-					break;
-				default:
-					ghostValue = scores[0];
-					break;
-			}
-			scores.push(ghostValue);
-		}
+				// 2. Injection des fantômes si l'équipe est incomplète
+				while (scores.length < settings.playersPerTeam) {
+					let ghostValue: number;
+					switch (target.rule) {
+						case 'Bonus':
+							ghostValue = 0;
+							break;
+						case 'Team_Bonus':
+							ghostValue = 0;
+							break;
+						case 'Individuel':
+							if (settings.usePenalizingGhost) {
+								if (settings.hasCrossAFixedPenalty) ghostValue = settings.malusValue;
+								else ghostValue = target.par + settings.malusOverPar;
+							} else ghostValue = scores[0];
+							break;
+						default:
+							ghostValue = scores[0];
+							break;
+					}
+					scores.push(ghostValue);
+				}
 
-		// 3. Somme des scores de la cible pour l'équipe
-		const targetTotal = scores.reduce((a, b) => a + b, 0);
+				// 3. Somme des scores de la cible pour l'équipe
+				const targetTotal = scores.reduce((a, b) => a + b, 0);
 
-		return sum + targetTotal;
-	}, 0);
+				return sum + targetTotal;
+			}, 0) / settings.playersPerTeam
+		).toFixed(2)
+	);
 };
 
 // Retourne la liste des id des joueurs de l'équipe

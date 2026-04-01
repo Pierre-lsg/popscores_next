@@ -13,7 +13,9 @@
 	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
 	import { scoreCardService } from '$lib/utils/pocketbase/scoreCards2Cloud';
 	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
-	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
+	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
+	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
+	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -41,11 +43,9 @@
 				let playerId: string | undefined;
 
 				if (isTeamCompetition) {
-					const team = teamsChampionshipStore.find(aFly.teamsId[0]);
+					const team = teamsCompetitionStore.find(aFly.teamsId[0]);
 					playerId = team?.playersId[0];
-				} else {
-					playerId = aFly.playersId[0];
-				}
+				} else playerId = aFly.playersId[0];
 
 				const result = results.find((r) => r.playerId === playerId);
 				const scoreCount = result?.scores ? Object.keys(result.scores).length : 0;
@@ -84,7 +84,7 @@
 	{#each scoreCards as scoreCard}
 		{#if isCompetitionTeam(currentCompetition)}
 			<h4>Fly #{scoreCard.fly.order}</h4>
-			<TeamScoreCard
+			<TeamScoreCardByTarget
 				rankedTeams={scoreCard.rankedTeams}
 				targets={scoreCard.targets}
 				players={scoreCard.players}
@@ -92,7 +92,10 @@
 			/>
 		{:else}
 			<h4>Fly #{scoreCard.fly.order}</h4>
-			<PlayerScoreCard rankedPlayers={scoreCard.rankedPlayers} targets={scoreCard.targets} />
+			<PlayerScoreCardByTarget
+				rankedPlayers={scoreCard.rankedPlayers}
+				targets={scoreCard.targets}
+			/>
 		{/if}
 	{/each}
 </div>

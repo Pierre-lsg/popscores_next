@@ -98,17 +98,23 @@
 	};
 
 	const savingCompetition = async (competition: Competition) => {
-		let status = await cloudSaveAllCompetition(competition, championship.id);
+		if (
+			confirm(
+				'Voulez-vous mettre à jour les informations partagées de la compétition ? \n Action déconseillée si la compétition est en cours'
+			)
+		) {
+			let status = await cloudSaveAllCompetition(competition, championship.id);
 
-		switch (status) {
-			case 'success':
-				toastStore.show('💾 Enregistrement effectué ...', 'success');
-				break;
-			case 'failure':
-				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
-				break;
-			default:
-				toastStore.show('💾 Enregsistrement en cours ...', 'failure');
+			switch (status) {
+				case 'success':
+					toastStore.show('💾 Enregistrement effectué ...', 'success');
+					break;
+				case 'failure':
+					toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+					break;
+				default:
+					toastStore.show('💾 Enregsistrement en cours ...', 'failure');
+			}
 		}
 	};
 

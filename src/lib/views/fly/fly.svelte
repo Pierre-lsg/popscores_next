@@ -15,12 +15,14 @@
 
 	import { onMount } from 'svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
+
 	import {
 		cloudLoadCurrentCompetitionForSupervisor,
 		isCompetitionTeam
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { selection } from '$lib/stores/selection';
+	import { base } from '$app/paths';
 
 	let championshipId = selection.currentId;
 
@@ -74,7 +76,6 @@
 
 	onMount(() => {
 		selectFly();
-		console.log('currentFly', currentFly);
 	});
 </script>
 
@@ -122,8 +123,19 @@
 	<button onclick={() => loadCompetition()} class="btn btn-primary">Récupérer la compétition</button
 	>
 {/if}
+<a class="btn btn-secondary retour" href={base + '/championship/' + selection.currentId + '/'}>
+	👑 Accueil
+</a>
 
 <style>
+	.retour {
+		padding-top: 0.5rem;
+		margin-top: 1rem;
+		text-align: center;
+		font-size: 1.2rem;
+		height: 2rem;
+		text-decoration: none;
+	}
 	.fly-list {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);

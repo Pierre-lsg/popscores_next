@@ -3,6 +3,7 @@
 	import type { Championship } from '$lib/types/championshipType';
 	import type { Fly } from '$lib/types/flyType';
 	import type { Team } from '$lib/types/teamType';
+	import type { Player } from '$lib/types/playerType';
 	import QRCode from '$lib/ui/QRCode.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
@@ -18,6 +19,11 @@
 	import type { User } from '$lib/types/userType';
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
 	import { refereesStore } from '$lib/stores/championship/refereeChampionshipStore.svelte';
+	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
+	import type { Result } from '$lib/types/resultType';
+	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
+	import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompetitionStore.svelte';
+	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
 
 	let {
 		currentCompetition = $bindable(),
@@ -95,6 +101,44 @@
 		}
 	};
 
+	const refreshFly = async (aFly: Fly) => {
+		if (confirm('Voulez-vous récupérer les données du fly #' + aFly.order + ' ?')) {
+			const cloudFly = await flyService.getFlyById(aFly.id);
+			let playersId: string[] = [];
+
+			if (cloudFly) aFly.status = cloudFly.status;
+
+			// Compétition par équipe
+			if (isCompetitionTeam(currentCompetition)) {
+				aFly.teamsId.forEach((teamId) => {
+					const team = teamsCompetitionStore.find(teamId);
+					playersId.push(...(team?.playersId || []));
+				});
+			}
+			// Compétition individuelle
+			else playersId = aFly.playersId;
+
+			playersId.forEach(async (aPlayerId) => {
+				console.log('rafraichissement player : ', aPlayerId);
+				const aPlayer: Player = await playerService.getPlayerById(aPlayerId);
+				if (aPlayer) {
+					console.log('update player : ', aPlayer);
+					playersChampionshipStore.remove(aPlayerId);
+					playersChampionshipStore.load(aPlayer);
+				}
+
+				const aResult: Result[] = await resultService.getResultsByCompetitionAndPlayer(
+					currentCompetition.id,
+					aPlayerId
+				);
+				if (aResult[0]) {
+					resultsCompetitionStore.remove(currentCompetition.id, aPlayerId);
+					resultsCompetitionStore.load(aResult[0]);
+				}
+			});
+		}
+	};
+
 	onMount(async () => {
 		// check all flys
 		allFlysCompleted = flys.every((fly) => fly.status === 'validated');
@@ -134,9 +178,7 @@
 						🌟
 					</button>
 					<button onclick={() => editQrConnect(fly)}> 🚪 </button>
-					<button onclick={() => alert('Todo : récupérer résultats/players du Cloud ...')}>
-						🔍
-					</button>
+					<button onclick={() => refreshFly(fly)}> 🔍 </button>
 				</div>
 				{#if isAttachingSupervisor[i]}
 					<Selector

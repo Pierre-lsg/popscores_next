@@ -20,6 +20,8 @@
 	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
 
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import { navContext } from '$lib/utils/nav.svelte';
+
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 	import {
@@ -186,13 +188,25 @@
 	onMount(() => {
 		initScoresPlayerOnTarget();
 		if (!isCourseEnded) if (checkAllTargetsValidated()) isCourseEnded = true;
-		console.log('teams', teams);
+		navContext.headerAction = returnButton;
+		return () => (navContext.headerAction = returnButtonPrev);
 	});
 </script>
 
+{#snippet returnButton()}
+	<span class="btn btn-back" role="none" onclick={() => (currentFly = undefined)}>
+		⛳ Accueil
+	</span>
+{/snippet}
+
+{#snippet returnButtonPrev()}
+	<span class="btn btn-back" role="none" onclick={() => (currentCompetition = undefined)}>
+		⛳ Accueil
+	</span>
+{/snippet}
+
 <div>
 	<div class="action">
-		<button onclick={() => (currentFly = undefined)} class="btn">Retour</button>
 		{#if isCourseEnded && currentFly.status === 'in_progress'}
 			<button onclick={() => validateFly()} class="btn btn-primary">
 				Valider{isOnline ? ' et transmettre ' : ' '}le fly
