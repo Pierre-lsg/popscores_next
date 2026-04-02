@@ -2,7 +2,7 @@
     RewriteEngine On
     
     # Définit la base du site (ton sous-répertoire)
-    RewriteBase /popscores_next/
+    RewriteBase /popscores/
 
     # Si le fichier ou le répertoire demandé n'existe pas physiquement
     RewriteCond %{REQUEST_FILENAME} !-f

@@ -1,4 +1,4 @@
-export const CURRENT_VERSION = '0.1.0';
+export const CURRENT_VERSION = '1.0.0';
 
 export const checkDataVersion = () => {
 	const savedVersion = localStorage.getItem('popscores_version');
@@ -9,7 +9,7 @@ export const checkDataVersion = () => {
 		// Lister les clés à conserver
 		// const theme = localStorage.getItem("golf-app-theme");
 
-		localStorage.clear();
+		//localStorage.clear();
 
 		// Recharger les clés à conserver
 		//if (theme) localStorage.setItem('theme', theme);

@@ -9,6 +9,7 @@ node_modules
 /build
 /dist
 /popscores_next
+/popscores
 
 # OS
 .DS_Store

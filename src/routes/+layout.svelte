@@ -78,8 +78,9 @@
 	Popscores v{CURRENT_VERSION}
 	{#if $user}🔗{$user.name} ({formatList($user.roles)})
 	{/if}
-	|
-	<span role="none" onclick={() => logoutAndPurge()}>🗝️</span>
+	<!--
+		<span role="none" onclick={() => logoutAndPurge()}>🗝️</span>
+	-->
 </footer>
 
 <style>
