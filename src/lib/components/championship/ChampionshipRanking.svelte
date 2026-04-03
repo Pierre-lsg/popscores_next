@@ -55,18 +55,18 @@
 
 <button onclick={() => publishChampionship()} class="btn btn-primary">Publier</button>
 
-<h3>Classement par joueur</h3>
-<table>
-	<thead>
-		<tr>
-			<th>Position</th>
-			<th>Nom du Joueur</th>
-			<th>Score</th>
-			<th>Détails</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#if championship}
+{#if championship && championship.rankingPlayers.length !== 0}
+	<h3>Classement par joueur</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Position</th>
+				<th>Nom du Joueur</th>
+				<th>Score</th>
+				<th>Détails</th>
+			</tr>
+		</thead>
+		<tbody>
 			{#each championship.rankingPlayers as p, i}
 				{@const player = playersChampionshipStore.find(p.id)}
 				{#if player}
@@ -78,22 +78,24 @@
 					</tr>
 				{/if}
 			{/each}
-		{/if}
-	</tbody>
-</table>
+		</tbody>
+	</table>
+{:else}
+	<p>Aucun classement par joueur actuellement</p>
+{/if}
 
-<h3>Classement par club ...</h3>
-<table>
-	<thead>
-		<tr>
-			<th>Position</th>
-			<th>Nom de l'asso</th>
-			<th>Score</th>
-			<th>Détails</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#if championship}
+{#if championship && championship.rankingClubs.length !== 0}
+	<h3>Classement par club</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Position</th>
+				<th>Nom de l'asso</th>
+				<th>Score</th>
+				<th>Détails</th>
+			</tr>
+		</thead>
+		<tbody>
 			{#each championship.rankingClubs as c, i}
 				{@const club = clubsStore.find(c.id)}
 				{#if club}
@@ -105,6 +107,8 @@
 					</tr>
 				{/if}
 			{/each}
-		{/if}
-	</tbody>
-</table>
+		</tbody>
+	</table>
+{:else}
+	<p>Aucun classement par club actuellement</p>
+{/if}

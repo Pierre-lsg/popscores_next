@@ -33,7 +33,7 @@
 16. ~~Ajouter la notion de championnat dans la table utilisateurs~~
 17. Une fois la compétition lancée les flys ne peuvent etre modifié
 18. Au mieux des joueurs et équipes 'sans club' seront ajoutables par le responsable de la carte de score
-19. Autoriser l'accès aux parcours de compétition même sans être connecté
+19. ~~Autoriser l'accès aux parcours de compétition même sans être connecté~~
 20. Sauvegarde association depuis l'écran ClubManagement
 21. ~~Ajouter les noms des joueurs sur les flys lors de l'affichage~~
 22. ~~Règle Bonus équipe règle par équipe par équipe~~

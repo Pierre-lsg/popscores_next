@@ -4,7 +4,6 @@
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { courseService } from '$lib/utils/pocketbase/courses2Cloud';
 	import { shareService } from '$lib/utils/shareService';
-	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import { onMount } from 'svelte';
 	import QRCode from '$lib/ui/QRCode.svelte';
 
@@ -22,11 +21,9 @@
 	}>();
 
 	onMount(async () => {
-		if ($user) {
-			allCourses = await courseService.getAllCourses();
-			allCourses = allCourses.filter((c) => c.name !== '');
-			loading = false;
-		}
+		allCourses = await courseService.getAllCourses();
+		allCourses = allCourses.filter((c) => c.name !== '');
+		loading = false;
 	});
 
 	const removeCourse = (id: string) => {
@@ -79,18 +76,16 @@
 		<p>Aucune parcours archivé pour le moment. ⛳</p>
 	{/each}
 
-	{#if $user}
-		<h3>Parcours disponibles dans le Cloud</h3>
+	<h3>Parcours disponibles dans le Cloud</h3>
 
-		{#if loading}
-			<p>Chargement ...</p>
-		{:else}
-			{#each filteredCourses as course, i}
-				<button class="course-card" onclick={() => loadCoursefromCloud(i)}>
-					<div>{course.name}</div>
-				</button>
-			{/each}
-		{/if}
+	{#if loading}
+		<p>Chargement ...</p>
+	{:else}
+		{#each filteredCourses as course, i}
+			<button class="course-card" onclick={() => loadCoursefromCloud(i)}>
+				<div>{course.name}</div>
+			</button>
+		{/each}
 	{/if}
 </div>
 

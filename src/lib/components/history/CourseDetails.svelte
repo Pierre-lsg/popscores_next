@@ -19,10 +19,6 @@
 	let newCourseName: string = $state('');
 	let isRenaming: boolean = $state(false);
 
-	const retourHistorique = () => {
-		currentCourse = '';
-	};
-
 	const saveCourseToCloud = async () => {
 		if (course) {
 			try {

@@ -16,6 +16,8 @@
 	import PlayerScoreOrder from '$lib/ui/PlayerScoreOrder.svelte';
 	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
 	import TeamScoreOrder from '$lib/ui/TeamScoreOrder.svelte';
+	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
+	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
 
 	const data = localStorage.getItem('golf-history');
 
@@ -32,15 +34,13 @@
 	let players: Player[] = $derived(session?.players || []);
 	let targets: Target[] = $derived(session?.targets || []);
 	let teams: Team[] = $derived(session?.teams || []);
+	let rotateSCTeam: boolean = $state(false);
+	let rotateSCPlayer: boolean = $state(false);
 
 	let rankedPlayers = $derived(getRankedPlayers(players || [], targets || []));
 	let rankedTeams = $derived(
 		getRankedTeams(teams || [], targets || [], players || [], settings.regulation)
 	);
-
-	const retourHistorique = () => {
-		currentSession = '';
-	};
 
 	const saveSessionToCloud = async () => {
 		try {
@@ -67,7 +67,7 @@
 
 			{#if settings.regulation.teamGame}
 				<!-- Affichage du résultat par équipe -->
-				<h3>Carte de score par équipe</h3>
+				<h3>Résultats par équipe</h3>
 				<TeamScoreOrder {rankedTeams} {targets} {players} settings={settings.regulation} />
 			{/if}
 
@@ -77,13 +77,30 @@
 
 			{#if settings.regulation.teamGame}
 				<!-- Carte des scores par équipe -->
-				<h3>Carte de score par équipe</h3>
-				<TeamScoreCard {rankedTeams} {targets} {players} settings={settings.regulation} />
+				<h3>
+					Carte de score par équipe <span role="none" onclick={() => (rotateSCTeam = !rotateSCTeam)}
+						>🔄</span
+					>
+				</h3>
+				{#if rotateSCTeam}
+					<TeamScoreCardByTarget {rankedTeams} {targets} {players} settings={settings.regulation} />
+				{:else}
+					<TeamScoreCard {rankedTeams} {targets} {players} settings={settings.regulation} />
+				{/if}
 			{/if}
 
 			<!-- Carte des scores par joueur -->
-			<h3>Carte de score par joueur</h3>
-			<PlayerScoreCard {rankedPlayers} {targets} />
+			<h3>
+				Carte de score par joueur <span
+					role="none"
+					onclick={() => (rotateSCPlayer = !rotateSCPlayer)}>🔄</span
+				>
+			</h3>
+			{#if rotateSCPlayer}
+				<PlayerScoreCardByTarget {rankedPlayers} {targets} />
+			{:else}
+				<PlayerScoreCard {rankedPlayers} {targets} />
+			{/if}
 		</div>
 	{:else}
 		<p>Aucune donnée de session trouvée.</p>

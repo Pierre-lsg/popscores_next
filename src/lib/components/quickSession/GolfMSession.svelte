@@ -15,7 +15,7 @@
 <div class="step-content" in:slide>
 	<div class="setup-fields">
 		<DatePicker label="📅 Date de la session" bind:value={s.sessionBeginning} />
-		<Param label="⛳ Nom du Golf" type="text" bind:value={s.locationName} />
+		<Param label="⛳ Nom du Parcours" type="text" bind:value={s.locationName} />
 		<Selector
 			id="weather"
 			label="☁️ Météo"

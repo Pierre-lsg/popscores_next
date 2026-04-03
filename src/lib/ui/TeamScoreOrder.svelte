@@ -6,7 +6,8 @@
 	import type { Regulation } from '$lib/types/regulationsType';
 	import type { Player } from '$lib/types/playerType';
 
-	import { getTeamStats } from '$lib/utils/session/golfScoringFunction.svelte';
+	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
+	import { formatPlayerList, getTeamStats } from '$lib/utils/session/golfScoringFunction.svelte';
 
 	let {
 		rankedTeams,
@@ -37,7 +38,12 @@
 					*
 				{/if}
 			</span>
-			<span class="podium-name">{t.name}</span>
+			<span class="podium-name"
+				>{t.name} - ({formatPlayerList(
+					playersStore.list.filter((p) => t.playersId.includes(p.id)),
+					settings
+				)})
+			</span>
 			<span class="podium-score">{stats.gross} ({stats.diff})</span>
 		</div>
 	{/each}

@@ -43,13 +43,8 @@
 				class="checkbox"
 			/>
 			<div class="content">
-				{#if isEditing[i]}
-					<TextField bind:value={regular.name} />
-				{:else}
-					{regular.name}
-				{/if}
+				<TextField bind:value={regular.name} />
 			</div>
-			<div role="none" onclick={() => (isEditing[i] = !isEditing[i])} class="handle">✏️</div>
 			<div role="none" onclick={() => removeRegular(regular.id)} class="btn-delete-small">X</div>
 		</div>
 	{:else}
