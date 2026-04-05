@@ -17,6 +17,7 @@
 	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	import { onMount } from 'svelte';
 	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
@@ -104,6 +105,18 @@
 		competitionService.saveCompetition(currentCompetition, championship.id);
 	};
 
+	const linkToResults = async () => {
+		try {
+			const link = `${window.location.origin}/ranking/?cs=${championship.id}&c=${currentCompetition.id}`;
+			await navigator.clipboard.writeText(link);
+
+			// On déclenche le toast !
+			toastStore.show('🔗 Lien de partage copié !');
+		} catch (err) {
+			toastStore.show('❌ Erreur lors de la copie');
+		}
+	};
+
 	onMount(() => {
 		checkPlayoff();
 	});
@@ -129,5 +142,7 @@
 
 	{#if currentCompetition.status !== 'published'}
 		<button onclick={() => publish()} class="btn btn-primary">Publier les résultats</button>
+	{:else}
+		<button onclick={() => linkToResults()} class="btn btn-primary">Lien vers les résultats</button>
 	{/if}
 </div>

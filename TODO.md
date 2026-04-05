@@ -11,6 +11,8 @@
 7. ~~Calcul du résultat erroné en individuel.~~ Les résultats du joueurs étaient récupérés après le calcul du classement
 8. ~~Problème des liens (href) si non à la racine d'un domaine~~
 9. ~~Parler d'association et non de club~~
+10. Lors de la livraison de mise à jour, supprimer les service workers enregistrés précédemment.
+11. ~~Photo et export csv oublié pour ScoreCardTeam.~~ Problème de classe CSS
 
 ## Améliorations
 
@@ -37,6 +39,14 @@
 20. Sauvegarde association depuis l'écran ClubManagement
 21. ~~Ajouter les noms des joueurs sur les flys lors de l'affichage~~
 22. ~~Règle Bonus équipe règle par équipe par équipe~~
+23. ~~Donner un lien direct vers les scores~~
+24. Détail des cibles lors de la compétition
+25. Indiquer la règle si clic sur la bulle règle (mode Romain)
+26. Ajouter des photos sur les cibles, départ et arrivée (mode Stoulk)
+27. Ajouter le rang pour les score cards
+28. Améliorer l'apparence des score cards
+29. Proposer un shortener pour les liens vers les scores
+30. ~~Ajouter un bouton sur la compétition pour récupérer le lien direct vers le résultat~~
 
 ## Quick session
 

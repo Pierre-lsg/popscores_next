@@ -42,6 +42,30 @@ export const championshipService = {
 
 	getByChampionshipId: (id: string) => db.getOne('championships', id, {}),
 
+	getChampionshipById: async (id: string) => {
+		const championship = await db.getOne('championships', id, {});
+		let aChampionship;
+		if (championship)
+			aChampionship = {
+				id: championship.data.id,
+				name: championship.data.name,
+				description: championship.data.description,
+				season: championship.data.season,
+				location: championship.data.location,
+				competitionsId: championship.data.competitionsId,
+				individualScale: championship.data.individualScale.id,
+				collectiveScale: championship.data.collectiveScale.id,
+				rankingClubs: championship.data.rankingClubs,
+				rankingPlayers: championship.data.rankingPlayers,
+				status: championship.data.status,
+				maxScoringTeams: championship.data.maxScoringTeams,
+				managersId: championship.data.managersId,
+				cpManagersId: championship.data.cpManagersId,
+				supervisorsId: championship.data.supervisorsId
+			};
+		return aChampionship;
+	},
+
 	save: (aChampionShip: Championship) => {
 		mpsStore.getScaleById(aChampionShip.individualScale);
 		const data = {

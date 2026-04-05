@@ -5,6 +5,7 @@
 	import { competitionService } from '$lib/utils/pocketbase/competitions2Cloud';
 	import RankingChampionship from '$lib/components/ranking/RankingChampionship.svelte';
 	import RankingCompetition from '$lib/components/ranking/RankingCompetition.svelte';
+	import { onMount } from 'svelte';
 
 	const championships = $state(championshipService.getAllChampionships());
 	let aChampionship: Championship = $state({} as Championship);
@@ -13,6 +14,24 @@
 	const competitions = $derived(competitionService.getCompetitionsByChampionship(aChampionship.id));
 	let aCompetition: Competition = $state({} as Competition);
 	let showCompetitionRanking: boolean = $state(false);
+
+	onMount(async () => {
+		// Lire l'URL
+		const params = new URLSearchParams(window.location.search);
+		const urlCompetitionId = params.get('c');
+		const urlChampionshipId = params.get('cs');
+		if (urlChampionshipId) {
+			showChampionshipRanking = true;
+			aChampionship =
+				(await championshipService.getChampionshipById(urlChampionshipId)) || ({} as Championship);
+		}
+		if (urlCompetitionId) {
+			aCompetition =
+				(await competitionService.getCompetitionById(urlCompetitionId)) || ({} as Competition);
+			showCompetitionRanking = true;
+			showChampionshipRanking = false;
+		}
+	});
 </script>
 
 <div>

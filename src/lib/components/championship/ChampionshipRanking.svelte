@@ -51,9 +51,26 @@
 			toastStore.show('💾 Echec à la publication ...', 'failure');
 		}
 	};
+
+	const linkToResults = async () => {
+		if (championship) {
+			try {
+				const link = `${window.location.origin}/ranking/?cs=${championship.id}`;
+				await navigator.clipboard.writeText(link);
+
+				// On déclenche le toast !
+				toastStore.show('🔗 Lien de partage copié !');
+			} catch (err) {
+				toastStore.show('❌ Erreur lors de la copie');
+			}
+		}
+	};
 </script>
 
-<button onclick={() => publishChampionship()} class="btn btn-primary">Publier</button>
+<div class="action">
+	<button onclick={() => publishChampionship()} class="btn btn-primary">Publier</button>
+	<button onclick={() => linkToResults()} class="btn btn-primary">Récupérer le lien</button>
+</div>
 
 {#if championship && championship.rankingPlayers.length !== 0}
 	<h3>Classement par joueur</h3>

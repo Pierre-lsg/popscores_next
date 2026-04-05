@@ -1,3 +1,9 @@
+https://localhost:5173/ranking/?cs=945336c5-ee08-451d-a265-d64a81cc1e07&c=d0ee224d-0b31-423f-b9bf-17e0e5b7dc9e
+
+https://localhost:5173/ranking/?c=d0ee224d-0b31-423f-b9bf-17e0e5b7dc9e
+https://localhost:5173/ranking/?cs=945336c5-ee08-451d-a265-d64a81cc1e07
+
+
  "description": "",
   "end_details": "",
   "end_pos": {},

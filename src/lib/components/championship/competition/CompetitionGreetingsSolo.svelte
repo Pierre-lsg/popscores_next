@@ -13,6 +13,7 @@
 	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
 	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
 	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
@@ -112,6 +113,18 @@
 		currentCompetition.status = 'published';
 		competitionService.saveCompetition(currentCompetition, championship.id);
 	};
+
+	const linkToResults = async () => {
+		try {
+			const link = `${window.location.origin}/ranking/?cs=${championship.id}&c=${currentCompetition.id}`;
+			await navigator.clipboard.writeText(link);
+
+			// On déclenche le toast !
+			toastStore.show('🔗 Lien de partage copié !');
+		} catch (err) {
+			toastStore.show('❌ Erreur lors de la copie');
+		}
+	};
 </script>
 
 <div>
@@ -159,6 +172,8 @@
 
 	{#if currentCompetition.status !== 'published'}
 		<button onclick={() => publish()} class="btn btn-primary">Publier les résultats</button>
+	{:else}
+		<button onclick={() => linkToResults()} class="btn btn-primary">Lien vers les résultats</button>
 	{/if}
 </div>
 
