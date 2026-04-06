@@ -55,7 +55,8 @@
 	const linkToResults = async () => {
 		if (championship) {
 			try {
-				const link = `${window.location.origin}/ranking/?cs=${championship.id}`;
+				// todo: supprimer ce hotfix en récupérant dans la conf vite le bon chemin
+				const link = `${window.location.origin}/popscores/ranking/?cs=${championship.id}`;
 				await navigator.clipboard.writeText(link);
 
 				// On déclenche le toast !
