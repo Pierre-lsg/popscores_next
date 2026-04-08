@@ -111,7 +111,7 @@
 			// Compétition par équipe
 			if (isCompetitionTeam(currentCompetition)) {
 				aFly.teamsId.forEach((teamId) => {
-					const team = teamsCompetitionStore.find(teamId);
+					const team = teamsCompetitionStore.findByIdAndSession(teamId, currentCompetition);
 					playersId.push(...(team?.playersId || []));
 				});
 			}
@@ -159,7 +159,10 @@
 					{#if isCompetitionTeam(currentCompetition)}
 						<ul>
 							{#each fly.teamsId as teamId}
-								{@const aTeam = teamsCompetitionStore.list.find((t) => t.id === teamId)}
+								{@const aTeam = teamsCompetitionStore.findByIdAndSession(
+									teamId,
+									currentCompetition
+								)}
 								{#if aTeam}
 									<li>
 										<span style="font-size: smaller">{aTeam.name} ({listTeamPlayers(aTeam)})</span>

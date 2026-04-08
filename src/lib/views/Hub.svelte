@@ -20,7 +20,6 @@
 
 	onMount(() => {
 		const params = new URLSearchParams(window.location.search);
-		console.log(params);
 		if (params !== null) {
 			urlIdent = params.get('ident') || '';
 			urlPass = params.get('pass') || '';

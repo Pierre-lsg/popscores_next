@@ -9,6 +9,7 @@ import type { Championship } from '$lib/types/championshipType';
 
 import { regulationsStore } from '$lib/stores/championship/regulationsStore.svelte';
 import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
+import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
@@ -114,7 +115,7 @@ export const cloudSaveAllCompetition = async (
 
 	// Lister et sauver les équipes
 	status = await cloudSaveTeams(competition.teamsId);
-	status = await cloudSaveCompetitionTeams(competition.teamsId);
+	status = await cloudSaveCompetitionTeams(competition.teamsId, competition.id);
 	messageStore.remove('modifTeams');
 
 	// Lister et sauver les joueurs
@@ -177,7 +178,7 @@ export const cloudSaveTeams = async (teamsId: string[]): Promise<string> => {
 	let status: string = 'success';
 
 	for (const teamId of teamsId) {
-		const aTeam: Team | undefined = teamsCompetitionStore.find(teamId);
+		const aTeam: Team | undefined = teamsChampionshipStore.find(teamId);
 		if (aTeam) {
 			try {
 				teamService.saveTeam(aTeam);
@@ -190,11 +191,14 @@ export const cloudSaveTeams = async (teamsId: string[]): Promise<string> => {
 	return status;
 };
 
-export const cloudSaveCompetitionTeams = async (teamsId: string[]): Promise<string> => {
+export const cloudSaveCompetitionTeams = async (
+	teamsId: string[],
+	competitionId: string
+): Promise<string> => {
 	let status: string = 'success';
 
 	for (const teamId of teamsId) {
-		const aTeam: Team | undefined = teamsCompetitionStore.find(teamId);
+		const aTeam: Team | undefined = teamsCompetitionStore.findByIdAndSession(teamId, competitionId);
 		if (aTeam) {
 			try {
 				teamService.saveCompetitionTeam(aTeam);

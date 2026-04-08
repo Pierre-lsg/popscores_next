@@ -213,7 +213,7 @@ export const rankingForCollectiveCompetition = (
 	if (!targets || !regulation || !aScale) return curClvRank;
 
 	let teams = teamsCompetitionStore.list.filter(
-		(t) => aCompetition.teamsId.includes(t.id) && t.clubId !== ''
+		(t) => aCompetition.teamsId.includes(t.id) && t.clubId !== '' && t.sessionId === aCompetition.id
 	);
 	// Ne conserver que les équipes dont le club est affilié à la fédération
 	teams = teams.filter((t) => t.clubId !== '' && clubsStore.find(t.clubId)?.isMember);

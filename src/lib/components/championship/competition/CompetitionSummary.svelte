@@ -21,7 +21,9 @@
 		playersChampionshipStore.list.filter((p) => currentCompetition.playersId.includes(p.id))
 	);
 	let teamsCompetition = $derived(
-		teamsCompetitionStore.list.filter((t) => currentCompetition.teamsId.includes(t.id))
+		teamsCompetitionStore.list.filter(
+			(t) => currentCompetition.teamsId.includes(t.id) && t.sessionId === currentCompetition.id
+		)
 	);
 	let courseCompetition = $derived(coursesChampionshipStore.find(currentCompetition.courseId));
 

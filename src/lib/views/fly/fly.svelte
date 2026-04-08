@@ -97,10 +97,13 @@
 				<div class="fly-item">
 					<div role="none" class="fly-card" onclick={() => (currentFly = fly)}>
 						<span style="font-size: larger">Fly #{fly.order} </span>
-						{#if isCompetitionTeam(currentCompetition)}
+						{#if currentCompetition && isCompetitionTeam(currentCompetition)}
 							<ul>
 								{#each fly.teamsId as teamId}
-									{@const aTeam = teamsCompetitionStore.list.find((t) => t.id === teamId)}
+									{@const competitionId = currentCompetition.id || ''}
+									{@const aTeam = teamsCompetitionStore.list.find(
+										(t) => t.id === teamId && t.sessionId === competitionId
+									)}
 									{#if aTeam}
 										<li>
 											<span style="font-size: smaller">{aTeam.name} ({listTeamPlayers(aTeam)})</span

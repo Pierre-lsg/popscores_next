@@ -44,7 +44,9 @@
 		coursesChampionshipStore.find(currentCompetition.courseId)
 	);
 	let teams: Team[] | undefined = $derived(
-		teamsCompetitionStore.list.filter((t) => currentFly.teamsId.includes(t.id))
+		teamsCompetitionStore.list.filter(
+			(t) => currentFly.teamsId.includes(t.id) && t.sessionId === currentCompetition.id
+		)
 	);
 	let players: Player[] | undefined = $derived(
 		playersChampionshipStore.list.filter((p) =>

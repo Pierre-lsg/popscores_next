@@ -1,14 +1,19 @@
 <script lang="ts">
+	import type { Club } from '$lib/types/clubType';
+	import type { Championship } from '$lib/types/championshipType';
+	import type { Team } from '$lib/types/teamType';
+	import type { Player } from '$lib/types/playerType';
+
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
+	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
 
 	import PlayersManagement from './PlayersManagement.svelte';
 	import TeamsManagement from './TeamsManagement.svelte';
-	import type { Club } from '$lib/types/clubType';
-	import type { Championship } from '$lib/types/championshipType';
 	import { navContext } from '$lib/utils/nav.svelte';
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import { selection } from '$lib/stores/selection';
+	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 
 	let { currentClub = $bindable(''), championship } = $props<{
 		currentClub: string;
@@ -16,6 +21,8 @@
 	}>();
 
 	let club: Club = clubsStore.list.filter((c) => c.id === currentClub)[0];
+	let teams: Team[] = $state(teamsChampionshipStore.list.filter((t) => t.clubId === club.id));
+	let players: Player[] = $state(playersChampionshipStore.list.filter((p) => p.clubId === club.id));
 
 	let isShowingPlayers = $state(true);
 	let isShowingTeams = $state(true);
@@ -30,6 +37,12 @@
 	const showTeams = () => {
 		isShowingTeams = !isShowingTeams;
 		teamsDisp = isShowingTeams ? 'réduire' : 'développer';
+	};
+
+	const unallocTeams = () => {
+		//
+		teams.forEach((t) => (t.playersId = []));
+		players.forEach((p) => (p.teamId = ''));
 	};
 
 	onMount(() => {
@@ -47,6 +60,8 @@
 {/snippet}
 
 <h2>Asso : {club.name}</h2>
+
+<button class="btn btn-primary" onclick={() => unallocTeams()}>Désallouer les équipes</button>
 
 <div>
 	Liste des joueurs
