@@ -36,6 +36,7 @@
 			(t) => currentCompetition.teamsId.includes(t.id) && t.sessionId === currentCompetition.id
 		)
 	);
+
 	let players: Player[] | undefined = $derived(
 		playersChampionshipStore.list.filter((p) =>
 			teams
@@ -53,8 +54,6 @@
 	let playoffTeams: Team[] | undefined = $state([]);
 	let playoffTarget: Target = $state({} as Target);
 	let isOnline: boolean = $state(true);
-
-	$inspect(teams);
 
 	$effect(() => {
 		if (networkStatus.isOnline) isOnline = true;

@@ -182,9 +182,14 @@
 				<div class="fly">
 					{fly.order}
 					{#each fly.teamsId as teamId, j}
-						{@const teamFly = teamsCompetitionStore.findByIdAndSession(teamId, currentCompetition)}
+						{@const teamFly = teamsCompetitionStore.findByIdAndSession(
+							teamId,
+							currentCompetition.id
+						)}
 						<div class="team-in-fly">
-							{teamFly?.name}
+							{#if teamFly}
+								{teamFly.name}
+							{/if}
 							<span class="edit-fly" role="none" onclick={() => editTeamFly(i, j)}>✏️</span>
 							{#if editingFly[i * nbTeamsPerFly + j]}
 								<Selector

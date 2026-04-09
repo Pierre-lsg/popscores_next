@@ -161,7 +161,7 @@
 							{#each fly.teamsId as teamId}
 								{@const aTeam = teamsCompetitionStore.findByIdAndSession(
 									teamId,
-									currentCompetition
+									currentCompetition.id
 								)}
 								{#if aTeam}
 									<li>

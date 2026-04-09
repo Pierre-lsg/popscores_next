@@ -48,6 +48,7 @@
 	const engageTeam = (index: number) => {
 		const aTeam = filteredTeams[index];
 		aTeam.sessionId = currentCompetition.id;
+		aTeam.id = crypto.randomUUID();
 		currentCompetition.teamsId.push(aTeam.id);
 		teamsCompetitionStore.load(aTeam);
 		engageClub(aTeam.clubId);
