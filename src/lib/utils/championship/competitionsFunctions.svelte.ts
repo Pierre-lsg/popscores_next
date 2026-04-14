@@ -490,7 +490,7 @@ export const cloudLoadResults = async (playerId: string, competitionId: string) 
 export const cloudLoadTeams = async (teamsId: string[], competitionId: string) => {
 	console.log('Chargement des équipes : ' + competitionId + ' - ' + teamsId);
 	for (let teamId of teamsId) {
-		const aTeam = await teamService.getTeamById(teamId);
+		const aTeam = await teamService.getTeamCompetitionById(teamId);
 		if (aTeam) {
 			teamsCompetitionStore.remove(aTeam.id);
 			teamsCompetitionStore.load(aTeam);

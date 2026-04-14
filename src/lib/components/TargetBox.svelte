@@ -2,6 +2,7 @@
 	import type { Target } from '$lib/types/targetType';
 	import Map from '$lib/ui/Map.svelte';
 	import { calculateDistance } from '$lib/utils/sharedFunction';
+	import { rulesCollection } from '$lib/types/targetType';
 
 	interface Props {
 		target: Target;
@@ -9,6 +10,9 @@
 	}
 
 	let { target = {} as Target, showDetails = $bindable(true) }: Props = $props();
+	let showHelp: boolean = $state(false);
+
+	const ruleDescription = $derived(rulesCollection[target.rule as keyof typeof rulesCollection]);
 
 	const displayDistance = (target: Target) => {
 		if (target.start_pos && target.end_pos) {
@@ -24,7 +28,12 @@
 		<h2>{target.name}</h2>
 		<ul>
 			<li>Par : {target.par}</li>
-			<li>Règles : {target.rule}</li>
+			<li>
+				Règles : {target.rule} <span role="none" onclick={() => (showHelp = !showHelp)}>🙋‍♂️</span>
+			</li>
+			{#if showHelp}
+				<p>{ruleDescription}</p>
+			{/if}
 			{#if target.start_pos.lat}
 				<li>Distance : {displayDistance(target)}</li>
 			{/if}

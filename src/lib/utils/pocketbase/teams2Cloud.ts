@@ -21,6 +21,11 @@ export const teamService = {
 		return team?.data as Team;
 	},
 
+	getTeamCompetitionById: async (id: string) => {
+		const team = await db.getOne('teams_in_competition', id, {});
+		return team?.data as Team;
+	},
+
 	saveTeam: (aTeam: Team) => {
 		const teamToSave = {
 			id: aTeam.id,

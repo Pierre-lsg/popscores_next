@@ -21,6 +21,20 @@ export type collectiveRule =
 	| 'Bonus'
 	| 'Individuel';
 
+export const rulesCollection = {
+	Scramble:
+		"Chaque joueur de l'équipe joue sa balle, puis rejoue de la meilleure balle de l'équipe",
+	Greensome:
+		"Chaque joueur de l'équipe joue sa balle au départ. Ils choisissent la meilleure balle et jouent cette balle alternativement jusqu'à la cible",
+	Chapman:
+		"Chaque joueur de l'équipe joue sa balle au départ. Poour le deuxième coup, ils jouent la balle du partenaire. Ils choisissent la meilleure balle et jouent alternativement jusqu'à atteindre la cible",
+	Foursome: "Chaque joueur de l'équipe joue alternativement une balle jusqu'à la cible",
+	'4-balls': "Chaque joueur de l'équipe joue sa balle jusqu'à la cible. On garde le meilleur score",
+	Team_Bonus: "Le bonus est compté pour l'équipe",
+	Bonus: 'Chaque joueur marque son propre Bonus (en équipe ou en compétition individuelle',
+	Individuel: "Chaque joueur de l'équipe joue sa balle jusqu'à la cible"
+};
+
 export interface Target {
 	id: string;
 	par: number;
