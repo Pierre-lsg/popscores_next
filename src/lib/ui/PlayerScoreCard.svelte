@@ -23,7 +23,7 @@
 		<span role="none" onclick={() => exportAsImage('PSC-capture')}>📸</span>&nbsp;&nbsp;
 		<span role="none" onclick={() => exportPSCToCSV(rankedPlayers, targets)}>📁</span>
 	</div>
-	<table class="table-container">
+	<table class="one_col-score-card">
 		<thead>
 			<tr class="header">
 				<th class="fixed-column">Cibles</th>

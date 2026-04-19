@@ -12,6 +12,8 @@
 	--bg-app: #e2fdd9;
 	--bg-ui: #e2fdd9;
 	--bg-card: #cef7c0;
+	--bg-cell-odd: #dffde1;
+	--bg-cell-even: #e7fee9;
 	--text-main: #263238;
 	--border-color: #cfd8dc;
 }
@@ -27,6 +29,8 @@
 	--bg-app: #121212;
 	--bg-ui: #c4b9b9;
 	--bg-card: #1e1e1e;
+	--bg-cell-odd: #0e0e0e;
+	--bg-cell-even: #141414;
 	--text-main: #e0e0e0;
 	--border-color: #333;
 }
@@ -42,6 +46,8 @@
 	--bg-app: #ffffff;
 	--bg-ui: #ffffff;
 	--bg-card: #ffffff;
+	--bg-cell-odd: #f8f8f8;
+	--bg-cell-even: f0f0f0;
 	--text-main: #000000;
 	--border-color: #060606;
 }
@@ -57,6 +63,8 @@
 	--bg-app: #fdecd7;
 	--bg-ui: #fdecd7;
 	--bg-card: #fad9b0;
+	--bg-cell-odd: #fbe6cd;
+	--bg-cell-even: #fae1c3;
 	--text-main: #3e2723;
 	--border-color: #d7ccc8;
 }
@@ -72,6 +80,8 @@
 	--bg-app: #e4dcaf;
 	--bg-ui: #e4dcaf;
 	--bg-card: #ebdf98;
+	--bg-cell-odd: #e9e4c9;
+	--bg-cell-even: #eee6b6;
 	--text-main: #263238;
 	--border-color: #b71c1c;
 }

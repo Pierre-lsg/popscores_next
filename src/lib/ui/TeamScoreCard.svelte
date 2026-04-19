@@ -40,7 +40,7 @@
 			>📁</span
 		>
 	</div>
-	<table class="scorecard-target" id="TSC-capture">
+	<table class="one_col-score-card" id="TSC-capture">
 		<thead>
 			<tr class="header">
 				<th rowspan="2" class="fixed-column" style="z-index:999;">Cibles</th>

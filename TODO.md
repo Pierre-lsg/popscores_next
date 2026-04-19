@@ -47,7 +47,8 @@
 28. Améliorer l'apparence des score cards
 29. Proposer un shortener pour les liens vers les scores
 30. ~~Ajouter un bouton sur la compétition pour récupérer le lien direct vers le résultat~~
-31. Ajouter l'option 'désassocier les joueurs' dans une association. Modification des joueurs ET des équipes de l'association
+31. ~~Ajouter l'option 'désassocier les joueurs' dans une association.~~
+32. Modification des joueurs ET des équipes de l'association
 
 ## Quick session
 

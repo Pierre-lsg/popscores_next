@@ -1,4 +1,4 @@
-.table-container {
+.two_col-score-card {
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 	background: var(--bg-card);
 	border-radius: 12px;
@@ -9,14 +9,43 @@
 		left: 0;
 		z-index: 3;
 		background-color: var(--bg-card);
+		width: 120px;
 	}
 
 	& th:nth-child(2),
 	& td:nth-child(2) {
 		position: sticky;
-		left: 75px; /* À ajuster selon la largeur réelle de ta colonne 1 */
 		z-index: 2;
 		background-color: var(--bg-card);
+	}
+
+	& tbody tr:nth-child(odd) {
+		background-color: var(--bg-cell-odd, #f0f0f0);
+	}
+	& tbody tr:nth-child(even) {
+		background-color: var(--bg-cell-even, #ffffff);
+	}
+}
+
+.one_col-score-card {
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+	background: var(--bg-card);
+	border-radius: 12px;
+	/* On garde la première colonne visible quand on scrolle à droite */
+	& th:nth-child(1),
+	& td:nth-child(1) {
+		position: sticky;
+		left: 0;
+		z-index: 3;
+		background-color: var(--bg-card);
+		width: 120px;
+	}
+
+	& tbody tr:nth-child(odd) {
+		background-color: var(--bg-cell-odd, #f0f0f0);
+	}
+	& tbody tr:nth-child(even) {
+		background-color: var(--bg-cell-even, #ffffff);
 	}
 }
 
@@ -51,6 +80,7 @@ table {
 }
 
 .header {
+	background-color: var(--bg-card);
 	border-bottom: 2px solid var(--primary);
 }
 
@@ -68,7 +98,7 @@ table {
 
 th.vertical-header {
 	/* On limite la largeur de la colonne au minimum */
-	width: 40px;
+	width: 120px;
 	max-height: 150px; /* Hauteur nécessaire pour les noms longs */
 	vertical-align: center;
 	padding-bottom: 10px;

@@ -40,10 +40,11 @@
 			>📁</span
 		>
 	</div>
-	<table class="scorecard-target" id="TSCBT-capture">
+	<table class="one_col-score-card" id="TSCBT-capture">
 		<thead>
 			<tr class="header">
-				<th colspan="2" class="first-fixed-col">Cibles</th>
+				<th>Cibles</th>
+				<th>&nbsp;</th>
 				{#each targets as target, i}
 					<th class="vertical-header">
 						<span>{target.name || 'Cible ' + (i + 1)}</span>
@@ -52,7 +53,8 @@
 				<th class="vertical-header"><span>Total</span></th>
 			</tr>
 			<tr class="header">
-				<th colspan="2" class="first-fixed-col">Par</th>
+				<th>Par</th>
+				<th>&nbsp;</th>
 				{#each targets as target, i}
 					<th class="vertical-header">
 						{target.par}
@@ -62,7 +64,8 @@
 			</tr>
 
 			<tr class="header">
-				<th colspan="2" class="first-fixed-col">Règle</th>
+				<th>Règle</th>
+				<th>&nbsp;</th>
 				{#each targets as target, i}
 					<th class="vertical-header">
 						{target.rule?.slice(0, 4) || ''}
@@ -77,11 +80,11 @@
 				{#each listTeamPlayer(team, players) as player, i}
 					<tr>
 						{#if i === 0}
-							<td class="first-fixed-col" rowspan={listTeamPlayer(team, players).length}
-								>{team.name}</td
-							>
+							<td>{team.name}</td>
+						{:else}
+							<td>&nbsp;</td>
 						{/if}
-						<td class="second-fixed-col">{player.name}</td>
+						<td>{player.name}</td>
 
 						{#each targets as target, j}
 							{@const playerScore = player.scores[target.id]}
