@@ -26,23 +26,31 @@
 	<table class="one_col-score-card">
 		<thead>
 			<tr class="header">
-				<th class="fixed-column">Cibles</th>
-				<th class="vertical-header par-row"><span>Par</span></th>
-				<th class="vertical-header par-row"><span>RdJ</span></th>
+				<th><div style="width: 100px; position: sticky;">&nbsp;</div></th>
+				<th class="par-col"><div style="width: 35px; position: sticky;">&nbsp;</div></th>
+				<th class="col-gr"><div style="width: 35px; position: sticky;">&nbsp;</div></th>
 				{#each rankedPlayers as player}
-					<th class="vertical-header"><span>{player.player.name}</span></th>
+					<th class="vertical-header last-cell"><span>&nbsp;</span></th>
+				{/each}
+			</tr>
+			<tr class="header">
+				<th>Cibles</th>
+				<th class="vertical-header par-col"><span>Par</span></th>
+				<th class="vertical-header col-gr"><span>RdJ</span></th>
+				{#each rankedPlayers as player}
+					<th class="vertical-header last-cell"><span>{player.player.name}</span></th>
 				{/each}
 			</tr>
 		</thead>
 		<tbody>
 			{#each targets as target, i}
 				<tr>
-					<td class="fixed-column">{target.name || 'Cible ' + (i + 1)}</td>
-					<td class="par-row">{target.par}</td>
-					<td class="par-row">{target.rule?.slice(0, 3) || ''}</td>
+					<td>{target.name || 'Cible ' + (i + 1)}</td>
+					<td class="par-col">{target.par}</td>
+					<td class="col-gr">{target.rule?.slice(0, 3) || ''}</td>
 					{#each rankedPlayers as player}
 						{@const score = player.player.scores[target.id]}
-						<td class={getScoreClass(score, target)}>
+						<td class="score-cell team-score {getScoreClass(score, target)}">
 							<div class="shape">
 								{(target.rule === 'Bonus' || target.rule === 'Team_Bonus') && score === 0
 									? '-'
@@ -55,11 +63,11 @@
 		</tbody>
 		<tfoot>
 			<tr class="footer">
-				<td class="fixed-column">Total</td>
-				<td class="par-row">{getTotalPar(targets)}</td>
-				<td class="par-row">|||</td>
+				<td>Total</td>
+				<td class="par-col">{getTotalPar(targets)}</td>
+				<td class="col-gr">|||</td>
 				{#each rankedPlayers as player}
-					<td>{calculatePlayerScore(player.player, targets)}</td>
+					<td class="last-cell">{calculatePlayerScore(player.player, targets)}</td>
 				{/each}
 			</tr>
 		</tfoot>

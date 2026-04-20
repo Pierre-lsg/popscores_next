@@ -43,17 +43,20 @@
 	<table class="one_col-score-card" id="TSC-capture">
 		<thead>
 			<tr class="header">
-				<th rowspan="2" class="fixed-column" style="z-index:999;">Cibles</th>
-				<th rowspan="2" class="vertical-header par-row" style="z-index:999;"><span>Par</span></th>
-				<th rowspan="2" class="vertical-header par-row"><span>RdJ</span></th>
+				<th><div style="width: 100px; position: sticky;">&nbsp;</div></th>
+				<th class="par-col"><div style="width: 35px; position: sticky;">&nbsp;</div></th>
+				<th class="col-gr"><div style="width: 35px; position: sticky;">&nbsp;</div></th>
 				{#each rankedTeams as rankedTeam}
 					{@const team = rankedTeam.team}
 					<th colspan={listTeamPlayer(team, players).length} class="last-cell"
-						><span>{team.name}</span></th
+						><div style="padding: 6px;">{team.name}</div></th
 					>
 				{/each}
 			</tr>
 			<tr class="header">
+				<th>Cibles</th>
+				<th class="vertical-header par-col"><span>Par</span></th>
+				<th class="vertical-header col-gr"><span>RdJ</span></th>
 				{#each rankedTeams as rankedTeam}
 					{@const team = rankedTeam.team}
 					{#each listTeamPlayer(team, players) as player, i}
@@ -69,16 +72,16 @@
 		<tbody>
 			{#each targets as target, i}
 				<tr>
-					<td class="fixed-column">{target.name || 'Cible ' + (i + 1)}</td>
-					<td class="par-row">{target.par}</td>
-					<td class="par-row">{target.rule?.slice(0, 3) || ''}</td>
+					<td>{target.name || 'Cible ' + (i + 1)}</td>
+					<td class="par-col">{target.par}</td>
+					<td class="col-gr">{target.rule?.slice(0, 3) || ''}</td>
 					{#each rankedTeams as rankedTeam}
 						{@const team = rankedTeam.team}
 						{@const teamScore = listTeamPlayer(team, players)[0].scores[target.id]}
 						{#if target.rule !== 'Bonus' && target.rule !== 'Individuel'}
 							<td
 								colspan={listTeamPlayer(team, players).length}
-								class="score-cell team-merge {getScoreClass(teamScore, target)}"
+								class="score-cell team-score {getScoreClass(teamScore, target)}"
 							>
 								<div class="shape">{teamScore}</div>
 							</td>
@@ -106,9 +109,9 @@
 		</tbody>
 		<tfoot>
 			<tr class="footer">
-				<td class="fixed-column">Total</td>
-				<td class="par-row">{getTotalPar(targets)}</td>
-				<td class="par-row">|||</td>
+				<td>Total</td>
+				<td class="par-col">{getTotalPar(targets)}</td>
+				<td class="col-gr">|||</td>
 				{#each rankedTeams as rankedTeam}
 					{@const team = rankedTeam.team}
 					<td colspan={listTeamPlayer(team, players).length} class="last-cell"

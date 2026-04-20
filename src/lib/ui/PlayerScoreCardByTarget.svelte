@@ -26,32 +26,32 @@
 	<table class="one_col-score-card" id="PSCBT-capture">
 		<thead>
 			<tr class="header">
-				<th class="first-fixed-col">Cibles</th>
+				<th class="first-fixed-col"><div style="width: 100px; position: sticky">Cibles</div></th>
 				{#each targets as target, i}
-					<th class="vertical-header">
+					<th class="vertical-header last-cell">
 						<span>{target.name || 'Cible ' + (i + 1)}</span>
 					</th>
 				{/each}
-				<th class="vertical-header"><span>Total</span></th>
+				<th class="vertical-header last-cell"><span>Total</span></th>
 			</tr>
 			<tr class="header">
-				<th class="first-fixed-col">Par</th>
+				<th class="first-fixed-col last-cell">Par</th>
 				{#each targets as target, i}
-					<th class="vertical-header">
+					<th class="vertical-header last-cell">
 						{target.par}
 					</th>
 				{/each}
-				<th>{getTotalPar(targets)}</th>
+				<th class="last-cell">{getTotalPar(targets)}</th>
 			</tr>
 
 			<tr class="header">
-				<th class="first-fixed-col">Règle</th>
+				<th class="first-fixed-col last-cell">Règle</th>
 				{#each targets as target, i}
-					<th class="vertical-header">
+					<th class="vertical-header last-cell">
 						{target.rule?.slice(0, 4) || ''}
 					</th>
 				{/each}
-				<th>|||</th>
+				<th class="last-cell">|||</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -60,7 +60,7 @@
 					<td class="vertical-header first-fixed-col"><span>{player.player.name}</span></td>
 					{#each targets as target, i}
 						{@const score = player.player.scores[target.id]}
-						<td class={getScoreClass(score, target)}>
+						<td class="score-cell team-score {getScoreClass(score, target)}">
 							<div class="shape">
 								{(target.rule === 'Bonus' || target.rule === 'Team_Bonus') && score === 0
 									? '-'
@@ -68,7 +68,9 @@
 							</div>
 						</td>
 					{/each}
-					<td>{calculatePlayerScore(player.player, targets)}</td>
+					<td class="last-cell" style="background-color: var(--bg-card);"
+						>{calculatePlayerScore(player.player, targets)}</td
+					>
 				</tr>
 			{/each}
 		</tbody>

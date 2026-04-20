@@ -43,77 +43,75 @@
 	<table class="one_col-score-card" id="TSCBT-capture">
 		<thead>
 			<tr class="header">
-				<th>Cibles</th>
-				<th>&nbsp;</th>
+				<th><div style="width: 100px; position: sticky;">&nbsp;</div></th>
+				<th class="par-col"><div style="width: 35px; position: sticky;">Cibles</div></th>
 				{#each targets as target, i}
-					<th class="vertical-header">
+					<th class="vertical-header last-cell">
 						<span>{target.name || 'Cible ' + (i + 1)}</span>
 					</th>
 				{/each}
-				<th class="vertical-header"><span>Total</span></th>
+				<th class="vertical-header last-cell"><span>Total</span></th>
 			</tr>
 			<tr class="header">
-				<th>Par</th>
 				<th>&nbsp;</th>
+				<th class="par-col">Par</th>
 				{#each targets as target, i}
-					<th class="vertical-header">
+					<th class="vertical-header last-cell">
 						{target.par}
 					</th>
 				{/each}
-				<th>{getTotalPar(targets)}</th>
+				<th class="last-cell">{getTotalPar(targets)}</th>
 			</tr>
 
 			<tr class="header">
-				<th>Règle</th>
 				<th>&nbsp;</th>
+				<th class="par-col">Règles</th>
 				{#each targets as target, i}
-					<th class="vertical-header">
+					<th class="vertical-header last-cell">
 						{target.rule?.slice(0, 4) || ''}
 					</th>
 				{/each}
-				<th>|||</th>
+				<th class="last-cell">|||</th>
 			</tr>
 		</thead>
 		<tbody>
-			{#each rankedTeams as rankedTeam}
+			{#each rankedTeams as rankedTeam, r}
 				{@const team = rankedTeam.team}
-				{#each listTeamPlayer(team, players) as player, i}
-					<tr>
-						{#if i === 0}
-							<td>{team.name}</td>
-						{:else}
-							<td>&nbsp;</td>
-						{/if}
-						<td>{player.name}</td>
+				<tr>
+					<td>
+						<div style="font-weight: bold">#{r + 1}</div>
+						<div>{team.name}</div>
+					</td>
+					<td class="par-col last-cell">
+						{#each listTeamPlayer(team, players) as player, i}
+							<div style="padding: 6px">{player.name}</div>
+						{/each}
+					</td>
 
-						{#each targets as target, j}
-							{@const playerScore = player.scores[target.id]}
-							{#if target.rule !== 'Bonus' && target.rule !== 'Individuel'}
-								{#if i === 0}
-									<td
-										rowspan={listTeamPlayer(team, players).length}
-										class="score-cell {getScoreClass(playerScore, target)} last-cell"
-									>
+					{#each targets as target, j}
+						<td class="last-cell">
+							{#each listTeamPlayer(team, players) as player, i}
+								{@const playerScore = player.scores[target.id]}
+								{#if target.rule !== 'Bonus' && target.rule !== 'Individuel'}
+									{#if i === 0}
+										<div class={getScoreClass(playerScore, target)}>
+											<div class="shape">
+												{target.rule === 'Bonus' && playerScore === 0 ? '-' : playerScore}
+											</div>
+										</div>
+									{/if}
+								{:else}
+									<div class={getScoreClass(playerScore, target)}>
 										<div class="shape">
 											{target.rule === 'Bonus' && playerScore === 0 ? '-' : playerScore}
 										</div>
-									</td>
-								{/if}
-							{:else}
-								<td class="score-cell {getScoreClass(playerScore, target)} last-cell">
-									<div class="shape">
-										{target.rule === 'Bonus' && playerScore === 0 ? '-' : playerScore}
 									</div>
-								</td>
-							{/if}
-						{/each}
-						{#if i === 0}
-							<td rowspan={listTeamPlayer(team, players).length}
-								>{calculateTeamScore(team, targets, players, settings)}</td
-							>
-						{/if}
-					</tr>
-				{/each}
+								{/if}
+							{/each}
+						</td>
+					{/each}
+					<td class="last-cell">{calculateTeamScore(team, targets, players, settings)}</td>
+				</tr>
 			{/each}
 		</tbody>
 	</table>

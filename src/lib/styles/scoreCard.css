@@ -1,44 +1,14 @@
-.two_col-score-card {
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-	background: var(--bg-card);
-	border-radius: 12px;
-	/* On garde la première colonne visible quand on scrolle à droite */
-	& th:nth-child(1),
-	& td:nth-child(1) {
-		position: sticky;
-		left: 0;
-		z-index: 3;
-		background-color: var(--bg-card);
-		width: 120px;
-	}
-
-	& th:nth-child(2),
-	& td:nth-child(2) {
-		position: sticky;
-		z-index: 2;
-		background-color: var(--bg-card);
-	}
-
-	& tbody tr:nth-child(odd) {
-		background-color: var(--bg-cell-odd, #f0f0f0);
-	}
-	& tbody tr:nth-child(even) {
-		background-color: var(--bg-cell-even, #ffffff);
-	}
-}
-
 .one_col-score-card {
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 	background: var(--bg-card);
 	border-radius: 12px;
-	/* On garde la première colonne visible quand on scrolle à droite */
+
 	& th:nth-child(1),
 	& td:nth-child(1) {
 		position: sticky;
 		left: 0;
 		z-index: 3;
 		background-color: var(--bg-card);
-		width: 120px;
 	}
 
 	& tbody tr:nth-child(odd) {
@@ -66,30 +36,39 @@
 	left: 0px;
 	z-index: 3;
 	background-color: var(--bg-card);
-}
-
-.second-fixed-col {
-	position: sticky;
-	left: 80px;
-	z-index: 2;
-	background-color: var(--bg-card);
+	border-right: 2px solid var(--primary);
 }
 
 table {
-	border-collapse: collapse;
+	border-collapse: separate;
 }
 
 .header {
 	background-color: var(--bg-card);
-	border-bottom: 2px solid var(--primary);
 }
 
-.par-row {
+.par-col {
+	left: 101px;
+	width: 35px;
+	z-index: 4;
+	position: sticky;
+	background-color: var(--bg-card);
+	border-left: 2px solid var(--primary);
+	border-right: 2px solid var(--primary);
+}
+
+.col-gr {
+	z-index: 4;
+	left: 138px;
+	width: 35px;
+	position: sticky;
+	background-color: var(--bg-card);
 	border-right: 2px solid var(--primary);
 }
 
 .last-cell {
 	border-right: 2px solid var(--primary);
+	padding: 6px;
 }
 
 .footer {
@@ -175,11 +154,10 @@ th.vertical-header span {
 	border: none;
 }
 
-.team-merge {
+.team-score {
 	background-color: rgba(0, 0, 0, 0.03); /* Léger fond pour distinguer l'équipe */
 	text-align: center;
 	font-weight: bold;
-	border-left: 2px solid var(--primary);
 	border-right: 2px solid var(--primary);
 }
 
