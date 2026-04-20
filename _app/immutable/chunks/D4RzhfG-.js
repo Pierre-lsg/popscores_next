@@ -1,1 +1,0 @@
-import{g as e,k as s,j as a}from"./Cd5ed81K.js";class r{#t=e(null);get headerAction(){return s(this.#t)}set headerAction(t){a(this.#t,t,!0)}#e=e("");get title(){return s(this.#e)}set title(t){a(this.#e,t,!0)}}const o=new r;export{o as n};
