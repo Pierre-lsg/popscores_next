@@ -140,6 +140,7 @@ export const toggleDictation = (recognition: any, isListening: boolean): Promise
 		};
 
 		recognition.onend = () => {
+			isListening = false;
 			recognition = null;
 		};
 

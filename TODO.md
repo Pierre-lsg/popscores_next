@@ -13,6 +13,7 @@
 9. ~~Parler d'association et non de club~~
 10. Lors de la livraison de mise à jour, supprimer les service workers enregistrés précédemment.
 11. ~~Photo et export csv oublié pour ScoreCardTeam.~~ Problème de classe CSS
+12. Fixer le problème du micro. Le désactiver automatiquement à la sortie de la box de saisie. Anomalie iphone
 
 ## Améliorations
 
@@ -43,12 +44,13 @@
 24. Détail des cibles lors de la compétition
 25. Indiquer la règle si clic sur la bulle règle (mode Romain)
 26. Ajouter des photos sur les cibles, départ et arrivée (mode Stoulk)
-27. Ajouter le rang pour les score cards
-28. Améliorer l'apparence des score cards
+27. ~~Ajouter le rang pour les score cards~~
+28. ~~Améliorer l'apparence des score cards~~
 29. Proposer un shortener pour les liens vers les scores
 30. ~~Ajouter un bouton sur la compétition pour récupérer le lien direct vers le résultat~~
 31. ~~Ajouter l'option 'désassocier les joueurs' dans une association.~~
 32. Modification des joueurs ET des équipes de l'association
+33. Corriger le calcul dans le cas de trou Bonus si èquipe incomplète
 
 ## Quick session
 
