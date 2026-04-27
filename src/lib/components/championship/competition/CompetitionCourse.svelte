@@ -11,21 +11,25 @@
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
-	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
+	import TextField from '$lib/ui/TextField.svelte';
+	import TargetProps from '$lib/ui/TargetProps.svelte';
 
+	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { onMount } from 'svelte';
-	import TextField from '$lib/ui/TextField.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
 	}>();
 
-	const ruleOptions = isCompetitionTeam(currentCompetition) ? collectiveRules : individualRules;
+	const isTeamGame = isCompetitionTeam(currentCompetition);
+	const ruleOptions = isTeamGame ? collectiveRules : individualRules;
 
 	let targets: Target[] = $state([]);
-	let editingTarget: boolean[] = $state([]);
+	let isEditingTarget: boolean[] = $state([]);
+	let isEditing: boolean = $state(false);
+
 	let course: Course | undefined = $derived(
 		coursesChampionshipStore.find(currentCompetition.courseId)
 	);
@@ -55,6 +59,8 @@
 				1
 			);
 		}
+		isEditingTarget.fill(false);
+		isEditing = false;
 	};
 
 	const addNewTarget = () => {
@@ -65,16 +71,17 @@
 	};
 
 	const editTarget = (id: number) => {
-		editingTarget[id] = !editingTarget[id];
-		for (let i = 0; i < editingTarget.length; i++) {
-			if (i !== id) editingTarget[i] = false;
+		isEditingTarget[id] = !isEditingTarget[id];
+		for (let i = 0; i < isEditingTarget.length; i++) {
+			if (i !== id) isEditingTarget[i] = false;
 		}
+		isEditing = isEditingTarget[id];
 	};
 
 	// Drag & drop functions
 	const handleConsider = () => {
 		isDragging = true;
-		editingTarget = editingTarget.map(() => false);
+		isEditingTarget = isEditingTarget.map(() => false);
 	};
 
 	const handleFinalize = (e: CustomEvent<{ items: any[] }>) => {
@@ -97,98 +104,73 @@
 	<CompetitionMenu bind:currentCompetition />
 
 	<h2>Définition du parcours</h2>
-	<h3>Liste des cibles</h3>
-	<button onclick={() => addNewTarget()} class="btn btn-primary">Ajouter une cible</button>
-	{#if course && targets.length > 0}
-		<div class="step-content" in:slide>
-			<div
-				class="targets-list"
-				use:dndzone={{
-					items: targets,
-					flipDurationMs,
-					dropTargetStyle: { outline: '2px dashed var(--primary)', borderRadius: '8px' }
-				}}
-				onconsider={(e) => {
-					handleConsider();
-					targets = e.detail.items;
-				}}
-				onfinalize={handleFinalize}
-			>
-				{#each targets as target (target.id)}
-					<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
-						<div class="content">
-							<span class="target-name">
-								<TextField bind:value={target.name} />
-							</span>
-							<span class="target-par">
-								<Stepper
-									bind:value={target.par}
-									min={0}
-									disabled={target.rule === 'Bonus' || target.rule === 'Team_Bonus'}
-								/>
-							</span>
-							<span class="target-rule">
-								<Selector
-									id="rule{target.id}"
-									bind:value={target.rule}
-									onchange={() =>
-										(target.par = target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
-									options={ruleOptions}
-								/>
-							</span>
-
-							<span>
-								<span role="none" onclick={() => editTarget(targets.indexOf(target))}>✏️</span>
-							</span>
+	{#if !isEditing}
+		<h3>Liste des cibles</h3>
+		<button onclick={() => addNewTarget()} class="btn btn-primary">Ajouter une cible</button>
+		{#if course && targets.length > 0}
+			<div class="step-content" in:slide>
+				<div
+					class="targets-list"
+					use:dndzone={{
+						items: targets,
+						flipDurationMs,
+						dropTargetStyle: { outline: '2px dashed var(--primary)', borderRadius: '8px' }
+					}}
+					onconsider={(e) => {
+						handleConsider();
+						targets = e.detail.items;
+					}}
+					onfinalize={handleFinalize}
+				>
+					{#each targets as target (target.id)}
+						<div class="target-item" animate:flip={{ duration: flipDurationMs }}>
+							<div class="content">
+								<span class="target-name">
+									<TextField bind:value={target.name} />
+								</span>
+								<span class="target-par">
+									<Stepper
+										bind:value={target.par}
+										min={0}
+										disabled={target.rule === 'Bonus' || target.rule === 'Team_Bonus'}
+									/>
+								</span>
+								<span class="target-rule">
+									<Selector
+										id="rule{target.id}"
+										bind:value={target.rule}
+										onchange={() =>
+											(target.par =
+												target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
+										options={ruleOptions}
+									/>
+								</span>
+								<span
+									class="btn-actions btn-par"
+									role="none"
+									onclick={() => editTarget(targets.indexOf(target))}>+</span
+								>
+							</div>
+							<div role="none" class="handle">☰</div>
 						</div>
-						<div role="none" class="handle">☰</div>
-					</div>
-				{/each}
+					{/each}
+				</div>
 			</div>
-		</div>
 
-		{#if isDragging}
-			<div
-				transition:fly={{ x: 100, duration: 300 }}
-				class="delete-zone"
-				use:dndzone={{ items: [] }}
-				onfinalize={handleRemoveDrop}
-			>
-				<div class="trash-icon">🗑️</div>
-				<p>Lâcher pour supprimer</p>
-			</div>
-		{/if}
-
-		<div>&nbsp;</div>
-		{#each course?.targets as target, i}
-			{#if editingTarget[i]}
-				<div class="item-form">
-					<Param
-						label="⛳ Nom de la cible"
-						type="text"
-						bind:value={target.name}
-						placeholder="Nom de la cible"
-						focus={true}
-						oneline={true}
-					/>
-					<Stepper label="Par" value={target.par} onchange={(val) => (target.par = val)} />
-					<Selector
-						label="Règle"
-						id="rule{target.id}"
-						bind:value={target.rule}
-						options={ruleOptions}
-						onchange={() =>
-							(target.par = target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
-					/>
-					<p class="param-container">
-						Autres params à définir plus tard (départ, arrivée, GPS photos, ...)
-					</p>
-					<button onclick={() => removeTarget(target.id)}> 🗑️ </button>
+			{#if isDragging}
+				<div
+					transition:fly={{ x: 100, duration: 300 }}
+					class="delete-zone"
+					use:dndzone={{ items: [] }}
+					onfinalize={handleRemoveDrop}
+				>
+					<div class="trash-icon">🗑️</div>
+					<p>Lâcher pour supprimer</p>
 				</div>
 			{/if}
-		{/each}
-	{:else}
-		<p>Aucune cible n'a été définie</p>
+		{:else}
+			<p>Aucune cible n'a été définie</p>
+		{/if}
 	{/if}
 
 	<ul>
@@ -197,17 +179,18 @@
 	</ul>
 </div>
 
-<style>
-	.param-container {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 0.5rem;
-		background: var(--bg-card);
-		border-radius: 8px;
-		margin-bottom: 0.5rem;
-	}
+{#each course?.targets as target, i}
+	{#if isEditingTarget[i]}
+		<TargetProps
+			{target}
+			{isTeamGame}
+			editTarget={() => editTarget(i)}
+			removeTarget={() => removeTarget(target.id)}
+		/>
+	{/if}
+{/each}
 
+<style>
 	.targets-list {
 		display: flex;
 		flex-direction: column;
