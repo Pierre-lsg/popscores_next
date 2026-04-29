@@ -140,7 +140,9 @@ export const calculateTeamScore = (
 							ghostValue = 0;
 							break;
 						case 'Team_Bonus':
-							ghostValue = 0;
+							if (settings.usePenalizingGhost) {
+								ghostValue = 0;
+							} else ghostValue = scores[0];
 							break;
 						case 'Individuel':
 							if (settings.usePenalizingGhost) {

@@ -41,7 +41,7 @@
 21. ~~Ajouter les noms des joueurs sur les flys lors de l'affichage~~
 22. ~~Règle Bonus équipe règle par équipe par équipe~~
 23. ~~Donner un lien direct vers les scores~~
-24. Détail des cibles lors de la compétition
+24. ~~Détail des cibles lors de la compétition~~
 25. Indiquer la règle si clic sur la bulle règle (mode Romain)
 26. Ajouter des photos sur les cibles, départ et arrivée (mode Stoulk)
 27. ~~Ajouter le rang pour les score cards~~
