@@ -7,7 +7,7 @@
 <div class="status-wrapper">
 	<div
 		role="none"
-		class="nothing"
+		class={messageStore.computeStatus()}
 		id="flag-status"
 		onclick={() => (showCsStatus = !showCsStatus)}
 	></div>

@@ -4,7 +4,7 @@
 
 	import type { Course } from '$lib/types/courseType';
 
-	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
 	import TargetBox from '../TargetBox.svelte';
 	import Param from '$lib/ui/Param.svelte';
@@ -47,7 +47,7 @@
 
 <div>
 	<div class="action">
-		{#if $user}
+		{#if userStore.current}
 			<button onclick={() => saveCourseToCloud()}>Enregistrer dans le Cloud</button>
 		{/if}
 	</div>

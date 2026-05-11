@@ -2,7 +2,7 @@
 	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 	import type { SessionArchive } from '$lib/types/sessionType';
 	import { historyService } from '$lib/utils/pocketbase/history2Cloud';
-	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import { onMount } from 'svelte';
 
 	let allSessions: SessionArchive[] = $state([]);

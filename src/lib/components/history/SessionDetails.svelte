@@ -10,7 +10,7 @@
 	import type { Team } from '$lib/types/teamType';
 	import type { Target } from '$lib/types/targetType';
 
-	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import SessionDetails from '$lib/components/quickSession/SessionDetails.svelte';
 	import PlayerScoreCard from '$lib/components/core_game/PlayerScoreCard.svelte';
 	import PlayerScoreOrder from '$lib/components/core_game/PlayerScoreOrder.svelte';
@@ -55,7 +55,7 @@
 
 <div>
 	<div class="action">
-		{#if $user}
+		{#if userStore.current}
 			<button onclick={() => saveSessionToCloud()}>Enregistrer dans le Cloud</button>
 		{/if}
 	</div>

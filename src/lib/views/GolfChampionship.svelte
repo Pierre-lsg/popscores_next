@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import type { Championship } from '$lib/types/championshipType';
-	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 
@@ -29,7 +29,7 @@
 
 <div class="hub-container">
 	<div class="grid-container">
-		{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr') || $user?.roles.includes('cpMgr'))}
+		{#if userStore.current && (userStore.current?.roles.includes('admin') || userStore.current?.roles.includes('csMgr') || userStore.current?.roles.includes('cpMgr'))}
 			<a class="card" href="{base}/championship/{currentChampionship.id}/competitions">
 				<span class="icon">⛳</span>
 				<h3>Compétitions</h3>
@@ -42,7 +42,7 @@
 			</a>
 		{/if}
 
-		{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))}
+		{#if userStore.current && (userStore.current?.roles.includes('admin') || userStore.current?.roles.includes('csMgr'))}
 			<a class="card" href="{base}/championship/{currentChampionship.id}/params">
 				<span class="icon">⚙️</span>
 				<h3>Paramétrages</h3>
@@ -55,7 +55,7 @@
 			</a>
 		{/if}
 
-		{#if $user && $user?.roles.includes('marshall')}
+		{#if userStore.current && userStore.current?.roles.includes('marshall')}
 			<a class="card" href="{base}/championship/{currentChampionship.id}/fly">
 				<span class="icon">⛳</span>
 				<h3>Fly</h3>

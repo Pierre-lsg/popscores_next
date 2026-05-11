@@ -5,7 +5,7 @@
 	import Selector from '$lib/ui/Selector.svelte';
 	import Loader from '$lib/ui/Loader.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
-	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import { securityCheck } from '$lib/utils/security';
 	import { loadAChampionship } from '$lib/utils/championship/championshipFunctions.svelte';
 	import { onMount } from 'svelte';
@@ -36,12 +36,12 @@
 
 		let userId: string = '';
 		let userRole: string = '';
-		if ($user && $user.roles) {
-			userId = $user.id;
+		if (userStore.current && userStore.current.roles) {
+			userId = userStore.current.id;
 
-			if ($user.roles.includes('admin')) userRole = 'admin';
-			else if ($user.roles.includes('csMgr')) userRole = 'csMgr';
-			else if ($user.roles.includes('cpMgr')) userRole = 'cpMgr';
+			if (userStore.current.roles.includes('admin')) userRole = 'admin';
+			else if (userStore.current.roles.includes('csMgr')) userRole = 'csMgr';
+			else if (userStore.current.roles.includes('cpMgr')) userRole = 'cpMgr';
 			else userRole = 'marshall';
 		}
 
@@ -67,19 +67,19 @@
 
 		// Si aucun championnat n'est actif dans la section
 		if (!currentChampionship) {
-			if ($user && !$user?.roles.includes('admin')) {
+			if (userStore.current && !userStore.current?.roles.includes('admin')) {
 				// Récupérer directement le championnat si un seul en cours
 				// Et si l'utilisateur est responsable du championnat
 				// ou au moins d'une compétition
 				cloudChampionships = cloudChampionships.filter((c) => {
 					// Todo Corriger la situation 'marshall' en listant les autorisés sur un championnat
-					if (c.status === 'setup' && $user?.roles.includes('csMgr')) {
-						if (c.managersId.includes($user.id)) return true;
+					if (c.status === 'setup' && userStore.current?.roles.includes('csMgr')) {
+						if (c.managersId.includes(userStore.current.id)) return true;
 					}
 					if (c.status === 'in_progress') {
-						if (c.managersId.includes($user.id)) return true;
-						if (c.cpManagersId.includes($user.id)) return true;
-						if ($user?.roles.includes('marshall')) return true;
+						if (c.managersId.includes(userStore.current.id)) return true;
+						if (c.cpManagersId.includes(userStore.current.id)) return true;
+						if (userStore.current?.roles.includes('marshall')) return true;
 					}
 					return false;
 				});
@@ -136,7 +136,7 @@
 		{/if}
 
 		<!-- Créer un nouveau championnatt -->
-		{#if $user && $user?.roles.includes('admin')}
+		{#if userStore.current && userStore.current?.roles.includes('admin')}
 			<h2>Créer un nouveau championnat 💼</h2>
 			<button onclick={() => addNewChampionship()}>Créer nouveau championnat</button>
 		{/if}

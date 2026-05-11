@@ -20,7 +20,7 @@
 		cloudLoadCurrentCompetitionForSupervisor,
 		isCompetitionTeam
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
-	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import { selection } from '$lib/stores/selection';
 	import { base } from '$app/paths';
 
@@ -49,8 +49,8 @@
 	};
 
 	const loadCompetition = async () => {
-		if ($user && championshipId && confirm('Voulez-vous rapatrier la compétition ?'))
-			await cloudLoadCurrentCompetitionForSupervisor(championshipId, $user.id);
+		if (userStore.current && championshipId && confirm('Voulez-vous rapatrier la compétition ?'))
+			await cloudLoadCurrentCompetitionForSupervisor(championshipId, userStore.current.id);
 		selectFly();
 		messageStore.reset();
 		// Todo : proposer un fix pour la non mise à jour de currentCompétition
@@ -63,12 +63,12 @@
 			(competition) => competition.startDate === new Date().toISOString().split('T')[0]
 		);
 
-		if (currentCompetition && $user) {
+		if (currentCompetition && userStore.current) {
 			//liste les flys de la compétition
 			let Allflys = flysChampionshipStore.list.filter((fly) =>
 				currentCompetition?.flysId.includes(fly.id)
 			);
-			flys = Allflys.filter((fly) => fly.supervisorId === $user.id);
+			flys = Allflys.filter((fly) => fly.supervisorId === userStore.current.id);
 		}
 
 		if (flys.length === 1) currentFly = flys[0];

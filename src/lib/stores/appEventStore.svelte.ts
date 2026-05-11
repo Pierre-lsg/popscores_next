@@ -20,12 +20,6 @@ class AppStatusStore {
 			$effect.root(() => {
 				$effect(() => {
 					localStorage.setItem(STORAGE_KEY, JSON.stringify(this.list));
-
-					const fse = document.getElementById('flag-status');
-					if (fse) {
-						fse.classList.remove('nothing', 'info', 'warning', 'alert');
-						fse.classList.add(this.computeStatus());
-					}
 				});
 			});
 		}

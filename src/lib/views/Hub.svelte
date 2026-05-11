@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
-	import { user, pb } from '$lib/utils/pocketbase/pocketBase';
+	import { pb } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import Login from '$lib/components/LoginBox.svelte';
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
@@ -38,7 +39,7 @@
 			<p>Suivi de partie entre amis</p>
 		</a>
 
-		{#if $user}
+		{#if userStore.current}
 			<a class="card" href={base + '/championship'}>
 				<span class="icon">👑</span>
 				<h3>Championnat</h3>
@@ -70,7 +71,7 @@
 			<p>Configuration de l'application</p>
 		</a>
 
-		{#if $user}
+		{#if userStore.current}
 			<div role="none" class="card" onclick={() => logout()}>
 				<span class="icon">👋</span>
 				<h3>Déconnexion</h3>

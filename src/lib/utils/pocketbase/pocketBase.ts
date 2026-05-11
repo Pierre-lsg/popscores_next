@@ -1,15 +1,7 @@
 import PocketBase from 'pocketbase';
 import { appSettings } from '$lib/stores/settingsStore.svelte';
-import { writable } from 'svelte/store';
 
 export const pb = new PocketBase(appSettings.values.cloudUrl);
-export const user = writable(pb.authStore.record);
-
-pb.authStore.onChange((auth) => {
-	console.log("Changement d'état auth", auth);
-	user.set(pb.authStore.record);
-});
-
 export const db = {
 	// Récupérer tous les éléments d'une collection
 	async getFullList<T>(collectionName: string, options = {}): Promise<T[]> {

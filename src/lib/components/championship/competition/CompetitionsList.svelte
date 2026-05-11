@@ -13,7 +13,7 @@
 	import MultiSelector from '$lib/ui/MultiSelector.svelte';
 	import Param from '$lib/ui/Param.svelte';
 
-	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import { getCpMgrs } from '$lib/utils/championship/championshipFunctions.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { smartSort } from '$lib/utils/sharedFunction';
@@ -29,11 +29,11 @@
 	let competitions = $derived<Competition[]>(
 		smartSort(
 			competitionsStore.list.filter((c: Competition) => {
-				if ($user) {
-					if ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))
+				if (userStore.current) {
+					if (userStore.current?.roles.includes('admin') || userStore.current?.roles.includes('csMgr'))
 						return championship.competitionsId.includes(c.id);
-					if ($user.id !== null)
-						return championship.competitionsId.includes(c.id) && c.managersId.includes($user.id);
+					if (userStore.current.id !== null)
+						return championship.competitionsId.includes(c.id) && c.managersId.includes(userStore.current.id);
 				}
 				return false;
 			}),
@@ -216,7 +216,7 @@
 	{#if competitions.length === 0}
 		<p>Aucune compétition enregistrée pour le moment. 🏆</p>
 	{/if}
-	{#if $user && ($user?.roles.includes('admin') || $user?.roles.includes('csMgr'))}
+	{#if userStore.current && (userStore.current?.roles.includes('admin') || userStore.current?.roles.includes('csMgr'))}
 		{#if !isEditingCompetition}
 			<button onclick={() => (addNewCompetition = true)} class="btn btn-primary"
 				>Ajouter une nouvelle compétition</button

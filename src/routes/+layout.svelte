@@ -8,7 +8,7 @@
 	import Toast from '$lib/ui/Toast.svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
 	import { checkDataVersion, CURRENT_VERSION } from '$lib/utils/migration';
-	import { user } from '$lib/utils/pocketbase/pocketBase';
+	import { userStore } from '$lib/stores/userStore.svelte';
 	import { onMount } from 'svelte';
 	import StatusSignal from '$lib/ui/InfoStatus.svelte';
 	import NetworkStatus from '$lib/ui/NetworkStatus.svelte';
@@ -76,7 +76,7 @@
 
 <footer style="background-color: var(--bg-card)">
 	Popscores v{CURRENT_VERSION}
-	{#if $user}🔗{$user.name} ({formatList($user.roles)})
+	{#if userStore.current}🔗{userStore.current.name} ({formatList(userStore.current.roles)})
 	{/if}
 	<!--
 		<span role="none" onclick={() => logoutAndPurge()}>🗝️</span>
