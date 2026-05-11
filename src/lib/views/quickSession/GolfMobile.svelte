@@ -13,7 +13,7 @@
 	import { afterNavigate } from '$app/navigation';
 
 	import Toast from '$lib/ui/Toast.svelte';
-	import GolfHeader from '$lib/ui/GolfHeader.svelte';
+	import GolfHeader from '$lib/components/core_game/GolfHeader.svelte';
 	import type { Course } from '$lib/types/courseType';
 
 	import RankingPodium from '$lib/components/quickSession/RankingPodium.svelte';

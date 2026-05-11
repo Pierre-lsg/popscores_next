@@ -3,7 +3,7 @@
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
+	import TeamScoreCard from '$lib/components/core_game/TeamScoreCard.svelte';
 
 	import { confetti } from '@neoconfetti/svelte';
 	import { onDestroy } from 'svelte';

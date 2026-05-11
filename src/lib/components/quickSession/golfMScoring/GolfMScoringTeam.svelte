@@ -6,14 +6,14 @@
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import type { Team } from '$lib/types/teamType';
-	import TeamScoreOrder from '$lib/ui/TeamScoreOrder.svelte';
-	import TargetBox from '$lib/components/TargetBox.svelte';
+	import TeamScoreOrder from '$lib/components/core_game/TeamScoreOrder.svelte';
+	import ScoreHeader from '$lib/components/core_game/scoring/ScoreHeader.svelte';
+	import ScoreGrid from '$lib/components/core_game/scoring/ScoreGrid.svelte';
 
 	import { swipe } from '$lib/utils/swipe';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
-	import TextField from '$lib/ui/TextField.svelte';
 	import { onMount } from 'svelte';
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { collectiveRules } from '$lib/types/targetType';
@@ -51,7 +51,6 @@
 	);
 
 	let showRanking: boolean = $state(false);
-	let showDetails: boolean = $state(false);
 
 	const initScoresPlayerOnTarget = () => {
 		playersStore.list.forEach((player) => {
@@ -150,34 +149,18 @@
 </div>
 
 <div class="step-content" in:slide>
-	<header
-		role="none"
-		class="target-header"
-		use:swipe={{ onRight: showNextTarget, onLeft: showPrevTarget }}
-	>
-		<button class="btn-target" onclick={() => showPrevTarget()} disabled={isFirstTarget}>◀</button>
-		<div class="target-info">
-			<h3>
-				<TextField bind:value={currentTarget.name} />&nbsp;(#&nbsp;{activeTargetIndex + 1})
-			</h3>
-			<div class="target-details">
-				<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('rule')}
-					>{currentTarget.rule}</span
-				>
-				{#if currentTarget.rule !== 'Bonus' && currentTarget.rule !== 'Team_Bonus'}
-					<span role="none" class="par-badge" onclick={() => modifyUpdatingBools('par')}
-						>PAR {currentTarget.par}</span
-					>
-				{/if}
-				<span role="none" class="par-badge" onclick={() => (showDetails = !showDetails)}>?</span>
-			</div>
-		</div>
-		<button class="btn-target" onclick={() => showNextTarget()} disabled={isLastTarget}>▶</button>
-	</header>
-
-	{#if showDetails}
-		<TargetBox target={currentTarget} bind:showDetails />
-	{/if}
+	<ScoreHeader
+		bind:target={currentTarget}
+		{targets}
+		{activeTargetIndex}
+		{isFirstTarget}
+		{isLastTarget}
+		allowEdit={true}
+		onNext={showNextTarget}
+		onPrev={showPrevTarget}
+		onModifyPar={() => modifyUpdatingBools('par')}
+		onModifyRule={() => modifyUpdatingBools('rule')}
+	/>
 
 	{#if updatingPar}
 		<Stepper
@@ -202,73 +185,14 @@
 		/>
 	{/if}
 
-	<div class="scores-grid">
-		<table>
-			<tbody>
-				{#if !scoringForAllPlayersRules.includes(currentTarget.rule || '')}
-					{#each teams as team}
-						{@const player = players.find((p) => p.id === team.playersId[0])}
-						{#if player}
-							<tr class="score">
-								<td class="player-name">
-									{team.name}
-								</td>
-								<td>
-									<Stepper
-										value={player.scores[currentTarget.id]}
-										min={minTrys}
-										max={maxTrys}
-										onchange={(val) => updateScoreTeam(team, currentTarget.id, val)}
-									/>
-								</td>
-								<td class="btn-actions">
-									<button
-										class="btn-par"
-										onclick={() => updateScoreTeam(team, currentTarget.id, currentTarget.par)}
-										title="Par">=</button
-									>
-									&nbsp;&nbsp;
-									<button
-										class="btn-delete"
-										onclick={() => updateScoreTeam(team, currentTarget.id, maxTrys)}
-										title="Echec">x</button
-									>
-								</td>
-							</tr>
-						{/if}
-					{/each}
-				{:else}
-					{#each players as player}
-						<tr class="score">
-							<td class="player-name">
-								{player.name}
-							</td>
-							<td>
-								<Stepper
-									value={player.scores[currentTarget.id] ?? 0}
-									min={minTrys}
-									max={maxTrys}
-									onchange={(val) => (player.scores[currentTarget.id] = val)}
-								/>
-							</td>
-							<td class="btn-actions">
-								<button
-									class="btn-par"
-									onclick={() => (player.scores[currentTarget.id] = currentTarget.par)}
-									title="Par">=</button
-								>
-								<button
-									class="btn-delete"
-									onclick={() => (player.scores[currentTarget.id] = maxTrys)}
-									title="Echec">x</button
-								>
-							</td>
-						</tr>
-					{/each}
-				{/if}
-			</tbody>
-		</table>
-	</div>
+	<ScoreGrid
+		target={currentTarget}
+		{players}
+		{teams}
+		{minTrys}
+		{maxTrys}
+		onScoreChange={(playerId, targetId, score) => playersStore.updateScore(playerId, targetId, score)}
+	/>
 </div>
 
 <style>

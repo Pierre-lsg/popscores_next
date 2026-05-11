@@ -6,10 +6,10 @@
 
 	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 
-	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
-	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
-	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
-	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
+	import TeamScoreCard from '$lib/components/core_game/TeamScoreCard.svelte';
+	import PlayerScoreCard from '$lib/components/core_game/PlayerScoreCard.svelte';
+	import TeamScoreCardByTarget from '$lib/components/core_game/TeamScoreCardByTarget.svelte';
+	import PlayerScoreCardByTarget from '$lib/components/core_game/PlayerScoreCardByTarget.svelte';
 
 	const s = sessionSettingsStore.settings;
 

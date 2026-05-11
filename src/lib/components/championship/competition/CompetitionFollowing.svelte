@@ -7,15 +7,15 @@
 	import CompetitionMenu from './CompetitionMenu.svelte';
 	import { onMount } from 'svelte';
 	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
-	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
-	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
+	import TeamScoreCard from '$lib/components/core_game/TeamScoreCard.svelte';
+	import PlayerScoreCard from '$lib/components/core_game/PlayerScoreCard.svelte';
 	import { coursesChampionshipStore } from '$lib/stores/championship/coursesChampionshipStore.svelte';
 	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
 	import { scoreCardService } from '$lib/utils/pocketbase/scoreCards2Cloud';
 	import { resultService } from '$lib/utils/pocketbase/results2Cloud';
 	import { teamsCompetitionStore } from '$lib/stores/championship/teamsCompetitionStore.svelte';
-	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
-	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
+	import TeamScoreCardByTarget from '$lib/components/core_game/TeamScoreCardByTarget.svelte';
+	import PlayerScoreCardByTarget from '$lib/components/core_game/PlayerScoreCardByTarget.svelte';
 
 	let { currentCompetition = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;

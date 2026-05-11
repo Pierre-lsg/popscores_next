@@ -15,7 +15,7 @@
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import TextField from '$lib/ui/TextField.svelte';
-	import TargetProps from '$lib/ui/TargetProps.svelte';
+	import TargetProps from '$lib/components/core_game/TargetProps.svelte';
 
 	let isTeamGame: boolean = sessionSettingsStore.settings.regulation.teamGame;
 

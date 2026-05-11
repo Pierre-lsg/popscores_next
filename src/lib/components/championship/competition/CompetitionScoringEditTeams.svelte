@@ -22,7 +22,7 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import { navContext } from '$lib/utils/nav.svelte';
 
-	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
+	import TeamScoreCardByTarget from '$lib/components/core_game/TeamScoreCardByTarget.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 	import {
 		cloudSaveScoreCard,
@@ -32,7 +32,8 @@
 	import { onMount } from 'svelte';
 	import { swipe } from '$lib/utils/swipe';
 	import { slide } from 'svelte/transition';
-	import TargetBox from '$lib/components/TargetBox.svelte';
+	import ScoreHeader from '$lib/components/core_game/scoring/ScoreHeader.svelte';
+	import ScoreGrid from '$lib/components/core_game/scoring/ScoreGrid.svelte';
 
 	let { currentCompetition = $bindable(), currentFly = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -76,9 +77,6 @@
 	);
 	let isCourseEnded: boolean = $state(false);
 	let isOnline: boolean = $state(true);
-	let isSelectingTarget: boolean = $state(false);
-	let selectedTarget: string = $state('');
-	let showDetails: boolean = $state(false);
 
 	$effect(() => {
 		if (networkStatus.isOnline) isOnline = true;
@@ -182,10 +180,7 @@
 		}
 	};
 
-	const changeTarget = () => {
-		activeTargetIndex = parseInt(selectedTarget);
-		isSelectingTarget = false;
-	};
+
 
 	onMount(() => {
 		initScoresPlayerOnTarget();
@@ -222,103 +217,27 @@
 	</div>
 	<!-- Saisie des résultats d'une cible pour un fly -->
 	<div class="step-content" in:slide>
-		<header
-			role="none"
-			class="target-header"
-			use:swipe={{ onRight: showNextTarget, onLeft: showPrevTarget }}
-		>
-			<button class="btn-target" onclick={() => showPrevTarget()}>◀</button>
-			<div class="target-info">
-				{#if !isSelectingTarget}
-					<h3 role="none" onclick={() => (isSelectingTarget = true)}>
-						{currentTarget.name} (# {activeTargetIndex + 1})
-					</h3>
-				{:else}
-					<Selector
-						id="targetSelection"
-						bind:value={selectedTarget}
-						options={targets.map((_, i) => String(i))}
-						optionsLabel={targets.map((t) => t.name)}
-						onchange={() => changeTarget()}
-					/>
-				{/if}
-				<div class="target-details">
-					<span class="par-badge">{currentTarget.rule}</span>
-					{#if currentTarget.rule !== 'Bonus' && currentTarget.rule !== 'Team_Bonus'}
-						<span class="par-badge">PAR {currentTarget.par}</span>
-					{/if}
-					<span role="none" class="par-badge" onclick={() => (showDetails = !showDetails)}>?</span>
-				</div>
-			</div>
-			<button class="btn-target" onclick={() => showNextTarget()}>▶</button>
-		</header>
+		<ScoreHeader
+			bind:target={currentTarget}
+			{targets}
+			{activeTargetIndex}
+			allowSelect={true}
+			onNext={showNextTarget}
+			onPrev={showPrevTarget}
+			onTargetSelect={(idx) => activeTargetIndex = idx}
+		/>
 
-		{#if showDetails}
-			<TargetBox target={currentTarget} bind:showDetails />
-		{/if}
-
-		<div class="scores-grid">
-			<table>
-				<tbody>
-					{#if !individualRules.includes(currentTarget.rule || '')}
-						{#each teams as team}
-							{@const player = players.find((p) => p.id === team.playersId[0])}
-							{#if player}
-								<tr class="score">
-									<td class="player-name">{team.name}</td>
-									<td>
-										<Stepper
-											value={player.scores[currentTarget.id] ?? 0}
-											min={minTrys}
-											max={maxTrys}
-											onchange={(val) => updateScoreTeam(team, currentTarget.id, val)}
-										/>
-									</td>
-									<td class="btn-actions">
-										<button
-											class="btn-par"
-											onclick={() => updateScoreTeam(team, currentTarget.id, currentTarget.par)}
-											title="Par">=</button
-										>
-										<button
-											class="btn-delete"
-											onclick={() => updateScoreTeam(team, currentTarget.id, maxTrys)}
-											title="Echec">x</button
-										>
-									</td>
-								</tr>
-							{/if}
-						{/each}
-					{:else}
-						{#each players as player}
-							<tr class="score">
-								<td class="player-name">{player.name}</td>
-								<td>
-									<Stepper
-										value={player.scores[currentTarget.id] ?? 0}
-										min={minTrys}
-										max={maxTrys}
-										onchange={(val) => (player.scores[currentTarget.id] = val)}
-									/>
-								</td>
-								<td class="btn-actions">
-									<button
-										class="btn-par"
-										onclick={() => (player.scores[currentTarget.id] = currentTarget.par)}
-										title="Par">=</button
-									>
-									<button
-										class="btn-delete"
-										onclick={() => (player.scores[currentTarget.id] = maxTrys)}
-										title="Echec">x</button
-									>
-								</td>
-							</tr>
-						{/each}
-					{/if}
-				</tbody>
-			</table>
-		</div>
+		<ScoreGrid
+			target={currentTarget}
+			{players}
+			{teams}
+			{minTrys}
+			{maxTrys}
+			onScoreChange={(playerId, targetId, score) => {
+				const player = players.find(p => p.id === playerId);
+				if (player) player.scores[targetId] = score;
+			}}
+		/>
 	</div>
 
 	<!-- Affichage de la carte de score -->

@@ -8,7 +8,7 @@
 	} from '$lib/utils/session/golfScoringFunction.svelte';
 
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
-	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
+	import PlayerScoreCard from '$lib/components/core_game/PlayerScoreCard.svelte';
 	import type { RankedPlayer } from '$lib/types/playerType';
 
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';

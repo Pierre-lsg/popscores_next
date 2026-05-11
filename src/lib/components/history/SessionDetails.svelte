@@ -12,12 +12,12 @@
 
 	import { user } from '$lib/utils/pocketbase/pocketBase';
 	import SessionDetails from '$lib/components/quickSession/SessionDetails.svelte';
-	import PlayerScoreCard from '$lib/ui/PlayerScoreCard.svelte';
-	import PlayerScoreOrder from '$lib/ui/PlayerScoreOrder.svelte';
-	import TeamScoreCard from '$lib/ui/TeamScoreCard.svelte';
-	import TeamScoreOrder from '$lib/ui/TeamScoreOrder.svelte';
-	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
-	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
+	import PlayerScoreCard from '$lib/components/core_game/PlayerScoreCard.svelte';
+	import PlayerScoreOrder from '$lib/components/core_game/PlayerScoreOrder.svelte';
+	import TeamScoreCard from '$lib/components/core_game/TeamScoreCard.svelte';
+	import TeamScoreOrder from '$lib/components/core_game/TeamScoreOrder.svelte';
+	import TeamScoreCardByTarget from '$lib/components/core_game/TeamScoreCardByTarget.svelte';
+	import PlayerScoreCardByTarget from '$lib/components/core_game/PlayerScoreCardByTarget.svelte';
 
 	const data = localStorage.getItem('golf-history');
 

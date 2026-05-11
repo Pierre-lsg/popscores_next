@@ -15,8 +15,8 @@
 	import { networkStatus } from '$lib/stores/networkStore.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
-	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
-	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
+	import TeamScoreCardByTarget from '$lib/components/core_game/TeamScoreCardByTarget.svelte';
+	import PlayerScoreCardByTarget from '$lib/components/core_game/PlayerScoreCardByTarget.svelte';
 
 	import { onMount } from 'svelte';
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';

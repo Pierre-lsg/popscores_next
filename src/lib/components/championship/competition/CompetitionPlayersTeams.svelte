@@ -14,7 +14,7 @@
 	import { getRules } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
-	import TeamCard from '$lib/ui/TeamCard.svelte';
+	import TeamCard from '$lib/components/core_game/TeamCard.svelte';
 	import CompetitionEditTeam from './CompetitionEditTeam.svelte';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{

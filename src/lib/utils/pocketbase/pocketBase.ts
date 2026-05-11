@@ -12,9 +12,9 @@ pb.authStore.onChange((auth) => {
 
 export const db = {
 	// Récupérer tous les éléments d'une collection
-	async getFullList(collectionName: string, options = {}) {
+	async getFullList<T>(collectionName: string, options = {}): Promise<T[]> {
 		try {
-			return await pb.collection(collectionName).getFullList({
+			return await pb.collection(collectionName).getFullList<T>({
 				sort: '-created',
 				requestKey: null,
 				...options
@@ -26,9 +26,9 @@ export const db = {
 	},
 
 	// Récupérer un record par id
-	async getOne(collectionName: string, id: string, options = {}) {
+	async getOne<T>(collectionName: string, id: string, options = {}): Promise<T | null> {
 		try {
-			return await pb.collection(collectionName).getOne(id, { requestKey: null, ...options });
+			return await pb.collection(collectionName).getOne<T>(id, { requestKey: null, ...options });
 		} catch (err) {
 			console.error(`Erreur getOne sur ${collectionName} :`, err);
 			return null;
@@ -36,17 +36,9 @@ export const db = {
 	},
 
 	// Supprimer un record
-	async delete(collectionName: string, id: string) {
+	async delete(collectionName: string, id: string): Promise<boolean> {
 		try {
-			// 1. Recherche de l'enregistrement existant avec ce filtre
-			const existingItem = await pb.collection(collectionName).getList(1, 1, { requestKey: null });
-			const existing = existingItem.items[0];
-
-			//2. S'il existe on le supprime
-			if (existing) {
-				const options = { requestKey: null };
-				return await pb.collection(collectionName).delete(id, options);
-			}
+			return await pb.collection(collectionName).delete(id, { requestKey: null });
 		} catch (err) {
 			console.error(`Erreur delete sur ${collectionName} :`, err);
 			throw err;
@@ -54,40 +46,37 @@ export const db = {
 	},
 
 	// Créer un record
-	async create(collectionName: string, data: any) {
+	async create<T>(collectionName: string, data: Partial<T>): Promise<T> {
 		try {
 			const options = { requestKey: null };
-			return await pb.collection(collectionName).create(data, options);
+			return await pb.collection(collectionName).create<T>(data, options);
 		} catch (err) {
-			console.error(`Erreur save sur ${collectionName} :`, err);
+			console.error(`Erreur create sur ${collectionName} :`, err);
 			throw err;
 		}
 	},
 
 	// Mettre à jour un record
-	async update(collectionName: string, data: any) {
+	async update<T>(collectionName: string, data: Partial<T> & { id: string }): Promise<T> {
 		try {
 			const options = { requestKey: null };
-			return await pb.collection(collectionName).update(data.id, data, options);
+			return await pb.collection(collectionName).update<T>(data.id, data, options);
 		} catch (err) {
 			console.error(`Erreur update sur ${collectionName} :`, err);
 			throw err;
 		}
 	},
 
-	// Sauvegarder
-	async save(collectionName: string, data: any) {
-		// On part du principe que data.id contient l'ID calculé par ton app
+	// Sauvegarder (Créer ou Mettre à jour selon la présence en base)
+	async save<T>(collectionName: string, data: Partial<T> & { id: string }): Promise<T> {
 		if (!data.id) {
 			throw new Error("L'ID doit être fourni par l'application.");
 		}
 
 		try {
-			// Désactiver l'auto-annulation
 			const options = { requestKey: null };
 			const filter = `id="${data.id}"`;
 
-			// 1. Recherche de l'enregistrement existant avec ce filtre
 			const existingItem = await pb.collection(collectionName).getList(1, 1, {
 				filter: filter,
 				...options
@@ -95,11 +84,10 @@ export const db = {
 
 			const existing = existingItem.items[0];
 
-			// 2. Décision : Update (si trouvé) ou Create (si absent)
 			if (existing) {
-				return await pb.collection(collectionName).update(data.id, data, options);
+				return await pb.collection(collectionName).update<T>(data.id, data, options);
 			} else {
-				return await pb.collection(collectionName).create(data, options);
+				return await pb.collection(collectionName).create<T>(data, options);
 			}
 		} catch (error) {
 			console.error(`Erreur lors de l'upsert sur ${collectionName}:`, error);
@@ -107,18 +95,15 @@ export const db = {
 		}
 	},
 
-	// Sauvegarder avec Clé
-	async saveWithKey(collectionName: string, data: any, keyFields: string) {
+	// Sauvegarder avec Clé dynamique
+	// data est Record<string, any> car on accède dynamiquement à data[key]
+	async saveWithKey<T>(collectionName: string, data: Record<string, any>, keyFields: string): Promise<T> {
 		try {
 			const options = { requestKey: null };
 
-			// 1. Construction du filtre dynamique (ex: "competitionId='ID1' && playerId='ID2'")
-			// On sépare la chaîne 'competitionId, playerId' en tableau
 			const keys = keyFields.split(',').map((k) => k.trim());
-
 			const filter = keys.map((key) => `${key} = "${data[key]}"`).join(' && ');
 
-			// 2. Recherche de l'enregistrement existant avec ce filtre
 			const existingList = await pb.collection(collectionName).getList(1, 1, {
 				filter: filter,
 				...options
@@ -126,13 +111,10 @@ export const db = {
 
 			const existing = existingList.items[0];
 
-			// 3. Décision : Update (si trouvé) ou Create (si absent)
 			if (existing) {
-				// On utilise l'ID trouvé en base pour faire l'update
-				return await pb.collection(collectionName).update(existing.id, data, options);
+				return await pb.collection(collectionName).update<T>(existing.id, data, options);
 			} else {
-				// Création d'un nouvel enregistrement
-				return await pb.collection(collectionName).create(data, options);
+				return await pb.collection(collectionName).create<T>(data, options);
 			}
 		} catch (error) {
 			console.error(`Erreur lors de l'upsert par clé sur ${collectionName}:`, error);

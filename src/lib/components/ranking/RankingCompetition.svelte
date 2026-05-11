@@ -8,8 +8,8 @@
 	import type { Team } from '$lib/types/teamType';
 	import type { RankedTeam } from '$lib/types/teamType';
 
-	import PlayerScoreCardByTarget from '$lib/ui/PlayerScoreCardByTarget.svelte';
-	import TeamScoreCardByTarget from '$lib/ui/TeamScoreCardByTarget.svelte';
+	import PlayerScoreCardByTarget from '$lib/components/core_game/PlayerScoreCardByTarget.svelte';
+	import TeamScoreCardByTarget from '$lib/components/core_game/TeamScoreCardByTarget.svelte';
 	import { scoreCardService } from '$lib/utils/pocketbase/scoreCards2Cloud';
 	import { getRankedPlayers, getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { onMount } from 'svelte';

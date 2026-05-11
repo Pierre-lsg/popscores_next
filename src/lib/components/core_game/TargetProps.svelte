@@ -5,12 +5,12 @@
 	import { getGPS } from '$lib/utils/sharedFunction';
 	import { onMount } from 'svelte';
 
-	import Param from './Param.svelte';
-	import Stepper from './Stepper.svelte';
-	import Selector from './Selector.svelte';
-	import ParamTextArea from './ParamTextArea.svelte';
-	import Map from './Map.svelte';
-	import Loader from './Loader.svelte';
+	import Param from '$lib/ui/Param.svelte';
+	import Stepper from '$lib/ui/Stepper.svelte';
+	import Selector from '$lib/ui/Selector.svelte';
+	import ParamTextArea from '$lib/ui/ParamTextArea.svelte';
+	import Map from '$lib/ui/Map.svelte';
+	import Loader from '$lib/ui/Loader.svelte';
 
 	interface Props {
 		target: Target;

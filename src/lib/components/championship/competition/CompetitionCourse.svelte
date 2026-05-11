@@ -12,7 +12,7 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 	import TextField from '$lib/ui/TextField.svelte';
-	import TargetProps from '$lib/ui/TargetProps.svelte';
+	import TargetProps from '$lib/components/core_game/TargetProps.svelte';
 
 	import { isCompetitionTeam } from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { targetsChampionshipStore } from '$lib/stores/championship/targetsChampionshipStore.svelte';
