@@ -16,6 +16,14 @@
 	--bg-cell-even: #e7fee9;
 	--text-main: #263238;
 	--border-color: #cfd8dc;
+
+	/* Sémantique (Statuts & Alertes) */
+	--color-success: #248724;
+	--color-alert: #d32f2f;
+	--color-warning: #f57c00;
+	--color-info: #0288d1;
+	--color-neutral: #546e7a;
+	--text-on-status: #ffffff;
 }
 
 /* Thème Moderne (Dark Mode) */
@@ -33,6 +41,14 @@
 	--bg-cell-even: #141414;
 	--text-main: #e0e0e0;
 	--border-color: #333;
+
+	/* Sémantique (Plus douce pour fond sombre) */
+	--color-success: #388e3c;
+	--color-alert: #e53935;
+	--color-warning: #fb8c00;
+	--color-info: #039be5;
+	--color-neutral: #607d8b;
+	--text-on-status: #ffffff;
 }
 
 /* Thème Contraste Élevé (Pour le plein soleil sur le green) */
@@ -46,10 +62,18 @@
 	--bg-app: #ffffff;
 	--bg-ui: #ffffff;
 	--bg-card: #ffffff;
-	--bg-cell-odd: #eeeeee;
+	--bg-cell-odd: var(--bg-card);
 	--bg-cell-even: #fafafa;
 	--text-main: #000000;
 	--border-color: #060606;
+
+	/* Sémantique (Très lisible) */
+	--color-success: #1b5e20;
+	--color-alert: #b71c1c;
+	--color-warning: #e65100;
+	--color-info: #01579b;
+	--color-neutral: #37474f;
+	--text-on-status: #ffffff;
 }
 
 /* Thème Chaleureux (Warm) */
@@ -67,6 +91,14 @@
 	--bg-cell-even: #fae1c3;
 	--text-main: #3e2723;
 	--border-color: #d7ccc8;
+
+	/* Sémantique */
+	--color-success: #2e7d32;
+	--color-alert: #c62828;
+	--color-warning: #ef6c00;
+	--color-info: #0277bd;
+	--color-neutral: #bf360c;
+	--text-on-status: #ffffff;
 }
 
 /* Thème plage (Sand & Beach) */
@@ -83,7 +115,15 @@
 	--bg-cell-odd: #e9e4c9;
 	--bg-cell-even: #eee6b6;
 	--text-main: #263238;
-	--border-color: #b71c1c;
+	--border-color: var(--color-alert);
+
+	/* Sémantique */
+	--color-success: #2e7d32;
+	--color-alert: #d32f2f;
+	--color-warning: #f57c00;
+	--color-info: #0288d1;
+	--color-neutral: #a1887f;
+	--text-on-status: #ffffff;
 }
 
 /*----------------------------*/
@@ -142,7 +182,7 @@ select {
 	width: 6.5rem;
 	height: 2rem;
 	background-color: var(--bg-card);
-	border: 1px solid #ccc;
+	border: 1px solid var(--border-color);
 	border-radius: 4px;
 	font-size: 1rem;
 }
@@ -323,8 +363,8 @@ h2:not(:first-child) {
 }
 
 .btn-par {
-	background: #cdcdff;
-	color: #2855c6;
+	background: var(--color-info);
+	color: var(--text-on-status);
 	border: none;
 	border-radius: 50%;
 	width: 40px;
@@ -339,8 +379,8 @@ h2:not(:first-child) {
 }
 
 .btn-delete {
-	background: #ffcdd2;
-	color: #c62828;
+	background: var(--color-alert);
+	color: var(--text-on-status);
 	border: none;
 	border-radius: 50%;
 	width: 40px;
@@ -355,8 +395,8 @@ h2:not(:first-child) {
 }
 
 .btn-delete-small {
-	background: #ffcdd2;
-	color: #c62828;
+	background: var(--color-alert);
+	color: var(--text-on-status);
 	border: none;
 	border-radius: 50%;
 	width: 25px;
@@ -369,7 +409,7 @@ h2:not(:first-child) {
 }
 
 .btn-delete:hover {
-	background: #ef5350;
+	background: var(--color-alert);
 	color: white;
 }
 
@@ -443,25 +483,42 @@ h2:not(:first-child) {
 	border-color: var(--border-color);
 }
 
-/* Flag status */
-.nothing {
+/*----------------------------*/
+/* Global Semantic Status     */
+/*----------------------------*/
+.status-success {
+	background-color: var(--color-success) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-success) !important;
+}
+
+.status-alert, .status-failure {
+	background-color: var(--color-alert) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-alert) !important;
+}
+
+.status-warning {
+	background-color: var(--color-warning) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-warning) !important;
+}
+
+.status-info {
+	background-color: var(--color-info) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-info) !important;
+}
+
+.status-neutral {
+	background-color: var(--color-neutral) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-neutral) !important;
+}
+
+.status-nothing {
 	border-color: var(--primary);
 	background-color: transparent;
-}
-
-.info {
-	border-color: darkgreen;
-	background-color: green;
-}
-
-.warning {
-	border-color: darkorange;
-	background-color: orange;
-}
-
-.alert {
-	border-color: darkred;
-	background-color: red;
 }
 
 /* Others */

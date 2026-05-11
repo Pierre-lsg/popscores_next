@@ -2,6 +2,7 @@
 	import Param from '$lib/ui/Param.svelte';
 	import Password from '$lib/ui/Password.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	interface Props {
 		url: string;
@@ -22,7 +23,7 @@
 			console.log('Connecté en tant que : ', pb.authStore.record?.email);
 			isConnecting = false;
 		} catch (err) {
-			alert('Echec à la connexion. Vérifiez vos identifiants.');
+			toastStore.show('Echec à la connexion. Vérifiez vos identifiants.', 'failure', 0);
 			console.log('login', err);
 		}
 	};

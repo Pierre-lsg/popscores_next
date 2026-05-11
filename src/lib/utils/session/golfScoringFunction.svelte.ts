@@ -3,6 +3,7 @@ import type { Team, RankedTeam } from '$lib/types/teamType';
 import type { Target } from '$lib/types/targetType';
 import type { Regulation } from '$lib/types/regulationsType';
 import { toPng } from 'html-to-image';
+import { toastStore } from '$lib/stores/toastStore.svelte';
 
 //                      //
 // --    Parcours    -- //
@@ -350,7 +351,11 @@ export const shareResultsPlayers =
 			}
 		} else {
 			// Option de secours si le navigateur est trop vieux
-			alert("Le partage n'est pas supporté sur ce navigateur. Voici les résultats :\n\n" + message);
+			toastStore.show(
+				"Le partage n'est pas supporté sur ce navigateur. Voici les résultats :\n\n" + message,
+				'neutral',
+				0
+			);
 		}
 	};
 
@@ -363,52 +368,56 @@ export const shareResultsTeams =
 		settings: Regulation,
 		photo?: any
 	) =>
-	async () => {
-		console.log('photo', photo);
+		async () => {
+			console.log('photo', photo);
 
-		// 1. On prépare le texte du message
-		let message = `🏆 Résultats PopScores \n\n`;
-		let shared: boolean = false;
+			// 1. On prépare le texte du message
+			let message = `🏆 Résultats PopScores \n\n`;
+			let shared: boolean = false;
 
-		rankedTeams.forEach((team, index) => {
-			const stats = getTeamStats(team.team, targets, players, settings);
-			const medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '🔹 ';
-			message += `${medal}${team.team.name}: ${stats.gross} ${stats.diffText}\n`;
-		});
+			rankedTeams.forEach((team, index) => {
+				const stats = getTeamStats(team.team, targets, players, settings);
+				const medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : '🔹 ';
+				message += `${medal}${team.team.name}: ${stats.gross} ${stats.diffText}\n`;
+			});
 
-		message += `\nJoué avec PopScores ⛳`;
+			message += `\nJoué avec PopScores ⛳`;
 
-		// Envoi avec photo si elle existe
-		if (photo) {
-			if (navigator.canShare && navigator.canShare({ files: [photo] })) {
+			// Envoi avec photo si elle existe
+			if (photo) {
+				if (navigator.canShare && navigator.canShare({ files: [photo] })) {
+					try {
+						await navigator.share({
+							files: [photo],
+							title: 'Résultat de la partie',
+							text: message
+						});
+						shared = true;
+					} catch (err) {
+						console.log("Echec de l'envoi avec photo : ", err);
+					}
+				}
+			}
+
+			// Envoi si pas de photo ou échec envoi avec photo
+			if (navigator.share && !shared) {
 				try {
 					await navigator.share({
-						files: [photo],
 						title: 'Résultat de la partie',
 						text: message
 					});
-					shared = true;
 				} catch (err) {
-					console.log("Echec de l'envoi avec photo : ", err);
+					console.log('Partage annulé ou erreur:', err);
 				}
+			} else {
+				// Option de secours si le navigateur est trop vieux
+				toastStore.show(
+					"Le partage n'est pas supporté sur ce navigateur. Voici les résultats :\n\n" + message,
+					'neutral',
+					0
+				);
 			}
-		}
-
-		// Envoi si pas de photo ou échec envoi avec photo
-		if (navigator.share && !shared) {
-			try {
-				await navigator.share({
-					title: 'Résultat de la partie',
-					text: message
-				});
-			} catch (err) {
-				console.log('Partage annulé ou erreur:', err);
-			}
-		} else {
-			// Option de secours si le navigateur est trop vieux
-			alert("Le partage n'est pas supporté sur ce navigateur. Voici les résultats :\n\n" + message);
-		}
-	};
+		};
 
 export const exportAsImage = async (idCapture: string) => {
 	const node = document.getElementById(idCapture);

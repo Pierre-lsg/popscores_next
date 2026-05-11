@@ -41,7 +41,11 @@
 
 		if (tmpCourse) tmpCourse.name = newCourseName;
 		isRenaming = false;
-		alert('Corriger/Simplifier cet écran en passant directemnt la currentCourse et non son id');
+		toastStore.show(
+			'Corriger/Simplifier cet écran en passant directemnt la currentCourse et non son id',
+			'failure',
+			0
+		);
 	};
 </script>
 

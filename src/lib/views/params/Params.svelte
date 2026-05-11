@@ -3,6 +3,7 @@
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
 	import { importLocalStorage, exportLocalStorage } from '$lib/utils/utils';
 
@@ -28,7 +29,7 @@
 			const cacheNames = await caches.keys();
 			await Promise.all(cacheNames.map((name) => caches.delete(name)));
 
-			alert('Application réinitialisée. Redémarrage de Popscores');
+			toastStore.show('Application réinitialisée. Redémarrage de Popscores', 'neutral', 5000);
 			window.location.reload();
 		}
 	};

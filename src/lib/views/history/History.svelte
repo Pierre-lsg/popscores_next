@@ -10,6 +10,7 @@
 	import RegularsList from '$lib/components/history/RegularsList.svelte';
 	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
 	import { navContext } from '../../utils/nav.svelte.ts';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	let option: string = $state('');
 	let currentSession: string = $state('');
@@ -19,7 +20,8 @@
 		const importedCourseData = shareService.loadCourseFromUrl();
 		if (importedCourseData) {
 			if (confirm('Un parcours a été trouvé via ce lien. Voulez-vous le récéupérer ?')) {
-				if (coursesStore.exist(importedCourseData.course.id)) alert('Le parcours existe déjà !');
+				if (coursesStore.exist(importedCourseData.course.id))
+					toastStore.show('Le parcours existe déjà !', 'neutral', 5000);
 				else coursesStore.load(importedCourseData.course);
 
 				window.history.replaceState({}, '', window.location.pathname);

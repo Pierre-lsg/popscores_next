@@ -165,7 +165,7 @@
 		display: flex;
 		align-items: center; /* Center text vertically */
 		padding: 6px 0px;
-		background-color: #4338ca;
+		background-color: var(--primary);
 		color: white;
 		border-radius: 8px;
 		cursor: pointer;

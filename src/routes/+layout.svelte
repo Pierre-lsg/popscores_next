@@ -6,6 +6,7 @@
 	import { page } from '$app/stores';
 	import ThemeSelector from '$lib/ui/ThemeSelector.svelte';
 	import Toast from '$lib/ui/Toast.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { formatList } from '$lib/utils/sharedFunction';
 	import { checkDataVersion, CURRENT_VERSION } from '$lib/utils/migration';
 	import { userStore } from '$lib/stores/userStore.svelte';
@@ -20,7 +21,7 @@
 	let webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '';
 
 	const logoutAndPurge = () => {
-		user.set(null);
+		userStore.current = null;
 		localStorage.clear();
 		pb.authStore.clear();
 		goto(base + '/');
@@ -29,7 +30,7 @@
 	onMount(() => {
 		const hasMigrated = checkDataVersion();
 		if (hasMigrated) {
-			alert('Application mise à jour');
+			toastStore.show('Application mise à jour', 'neutral', 5000);
 			window.location.reload();
 		}
 	});

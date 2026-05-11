@@ -81,7 +81,7 @@
 	}
 
 	.scale-container {
-		border: 1px solid #ddd;
+		border: 1px solid var(--border-color);
 		border-radius: 8px;
 		padding: 0.5rem;
 		background: var(--bg-card);
@@ -92,13 +92,13 @@
 		align-items: center;
 		gap: 10px;
 		margin-bottom: 1rem;
-		border-bottom: 2px solid #eee;
+		border-bottom: 2px solid var(--bg-card);
 		padding-bottom: 0.5rem;
 	}
 
 	.badge {
 		background: var(--bg-card);
-		color: #4338ca;
+		color: var(--primary);
 		padding: 2px 8px;
 		border-radius: 12px;
 		font-size: 0.8rem;
@@ -117,15 +117,15 @@
 	.rank-item {
 		display: flex;
 		flex-direction: column;
-		background: #f9fafb;
+		background: var(--bg-app);
 		padding: 8px;
 		border-radius: 4px;
-		border: 1px solid #efefef;
+		border: 1px solid var(--bg-card);
 	}
 
 	.rank-item label {
 		font-size: 0.75rem;
-		color: #666;
+		color: var(--secondary);
 		margin-bottom: 4px;
 	}
 
@@ -148,7 +148,7 @@
 	}
 
 	.btn-add {
-		background: #22c55e;
+		background: var(--color-success);
 		color: white;
 		border: none;
 		padding: 6px 12px;
@@ -156,7 +156,7 @@
 		cursor: pointer;
 	}
 	.btn-remove {
-		background: #ef4444;
+		background: var(--color-alert);
 		color: white;
 		border: none;
 		padding: 6px 12px;

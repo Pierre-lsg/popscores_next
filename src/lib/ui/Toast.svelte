@@ -4,39 +4,56 @@
 </script>
 
 {#if toastStore.message}
-	<button
-		transition:fly={{ y: 0, duration: 300 }}
-		class="toast-button {toastStore.status}"
-		onclick={() => toastStore.dismiss()}
+	<div
+		transition:fly={{ y: -50, duration: 300 }}
+		class="toast-container status-{toastStore.status}"
+		role="alert"
 	>
-		{toastStore.message}
-	</button>
+		<span class="message">{toastStore.message}</span>
+		{#if toastStore.isPersistent}
+			<button class="close-btn" onclick={() => toastStore.dismiss()} aria-label="Fermer">
+				✕
+			</button>
+		{/if}
+	</div>
 {/if}
 
 <style>
-	.toast-button {
-		border: none;
+	.toast-container {
 		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
+		top: 1rem;
+		left: 50%;
+		transform: translateX(-50%);
 		z-index: 1000;
-		padding: 0.5rem;
-		text-align: center;
-		font-size: 0.9rem;
+		padding: 0.75rem 1.5rem;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		min-width: 300px;
+		justify-content: space-between;
 		font-weight: bold;
-		color: white;
+		font-size: 0.95rem;
 	}
 
-	.success {
-		background: #248724;
+	.message {
+		flex-grow: 1;
+		text-align: center;
 	}
 
-	.failure {
-		background: #ff3030;
+	.close-btn {
+		background: none;
+		border: none;
+		color: var(--text-on-status);
+		font-size: 1.2rem;
+		cursor: pointer;
+		padding: 0 0.5rem;
+		opacity: 0.8;
+		transition: opacity 0.2s;
 	}
 
-	.warning {
-		background: #ff7f30;
+	.close-btn:hover {
+		opacity: 1;
 	}
 </style>

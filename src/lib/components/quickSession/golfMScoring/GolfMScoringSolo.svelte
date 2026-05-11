@@ -13,6 +13,7 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 	import Param from '$lib/ui/Param.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	import { swipe } from '$lib/utils/swipe';
 	import { onMount } from 'svelte';
@@ -84,7 +85,7 @@
 	const deleteTarget = () => {
 		const targetIndex = activeTargetIndex;
 		if (isFirstTarget === isLastTarget) {
-			alert('Un parcours doit contenir au moins un trou');
+			toastStore.show('Un parcours doit contenir au moins un trou', 'failure', 0);
 			return;
 		}
 		if (isLastTarget) activeTargetIndex = activeTargetIndex - 1;
@@ -177,7 +178,8 @@
 		{players}
 		{minTrys}
 		{maxTrys}
-		onScoreChange={(playerId, targetId, score) => playersStore.updateScore(playerId, targetId, score)}
+		onScoreChange={(playerId, targetId, score) =>
+			playersStore.updateScore(playerId, targetId, score)}
 	/>
 </div>
 

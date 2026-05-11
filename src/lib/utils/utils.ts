@@ -89,6 +89,5 @@ export const importLocalStorage = async (file: File): Promise<void> => {
 		window.location.reload();
 	} catch (error) {
 		console.error("Erreur lors de l'import :", error);
-		alert("Échec de l'importation. Vérifiez le fichier.");
 	}
 };

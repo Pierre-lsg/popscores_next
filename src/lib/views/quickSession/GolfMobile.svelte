@@ -135,12 +135,12 @@
 
 	const showTargets = () => {
 		if (playersStore.list.length > 0) nextCard(Step.targets);
-		else alert('Veuillez saisir un joueur');
+		else toastStore.show('Veuillez saisir un joueur', 'neutral', 5000);
 	};
 
 	const showScoring = () => {
 		if (targetsStore.list.length) nextCard(Step.scoring);
-		else alert('Veuillez saisir une cible');
+		else toastStore.show('Veuillez saisir une cible', 'neutral', 5000);
 	};
 </script>
 

@@ -4,6 +4,7 @@
 
 	import Selector from '$lib/ui/Selector.svelte';
 	import Loader from '$lib/ui/Loader.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { championshipStore } from '$lib/stores/championship/championshipsStore.svelte';
 	import { userStore } from '$lib/stores/userStore.svelte';
 	import { securityCheck } from '$lib/utils/security';
@@ -50,7 +51,7 @@
 		if (tmpChampionship) {
 			currentChampionship = tmpChampionship;
 			goto(base + '/championship/' + currentChampionship.id);
-		} else alert('Aucun championnat sélectionné');
+		} else toastStore.show('Aucun championnat sélectionné', 'neutral', 5000);
 
 		loadingChampionship = false;
 	};
@@ -67,19 +68,20 @@
 
 		// Si aucun championnat n'est actif dans la section
 		if (!currentChampionship) {
-			if (userStore.current && !userStore.current?.roles.includes('admin')) {
+			const currentUser = userStore.current;
+			if (currentUser && !currentUser.roles.includes('admin')) {
 				// Récupérer directement le championnat si un seul en cours
 				// Et si l'utilisateur est responsable du championnat
 				// ou au moins d'une compétition
 				cloudChampionships = cloudChampionships.filter((c) => {
 					// Todo Corriger la situation 'marshall' en listant les autorisés sur un championnat
-					if (c.status === 'setup' && userStore.current?.roles.includes('csMgr')) {
-						if (c.managersId.includes(userStore.current.id)) return true;
+					if (c.status === 'setup' && currentUser.roles.includes('csMgr')) {
+						if (c.managersId.includes(currentUser.id)) return true;
 					}
 					if (c.status === 'in_progress') {
-						if (c.managersId.includes(userStore.current.id)) return true;
-						if (c.cpManagersId.includes(userStore.current.id)) return true;
-						if (userStore.current?.roles.includes('marshall')) return true;
+						if (c.managersId.includes(currentUser.id)) return true;
+						if (c.cpManagersId.includes(currentUser.id)) return true;
+						if (currentUser.roles.includes('marshall')) return true;
 					}
 					return false;
 				});

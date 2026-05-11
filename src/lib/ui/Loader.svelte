@@ -26,7 +26,7 @@
 
 	.loader-message {
 		font-size: 2.5rem;
-		color: var(--color-text-soft, #eee);
+		color: var(--color-text-soft, var(--bg-card));
 		font-weight: 500;
 		text-align: center;
 		/* Petite animation de pulsation du texte */

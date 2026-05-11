@@ -11,6 +11,7 @@
 	import ParamTextArea from '$lib/ui/ParamTextArea.svelte';
 	import Map from '$lib/ui/Map.svelte';
 	import Loader from '$lib/ui/Loader.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	interface Props {
 		target: Target;
@@ -35,7 +36,7 @@
 				if (type === 'start') target.start_pos = coords;
 				else target.end_pos = coords;
 			} catch (err) {
-				alert('Erreur GPS : ' + err);
+				toastStore.show('Erreur GPS : ' + err, 'failure', 0);
 			} finally {
 				loadingGps = false;
 			}

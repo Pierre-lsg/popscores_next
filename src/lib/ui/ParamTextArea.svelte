@@ -104,7 +104,7 @@
 	.btn-mic {
 		padding: 4px 12px;
 		border-radius: 20px;
-		border: 1px solid #ccc;
+		border: 1px solid var(--border-color);
 		background: white;
 		transition: all 0.3s;
 	}

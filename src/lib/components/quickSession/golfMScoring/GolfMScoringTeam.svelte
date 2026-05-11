@@ -14,6 +14,8 @@
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
+
 	import { onMount } from 'svelte';
 	import { getRankedTeams } from '$lib/utils/session/golfScoringFunction.svelte';
 	import { collectiveRules } from '$lib/types/targetType';
@@ -84,7 +86,7 @@
 	const deleteTarget = () => {
 		const targetIndex = activeTargetIndex;
 		if (isFirstTarget === isLastTarget) {
-			alert('Un parcours doit contenir au moins un trou');
+			toastStore.show('Un parcours doit contenir au moins un trou', 'failure', 0);
 			return;
 		}
 		if (isLastTarget) activeTargetIndex = activeTargetIndex - 1;
@@ -191,7 +193,8 @@
 		{teams}
 		{minTrys}
 		{maxTrys}
-		onScoreChange={(playerId, targetId, score) => playersStore.updateScore(playerId, targetId, score)}
+		onScoreChange={(playerId, targetId, score) =>
+			playersStore.updateScore(playerId, targetId, score)}
 	/>
 </div>
 

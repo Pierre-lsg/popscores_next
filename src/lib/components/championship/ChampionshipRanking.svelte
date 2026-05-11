@@ -29,7 +29,7 @@
 				return competition ? competition.name : 'Compétition inconnue';
 			})
 			.filter((name) => name !== 'Compétition inconnue');
-		alert(competitionNames);
+		toastStore.show(formatList(competitionNames), 'success', 0);
 	};
 
 	const competitionsClubDetails = (clubRanking: Ranking) => {
@@ -39,7 +39,7 @@
 				return competition ? competition.name : 'Compétition inconnue';
 			})
 			.filter((name) => name !== 'Compétition inconnue');
-		alert(formatList(competitionNames));
+		toastStore.show(formatList(competitionNames), 'success', 0);
 	};
 
 	const publishChampionship = async () => {

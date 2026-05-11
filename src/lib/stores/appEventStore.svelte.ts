@@ -78,10 +78,10 @@ class AppStatusStore {
 	 */
 	computeStatus() {
 		const currentStatus = this.list.map((s) => s.status);
-		if (currentStatus.includes('alert')) return 'alert';
-		if (currentStatus.includes('warning')) return 'warning';
-		if (currentStatus.includes('info')) return 'info';
-		return 'nothing';
+		if (currentStatus.includes('alert')) return 'status-alert';
+		if (currentStatus.includes('warning')) return 'status-warning';
+		if (currentStatus.includes('info')) return 'status-info';
+		return 'status-nothing';
 	}
 }
 

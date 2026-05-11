@@ -3,17 +3,18 @@
 	import type { Championship } from '$lib/types/championshipType';
 	import { clubService } from '$lib/utils/pocketbase/clubs2Cloud';
 	import { playerService } from '$lib/utils/pocketbase/players2Cloud';
+	import { toastStore } from '$lib/stores/toastStore.svelte';
 
 	let { championship = null } = $props<{
 		championship: Championship;
 	}>();
 
 	const competitionsPlayerDetails = (p: string) => {
-		alert('todo');
+		toastStore.show('TODO : ' + p, 'neutral', 0);
 	};
 
 	const competitionsClubDetails = (c: string) => {
-		alert('todo');
+		toastStore.show('TODO : ' + c, 'neutral', 0);
 	};
 </script>
 
