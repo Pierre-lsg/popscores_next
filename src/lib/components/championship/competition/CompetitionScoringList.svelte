@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Championship } from '$lib/types/championshipType';
 	import type { Fly } from '$lib/types/flyType';
@@ -44,19 +45,19 @@
 
 	let qrRefereeConnect: string = $state('');
 
-	const validating = () => {
-		if (confirm('Validez-vous les résultats ?')) {
+	const validating = async () => {
+		if (await confirmStore.prompt('Validez-vous les résultats ?')) {
 			currentCompetition.status = 'finished';
 			currentCompetition.step = 'welcome';
 			competitionService.saveCompetition(currentCompetition, championship.id);
 		}
 	};
 
-	const loadingFly = (fly: Fly) => {
+	const loadingFly = async (fly: Fly) => {
 		currentFly = fly;
 	};
 
-	const listTeamPlayers = (team: Team) => {
+	const listTeamPlayers = async (team: Team) => {
 		let playerList: string[] = [];
 		team.playersId.forEach((aPlayerId) => {
 			playerList.push(playersChampionshipStore.find(aPlayerId)?.name || '👻');
@@ -64,7 +65,7 @@
 		return formatList(playerList);
 	};
 
-	const listCompetitors = (fly: Fly) => {
+	const listCompetitors = async (fly: Fly) => {
 		let compList: string[] = [];
 		fly.playersId.forEach((playerId) => {
 			compList.push(playersChampionshipStore.list.find((t) => t.id === playerId)?.name || '');
@@ -72,7 +73,7 @@
 		return formatList(compList);
 	};
 
-	const displaySupervisor = (fly: Fly) => {
+	const displaySupervisor = async (fly: Fly) => {
 		let supervisor = supervisors.find((s) => s.id === fly.supervisorId);
 		if (supervisor) return supervisor.name;
 		else return '';
@@ -102,7 +103,7 @@
 	};
 
 	const refreshFly = async (aFly: Fly) => {
-		if (confirm('Voulez-vous récupérer les données du fly #' + aFly.order + ' ?')) {
+		if (await confirmStore.prompt('Voulez-vous récupérer les données du fly #' + aFly.order + ' ?')) {
 			const cloudFly = await flyService.getFlyById(aFly.id);
 			let playersId: string[] = [];
 
@@ -154,7 +155,7 @@
 	<div class="fly-list">
 		{#each flys as fly, i}
 			<div class="fly-item">
-				<div role="none" class="fly-card" onclick={() => loadingFly(fly)}>
+				<div role="none" class="fly-card" onclick={async () => loadingFly(fly)}>
 					<span class="text-lg">Fly #{fly.order} </span>
 					{#if isCompetitionTeam(currentCompetition)}
 						<ul>
@@ -177,11 +178,11 @@
 					<span class="text-sm">{fly.status || 'inconnu'}</span>
 				</div>
 				<div class="action">
-					<button onclick={() => (isAttachingSupervisor[i] = !isAttachingSupervisor[i])}>
+					<button onclick={async () => (isAttachingSupervisor[i] = !isAttachingSupervisor[i])}>
 						🌟
 					</button>
-					<button onclick={() => editQrConnect(fly)}> 🚪 </button>
-					<button onclick={() => refreshFly(fly)}> 🔍 </button>
+					<button onclick={async () => editQrConnect(fly)}> 🚪 </button>
+					<button onclick={async () => refreshFly(fly)}> 🔍 </button>
 				</div>
 				{#if isAttachingSupervisor[i]}
 					<Selector
@@ -198,7 +199,7 @@
 	</div>
 
 	{#if qrRefereeConnect !== ''}
-		<div role="none" onclick={() => (qrRefereeConnect = '')}>
+		<div role="none" onclick={async () => (qrRefereeConnect = '')}>
 			<QRCode data={qrRefereeConnect} size={400} />
 		</div>
 	{/if}

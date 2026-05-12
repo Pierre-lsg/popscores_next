@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import { collectiveRules, individualRules, type Target } from '$lib/types/targetType';
 	import type { Course } from '$lib/types/courseType';
@@ -52,8 +53,8 @@
 		}
 	});
 
-	const removeTarget = (id: string) => {
-		if (confirm('Voulez-vous vraiment supprimer cette cible ?')) {
+	const removeTarget = async (id: string) => {
+		if (await confirmStore.prompt('Voulez-vous vraiment supprimer cette cible ?')) {
 			course?.targets.splice(
 				course.targets.findIndex((target) => target.id === id),
 				1
@@ -63,14 +64,14 @@
 		isEditing = false;
 	};
 
-	const addNewTarget = () => {
+	const addNewTarget = async () => {
 		if (course) {
 			course.targets.push(targetsChampionshipStore.new());
 			targets = course.targets;
 		}
 	};
 
-	const editTarget = (id: number) => {
+	const editTarget = async (id: number) => {
 		isEditingTarget[id] = !isEditingTarget[id];
 		for (let i = 0; i < isEditingTarget.length; i++) {
 			if (i !== id) isEditingTarget[i] = false;
@@ -79,18 +80,18 @@
 	};
 
 	// Drag & drop functions
-	const handleConsider = () => {
+	const handleConsider = async () => {
 		isDragging = true;
 		isEditingTarget = isEditingTarget.map(() => false);
 	};
 
-	const handleFinalize = (e: CustomEvent<{ items: any[] }>) => {
+	const handleFinalize = async (e: CustomEvent<{ items: any[] }>) => {
 		targets = e.detail.items;
 		if (course) course.targets = targets;
 		isDragging = false;
 	};
 
-	const handleRemoveDrop = (e: CustomEvent<{ items: any[] }>) => {
+	const handleRemoveDrop = async (e: CustomEvent<{ items: any[] }>) => {
 		const removedItem = e.detail.items[0];
 		if (removedItem) {
 			targets = targets.filter((t) => t.id !== removedItem.id);
@@ -106,7 +107,7 @@
 	<h2>Définition du parcours</h2>
 	{#if !isEditing}
 		<h3>Liste des cibles</h3>
-		<button onclick={() => addNewTarget()} class="btn btn-primary">Ajouter une cible</button>
+		<button onclick={async () => addNewTarget()} class="btn btn-primary">Ajouter une cible</button>
 		{#if course && targets.length > 0}
 			<div class="step-content" in:slide>
 				<div
@@ -148,7 +149,7 @@
 								<span
 									class="btn-actions btn-par"
 									role="none"
-									onclick={() => editTarget(targets.indexOf(target))}>+</span
+									onclick={async () => editTarget(targets.indexOf(target))}>+</span
 								>
 							</div>
 							<div role="none" class="handle">☰</div>

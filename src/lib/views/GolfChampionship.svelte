@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { base } from '$app/paths';
 	import type { Championship } from '$lib/types/championshipType';
 	import { userStore } from '$lib/stores/userStore.svelte';
@@ -9,9 +10,9 @@
 		currentChampionship: Championship;
 	}>();
 
-	const changeChampionship = () => {
+	const changeChampionship = async () => {
 		if (
-			confirm(
+			await confirmStore.prompt(
 				'Voulez-vous vraiment changer de championnat ? \n Les données non sauvegardées dans le Cloud seront écrasées.'
 			)
 		) {
@@ -67,7 +68,7 @@
 			<h3>Retour Accueil</h3>
 		</a>
 
-		<div role="none" class="card" onclick={() => changeChampionship()}>
+		<div role="none" class="card" onclick={async () => changeChampionship()}>
 			<span class="icon">🔄</span>
 			<h3>Changer de championnat</h3>
 		</div>

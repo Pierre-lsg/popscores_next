@@ -3,6 +3,7 @@
 	import Password from '$lib/ui/Password.svelte';
 	import { pb } from '$lib/utils/pocketbase/pocketBase';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
+	import { fade, scale } from 'svelte/transition';
 
 	interface Props {
 		url: string;
@@ -29,15 +30,16 @@
 	};
 </script>
 
-<div class="box-screen">
-	<div class="content-box">
-		Serveur : {url}
+<div class="modal-backdrop" transition:fade={{ duration: 200 }}>
+	<div class="modal-box" transition:scale={{ start: 0.95, duration: 200 }}>
+		<h3 class="modal-title">Connexion à PocketBase</h3>
+		<p class="text-sm">Serveur : {url}</p>
 		<div class="credentials">
 			<Param label="Identifiant" type="text" bind:value={username} placeholder="Identifiant" />
 			<Password label="Mot de passe" bind:value={password} />
-			<div class="action">
+			<div class="modal-actions" style="margin-top: 1.5rem; display: flex; justify-content: space-around; gap: 1rem;">
 				<button onclick={() => login()} class="btn btn-primary">Se connecter</button>
-				<button onclick={() => (isConnecting = false)} class="btn">Annuler</button>
+				<button onclick={() => (isConnecting = false)} class="btn btn-secondary">Annuler</button>
 			</div>
 		</div>
 	</div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import type { User } from '$lib/types/userType';
 	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
@@ -60,7 +61,7 @@
 	let competitionLocation: string = $state('');
 	let competitionManagersId: string[] = $state([]);
 
-	const createCompetition = () => {
+	const createCompetition = async () => {
 		let tmpCompetition: Competition = competitionsStore.add(
 			competitionName,
 			'setup',
@@ -78,8 +79,8 @@
 		addNewCompetition = false;
 	};
 
-	const removeCompetition = (aCompetition: Competition) => {
-		if (confirm('Voulez-vous vraiment supprimer cette compétition ?')) {
+	const removeCompetition = async (aCompetition: Competition) => {
+		if (await confirmStore.prompt('Voulez-vous vraiment supprimer cette compétition ?')) {
 			championship.competitionsId = championship.competitionsId.filter(
 				(id: string) => id !== aCompetition.id
 			);
@@ -88,7 +89,7 @@
 		}
 	};
 
-	const editingCompetition = (index: number) => {
+	const editingCompetition = async (index: number) => {
 		for (let i = 0; i < numCompetitions; i++) {
 			if (i !== index) editCompetition[i] = false;
 		}
@@ -99,7 +100,7 @@
 
 	const savingCompetition = async (competition: Competition) => {
 		if (
-			confirm(
+			await confirmStore.prompt(
 				'Voulez-vous mettre à jour les informations partagées de la compétition ? \n Action déconseillée si la compétition est en cours'
 			)
 		) {
@@ -118,10 +119,10 @@
 		}
 	};
 
-	const loadCompetitionfromCloud = (index: number) => {
+	const loadCompetitionfromCloud = async (index: number) => {
 		const aCompet = competitionsStore.list.filter((c) => c.id === filteredCompetitions[index].id);
 		if (aCompet.length == 0) {
-			if (confirm('Voulez-vous importer la compétition ?')) {
+			if (await confirmStore.prompt('Voulez-vous importer la compétition ?')) {
 				cloudLoadCompetition(filteredCompetitions[index].id);
 			}
 		}
@@ -132,11 +133,11 @@
 		loading = false;
 	});
 
-	const loadingCompetition = (competition: Competition) => {
+	const loadingCompetition = async (competition: Competition) => {
 		currentCompetition = competition;
 	};
 
-	const toggleManagers = () => {
+	const toggleManagers = async () => {
 		// Pour chaque compétition du championnat, renvoie la liste des managersId
 		const managers = championship.competitionsId
 			.map((competitionId: string) => {
@@ -157,7 +158,7 @@
 		<div class="item-list">
 			{#each competitions as competition, i}
 				<div class="item-details">
-					<div role="none" class="item-card" onclick={() => loadingCompetition(competition)}>
+					<div role="none" class="item-card" onclick={async () => loadingCompetition(competition)}>
 						<div class="details">
 							{competition.name}
 						</div>
@@ -166,9 +167,9 @@
 					</div>
 					{#if (competition.status !== 'finished' && competition.status !== 'published') || competition.startDate >= today}
 						<div class="action">
-							<button onclick={() => removeCompetition(competition)}> 🗑️ </button>
-							<button onclick={() => editingCompetition(i)}>✏️</button>
-							<button onclick={() => savingCompetition(competition)}>☁️</button>
+							<button onclick={async () => removeCompetition(competition)}> 🗑️ </button>
+							<button onclick={async () => editingCompetition(i)}>✏️</button>
+							<button onclick={async () => savingCompetition(competition)}>☁️</button>
 						</div>
 					{/if}
 				</div>
@@ -208,7 +209,7 @@
 						onchange={() => toggleManagers()}
 					/>
 				{/await}
-				<button onclick={() => editingCompetition(i)} class="btn btn-primary">Terminer</button>
+				<button onclick={async () => editingCompetition(i)} class="btn btn-primary">Terminer</button>
 			</div>
 		{/if}
 	{/each}
@@ -218,7 +219,7 @@
 	{/if}
 	{#if userStore.current && (userStore.current?.roles.includes('admin') || userStore.current?.roles.includes('csMgr'))}
 		{#if !isEditingCompetition}
-			<button onclick={() => (addNewCompetition = true)} class="btn btn-primary"
+			<button onclick={async () => (addNewCompetition = true)} class="btn btn-primary"
 				>Ajouter une nouvelle compétition</button
 			>
 		{/if}
@@ -253,7 +254,7 @@
 		{/await}
 		<div class="action">
 			<button onclick={createCompetition} class="btn btn-primary">Créer</button>
-			<button onclick={() => (addNewCompetition = false)} class="btn">Annuler</button>
+			<button onclick={async () => (addNewCompetition = false)} class="btn">Annuler</button>
 		</div>
 	</div>
 {/if}
@@ -264,7 +265,7 @@
 {:else if filteredCompetitions.length > 0}
 	<h3>Competitions disponibles sur le Cloud</h3>
 	{#each filteredCompetitions as c, i}
-		<button onclick={() => loadCompetitionfromCloud(i)}>
+		<button onclick={async () => loadCompetitionfromCloud(i)}>
 			<div>{c.name} - {c.startDate}</div>
 		</button>
 	{/each}

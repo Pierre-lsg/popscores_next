@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
@@ -33,10 +34,10 @@
 
 	gameStatus.currentTargetIndex = activeTargetIndex;
 
-	afterNavigate(({ type }) => {
+	afterNavigate(async ({ type }) => {
 		if (type === 'link') {
 			if (gameStatus.status !== 'setup') {
-				if (confirm('Une partie est déjà en cours. Voulez-vous commencer une nouvelle partie ?')) {
+				if (await confirmStore.prompt('Une partie est déjà en cours. Voulez-vous commencer une nouvelle partie ?')) {
 					resetGame();
 				}
 			}
@@ -52,7 +53,7 @@
 		else if (gameStatus.status === 'finished') nextCard(Step.ranking);
 	});
 
-	const nextCard = (nextStep: number) => {
+	const nextCard = async (nextStep: number) => {
 		currentStep = nextStep;
 		if (nextStep === Step.session) gameStatus.status = 'setup';
 		else if (nextStep === Step.players) gameStatus.status = 'setup';
@@ -61,13 +62,13 @@
 		else if (nextStep === Step.ranking) gameStatus.status = 'finished';
 	};
 
-	const resetGameConfirm = () => {
-		if (confirm('Voulez-vous vraiment recommencer à zéro ?')) {
+	const resetGameConfirm = async () => {
+		if (await confirmStore.prompt('Voulez-vous vraiment recommencer à zéro ?')) {
 			resetGame();
 		}
 	};
 
-	const resetGame = () => {
+	const resetGame = async () => {
 		playersStore.reset();
 		targetsStore.reset();
 		teamsStore.reset();
@@ -78,7 +79,7 @@
 		nextCard(Step.session);
 	};
 
-	const saveGameToHistory = () => {
+	const saveGameToHistory = async () => {
 		const newArchive = {
 			id: sessionSettingsStore.settings.id,
 			settings: sessionSettingsStore.settings,
@@ -91,7 +92,7 @@
 		if (isSessionHistorised) toastStore.show("Session enregistrée dans l'historique");
 	};
 
-	const saveCourseAndPlayers = () => {
+	const saveCourseAndPlayers = async () => {
 		const newCourse: Course = {
 			id: sessionSettingsStore.settings.id,
 			name:
@@ -111,7 +112,7 @@
 		isCourseSaved = true;
 	};
 
-	const showPodium = () => {
+	const showPodium = async () => {
 		// All scores have been entered ?
 		let hasAllScoresEntered = true;
 		targetsStore.list.forEach((t) => {
@@ -128,17 +129,17 @@
 
 		if (hasAllScoresEntered) nextCard(Step.ranking);
 		else {
-			if (confirm("Tous les scores n'ont pas été saisis.\nVoulez-vous accéder au Podium ?"))
+			if (await confirmStore.prompt("Tous les scores n'ont pas été saisis.\nVoulez-vous accéder au Podium ?"))
 				nextCard(Step.ranking);
 		}
 	};
 
-	const showTargets = () => {
+	const showTargets = async () => {
 		if (playersStore.list.length > 0) nextCard(Step.targets);
 		else toastStore.show('Veuillez saisir un joueur', 'neutral', 5000);
 	};
 
-	const showScoring = () => {
+	const showScoring = async () => {
 		if (targetsStore.list.length) nextCard(Step.scoring);
 		else toastStore.show('Veuillez saisir une cible', 'neutral', 5000);
 	};
@@ -188,16 +189,16 @@
 		<GolfHeader title="🏆 Classement Final" onPrev={() => nextCard(Step.scoring)} />
 		<RankingPodium />
 
-		<button class="btn btn-primary" onclick={() => nextCard(Step.scoreCard)}>Carte de score</button>
+		<button class="btn btn-primary" onclick={async () => nextCard(Step.scoreCard)}>Carte de score</button>
 		<!-- <button onclick={copyShareLink} class="btn btn-share"> 🔗 Partager la partie </button> -->
-		<button class="btn btn-primary" onclick={() => resetGameConfirm()}>Nouvelle partie</button>
+		<button class="btn btn-primary" onclick={async () => resetGameConfirm()}>Nouvelle partie</button>
 		{#if !isSessionHistorised}
-			<button class="btn btn-primary" onclick={() => saveGameToHistory()}
+			<button class="btn btn-primary" onclick={async () => saveGameToHistory()}
 				>Historiser la partie</button
 			>
 		{/if}
 		{#if !isCourseSaved}
-			<button class="btn btn-primary" onclick={() => saveCourseAndPlayers()}
+			<button class="btn btn-primary" onclick={async () => saveCourseAndPlayers()}
 				>Enregistrer parcours et joueurs</button
 			>
 		{/if}

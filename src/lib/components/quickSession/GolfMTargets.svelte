@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
 	import GolfSCourse from './GolfSCourse.svelte';
@@ -33,7 +34,7 @@
 	let newTargetRule = $state(ruleOptions[0]);
 
 	// Function to add a new target to targetsStore with specified parameters
-	const addTarget = () => {
+	const addTarget = async () => {
 		targetsStore.add(
 			newTargetRule === 'Bonus' || newTargetRule === 'Team_Bonus' ? 0 : 4,
 			'Une cible',
@@ -44,7 +45,7 @@
 	};
 
 	// Function to handle the removal of a target from dndzone
-	const handleRemoveDrop = (e: CustomEvent<{ items: any[] }>) => {
+	const handleRemoveDrop = async (e: CustomEvent<{ items: any[] }>) => {
 		const removedItem = e.detail.items[0];
 		if (removedItem) {
 			targetsStore.list = targetsStore.list.filter((h) => h.id !== removedItem.id);
@@ -55,17 +56,17 @@
 	};
 
 	// Function to handle the consideration of a target in dndzone
-	const handleConsider = () => {
+	const handleConsider = async () => {
 		isDragging = true;
 	};
 
 	// Function to finalize the reordering of targets in dndzone
-	const handleFinalize = (e: CustomEvent<{ items: any[] }>) => {
+	const handleFinalize = async (e: CustomEvent<{ items: any[] }>) => {
 		targetsStore.list = e.detail.items;
 		isDragging = false;
 	};
 
-	const editTarget = (id: number) => {
+	const editTarget = async (id: number) => {
 		isEditingTarget[id] = !isEditingTarget[id];
 		for (let i = 0; i < isEditingTarget.length; i++) {
 			if (i !== id) isEditingTarget[i] = false;
@@ -73,25 +74,25 @@
 		isEditing = isEditingTarget[id];
 	};
 
-	const removeTarget = (id: string) => {
-		if (confirm('Voulez-vous vraiment supprimer cette cible ?')) {
+	const removeTarget = async (id: string) => {
+		if (await confirmStore.prompt('Voulez-vous vraiment supprimer cette cible ?')) {
 			targetsStore.removeById(id);
 		}
 		isEditingTarget.fill(false);
 		isEditing = false;
 	};
 
-	const selectCourse = () => {
+	const selectCourse = async () => {
 		isSelectingCourse = true;
 	};
 </script>
 
 <div class="step-content" in:slide>
 	{#if !isEditing}
-		<button onclick={() => addTarget()} class="btn-large btn-primary">Ajouter une cible ≡</button>
+		<button onclick={async () => addTarget()} class="btn-large btn-primary">Ajouter une cible ≡</button>
 	{/if}
 	{#if !isCourseSelected}
-		<button onclick={() => selectCourse()} class="btn-large btn-primary"
+		<button onclick={async () => selectCourse()} class="btn-large btn-primary"
 			>Sélectionner un précédent parcours ≡</button
 		>
 	{/if}
@@ -138,7 +139,7 @@
 							/>
 							<button
 								class="btn-icon target-settings-btn"
-								onclick={() => editTarget(targetsStore.list.indexOf(target))}
+								onclick={async () => editTarget(targetsStore.list.indexOf(target))}
 								title="Paramètres de la cible"
 							>
 								⚙️

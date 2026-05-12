@@ -24,7 +24,7 @@
 		top: 1rem;
 		left: 50%;
 		transform: translateX(-50%);
-		z-index: 1000;
+		z-index: 10000;
 		padding: 0.75rem 1.5rem;
 		border-radius: 8px;
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);

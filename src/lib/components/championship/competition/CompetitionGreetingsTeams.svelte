@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Championship } from '$lib/types/championshipType';
 	import type { Course } from '$lib/types/courseType';
@@ -60,7 +61,7 @@
 		else isOnline = false;
 	});
 
-	const checkPlayoff = () => {
+	const checkPlayoff = async () => {
 		// List tied first place competitors
 		playoffTeams = rankedTeams
 			.filter((team) => team.isTie && team.rank === 1)
@@ -73,7 +74,7 @@
 		});
 	};
 
-	const preparePlayoff = () => {
+	const preparePlayoff = async () => {
 		// create playoff target
 		playoffTarget = targetsChampionshipStore.add('playoff', 0, 'Bonus');
 		if (course) course.targets.push(playoffTarget);
@@ -81,8 +82,8 @@
 		isShowingPlayoff = true;
 	};
 
-	const resolveTies = (winner: Player) => {
-		if (confirm(winner.name + ' a gagné le playoff ?')) {
+	const resolveTies = async (winner: Player) => {
+		if (await confirmStore.prompt(winner.name + ' a gagné le playoff ?')) {
 			players.forEach((player) => {
 				player.scores[playoffTarget.id] = player.id === winner.id ? -1 : 0;
 
@@ -103,7 +104,7 @@
 		}
 	};
 
-	const publish = () => {
+	const publish = async () => {
 		currentCompetition.status = 'published';
 		competitionService.saveCompetition(currentCompetition, championship.id);
 	};
@@ -130,7 +131,7 @@
 <div>
 	{#if rankedTeams[0].isTie && !isShowingPlayoff && playoffTeams}
 		<p>Nous avons une égalité entre {formatList(playoffTeams.map((t) => t.name))}</p>
-		<button onclick={() => preparePlayoff()} class="btn btn-primary">Préparer le playoff</button>
+		<button onclick={async () => preparePlayoff()} class="btn btn-primary">Préparer le playoff</button>
 		<p>Ajout d'un trou supplémentaire</p>
 		<p>Score saisie, uniquement pour les équipes ou joueurs à départager</p>
 	{/if}
@@ -138,7 +139,7 @@
 	{#if isShowingPlayoff}
 		<h3>Sélectionner le vainqueur du playoff</h3>
 		{#each playoffPlayers as player}
-			<p>{player.name} <button onclick={() => resolveTies(player)}>👑</button></p>
+			<p>{player.name} <button onclick={async () => resolveTies(player)}>👑</button></p>
 		{/each}
 	{/if}
 
@@ -146,8 +147,8 @@
 	<TeamScoreCardByTarget {rankedTeams} {targets} {players} {settings} />
 
 	{#if currentCompetition.status !== 'published'}
-		<button onclick={() => publish()} class="btn btn-primary">Publier les résultats</button>
+		<button onclick={async () => publish()} class="btn btn-primary">Publier les résultats</button>
 	{:else}
-		<button onclick={() => linkToResults()} class="btn btn-primary">Lien vers les résultats</button>
+		<button onclick={async () => linkToResults()} class="btn btn-primary">Lien vers les résultats</button>
 	{/if}
 </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 	import { base } from '$app/paths';
 
@@ -30,7 +31,7 @@
 	const loadChampionship = async () => {
 		loadingChampionship = true;
 
-		if (!confirm('Les données du championnat vont être rechargées. \n Voulez-vous continuer ?')) {
+		if (!(await confirmStore.prompt('Les données du championnat vont être rechargées. \n Voulez-vous continuer ?'))) {
 			loadingChampionship = false;
 			return false;
 		}
@@ -56,7 +57,7 @@
 		loadingChampionship = false;
 	};
 
-	const addNewChampionship = () => {
+	const addNewChampionship = async () => {
 		currentChampionship = championshipStore.new();
 		goto(base + '/championship/' + currentChampionship.id);
 	};
@@ -127,7 +128,7 @@
 
 				<button
 					disabled={selectedChampionshipId === ''}
-					onclick={() => loadChampionship()}
+					onclick={async () => loadChampionship()}
 					class="btn btn-primary">Sélectionner</button
 				>
 			{:else}
@@ -140,7 +141,7 @@
 		<!-- Créer un nouveau championnatt -->
 		{#if userStore.current && userStore.current?.roles.includes('admin')}
 			<h2>Créer un nouveau championnat 💼</h2>
-			<button onclick={() => addNewChampionship()}>Créer nouveau championnat</button>
+			<button onclick={async () => addNewChampionship()}>Créer nouveau championnat</button>
 		{/if}
 	{/if}
 </div>

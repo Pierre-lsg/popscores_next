@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { appSettings } from '$lib/stores/settingsStore.svelte';
 	import Toggle from '$lib/ui/Toggle.svelte';
 	import Param from '$lib/ui/Param.svelte';
@@ -9,13 +10,13 @@
 
 	let fileInput: HTMLInputElement;
 
-	const localReset = () => {
-		if (confirm('Voulez-vous supprimer le cache local ?')) localStorage.clear();
+	const localReset = async () => {
+		if (await confirmStore.prompt('Voulez-vous supprimer le cache local ?')) localStorage.clear();
 		window.location.reload();
 	};
 
 	const deepReset = async () => {
-		if (confirm("Voulez-vous réinitialiser l'application ?")) {
+		if (await confirmStore.prompt("Voulez-vous réinitialiser l'application ?")) {
 			// vide le localStorage
 			localStorage.clear();
 
@@ -34,12 +35,12 @@
 		}
 	};
 
-	const updatePocketBaseUrl = () => {
+	const updatePocketBaseUrl = async () => {
 		pb.baseURL = appSettings.values.cloudUrl;
 		if (pb.authStore.isValid) pb.authStore.clear();
 	};
 
-	const handleFileChange = (event: Event) => {
+	const handleFileChange = async (event: Event) => {
 		const target = event.target as HTMLInputElement;
 		if (target.files && target.files[0]) {
 			importLocalStorage(target.files[0]);
@@ -88,8 +89,8 @@
 	/>
 
 	<h2>Import/Export</h2>
-	<button onclick={() => exportLocalStorage()}>📥 Exporter backup</button>
-	<button onclick={() => fileInput.click()}>📥 Importer Backup</button>
+	<button onclick={async () => exportLocalStorage()}>📥 Exporter backup</button>
+	<button onclick={async () => fileInput.click()}>📥 Importer Backup</button>
 	<input
 		bind:this={fileInput}
 		type="file"
@@ -98,8 +99,8 @@
 		style="display: none;"
 	/>
 	<h2>Réinitialisation</h2>
-	<button onclick={() => localReset()}>Réinitialisation des données</button>
-	<button onclick={() => deepReset()}>Réinitialisation totale</button>
+	<button onclick={async () => localReset()}>Réinitialisation des données</button>
+	<button onclick={async () => deepReset()}>Réinitialisation totale</button>
 </div>
 
 <style>

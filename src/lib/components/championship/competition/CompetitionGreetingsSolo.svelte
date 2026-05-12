@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Championship } from '$lib/types/championshipType';
 	import type { Player, RankedPlayer } from '$lib/types/playerType';
@@ -61,12 +62,12 @@
 		else isOnline = false;
 	});
 
-	const showPlayers = () => {
+	const showPlayers = async () => {
 		isShowingPlayers = !isShowingPlayers;
 		playersDisp = isShowingPlayers ? 'réduire' : 'développer';
 	};
 
-	const showTeams = () => {
+	const showTeams = async () => {
 		isShowingTeams = !isShowingTeams;
 		teamsDisp = isShowingTeams ? 'réduire' : 'développer';
 	};
@@ -75,7 +76,7 @@
 		if (rules.doubleRanking) teams = teamsForDoubleRanking(currentCompetition, targets, rules);
 	});
 
-	const preparePlayoff = () => {
+	const preparePlayoff = async () => {
 		// create playoff target
 		playoffTarget = targetsChampionshipStore.add('playoff', 0, 'Bonus');
 		if (course) course.targets.push(playoffTarget);
@@ -87,8 +88,8 @@
 		isShowingPlayoff = true;
 	};
 
-	const resolveTies = (winner: Player) => {
-		if (confirm(winner.name + ' a gagné le playoff ?')) {
+	const resolveTies = async (winner: Player) => {
+		if (await confirmStore.prompt(winner.name + ' a gagné le playoff ?')) {
 			players.forEach((player) => {
 				player.scores[playoffTarget.id] = player.id === winner.id ? -1 : 0;
 
@@ -109,7 +110,7 @@
 		}
 	};
 
-	const publish = () => {
+	const publish = async () => {
 		currentCompetition.status = 'published';
 		competitionService.saveCompetition(currentCompetition, championship.id);
 	};
@@ -133,11 +134,11 @@
 
 	<div>
 		Classement final (regroupement de l'ensemble des cartes de scores en individuel)
-		<span role="none" onclick={() => showPlayers()} class="action">{playersDisp}</span>
+		<span role="none" onclick={async () => showPlayers()} class="action">{playersDisp}</span>
 	</div>
 
 	{#if rankedPlayers[0].isTie && !isShowingPlayoff}
-		<button onclick={() => preparePlayoff()} class="btn btn-primary">Préparer le playoff</button>
+		<button onclick={async () => preparePlayoff()} class="btn btn-primary">Préparer le playoff</button>
 		<p>Ajout d'un trou supplémentaire</p>
 		<p>Score saisie, uniquement pour les équipes ou joueurs à départager</p>
 	{/if}
@@ -145,7 +146,7 @@
 	{#if isShowingPlayoff}
 		<h3>Sélectionner le vainqueur du playoff</h3>
 		{#each playoffPlayers as player}
-			<p>{player.name} <button onclick={() => resolveTies(player)}>👑</button></p>
+			<p>{player.name} <button onclick={async () => resolveTies(player)}>👑</button></p>
 		{/each}
 	{/if}
 
@@ -162,7 +163,7 @@
 	{#if rules && rules.doubleRanking}
 		<div>
 			Liste des équipes
-			<span role="none" onclick={() => showTeams()} class="action">{teamsDisp}</span>
+			<span role="none" onclick={async () => showTeams()} class="action">{teamsDisp}</span>
 		</div>
 
 		{#if isShowingTeams}
@@ -172,9 +173,9 @@
 	{/if}
 
 	{#if currentCompetition.status !== 'published'}
-		<button onclick={() => publish()} class="btn btn-primary">Publier les résultats</button>
+		<button onclick={async () => publish()} class="btn btn-primary">Publier les résultats</button>
 	{:else}
-		<button onclick={() => linkToResults()} class="btn btn-primary">Lien vers les résultats</button>
+		<button onclick={async () => linkToResults()} class="btn btn-primary">Lien vers les résultats</button>
 	{/if}
 </div>
 

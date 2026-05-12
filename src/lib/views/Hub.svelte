@@ -29,7 +29,7 @@
 	});
 </script>
 
-<h1>{appSettings.values.clubName}</h1>
+<h1 style="text-align: center; margin-top: 1rem;">{appSettings.values.clubName}</h1>
 
 <div class="hub-container">
 	<div class="grid-container">
@@ -96,28 +96,78 @@
 {/if}
 
 <style>
+	.hub-container {
+		display: flex;
+		justify-content: center;
+		padding: 1rem;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
 	.grid-container {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-		gap: 1rem;
-		padding: 0.5rem;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2rem;
+		width: 100%;
+		max-width: 900px; /* Limite la largeur sur PC pour garder un aspect dashboard */
+	}
+
+	.card {
+		padding: 2rem 1rem; /* Plus d'espace intérieur sur PC */
+		min-height: 180px;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.icon {
+		font-size: 3.5rem;
+		margin-bottom: 0.5rem;
+		filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2));
+	}
+
+	h3 {
+		font-size: 1.3rem;
+		margin: 0;
+	}
+
+	p {
+		font-size: 0.95rem;
+		opacity: 0.8;
+		margin: 0;
+	}
+
+	@media (max-width: 1024px) {
+		.grid-container {
+			gap: 1.5rem;
+		}
 	}
 
 	@media (max-width: 768px) {
 		.grid-container {
-			display: grid;
 			grid-template-columns: repeat(2, 1fr);
-			gap: 15px;
-			padding: 10px;
+			gap: 1rem;
+		}
+		
+		.card {
+			padding: 1.5rem 0.5rem;
+			min-height: 150px;
+		}
+
+		.icon {
+			font-size: 2.8rem;
 		}
 	}
 
-	.icon {
-		font-size: 2.5rem;
+	@media (max-width: 380px) {
+		.grid-container {
+			gap: 0.8rem;
+		}
 	}
 
 	.disabled {
-		opacity: 0.6;
+		opacity: 0.5;
 		cursor: not-allowed;
+		filter: grayscale(1);
 	}
 </style>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
 	import type { Course } from '$lib/types/courseType';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
@@ -26,14 +27,14 @@
 		loading = false;
 	});
 
-	const removeCourse = (id: string) => {
+	const removeCourse = async (id: string) => {
 		coursesStore.remove(id);
 	};
 
-	const loadCoursefromCloud = (index: number) => {
+	const loadCoursefromCloud = async (index: number) => {
 		const aCourse = coursesStore.list.filter((c) => c.id === filteredCourses[index].id);
 		if (aCourse.length == 0) {
-			if (confirm('Voulez-vous importer le parcours ?')) {
+			if (await confirmStore.prompt('Voulez-vous importer le parcours ?')) {
 				const newCourse = filteredCourses[index];
 				coursesStore.load(newCourse);
 			}
@@ -57,20 +58,20 @@
 <div class="course-list">
 	<h2>{title}</h2>
 	{#if qrDataCourse !== ''}
-		<div role="none" onclick={() => (qrDataCourse = '')}>
+		<div role="none" onclick={async () => (qrDataCourse = '')}>
 			<QRCode data={qrDataCourse} size={400} />
 		</div>
 	{/if}
 	{#each coursesStore.list as course, i}
-		<button class="list-card" onclick={() => (currentCourse = course.id)}>
+		<button class="list-card" onclick={async () => (currentCourse = course.id)}>
 			<div class="details">
 				{course.name}
 			</div>
 			<div class="icon">⛳</div>
 		</button>
 		<div class="action course-action">
-			<button class="btn btn-icon course-btn-danger" onclick={() => removeCourse(course.id)}> 🗑️ </button>
-			<button class="btn btn-primary" onclick={() => copyShareLink(course)}>🔗 Partager</button>
+			<button class="btn btn-icon course-btn-danger" onclick={async () => removeCourse(course.id)}> 🗑️ </button>
+			<button class="btn btn-primary" onclick={async () => copyShareLink(course)}>🔗 Partager</button>
 		</div>
 	{:else}
 		<p>Aucun parcours archivé pour le moment. ⛳</p>
@@ -82,7 +83,7 @@
 		<p>Chargement ...</p>
 	{:else}
 		{#each filteredCourses as course, i}
-			<button class="list-card" onclick={() => loadCoursefromCloud(i)}>
+			<button class="list-card" onclick={async () => loadCoursefromCloud(i)}>
 				<div>{course.name}</div>
 			</button>
 		{/each}

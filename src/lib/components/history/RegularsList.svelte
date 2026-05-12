@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 	import { shareService } from '$lib/utils/shareService';
@@ -13,8 +14,8 @@
 	let checkedRegulars = $state(regularsStore.list);
 	let qrDataPlayers: string = $state('');
 
-	const removeRegular = (id: string) => {
-		if (confirm('Voulez-vous supprimer ce joueur ?')) regularsStore.remove(id);
+	const removeRegular = async (id: string) => {
+		if (await confirmStore.prompt('Voulez-vous supprimer ce joueur ?')) regularsStore.remove(id);
 	};
 
 	const copyShareLink = async () => {
@@ -45,17 +46,17 @@
 			<div class="content">
 				<TextField bind:value={regular.name} />
 			</div>
-			<div role="none" onclick={() => removeRegular(regular.id)} class="btn-delete-small">X</div>
+			<div role="none" onclick={async () => removeRegular(regular.id)} class="btn-delete-small">X</div>
 		</div>
 	{:else}
 		<p>Aucune joueur régulier connu. 👤</p>
 	{/each}
 	{#if qrDataPlayers !== ''}
-		<div role="none" onclick={() => (qrDataPlayers = '')}>
+		<div role="none" onclick={async () => (qrDataPlayers = '')}>
 			<QRCode data={qrDataPlayers} size={400} />
 		</div>
 	{:else}
-		<button onclick={() => copyShareLink()} class="btn btn-primary">Partager la liste</button>
+		<button onclick={async () => copyShareLink()} class="btn btn-primary">Partager la liste</button>
 	{/if}
 </div>
 

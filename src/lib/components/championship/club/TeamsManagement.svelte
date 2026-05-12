@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import { teamsChampionshipStore } from '$lib/stores/championship/teamsChampionshipStore.svelte';
@@ -30,7 +31,7 @@
 	let teamName: string = $state('');
 
 	// Function to add a new team
-	const addNewTeam = () => {
+	const addNewTeam = async () => {
 		const newTeam = teamsChampionshipStore.add(teamName, club.id);
 		if (!club.teamsId.includes(newTeam.id)) {
 			club.teamsId.push(newTeam.id);
@@ -41,8 +42,8 @@
 	};
 
 	// Function to remove a team
-	const removeTeam = (team: Team) => {
-		if (confirm('Voulez-vous vraiment supprimer cette équipe ?')) {
+	const removeTeam = async (team: Team) => {
+		if (await confirmStore.prompt('Voulez-vous vraiment supprimer cette équipe ?')) {
 			team.playersId.forEach((id) => {
 				const player = playersChampionshipStore.list.find((p) => p.id === id);
 				if (player) player.teamId = '';
@@ -54,7 +55,7 @@
 	};
 
 	// Function to toggle editing of a team
-	const editTeam = (index: number) => {
+	const editTeam = async (index: number) => {
 		for (let i = 0; i < numTeams; i++) {
 			if (i !== index) editingTeam[i] = false;
 		}
@@ -70,7 +71,7 @@
 {#if !isEditingTeam && !creatingNewTeam}
 	<div class="item-list">
 		{#each teams as team, i}
-			<div role="none" class="item-details" onclick={() => editTeam(i)}>
+			<div role="none" class="item-details" onclick={async () => editTeam(i)}>
 				<div role="none" class="team-card item-card">
 					<div class="details">
 						{team.name}
@@ -93,8 +94,8 @@
 			<div class="item-form">
 				<TeamEditing {currentClub} {team} {clubPlayers} />
 				<div class="action">
-					<button onclick={() => editTeam(i)} class="btn btn-primary"> Valider </button>
-					<button onclick={() => removeTeam(team)} class="btn"> 🗑️ Supprimer</button>
+					<button onclick={async () => editTeam(i)} class="btn btn-primary"> Valider </button>
+					<button onclick={async () => removeTeam(team)} class="btn"> 🗑️ Supprimer</button>
 				</div>
 			</div>
 		{/if}
@@ -107,7 +108,7 @@
 
 <!-- Adding a new team-->
 {#if !isEditingTeam && !creatingNewTeam}
-	<button onclick={() => (creatingNewTeam = true)} class="btn btn-primary"
+	<button onclick={async () => (creatingNewTeam = true)} class="btn btn-primary"
 		>Ajouter une nouvelle équipe</button
 	>
 {/if}
@@ -124,7 +125,7 @@
 		/>
 		<div class="action">
 			<button onclick={addNewTeam} class="btn btn-primary">Créer</button>
-			<button onclick={() => (creatingNewTeam = false)} class="btn">Annuler</button>
+			<button onclick={async () => (creatingNewTeam = false)} class="btn">Annuler</button>
 		</div>
 	</div>
 {/if}

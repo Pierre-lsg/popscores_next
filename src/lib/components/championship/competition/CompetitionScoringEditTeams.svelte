@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Fly } from '$lib/types/flyType';
 	import type { Course } from '$lib/types/courseType';
@@ -83,8 +84,8 @@
 		else isOnline = false;
 	});
 
-	const showNextTarget = () => {
-		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
+	const showNextTarget = async () => {
+		if (await confirmStore.prompt('Validez-vous les scores saisis pour cette cible ?')) {
 			currentFly.status = 'in_progress';
 			if (isOnline) saveProgressToCloud();
 			if (activeTargetIndex < targets.length - 1) activeTargetIndex++;
@@ -105,8 +106,8 @@
 		return allTargetsValidated;
 	};
 
-	const showPrevTarget = () => {
-		if (confirm('Validez-vous les scores saisis pour cette cible ?')) {
+	const showPrevTarget = async () => {
+		if (await confirmStore.prompt('Validez-vous les scores saisis pour cette cible ?')) {
 			currentFly.status = 'in_progress';
 			if (isOnline) saveProgressToCloud();
 			if (activeTargetIndex > 0) activeTargetIndex--;
@@ -116,7 +117,7 @@
 		}
 	};
 
-	const saveProgressToCloud = () => {
+	const saveProgressToCloud = async () => {
 		if (isOnline) {
 			flyService.saveFly(currentFly);
 			messageStore.remove('sendFly');
@@ -137,7 +138,7 @@
 		});
 	};
 
-	const initScoresPlayerOnTarget = () => {
+	const initScoresPlayerOnTarget = async () => {
 		players.forEach((player) => {
 			if (currentTarget)
 				if (player.scores[currentTarget.id] === undefined) {
@@ -146,7 +147,7 @@
 		});
 	};
 
-	const updateScoreTeam = (team: Team, targetId: string, score: number) => {
+	const updateScoreTeam = async (team: Team, targetId: string, score: number) => {
 		team.playersId.forEach((playerId) => {
 			if (players) {
 				const player = players.find((p) => p.id === playerId);
@@ -155,7 +156,7 @@
 		});
 	};
 
-	const validateFly = () => {
+	const validateFly = async () => {
 		saveProgressToCloud();
 		// Transmettre la carte de score
 		if (isOnline)
@@ -191,13 +192,13 @@
 </script>
 
 {#snippet returnButton()}
-	<span class="btn btn-back" role="none" onclick={() => (currentFly = undefined)}>
+	<span class="btn btn-back" role="none" onclick={async () => (currentFly = undefined)}>
 		⛳ Accueil
 	</span>
 {/snippet}
 
 {#snippet returnButtonPrev()}
-	<span class="btn btn-back" role="none" onclick={() => (currentCompetition = undefined)}>
+	<span class="btn btn-back" role="none" onclick={async () => (currentCompetition = undefined)}>
 		⛳ Accueil
 	</span>
 {/snippet}
@@ -205,12 +206,12 @@
 <div>
 	<div class="action">
 		{#if isCourseEnded && currentFly.status === 'in_progress'}
-			<button onclick={() => validateFly()} class="btn btn-primary">
+			<button onclick={async () => validateFly()} class="btn btn-primary">
 				Valider{isOnline ? ' et transmettre ' : ' '}le fly
 			</button>
 		{/if}
 		{#if isCourseEnded && (currentFly.status === 'validated' || currentFly.status === 'finished')}
-			<button onclick={() => validateFly()} class="btn btn-primary">
+			<button onclick={async () => validateFly()} class="btn btn-primary">
 				Corriger{isOnline ? ' et transmettre ' : ' '}le fly
 			</button>
 		{/if}

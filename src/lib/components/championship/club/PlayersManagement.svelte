@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { clubsStore } from '$lib/stores/championship/clubsStore.svelte';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 	import photo from '$lib/assets/photo.png';
@@ -33,7 +34,7 @@
 	let playerNickname: string = $state('');
 
 	// Function to add a new player
-	const addNewPlayer = () => {
+	const addNewPlayer = async () => {
 		const newPlayer: Player = pcs.add(playerName, playerSurname, playerNickname, club.id);
 		if (!club.playersId.includes(newPlayer.id)) {
 			club.playersId.push(newPlayer.id);
@@ -44,8 +45,8 @@
 	};
 
 	// Function to remove a player
-	const removePlayer = (playerId: string) => {
-		if (confirm('Voulez-vous vraiment supprimer ce joueur ?')) {
+	const removePlayer = async (playerId: string) => {
+		if (await confirmStore.prompt('Voulez-vous vraiment supprimer ce joueur ?')) {
 			pcs.remove(playerId);
 			editingPlayer.fill(false);
 		}
@@ -56,7 +57,7 @@
 	};
 
 	// Function to toggle editing of a player
-	const editPlayer = (player: Player, index: number) => {
+	const editPlayer = async (player: Player, index: number) => {
 		// Change club if needed
 		if (newClubId !== club.id) {
 			player.clubId = newClubId;
@@ -75,7 +76,7 @@
 		isEditingPlayer = editingPlayer.some((value) => value === true);
 	};
 
-	const downloadPlayer = (aPlayer: Player) => {
+	const downloadPlayer = async (aPlayer: Player) => {
 		pcs.load(aPlayer);
 		refrechCloudPlayers();
 	};
@@ -94,7 +95,7 @@
 {#if !isEditingPlayer && !isCreatingNewPlayer}
 	<div class="item-list">
 		{#each players as player, i}
-			<div role="none" class="item-details" onclick={() => editPlayer(player, i)}>
+			<div role="none" class="item-details" onclick={async () => editPlayer(player, i)}>
 				<div style="background-image: url({photo});" class="item-card player-card">
 					<div class="details">
 						<div>{player.name}</div>
@@ -111,11 +112,11 @@
 	{/if}
 
 	{#if !editingPlayer.some(Boolean) && !isCreatingNewPlayer}
-		<button onclick={() => (isCreatingNewPlayer = true)} class="btn btn-primary"
+		<button onclick={async () => (isCreatingNewPlayer = true)} class="btn btn-primary"
 			>Ajouter un nouveau joueur</button
 		>
 		{#if cloudPlayers.length > 0}
-			<button onclick={() => (isFindingCloudPlayer = true)} class="btn btn-secondary"
+			<button onclick={async () => (isFindingCloudPlayer = true)} class="btn btn-secondary"
 				>Rechercher un joueur dans le Cloud</button
 			>
 		{/if}
@@ -147,8 +148,8 @@
 					optionsLabel={clubsStore.list.map((club) => club.name)}
 				/>
 				<div class="action">
-					<button onclick={() => editPlayer(player, i)} class="btn btn-primary"> Valider </button>
-					<button onclick={() => removePlayer(player.id)} class="btn"> 🗑️ Supprimer</button>
+					<button onclick={async () => editPlayer(player, i)} class="btn btn-primary"> Valider </button>
+					<button onclick={async () => removePlayer(player.id)} class="btn"> 🗑️ Supprimer</button>
 				</div>
 			</div>
 		{/if}
@@ -174,7 +175,7 @@
 		<Param label="Surnom" type="text" bind:value={playerNickname} placeholder="Surnom" />
 		<div class="action">
 			<button onclick={addNewPlayer} class="btn btn-primary">Créer</button>
-			<button onclick={() => (isCreatingNewPlayer = false)} class="btn">Annuler</button>
+			<button onclick={async () => (isCreatingNewPlayer = false)} class="btn">Annuler</button>
 		</div>
 	</div>
 {/if}
@@ -185,7 +186,7 @@
 		{#each cloudPlayers as player}
 			<div class="action">
 				{player.name}
-				<button onclick={() => downloadPlayer(player)} class="btn btn-primary">Rapatrier</button>
+				<button onclick={async () => downloadPlayer(player)} class="btn btn-primary">Rapatrier</button>
 			</div>
 		{/each}
 	</div>

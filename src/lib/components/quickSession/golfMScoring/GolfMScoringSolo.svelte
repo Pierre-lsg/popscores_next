@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { slide } from 'svelte/transition';
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
@@ -47,7 +48,7 @@
 
 	let showRanking: boolean = $state(false);
 
-	const initScoresPlayerOnTarget = () => {
+	const initScoresPlayerOnTarget = async () => {
 		players.forEach((player) => {
 			if (player.scores[currentTarget.id] === undefined) {
 				playersStore.updateScore(player.id, currentTarget.id, currentTarget.par);
@@ -55,14 +56,14 @@
 		});
 	};
 
-	const showNextTarget = () => {
+	const showNextTarget = async () => {
 		modifyUpdatingBools('');
 
 		if (activeTargetIndex < targets.length - 1) {
 			activeTargetIndex++;
 			initScoresPlayerOnTarget();
 		} else {
-			if (confirm('Voulez-vous ajouter une autre cible ?')) {
+			if (await confirmStore.prompt('Voulez-vous ajouter une autre cible ?')) {
 				//
 				targetsStore.addTarget();
 				activeTargetIndex++;
@@ -71,18 +72,18 @@
 		}
 	};
 
-	const showPrevTarget = () => {
+	const showPrevTarget = async () => {
 		modifyUpdatingBools('');
 		if (activeTargetIndex > 0) activeTargetIndex--;
 	};
 
-	const modifyUpdatingBools = (updatedField: string) => {
+	const modifyUpdatingBools = async (updatedField: string) => {
 		updatingPar = updatedField === 'par' ? !updatingPar : false;
 		updatingRule = updatedField === 'rule' ? !updatingRule : false;
 		updatingName = updatedField === 'name' ? !updatingName : false;
 	};
 
-	const deleteTarget = () => {
+	const deleteTarget = async () => {
 		const targetIndex = activeTargetIndex;
 		if (isFirstTarget === isLastTarget) {
 			toastStore.show('Un parcours doit contenir au moins un trou', 'failure', 0);
@@ -90,14 +91,14 @@
 		}
 		if (isLastTarget) activeTargetIndex = activeTargetIndex - 1;
 
-		if (confirm('Voulez-vous annuler la cible ?')) {
+		if (await confirmStore.prompt('Voulez-vous annuler la cible ?')) {
 			targetsStore.remove(targetIndex);
 		}
 	};
 
-	const updateTargetRule = () => {
+	const updateTargetRule = async () => {
 		if (
-			!confirm("La règle 'Bonus' nécessite de réinitialiser les scores.\n Voulez-vous continuer ?")
+			!(await confirmStore.prompt("La règle 'Bonus' nécessite de réinitialiser les scores.\n Voulez-vous continuer ?"))
 		) {
 			currentTarget.rule = 'Individuel';
 			return;
@@ -125,7 +126,7 @@
 		>
 			🔥 Provisoire
 		</div>
-		<div role="none" onclick={() => deleteTarget()} class="btn-delete-small">X</div>
+		<div role="none" onclick={async () => deleteTarget()} class="btn-delete-small">X</div>
 	</div>
 	{#if showRanking}
 		<PlayerScoreOrder {rankedPlayers} {targets} />

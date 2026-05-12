@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { historyStore } from '$lib/stores/quickSession/historyStore.svelte';
 	import type { SessionArchive } from '$lib/types/sessionType';
 	import { historyService } from '$lib/utils/pocketbase/history2Cloud';
@@ -22,14 +23,14 @@
 		loading = false;
 	});
 
-	const removeSession = (id: string) => {
+	const removeSession = async (id: string) => {
 		historyStore.removeGame(id);
 	};
 
-	const loadSessionfromCloud = (index: number) => {
+	const loadSessionfromCloud = async (index: number) => {
 		const aSession = historyStore.list.filter((s) => s.id === filteredSessions[index].id);
 		if (aSession.length == 0) {
-			if (confirm('Voulez-vous importer la session ?')) {
+			if (await confirmStore.prompt('Voulez-vous importer la session ?')) {
 				const newArchive = filteredSessions[index];
 				historyStore.archiveGame(newArchive);
 			}
@@ -41,7 +42,7 @@
 	<h2>{title}</h2>
 	{#each historyStore.list as session, i}
 		<div class="action session-action">
-			<button class="list-card" onclick={() => (currentSession = session.id)}>
+			<button class="list-card" onclick={async () => (currentSession = session.id)}>
 				<div class="details">
 					{session.settings.locationName}
 				</div>
@@ -52,7 +53,7 @@
 				<div class="icon">📜</div>
 			</button>
 
-			<button onclick={() => removeSession(session.id)} class="btn-delete-small">X</button>
+			<button onclick={async () => removeSession(session.id)} class="btn-delete-small">X</button>
 		</div>
 	{:else}
 		<p>Aucune session archivée pour le moment. ⛳</p>
@@ -64,7 +65,7 @@
 	{:else if filteredSessions.length > 0}
 		<h3>Sessions disponibles sur le Cloud</h3>
 		{#each filteredSessions as session, i}
-			<button class="list-card" onclick={() => loadSessionfromCloud(i)}>
+			<button class="list-card" onclick={async () => loadSessionfromCloud(i)}>
 				<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
 			</button>
 		{/each}

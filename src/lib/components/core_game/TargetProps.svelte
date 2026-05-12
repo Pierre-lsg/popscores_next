@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Target } from '$lib/types/targetType';
 	import { individualRules, collectiveRules } from '$lib/types/targetType';
 	import { calculateDistance, type GPSCoords } from '$lib/utils/sharedFunction';
@@ -28,7 +29,7 @@
 	async function setPosition(type: 'start' | 'end', target: Target) {
 		let confirmedPositionning = true;
 		if ((type === 'start' && target.start_pos.lat) || (type === 'end' && target.end_pos.lat))
-			confirmedPositionning = confirm('Voulez-vous redéfinir les positions ? ');
+			confirmedPositionning = await confirmStore.prompt('Voulez-vous redéfinir les positions ? ');
 		if (confirmedPositionning) {
 			loadingGps = true;
 			try {
@@ -43,7 +44,7 @@
 		}
 	}
 
-	const displayDistance = (target: Target) => {
+	const displayDistance = async (target: Target) => {
 		if (target.start_pos && target.end_pos) {
 			const distance = Math.round(calculateDistance(target.start_pos, target.end_pos));
 			if (distance) return distance + ' m';
@@ -86,7 +87,7 @@
 				bind:value={target.optional_rules}
 			/>
 
-			<button onclick={() => setPosition('start', target)} class:active={target.start_pos}>
+			<button onclick={async () => setPosition('start', target)} class:active={target.start_pos}>
 				{target.start_pos.lat ? '🚩 Départ fixé. Redéfinir ?' : '📍 Fixer le départ'}
 			</button>
 			<ParamTextArea
@@ -95,7 +96,7 @@
 				bind:value={target.start_details}
 			/>
 
-			<button onclick={() => setPosition('end', target)} class:active={target.end_pos}>
+			<button onclick={async () => setPosition('end', target)} class:active={target.end_pos}>
 				{target.end_pos.lat ? '🎯 Arrivée fixée. Redéfinir ?' : "📍 Fixer l'arrivée"}
 			</button>
 			<ParamTextArea
@@ -111,8 +112,8 @@
 		</div>
 	</div>
 	<div class="action">
-		<button onclick={() => editTarget?.()}>Valider</button>
-		<button onclick={() => removeTarget?.()}> 🗑️ </button>
+		<button onclick={async () => editTarget?.()}>Valider</button>
+		<button onclick={async () => removeTarget?.()}> 🗑️ </button>
 	</div>
 </div>
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { onMount } from 'svelte';
 	import type { Club } from '$lib/types/clubType';
 	import ClubDisplayBox from './ClubDisplayBox.svelte';
@@ -33,19 +34,19 @@
 		championship: Championship;
 	}>();
 
-	const createClub = () => {
+	const createClub = async () => {
 		clubsStore.add(clubName, clubDescription, championship.id, [], [], isFederationMember);
 		((clubName = ''), (clubDescription = ''), (isFederationMember = false));
 		addNewClub = false;
 	};
 
-	const removeClub = (id: string) => {
-		if (confirm('Voulez-vous vraiment supprimer cette association ?')) {
+	const removeClub = async (id: string) => {
+		if (await confirmStore.prompt('Voulez-vous vraiment supprimer cette association ?')) {
 			clubsStore.remove(id);
 		}
 	};
 
-	const editingClub = (index: number) => {
+	const editingClub = async (index: number) => {
 		for (let i = 0; i < clubs.length; i++) {
 			if (i !== index) editClub[i] = false;
 		}
@@ -53,7 +54,7 @@
 		isEditingClub = editClub.some((value) => value === true);
 	};
 
-	const quickViewTeams = (club: Club) => {
+	const quickViewTeams = async (club: Club) => {
 		clubDisplayed = club;
 		showBox = true;
 	};
@@ -76,11 +77,11 @@
 		}
 	};
 
-	const loadClubfromCloud = (index: number) => {
+	const loadClubfromCloud = async (index: number) => {
 		// If club doesn't exist
 		const aClub = clubsStore.list.filter((c) => c.id === filteredClubs[index].id);
 		if (aClub.length == 0) {
-			if (confirm("Voulez-vous importer l'association ?")) {
+			if (await confirmStore.prompt("Voulez-vous importer l'association ?")) {
 				const newClub = {
 					id: filteredClubs[index].id,
 					name: filteredClubs[index].name,
@@ -119,7 +120,7 @@
 	<div class="item-list">
 		{#each clubs as club, i}
 			<div class="item-details">
-				<div role="none" class="item-card" onclick={() => (currentClub = club.id)}>
+				<div role="none" class="item-card" onclick={async () => (currentClub = club.id)}>
 					<div class="details">
 						{club.name}
 					</div>
@@ -127,10 +128,10 @@
 					<div class="icon">🏆</div>
 				</div>
 				<div class="action">
-					<button onclick={() => removeClub(club.id)}> 🗑️ </button>
-					<button onclick={() => editingClub(i)}>✏️</button>
-					<button onclick={() => quickViewTeams(club)}>👁️</button>
-					<button onclick={() => savingClub(club)}>☁️</button>
+					<button onclick={async () => removeClub(club.id)}> 🗑️ </button>
+					<button onclick={async () => editingClub(i)}>✏️</button>
+					<button onclick={async () => quickViewTeams(club)}>👁️</button>
+					<button onclick={async () => savingClub(club)}>☁️</button>
 				</div>
 			</div>
 		{/each}
@@ -138,7 +139,7 @@
 		<!-- Sans club -->
 		<!--
 		<div class="item-details">
-			<div role="none" class="item-card" onclick={() => (currentClub = 'no_club')}>
+			<div role="none" class="item-card" onclick={async () => (currentClub = 'no_club')}>
 				<div class="details">Sans club</div>
 				<div class="text-sm">Equipes et joueurs sans non affiliés à un club</div>
 				<div class="icon">❓</div>
@@ -151,7 +152,7 @@
 		<p>Aucune association enregistrée pour le moment. 🏆</p>
 	{/if}
 
-	<button onclick={() => (addNewClub = true)} class="btn btn-primary"
+	<button onclick={async () => (addNewClub = true)} class="btn btn-primary"
 		>Ajouter une nouvelle association</button
 	>
 
@@ -161,7 +162,7 @@
 	{:else}
 		<h3>Associations disponibles sur le Cloud</h3>
 		{#each filteredClubs as c, i}
-			<button onclick={() => loadClubfromCloud(i)}>
+			<button onclick={async () => loadClubfromCloud(i)}>
 				<div>{c.name} - {c.description?.slice(0, 30)}</div>
 			</button>
 		{/each}
@@ -192,7 +193,7 @@
 			/>
 			<Toggle label="Est membre de la Fédération" bind:checked={club.isMember} />
 			<div class="action">
-				<button onclick={() => editingClub(i)} class="btn btn-primary">Valider</button>
+				<button onclick={async () => editingClub(i)} class="btn btn-primary">Valider</button>
 			</div>
 		</div>
 	{/if}
@@ -218,7 +219,7 @@
 		<Toggle label="Est membre de la Fédération" bind:checked={isFederationMember} />
 		<div class="action">
 			<button onclick={createClub} class="btn btn-primary">Créer</button>
-			<button onclick={() => (addNewClub = false)} class="btn">Annuler</button>
+			<button onclick={async () => (addNewClub = false)} class="btn">Annuler</button>
 		</div>
 	</div>
 {/if}

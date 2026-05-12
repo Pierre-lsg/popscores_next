@@ -12,6 +12,7 @@
 	--bg-app: #e2fdd9;
 	--bg-ui: #e2fdd9;
 	--bg-card: #cef7c0;
+	--bg-card-rgb: 206, 247, 192;
 	--bg-cell-odd: #d7fdda;
 	--bg-cell-even: #e7fee9;
 	--text-main: #263238;
@@ -35,8 +36,9 @@
 
 	/* Neutres */
 	--bg-app: #121212;
-	--bg-ui: #c4b9b9;
+	--bg-ui: #1e1e1e;
 	--bg-card: #1e1e1e;
+	--bg-card-rgb: 30, 30, 30;
 	--bg-cell-odd: #000;
 	--bg-cell-even: #141414;
 	--text-main: #e0e0e0;
@@ -62,6 +64,7 @@
 	--bg-app: #ffffff;
 	--bg-ui: #ffffff;
 	--bg-card: #ffffff;
+	--bg-card-rgb: 255, 255, 255;
 	--bg-cell-odd: var(--bg-card);
 	--bg-cell-even: #fafafa;
 	--text-main: #000000;
@@ -87,6 +90,7 @@
 	--bg-app: #fdecd7;
 	--bg-ui: #fdecd7;
 	--bg-card: #fad9b0;
+	--bg-card-rgb: 250, 217, 176;
 	--bg-cell-odd: #fdecd7;
 	--bg-cell-even: #fae1c3;
 	--text-main: #3e2723;
@@ -112,10 +116,12 @@
 	--bg-app: #e4dcaf;
 	--bg-ui: #e4dcaf;
 	--bg-card: #ebdf98;
+	--bg-card-rgb: 235, 223, 152;
 	--bg-cell-odd: #e9e4c9;
 	--bg-cell-even: #eee6b6;
 	--text-main: #263238;
 	--border-color: var(--color-alert);
+	--input-bg: var(--bg-card);
 
 	/* Sémantique */
 	--color-success: #2e7d32;

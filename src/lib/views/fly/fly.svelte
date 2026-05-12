@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import type { Competition } from '$lib/types/competitionType';
 	import type { Fly } from '$lib/types/flyType';
 	import type { Team } from '$lib/types/teamType';
@@ -32,7 +33,7 @@
 	let currentFly: Fly | undefined = $state();
 	let flys: Fly[] = $state([]);
 
-	const listTeamPlayers = (team: Team) => {
+	const listTeamPlayers = async (team: Team) => {
 		let playerList: string[] = [];
 		team.playersId.forEach((aPlayerId) => {
 			playerList.push(playersChampionshipStore.find(aPlayerId)?.name || '👻');
@@ -40,7 +41,7 @@
 		return formatList(playerList);
 	};
 
-	const listCompetitors = (fly: Fly) => {
+	const listCompetitors = async (fly: Fly) => {
 		let compList: string[] = [];
 		fly.playersId.forEach((playerId) => {
 			compList.push(playersChampionshipStore.list.find((t) => t.id === playerId)?.name || '');
@@ -49,7 +50,7 @@
 	};
 
 	const loadCompetition = async () => {
-		if (userStore.current && championshipId && confirm('Voulez-vous rapatrier la compétition ?'))
+		if (userStore.current && championshipId && await confirmStore.prompt('Voulez-vous rapatrier la compétition ?'))
 			await cloudLoadCurrentCompetitionForSupervisor(championshipId, userStore.current.id);
 		selectFly();
 		messageStore.reset();
@@ -58,7 +59,7 @@
 		location.reload();
 	};
 
-	const selectFly = () => {
+	const selectFly = async () => {
 		currentCompetition = competitionsStore.list.find(
 			(competition) => competition.startDate === new Date().toISOString().split('T')[0]
 		);
@@ -83,7 +84,7 @@
 {#if currentCompetition}
 	{#if flys.length === 0}
 		<p>Aucun fly n'est à surveiller ...</p>
-		<button onclick={() => loadCompetition()} class="btn btn-primary">Récupérer des flys</button>
+		<button onclick={async () => loadCompetition()} class="btn btn-primary">Récupérer des flys</button>
 	{:else if currentFly}
 		{#if isCompetitionTeam(currentCompetition)}
 			<CompetitionScoringEditTeams bind:currentCompetition bind:currentFly />
@@ -95,7 +96,7 @@
 		<div class="fly-list">
 			{#each flys as fly, i}
 				<div class="fly-item">
-					<div role="none" class="fly-card" onclick={() => (currentFly = fly)}>
+					<div role="none" class="fly-card" onclick={async () => (currentFly = fly)}>
 						<span class="text-lg">Fly #{fly.order} </span>
 						{#if currentCompetition && isCompetitionTeam(currentCompetition)}
 							<ul>
@@ -123,7 +124,7 @@
 	{/if}
 {:else}
 	<p>Aucune compétition n'est accessible ...</p>
-	<button onclick={() => loadCompetition()} class="btn btn-primary">Récupérer la compétition</button
+	<button onclick={async () => loadCompetition()} class="btn btn-primary">Récupérer la compétition</button
 	>
 {/if}
 <a class="btn btn-secondary retour" href={base + '/championship/' + selection.currentId + '/'}>

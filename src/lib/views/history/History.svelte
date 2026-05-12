@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { confirmStore } from '$lib/stores/confirmStore.svelte';
 	import { base } from '$app/paths';
 	import SessionsList from '$lib/components/history/SessionsList.svelte';
 	import SessionDetails from '$lib/components/history/SessionDetails.svelte';
 	import CoursesList from '$lib/components/history/CoursesList.svelte';
 	import { coursesStore } from '$lib/stores/quickSession/coursesStore.svelte';
 	import { shareService } from '$lib/utils/shareService';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import CourseDetails from '$lib/components/history/CourseDetails.svelte';
 	import RegularsList from '$lib/components/history/RegularsList.svelte';
 	import { regularsStore } from '$lib/stores/quickSession/regularPlayersStore.svelte';
@@ -16,10 +17,10 @@
 	let currentSession: string = $state('');
 	let currentCourse: string = $state('');
 
-	onMount(() => {
+	onMount(async () => {
 		const importedCourseData = shareService.loadCourseFromUrl();
 		if (importedCourseData) {
-			if (confirm('Un parcours a été trouvé via ce lien. Voulez-vous le récéupérer ?')) {
+			if (await confirmStore.prompt('Un parcours a été trouvé via ce lien. Voulez-vous le récéupérer ?')) {
 				if (coursesStore.exist(importedCourseData.course.id))
 					toastStore.show('Le parcours existe déjà !', 'neutral', 5000);
 				else coursesStore.load(importedCourseData.course);
@@ -30,7 +31,7 @@
 
 		const importedRegularsData = shareService.loadRegularsFromUrl();
 		if (importedRegularsData && importedRegularsData.length !== 0) {
-			if (confirm('Une liste de joueurs a été trouvé via ce lien. Voulez-vous les récéupérer ?'))
+			if (await confirmStore.prompt('Une liste de joueurs a été trouvé via ce lien. Voulez-vous les récéupérer ?'))
 				regularsStore.loads(importedRegularsData);
 
 			window.history.replaceState({}, '', window.location.pathname);
@@ -38,7 +39,10 @@
 
 		// navigationS
 		navContext.headerAction = returnButton;
-		return () => (navContext.headerAction = null);
+	});
+
+	onDestroy(() => {
+		navContext.headerAction = null;
 	});
 </script>
 
@@ -47,11 +51,11 @@
 	{#if option === ''}
 		<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
 	{:else if option === 'sessions' && currentSession !== ''}
-		<span class="btn btn-back" onclick={() => (currentSession = '')} role="none">📄 Accueil</span>
+		<span class="btn btn-back" onclick={async () => (currentSession = '')} role="none">📄 Accueil</span>
 	{:else if option === 'courses' && currentCourse !== ''}
-		<span class="btn btn-back" onclick={() => (currentCourse = '')} role="none">⛳ Accueil</span>
+		<span class="btn btn-back" onclick={async () => (currentCourse = '')} role="none">⛳ Accueil</span>
 	{:else}
-		<span class="btn btn-back" onclick={() => (option = '')} role="none">📜 Accueil</span>
+		<span class="btn btn-back" onclick={async () => (option = '')} role="none">📜 Accueil</span>
 	{/if}
 {/snippet}
 
@@ -59,19 +63,19 @@
 {#if option === ''}
 	<div class="hub-container">
 		<div class="grid-container">
-			<div class="card" role="none" onclick={() => (option = 'sessions')}>
+			<div class="card" role="none" onclick={async () => (option = 'sessions')}>
 				<span class="icon">📄</span>
 				<h3>Sessions</h3>
 				<p>Liste des sessions passées</p>
 			</div>
 
-			<div class="card" role="none" onclick={() => (option = 'courses')}>
+			<div class="card" role="none" onclick={async () => (option = 'courses')}>
 				<span class="icon">⛳</span>
 				<h3>Parcours</h3>
 				<p>Liste et partage des parcours</p>
 			</div>
 
-			<div class="card" role="none" onclick={() => (option = 'players')}>
+			<div class="card" role="none" onclick={async () => (option = 'players')}>
 				<span class="icon">👥</span>
 				<h3>Joueurs</h3>
 				<p>Liste et partage des joueurs réguliers</p>

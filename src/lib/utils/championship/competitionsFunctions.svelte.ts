@@ -35,7 +35,7 @@ import type { Target } from '$lib/types/targetType';
 import { scoreCardService } from '../pocketbase/scoreCards2Cloud';
 import type { ScoreCard } from '$lib/types/scoreCardType';
 
-export const isCompetitionTeam = (competition: Competition) => {
+export const isCompetitionTeam = async (competition: Competition) => {
 	let rules: Regulations | undefined;
 	let isTeamGame: boolean = false;
 	if (competition) {
@@ -588,7 +588,7 @@ export const startCompetition = async (
 	currentCompetition: Competition,
 	championship: Championship
 ) => {
-	if (confirm('Voulez-vous figer les flys et démarrer la compétition ?')) {
+	if (await confirmStore.prompt('Voulez-vous figer les flys et démarrer la compétition ?')) {
 		//Figer les équipes de la compétition
 		currentCompetition.teamsId.forEach((teamId: string) => {
 			const aTeam = teamsCompetitionStore.find(teamId);
