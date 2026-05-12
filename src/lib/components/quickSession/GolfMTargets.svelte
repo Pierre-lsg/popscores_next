@@ -116,28 +116,36 @@
 		>
 			{#each targetsStore.list as target (target.id)}
 				<div class="flex-item" animate:flip={{ duration: flipDurationMs }}>
-					<div class="content">
-						<TextField bind:value={target.name} />
-						<Stepper
-							label=""
-							bind:value={target.par}
-							min={0}
-							disabled={target.rule === 'Bonus' || target.rule === 'Team_Bonus'}
-						/>
-						<Selector
-							id="rule{target.id}"
-							bind:value={target.rule}
-							onchange={() =>
-								(target.par = target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
-							options={ruleOptions}
-						/>
-						<span
-							class="btn-actions btn-par"
-							role="none"
-							onclick={() => editTarget(targetsStore.list.indexOf(target))}>+</span
-						>
+					<div class="content target-layout">
+						<!-- Ligne 1 : Nom de la cible -->
+						<div class="target-name">
+							<TextField bind:value={target.name} />
+						</div>
+						<!-- Ligne 2 : Contrôles -->
+						<div class="target-controls">
+							<Stepper
+								label=""
+								bind:value={target.par}
+								min={0}
+								disabled={target.rule === 'Bonus' || target.rule === 'Team_Bonus'}
+							/>
+							<Selector
+								id="rule{target.id}"
+								bind:value={target.rule}
+								onchange={() =>
+									(target.par = target.rule === 'Bonus' || target.rule === 'Team_Bonus' ? 0 : 4)}
+								options={ruleOptions}
+							/>
+							<button
+								class="btn-icon target-settings-btn"
+								onclick={() => editTarget(targetsStore.list.indexOf(target))}
+								title="Paramètres de la cible"
+							>
+								⚙️
+							</button>
+						</div>
 					</div>
-					<div class="handle">☰</div>
+					<div class="handle target-handle">☰</div>
 				</div>
 			{/each}
 		</div>
@@ -166,3 +174,45 @@
 		/>
 	{/if}
 {/each}
+
+<style>
+	.target-layout {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		flex: 1;
+		width: 100%;
+	}
+
+	.target-name {
+		width: 100%;
+		text-align: left;
+		font-weight: 600;
+	}
+
+	.target-controls {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	.target-settings-btn {
+		min-width: 38px;
+		width: 38px;
+		height: 38px;
+		padding: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 50%;
+		font-size: 1.1rem;
+		margin: 0;
+	}
+
+	.target-handle {
+		padding-left: 10px;
+		display: flex;
+		align-items: center;
+	}
+</style>

@@ -68,8 +68,8 @@
 			</div>
 			<div class="icon">⛳</div>
 		</button>
-		<div class="action" style="gap: 10px; justify-content: flex-end; margin-bottom: 10px;">
-			<button class="btn btn-icon" style="color: var(--color-alert); border-color: var(--color-alert);" onclick={() => removeCourse(course.id)}> 🗑️ </button>
+		<div class="action course-action">
+			<button class="btn btn-icon course-btn-danger" onclick={() => removeCourse(course.id)}> 🗑️ </button>
 			<button class="btn btn-primary" onclick={() => copyShareLink(course)}>🔗 Partager</button>
 		</div>
 	{:else}
@@ -108,6 +108,17 @@
 		font-size: 1.5rem;
 		margin-left: 10px;
 		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+	}
+
+	.course-action {
+		gap: 10px;
+		justify-content: flex-end;
+		margin-bottom: 10px;
+	}
+
+	.course-btn-danger {
+		color: var(--color-alert);
+		border-color: var(--color-alert);
 	}
 
 	p {

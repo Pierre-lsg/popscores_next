@@ -40,7 +40,7 @@
 <div class="history-list">
 	<h2>{title}</h2>
 	{#each historyStore.list as session, i}
-		<div class="action" style="gap: 10px;">
+		<div class="action session-action">
 			<button class="list-card" onclick={() => (currentSession = session.id)}>
 				<div class="details">
 					{session.settings.locationName}
@@ -91,6 +91,10 @@
 		font-size: 1.5rem;
 		margin-left: 10px;
 		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+	}
+
+	.session-action {
+		gap: 10px;
 	}
 
 	p {

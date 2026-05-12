@@ -39,7 +39,7 @@
 <div class="card" style="width: 100%; box-sizing: border-box; align-items: stretch; text-align: left;">
 	{#if scale}
 		<div class="scale-header">
-			<h3 style="margin: 0;">{scale.name || 'Barème'}</h3>
+			<h3>{scale.name || 'Barème'}</h3>
 			<span class="badge">{scale.isIndividual ? 'Individuel' : 'Collectif'}</span>
 		</div>
 

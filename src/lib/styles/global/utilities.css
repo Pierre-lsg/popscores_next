@@ -57,3 +57,21 @@
 	-ms-user-select: none; /* Internet Explorer/Edge */
 }
 
+/*----------------------------*/
+/* Layout & Typography Utils  */
+/*----------------------------*/
+
+.d-flex { display: flex; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.text-sm { font-size: 0.85em; }
+.text-lg { font-size: 1.15em; }
+.font-bold { font-weight: bold; }
+
+.mt-0 { margin-top: 0 !important; }
+.w-full { width: 100%; }
+.sticky-col { position: sticky; background-color: var(--bg-card); z-index: 10; }
+
+

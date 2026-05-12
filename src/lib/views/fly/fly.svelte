@@ -96,7 +96,7 @@
 			{#each flys as fly, i}
 				<div class="fly-item">
 					<div role="none" class="fly-card" onclick={() => (currentFly = fly)}>
-						<span style="font-size: larger">Fly #{fly.order} </span>
+						<span class="text-lg">Fly #{fly.order} </span>
 						{#if currentCompetition && isCompetitionTeam(currentCompetition)}
 							<ul>
 								{#each fly.teamsId as teamId}
@@ -106,16 +106,16 @@
 									)}
 									{#if aTeam}
 										<li>
-											<span style="font-size: smaller">{aTeam.name} ({listTeamPlayers(aTeam)})</span
+											<span class="text-sm">{aTeam.name} ({listTeamPlayers(aTeam)})</span
 											>
 										</li>
 									{/if}
 								{/each}
 							</ul>
 						{:else}
-							<span style="font-size: smaller">{listCompetitors(fly)}</span>
+							<span class="text-sm">{listCompetitors(fly)}</span>
 						{/if}
-						<span style="font-size: smaller">{fly.status || 'inconnu'}</span>
+						<span class="text-sm">{fly.status || 'inconnu'}</span>
 					</div>
 				</div>
 			{/each}

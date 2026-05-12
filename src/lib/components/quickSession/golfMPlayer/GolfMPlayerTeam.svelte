@@ -48,7 +48,7 @@
 
 	const createTeams = () => {
 		const nbPlayerPerTeam = s.regulation.playersPerTeam;
-		const nbTeams = Math.floor(playersStore.list.length / nbPlayerPerTeam) + 1;
+		const nbTeams = Math.ceil(playersStore.list.length / nbPlayerPerTeam);
 		const playersSorted = shuffle(playersStore.list);
 
 		let playersId: string[] = [];

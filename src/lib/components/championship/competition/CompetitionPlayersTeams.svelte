@@ -115,7 +115,7 @@
 	<h3>Equipes engagés ...</h3>
 	{#if competitionTeams.length > 0}
 		{#each competitionTeams as team, i}
-			<div style="display: flex">
+			<div class="d-flex">
 				<span role="none" onclick={() => disengageTeam(i)} class="selectable-item">
 					<TeamCard
 						{team}
@@ -155,7 +155,7 @@
 		<Param label="Nom" bind:value={nameFilter} oneline={true} />
 		{#if filteredTeams.length > 0}
 			{#each filteredTeams as team, i}
-				<div style="display: flex">
+				<div class="d-flex">
 					<span role="none" onclick={() => engageTeam(i)} class="selectable-item">
 						<TeamCard
 							{team}

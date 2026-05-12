@@ -124,7 +124,7 @@
 	{#each players as player, i}
 		{#if editingPlayer[i]}
 			<div class="item-form">
-				<h3 style="margin-top: 0">Modifier le joueur 👤</h3>
+				<h3>Modifier le joueur 👤</h3>
 				<Param
 					label="Nom du joueur"
 					type="text"
@@ -157,7 +157,7 @@
 
 {#if isCreatingNewPlayer}
 	<div class="item-form">
-		<h3 style="margin-top: 0">Nouveau joueur 👤</h3>
+		<h3>Nouveau joueur 👤</h3>
 		<Param
 			label="Nom du joueur"
 			type="text"
@@ -181,7 +181,7 @@
 
 {#if isFindingCloudPlayer}
 	<div class="item-form">
-		<h3 style="margin-top: 0">Autres joueurs du Cloud 👤</h3>
+		<h3>Autres joueurs du Cloud 👤</h3>
 		{#each cloudPlayers as player}
 			<div class="action">
 				{player.name}

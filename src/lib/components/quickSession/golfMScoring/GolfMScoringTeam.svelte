@@ -197,12 +197,3 @@
 			playersStore.updateScore(playerId, targetId, score)}
 	/>
 </div>
-
-<style>
-	h3 {
-		display: flex;
-		width: 100%;
-		align-items: center;
-		justify-content: center;
-	}
-</style>

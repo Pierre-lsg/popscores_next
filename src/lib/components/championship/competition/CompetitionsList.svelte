@@ -225,7 +225,7 @@
 	{/if}
 {:else}
 	<div class="item-form">
-		<h3 style="margin-top: 0">Nouvelle Compétition</h3>
+		<h3>Nouvelle Compétition</h3>
 		<Param
 			label="⛳ Nom de la compétition"
 			type="text"

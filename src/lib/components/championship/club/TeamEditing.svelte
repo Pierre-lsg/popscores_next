@@ -53,7 +53,7 @@
 </script>
 
 <div class="team-form">
-	<h3 style="margin-top: 0">Modifier l'équipe 👥</h3>
+	<h3>Modifier l'équipe 👥</h3>
 	<Param
 		label="Nom de l'équipe"
 		type="text"

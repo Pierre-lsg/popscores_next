@@ -108,3 +108,9 @@ h2:not(:first-child) {
 	margin-top: 2rem;
 }
 
+h3 {
+	margin-top: 0;
+	margin-bottom: 0.5rem;
+	color: var(--text-main);
+}
+

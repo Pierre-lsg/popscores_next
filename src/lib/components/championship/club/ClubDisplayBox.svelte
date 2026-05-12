@@ -20,7 +20,7 @@
 
 <div class="box-screen">
 	<div class="content-box">
-		<div style="text-align: center;">{club.name}</div>
+		<div class="text-center">{club.name}</div>
 		<p>Joueurs :</p>
 		{formatList(players.map((p) => p.name))}
 		<p>Equipes :</p>

@@ -114,7 +114,7 @@
 
 {#if creatingNewTeam}
 	<div class="item-form">
-		<h3 style="margin-top: 0">Nouvelle équipe 👥</h3>
+		<h3>Nouvelle équipe 👥</h3>
 		<Param
 			label="Nom de l'équipe"
 			type="text"

@@ -79,7 +79,7 @@
 				{@const team = rankedTeam.team}
 				<tr>
 					<td>
-						<div style="font-weight: bold">#{r + 1}</div>
+						<div class="font-bold">#{r + 1}</div>
 						<div>{team.name}</div>
 					</td>
 					<td class="par-col last-cell">

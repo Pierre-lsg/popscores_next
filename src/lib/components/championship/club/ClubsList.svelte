@@ -123,7 +123,7 @@
 					<div class="details">
 						{club.name}
 					</div>
-					<div style="font-size: smaller;">{club.description.substring(0, 40) + ' ...'}</div>
+					<div class="text-sm">{club.description.substring(0, 40) + ' ...'}</div>
 					<div class="icon">🏆</div>
 				</div>
 				<div class="action">
@@ -140,7 +140,7 @@
 		<div class="item-details">
 			<div role="none" class="item-card" onclick={() => (currentClub = 'no_club')}>
 				<div class="details">Sans club</div>
-				<div style="font-size: smaller;">Equipes et joueurs sans non affiliés à un club</div>
+				<div class="text-sm">Equipes et joueurs sans non affiliés à un club</div>
 				<div class="icon">❓</div>
 			</div>
 		</div>
