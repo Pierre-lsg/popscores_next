@@ -1,0 +1,128 @@
+/*----------------------------*/
+/* Thème par défaut (Classic) */
+/*----------------------------*/
+:root,
+[data-theme='classic'] {
+	/* Couleurs principales */
+	--primary: #2e7d32;
+	--primary-light: #e8f5e9;
+	--secondary: #546e7a;
+
+	/* Neutres */
+	--bg-app: #e2fdd9;
+	--bg-ui: #e2fdd9;
+	--bg-card: #cef7c0;
+	--bg-cell-odd: #d7fdda;
+	--bg-cell-even: #e7fee9;
+	--text-main: #263238;
+	--border-color: #cfd8dc;
+
+	/* Sémantique (Statuts & Alertes) */
+	--color-success: #248724;
+	--color-alert: #d32f2f;
+	--color-warning: #f57c00;
+	--color-info: #0288d1;
+	--color-neutral: #546e7a;
+	--text-on-status: #ffffff;
+}
+
+/* Thème Moderne (Dark Mode) */
+[data-theme='modern'] {
+	/* Couleurs principales */
+	--primary: #4d4d4d;
+	--primary-light: #e8f5e9;
+	--secondary: #546e7a;
+
+	/* Neutres */
+	--bg-app: #121212;
+	--bg-ui: #c4b9b9;
+	--bg-card: #1e1e1e;
+	--bg-cell-odd: #000;
+	--bg-cell-even: #141414;
+	--text-main: #e0e0e0;
+	--border-color: #333;
+
+	/* Sémantique (Plus douce pour fond sombre) */
+	--color-success: #388e3c;
+	--color-alert: #e53935;
+	--color-warning: #fb8c00;
+	--color-info: #039be5;
+	--color-neutral: #607d8b;
+	--text-on-status: #ffffff;
+}
+
+/* Thème Contraste Élevé (Pour le plein soleil sur le green) */
+[data-theme='high-contrast'] {
+	/* Couleurs principales */
+	--primary: #000000;
+	--primary-light: #e8f5e9;
+	--secondary: dimgray;
+
+	/* Neutres */
+	--bg-app: #ffffff;
+	--bg-ui: #ffffff;
+	--bg-card: #ffffff;
+	--bg-cell-odd: var(--bg-card);
+	--bg-cell-even: #fafafa;
+	--text-main: #000000;
+	--border-color: #060606;
+
+	/* Sémantique (Très lisible) */
+	--color-success: #1b5e20;
+	--color-alert: #b71c1c;
+	--color-warning: #e65100;
+	--color-info: #01579b;
+	--color-neutral: #37474f;
+	--text-on-status: #ffffff;
+}
+
+/* Thème Chaleureux (Warm) */
+[data-theme='warm'] {
+	/* Couleurs principales */
+	--primary: #d84315;
+	--primary-light: #fff3e0;
+	--secondary: #bf360c;
+
+	/* Neutres */
+	--bg-app: #fdecd7;
+	--bg-ui: #fdecd7;
+	--bg-card: #fad9b0;
+	--bg-cell-odd: #fdecd7;
+	--bg-cell-even: #fae1c3;
+	--text-main: #3e2723;
+	--border-color: #d7ccc8;
+
+	/* Sémantique */
+	--color-success: #2e7d32;
+	--color-alert: #c62828;
+	--color-warning: #ef6c00;
+	--color-info: #0277bd;
+	--color-neutral: #bf360c;
+	--text-on-status: #ffffff;
+}
+
+/* Thème plage (Sand & Beach) */
+[data-theme='beach'] {
+	/* Couleurs principales */
+	--primary: #ac8d00;
+	--primary-light: #fff9c4;
+	--secondary: #a1887f;
+
+	/* Neutres */
+	--bg-app: #e4dcaf;
+	--bg-ui: #e4dcaf;
+	--bg-card: #ebdf98;
+	--bg-cell-odd: #e9e4c9;
+	--bg-cell-even: #eee6b6;
+	--text-main: #263238;
+	--border-color: var(--color-alert);
+
+	/* Sémantique */
+	--color-success: #2e7d32;
+	--color-alert: #d32f2f;
+	--color-warning: #f57c00;
+	--color-info: #0288d1;
+	--color-neutral: #a1887f;
+	--text-on-status: #ffffff;
+}
+

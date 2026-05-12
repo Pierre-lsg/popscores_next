@@ -36,10 +36,10 @@
 	};
 </script>
 
-<div class="scale-container">
+<div class="card" style="width: 100%; box-sizing: border-box; align-items: stretch; text-align: left;">
 	{#if scale}
 		<div class="scale-header">
-			<h3>{scale.name || 'Barème'}</h3>
+			<h3 style="margin: 0;">{scale.name || 'Barème'}</h3>
 			<span class="badge">{scale.isIndividual ? 'Individuel' : 'Collectif'}</span>
 		</div>
 
@@ -54,7 +54,7 @@
 
 		<div class="actions-bar">
 			<div class="add-group">
-				<button class="btn-add" onclick={addRanks}> Ajouter </button>
+				<button class="btn status-success" onclick={addRanks}> Ajouter </button>
 				<input type="number" min="1" max="50" bind:value={qtyToAdd} class="input-qty" />
 				{#if scale.points.length === 0}
 					<input value={qtyToAdd > 1 ? 'rangs' : 'rang'} class="viewInput" disabled />
@@ -65,8 +65,8 @@
 			</div>
 
 			{#if scale.points.length > 0}
-				<button class="btn-remove" onclick={removeLastRank} title="Supprimer la dernière place">
-					Supprimer la place {scale.points.length}
+				<button class="btn status-alert" onclick={removeLastRank} title="Supprimer la dernière place">
+					Supprimer ({scale.points.length})
 				</button>
 			{/if}
 		</div>
@@ -80,24 +80,17 @@
 		max-width: 7rem;
 	}
 
-	.scale-container {
-		border: 1px solid var(--border-color);
-		border-radius: 8px;
-		padding: 0.5rem;
-		background: var(--bg-card);
-	}
-
 	.scale-header {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		margin-bottom: 1rem;
-		border-bottom: 2px solid var(--bg-card);
+		border-bottom: 2px solid var(--border-color);
 		padding-bottom: 0.5rem;
 	}
 
 	.badge {
-		background: var(--bg-card);
+		background: var(--bg-app);
 		color: var(--primary);
 		padding: 2px 8px;
 		border-radius: 12px;
@@ -107,7 +100,7 @@
 
 	.ranks-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
 		gap: 10px;
 		max-height: 300px;
 		overflow-y: auto;
@@ -119,8 +112,8 @@
 		flex-direction: column;
 		background: var(--bg-app);
 		padding: 8px;
-		border-radius: 4px;
-		border: 1px solid var(--bg-card);
+		border-radius: 6px;
+		border: 1px solid var(--border-color);
 	}
 
 	.rank-item label {
@@ -145,22 +138,5 @@
 
 	.input-qty {
 		width: 60px;
-	}
-
-	.btn-add {
-		background: var(--color-success);
-		color: white;
-		border: none;
-		padding: 6px 12px;
-		border-radius: 4px;
-		cursor: pointer;
-	}
-	.btn-remove {
-		background: var(--color-alert);
-		color: white;
-		border: none;
-		padding: 6px 12px;
-		border-radius: 4px;
-		cursor: pointer;
 	}
 </style>

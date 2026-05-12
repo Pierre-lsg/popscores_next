@@ -1,0 +1,59 @@
+/*----------------------------*/
+/* Global Semantic Status     */
+/*----------------------------*/
+.status-success {
+	background-color: var(--color-success) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-success) !important;
+}
+
+.status-alert, .status-failure {
+	background-color: var(--color-alert) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-alert) !important;
+}
+
+.status-warning {
+	background-color: var(--color-warning) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-warning) !important;
+}
+
+.status-info {
+	background-color: var(--color-info) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-info) !important;
+}
+
+.status-neutral {
+	background-color: var(--color-neutral) !important;
+	color: var(--text-on-status) !important;
+	border-color: var(--color-neutral) !important;
+}
+
+.status-nothing {
+	border-color: var(--primary);
+	background-color: transparent;
+}
+
+.progress-bar {
+	height: 4px;
+	color: var(--primary);
+	background-color: white;
+	border-radius: 2px;
+	border: 1px solid var(--primary);
+}
+
+.fill {
+	height: 100%;
+	background: var(--primary);
+	transition: width 0.3s;
+}
+
+.unselectable {
+	user-select: none; /* Standard syntax */
+	-webkit-user-select: none; /* Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+}
+

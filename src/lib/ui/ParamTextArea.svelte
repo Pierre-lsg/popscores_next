@@ -63,57 +63,24 @@
 </div>
 
 <style>
-	.param-container {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		margin-bottom: 1.2rem;
-		width: 100%;
-	}
-
-	label {
-		font-weight: 600;
-		font-size: 1rem;
-		color: var(--color-text-soft, #555);
-		text-align: left;
-	}
-
-	textarea {
-		padding: 12px;
-		border: 2px solid #e0e0e0;
-		border-radius: 8px;
-		font-size: 1rem;
-		font-family: inherit; /* Pour éviter la police monospacée par défaut */
-		transition: border-color 0.2s;
-		outline: none;
-		background-color: var(--bg-ui);
-		resize: vertical; /* Permet à l'utilisateur d'ajuster la hauteur si besoin */
-		line-height: 1.4;
-	}
-
-	textarea:focus {
-		border-color: var(--border-color);
-	}
-
-	:global(.dark-mode) textarea {
-		background: #222;
-		color: white;
-		border-color: var(--border-color);
-	}
-
 	.btn-mic {
-		padding: 4px 12px;
+		align-self: flex-start;
+		padding: 6px 16px;
 		border-radius: 20px;
 		border: 1px solid var(--border-color);
-		background: white;
+		background: var(--bg-card);
+		color: var(--text-main);
+		font-weight: 600;
+		cursor: pointer;
 		transition: all 0.3s;
+		margin-bottom: 4px;
 	}
 
 	/* Animation de pulsation quand on enregistre */
 	.recording {
-		background: #ffeded;
-		border-color: #ff4d4d;
-		color: #ff4d4d;
+		background: var(--color-alert);
+		border-color: var(--color-alert);
+		color: white;
 		animation: pulse 1.5s infinite;
 	}
 

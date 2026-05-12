@@ -40,8 +40,8 @@
 <div class="history-list">
 	<h2>{title}</h2>
 	{#each historyStore.list as session, i}
-		<div class="action">
-			<button class="session-card" onclick={() => (currentSession = session.id)}>
+		<div class="action" style="gap: 10px;">
+			<button class="list-card" onclick={() => (currentSession = session.id)}>
 				<div class="details">
 					{session.settings.locationName}
 				</div>
@@ -52,7 +52,7 @@
 				<div class="icon">📜</div>
 			</button>
 
-			<button onclick={() => removeSession(session.id)} class="btn btn-delete-small">X</button>
+			<button onclick={() => removeSession(session.id)} class="btn-delete-small">X</button>
 		</div>
 	{:else}
 		<p>Aucune session archivée pour le moment. ⛳</p>
@@ -64,7 +64,7 @@
 	{:else if filteredSessions.length > 0}
 		<h3>Sessions disponibles sur le Cloud</h3>
 		{#each filteredSessions as session, i}
-			<button class="session-card" onclick={() => loadSessionfromCloud(i)}>
+			<button class="list-card" onclick={() => loadSessionfromCloud(i)}>
 				<div>{session.settings.locationName} - {session.settings.sessionBeginning}</div>
 			</button>
 		{/each}
@@ -81,33 +81,6 @@
 		margin: 0 auto;
 	}
 
-	.session-card {
-		display: flex;
-		align-items: center;
-		background: var(--bg-card);
-		border: 1px solid #e0e0e0;
-		border-radius: 12px;
-		padding: 15px;
-		text-align: left;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-		width: 100%;
-		color: inherit;
-		font-family: inherit;
-	}
-
-	.session-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		border-color: var(--border-color);
-	}
-
-	.session-card:active {
-		transform: translateY(0);
-		background-color: #f8f9fa;
-	}
-
 	.details {
 		flex-grow: 1;
 		display: flex;
@@ -120,10 +93,9 @@
 		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
 	}
 
-	/* Effet "vide" */
 	p {
 		text-align: center;
-		color: #95a5a6;
+		color: var(--secondary);
 		margin-top: 40px;
 		font-style: italic;
 	}

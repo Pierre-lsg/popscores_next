@@ -1,0 +1,191 @@
+/*----------------------------*/
+/* Main classes (Boutons UI)  */
+/*----------------------------*/
+
+/* Boutons génériques - Premium Base */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.6rem 1.2rem;
+	border-radius: 8px;
+	border: 1px solid transparent;
+	font-family: inherit;
+	font-weight: 600;
+	font-size: 0.95rem;
+	cursor: pointer;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+	-webkit-tap-highlight-color: transparent;
+	user-select: none;
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.btn:active {
+	transform: translateY(1px) scale(0.98);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Variantes de couleurs */
+.btn-primary {
+	background: var(--primary);
+	color: var(--primary-light);
+	border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary {
+	background: var(--secondary);
+	color: var(--primary-light);
+	border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.btn-large {
+	width: 100%;
+	padding: 0.8rem 1.5rem;
+	font-size: 1.1rem;
+}
+
+/* Boutons style "Ghost" / "Outline" (ex: btn-icon) */
+.btn-icon {
+	background: transparent;
+	border: 2px solid var(--primary);
+	color: var(--primary);
+	border-radius: 6px;
+	padding: 0.4rem 1rem;
+	margin: 4px 4px 0 0;
+	min-width: 80px;
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+	background: var(--primary);
+	color: var(--primary-light);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Boutons Circulaires Premium */
+.btn-par, .btn-delete, .btn-delete-small {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	border-radius: 50%;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+	-webkit-tap-highlight-color: transparent;
+}
+
+.btn-par:hover, .btn-delete:hover, .btn-delete-small:hover {
+	transform: scale(1.08);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-par:active, .btn-delete:active, .btn-delete-small:active {
+	transform: scale(0.95);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Spécificités des boutons circulaires */
+.btn-par {
+	background: var(--color-info);
+	color: var(--text-on-status);
+	width: 40px;
+	height: 40px;
+	font-size: 1.2rem;
+}
+
+.btn-delete {
+	background: var(--color-alert);
+	color: var(--text-on-status);
+	width: 40px;
+	height: 40px;
+	font-size: 1.3rem;
+}
+
+.btn-delete-small {
+	background: var(--color-alert);
+	color: var(--text-on-status);
+	width: 25px;
+	height: 25px;
+	font-size: 1rem;
+}
+
+/* Bouton Retour (Minimaliste) */
+.btn-back {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	text-decoration: none;
+	background: none;
+	border: none;
+	color: var(--text-main);
+	cursor: pointer;
+	padding: 0.4rem 0.6rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	opacity: 0.8;
+	transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-back:hover {
+	opacity: 1;
+	transform: translateX(-3px); /* Effet "glissement vers la gauche" */
+}
+
+/* Conteneur d'actions */
+.btn-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.75rem;
+	background: var(--bg-card);
+	border-radius: 12px;
+	margin-bottom: 0.5rem;
+	width: 25%;
+	box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); /* Effet creusé pour démarquer la zone */
+}
+
+/* Classement (Pastilles) */
+.rank {
+	background: var(--primary);
+	color: var(--primary-light);
+	width: 30px;
+	height: 30px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	margin-right: 15px;
+	font-weight: bold;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Drag & Drop interactions */
+.handle {
+	padding: 0 0 0 0.5rem;
+	width: 10%;
+	text-align: center;
+	cursor: grab;
+	color: var(--secondary);
+	user-select: none;
+	opacity: 0.6;
+	transition: opacity 0.2s;
+}
+
+.handle:hover {
+	opacity: 1;
+}
+
+.handle:active {
+	cursor: grabbing;
+}

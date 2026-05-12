@@ -62,18 +62,18 @@
 		</div>
 	{/if}
 	{#each coursesStore.list as course, i}
-		<button class="course-card" onclick={() => (currentCourse = course.id)}>
+		<button class="list-card" onclick={() => (currentCourse = course.id)}>
 			<div class="details">
 				{course.name}
 			</div>
 			<div class="icon">⛳</div>
 		</button>
-		<div class="action">
-			<button onclick={() => removeCourse(course.id)}> 🗑️ </button>
-			<button onclick={() => copyShareLink(course)}>🔗 Partager</button>
+		<div class="action" style="gap: 10px; justify-content: flex-end; margin-bottom: 10px;">
+			<button class="btn btn-icon" style="color: var(--color-alert); border-color: var(--color-alert);" onclick={() => removeCourse(course.id)}> 🗑️ </button>
+			<button class="btn btn-primary" onclick={() => copyShareLink(course)}>🔗 Partager</button>
 		</div>
 	{:else}
-		<p>Aucune parcours archivé pour le moment. ⛳</p>
+		<p>Aucun parcours archivé pour le moment. ⛳</p>
 	{/each}
 
 	<h3>Parcours disponibles dans le Cloud</h3>
@@ -82,7 +82,7 @@
 		<p>Chargement ...</p>
 	{:else}
 		{#each filteredCourses as course, i}
-			<button class="course-card" onclick={() => loadCoursefromCloud(i)}>
+			<button class="list-card" onclick={() => loadCoursefromCloud(i)}>
 				<div>{course.name}</div>
 			</button>
 		{/each}
@@ -98,33 +98,6 @@
 		margin: 0 auto;
 	}
 
-	.course-card {
-		display: flex;
-		align-items: center;
-		background: var(--bg-card);
-		border: 1px solid #e0e0e0;
-		border-radius: 12px;
-		padding: 15px;
-		text-align: left;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-		width: 100%;
-		color: inherit;
-		font-family: inherit;
-	}
-
-	.course-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		border-color: var(--border-color);
-	}
-
-	.course-card:active {
-		transform: translateY(0);
-		background-color: #f8f9fa;
-	}
-
 	.details {
 		flex-grow: 1;
 		display: flex;
@@ -137,10 +110,9 @@
 		filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
 	}
 
-	/* Effet "vide" */
 	p {
 		text-align: center;
-		color: #95a5a6;
+		color: var(--secondary);
 		margin-top: 40px;
 		font-style: italic;
 	}
