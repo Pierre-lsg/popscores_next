@@ -27,11 +27,11 @@
 	}>();
 </script>
 
-<div class="list-card">
+<div class="others-list">
 	{#each rankedTeams as team, i}
 		{@const t = team.team}
 		{@const stats = getTeamStats(t, targets, players, settings)}
-		<div class="item-card">
+		<div class="other-item">
 			<span class="rank"
 				>{team.rank}
 				{#if team.isTie}
@@ -52,21 +52,5 @@
 <style>
 	.podium-name {
 		font-size: 1rem;
-	}
-
-	.item-card {
-		display: flex;
-		justify-content: space-between;
-		margin: 0.5rem 0rem;
-		background-color: var(--bg-card);
-	}
-
-	.list-card {
-		border: 1px solid var(--primary);
-		background-color: var(--bg-card);
-		border-radius: 12px;
-		padding: 0.5rem;
-		margin-bottom: 20px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 </style>

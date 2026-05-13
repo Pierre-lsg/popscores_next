@@ -26,13 +26,13 @@
 	<table class="one_col-score-card" id="PSCBT-capture">
 		<thead>
 			<tr class="header">
-				<th class="first-fixed-col"><div style="width: 100px; position: sticky">Cibles</div></th>
+				<th class="first-fixed-col"><div style="width: 100px;">Cibles</div></th>
 				{#each targets as target, i}
 					<th class="vertical-header last-cell">
 						<span>{target.name || 'Cible ' + (i + 1)}</span>
 					</th>
 				{/each}
-				<th class="vertical-header last-cell"><span>Total</span></th>
+				<th class="vertical-header last-cell total-column"><span>Total</span></th>
 			</tr>
 			<tr class="header">
 				<th class="first-fixed-col last-cell">Par</th>
@@ -41,7 +41,7 @@
 						{target.par}
 					</th>
 				{/each}
-				<th class="last-cell">{getTotalPar(targets)}</th>
+				<th class="last-cell total-column">{getTotalPar(targets)}</th>
 			</tr>
 
 			<tr class="header">
@@ -51,7 +51,7 @@
 						{target.rule?.slice(0, 4) || ''}
 					</th>
 				{/each}
-				<th class="last-cell">|||</th>
+				<th class="last-cell total-column">|||</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -68,7 +68,7 @@
 							</div>
 						</td>
 					{/each}
-					<td class="last-cell" style="background-color: var(--bg-card);"
+					<td class="last-cell total-column" style="background-color: var(--bg-card);"
 						>{calculatePlayerScore(player.player, targets)}</td
 					>
 				</tr>

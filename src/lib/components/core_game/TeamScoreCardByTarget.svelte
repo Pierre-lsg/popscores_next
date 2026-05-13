@@ -43,14 +43,14 @@
 	<table class="one_col-score-card" id="TSCBT-capture">
 		<thead>
 			<tr class="header">
-				<th><div style="width: 100px; position: sticky;">&nbsp;</div></th>
-				<th class="par-col"><div style="width: 35px; position: sticky;">Cibles</div></th>
+				<th><div style="width: 100px;">&nbsp;</div></th>
+				<th class="par-col"><div style="width: 35px;">Cibles</div></th>
 				{#each targets as target, i}
 					<th class="vertical-header last-cell">
 						<span>{target.name || 'Cible ' + (i + 1)}</span>
 					</th>
 				{/each}
-				<th class="vertical-header last-cell"><span>Total</span></th>
+				<th class="vertical-header last-cell total-column"><span>Total</span></th>
 			</tr>
 			<tr class="header">
 				<th>&nbsp;</th>
@@ -60,7 +60,7 @@
 						{target.par}
 					</th>
 				{/each}
-				<th class="last-cell">{getTotalPar(targets)}</th>
+				<th class="last-cell total-column">{getTotalPar(targets)}</th>
 			</tr>
 
 			<tr class="header">
@@ -71,7 +71,7 @@
 						{target.rule?.slice(0, 4) || ''}
 					</th>
 				{/each}
-				<th class="last-cell">|||</th>
+				<th class="last-cell total-column">|||</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -110,7 +110,7 @@
 							{/each}
 						</td>
 					{/each}
-					<td class="last-cell">{calculateTeamScore(team, targets, players, settings)}</td>
+					<td class="last-cell total-column">{calculateTeamScore(team, targets, players, settings)}</td>
 				</tr>
 			{/each}
 		</tbody>

@@ -42,7 +42,7 @@
 	.header-section {
 		background: var(--bg-card);
 		display: flex;
-		z-index: 10;
+		z-index: 100;
 		justify-content: space-between;
 		align-items: flex-start;
 		width: 100%;

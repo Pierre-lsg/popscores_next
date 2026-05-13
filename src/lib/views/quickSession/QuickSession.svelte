@@ -8,7 +8,7 @@
 		<GolfMobile />
 	{:else}
 		<div class="desktop-container">
-			Todo : version Desktop
+			***
 			<GolfMobile />
 		</div>
 	{/if}

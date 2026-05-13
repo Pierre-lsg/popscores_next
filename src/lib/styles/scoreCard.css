@@ -1,10 +1,14 @@
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+	width: 100%;
+}
+
 .one_col-score-card {
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 	background: var(--bg-card);
 	border-radius: 12px;
-	border-collapse: collapse;
-	overflow: hidden;
-	width: 100%;
+	/* On retire overflow: hidden qui peut casser le sticky */
 }
 
 /* Entête Glass Style Unifié */
@@ -44,53 +48,81 @@
 
 /* --- COLONNES FIGÉES (STICKY) --- */
 
-/* Colonne 1 : Rang & Equipe */
+/* Base pour toutes les colonnes figées (th et td) */
+.first-fixed-col,
+.par-col,
+.col-gr,
 .one_col-score-card th:nth-child(1),
-.one_col-score-card td:nth-child(1) {
-	position: sticky;
-	left: 0;
+.one_col-score-card td:nth-child(1),
+.one_col-score-card th:nth-child(2),
+.one_col-score-card td:nth-child(2) {
+	position: sticky !important;
 	z-index: 20;
-	/* Plus haut que l'entête standard */
 	background-color: var(--bg-card) !important;
-	border-right: 2px solid var(--primary);
+	border-right: 2px solid var(--primary) !important;
+}
+
+/* Positionnement horizontal précis */
+.one_col-score-card th:nth-child(1),
+.one_col-score-card td:nth-child(1),
+.first-fixed-col {
+	left: 0 !important;
 	min-width: 100px;
 	width: 100px;
 }
 
-/* Colonne 2 : Joueurs & Libellés (Par, Règles...) */
 .one_col-score-card th:nth-child(2),
-.one_col-score-card td:nth-child(2) {
-	position: sticky;
-	left: 100px;
-	/* Doit correspondre à la largeur de la Col 1 */
-	z-index: 20;
-	background-color: var(--bg-card) !important;
-	border-right: 2px solid var(--primary);
-	min-width: 120px;
-	width: 120px;
+.one_col-score-card td:nth-child(2),
+.par-col {
+	left: 100px !important;
+	min-width: 35px;
 }
 
-/* On s'assure que l'entête reste au dessus de tout au scroll */
-.one_col-score-card thead tr.header th {
+/* La 3ème colonne (RdJ) n'existe que dans certains tableaux */
+.col-gr {
+	left: 135px !important;
+	min-width: 35px;
+}
+
+/* Spécificités de l'entête (thead) */
+.one_col-score-card thead tr th {
 	position: sticky;
 	top: 0;
 	z-index: 25;
 }
 
-/* Cas particulier : les coins supérieurs des colonnes figées */
-.one_col-score-card thead tr.header th:nth-child(1),
-.one_col-score-card thead tr.header th:nth-child(2) {
+/* Les coins (intersection sticky horizontal et vertical) */
+.one_col-score-card thead tr th:nth-child(1),
+.one_col-score-card thead tr th:nth-child(2),
+.one_col-score-card thead tr th:nth-child(3),
+.one_col-score-card thead tr th.par-col,
+.one_col-score-card thead tr th.col-gr,
+.one_col-score-card thead tr th.first-fixed-col {
 	z-index: 30;
-	/* Le plus haut pour ne pas être écrasé par le scroll vertical */
+	top: 0;
+	border-right: 2px solid var(--primary) !important;
 }
+
+
+/* Séparation de la colonne Total (uniquement si la classe est présente) */
+.one_col-score-card .total-column {
+	border-left: 2px solid var(--primary) !important;
+	font-weight: bold;
+}
+
 
 .one_col-score-card tbody tr:nth-child(odd) td {
 	background-color: var(--bg-cell-odd);
+}
+.one_col-score-card tbody tr:nth-child(even) td {
+	background-color: var(--bg-cell-even);
 }
 
 .one_col-score-card tbody tr:nth-child(even) td {
 	background-color: var(--bg-cell-even);
 }
+
+
 
 /* Restauration du scroll */
 .scorecard {

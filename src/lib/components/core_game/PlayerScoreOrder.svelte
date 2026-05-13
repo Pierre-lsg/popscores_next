@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { RankedPlayer } from '$lib/types/playerType';
 	import type { Target } from '$lib/types/targetType';
+	import '$lib/styles/rankingPodium.css';
 
 	import { getPlayerStats } from '$lib/utils/session/golfScoringFunction.svelte';
 
@@ -10,11 +11,11 @@
 	}>();
 </script>
 
-<div class="list-card">
+<div class="others-list">
 	{#each rankedPlayers as player, i}
 		{@const p = player.player}
 		{@const stats = getPlayerStats(p, targets)}
-		<div class="item-card">
+		<div class="other-item">
 			<span class="rank"
 				>{player.rank}
 				{#if player.isTie}
@@ -30,21 +31,5 @@
 <style>
 	.podium-name {
 		font-size: 1rem;
-	}
-
-	.item-card {
-		display: flex;
-		justify-content: space-between;
-		margin: 0.5rem 0rem;
-		background-color: var(--bg-card);
-	}
-
-	.list-card {
-		border: 1px solid var(--primary);
-		background-color: var(--bg-card);
-		border-radius: 12px;
-		padding: 0.5rem;
-		margin-bottom: 20px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 </style>

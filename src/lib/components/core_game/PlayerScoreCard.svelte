@@ -26,9 +26,9 @@
 	<table class="one_col-score-card">
 		<thead>
 			<tr class="header">
-				<th><div style="width: 100px; position: sticky;">&nbsp;</div></th>
-				<th class="par-col"><div style="width: 35px; position: sticky;">&nbsp;</div></th>
-				<th class="col-gr"><div style="width: 35px; position: sticky;">&nbsp;</div></th>
+				<th><div style="width: 100px;">&nbsp;</div></th>
+				<th class="par-col"><div style="width: 35px;">&nbsp;</div></th>
+				<th class="col-gr"><div style="width: 35px;">&nbsp;</div></th>
 				{#each rankedPlayers as player}
 					<th class="vertical-header last-cell"><span>&nbsp;</span></th>
 				{/each}

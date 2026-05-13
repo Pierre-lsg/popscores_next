@@ -24,12 +24,14 @@
 	width: 100%;
 	border-radius: 8px 8px 0 0;
 }
+
 .podium-name {
 	font-size: 0.8rem;
 	font-weight: bold;
 	margin-top: 5px;
 	text-align: center;
 }
+
 .podium-score {
 	font-size: 1.2rem;
 	font-weight: 800;
@@ -42,11 +44,13 @@
 	background: #ffd700;
 	border: 2px solid #e6c200;
 }
+
 .silver .bar {
 	height: 105px;
 	background: #c0c0c0;
 	border: 2px solid #a9a9a9;
 }
+
 .bronze .bar {
 	height: 75px;
 	background: #cd7f32;
@@ -59,12 +63,15 @@
 }
 
 .others-list {
+	display: flex;
+	flex-direction: column;
 	background: #f9f9f9;
 	border-radius: 12px;
 	padding: 10px;
 	margin: 0.5rem 0;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 .other-item {
 	display: flex;
 	justify-content: space-between;
@@ -72,6 +79,7 @@
 	border-bottom: 1px solid #eee;
 	background-color: var(--bg-card);
 }
+
 .rank {
 	color: white;
 	font-weight: bold;
