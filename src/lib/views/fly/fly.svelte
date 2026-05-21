@@ -33,7 +33,7 @@
 	let currentFly: Fly | undefined = $state();
 	let flys: Fly[] = $state([]);
 
-	const listTeamPlayers = async (team: Team) => {
+	const listTeamPlayers = (team: Team) => {
 		let playerList: string[] = [];
 		team.playersId.forEach((aPlayerId) => {
 			playerList.push(playersChampionshipStore.find(aPlayerId)?.name || '👻');
@@ -41,7 +41,7 @@
 		return formatList(playerList);
 	};
 
-	const listCompetitors = async (fly: Fly) => {
+	const listCompetitors = (fly: Fly) => {
 		let compList: string[] = [];
 		fly.playersId.forEach((playerId) => {
 			compList.push(playersChampionshipStore.list.find((t) => t.id === playerId)?.name || '');
