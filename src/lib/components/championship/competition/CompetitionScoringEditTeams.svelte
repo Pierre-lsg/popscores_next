@@ -218,27 +218,29 @@
 	</div>
 	<!-- Saisie des résultats d'une cible pour un fly -->
 	<div class="step-content" in:slide>
-		<ScoreHeader
-			bind:target={currentTarget}
-			{targets}
-			{activeTargetIndex}
-			allowSelect={true}
-			onNext={showNextTarget}
-			onPrev={showPrevTarget}
-			onTargetSelect={(idx) => activeTargetIndex = idx}
-		/>
+		{#if currentTarget}
+			<ScoreHeader
+				target={currentTarget}
+				{targets}
+				{activeTargetIndex}
+				allowSelect={true}
+				onNext={showNextTarget}
+				onPrev={showPrevTarget}
+				onTargetSelect={(idx) => activeTargetIndex = idx}
+			/>
 
-		<ScoreGrid
-			target={currentTarget}
-			{players}
-			{teams}
-			{minTrys}
-			{maxTrys}
-			onScoreChange={(playerId, targetId, score) => {
-				const player = players.find(p => p.id === playerId);
-				if (player) player.scores[targetId] = score;
-			}}
-		/>
+			<ScoreGrid
+				target={currentTarget}
+				{players}
+				{teams}
+				{minTrys}
+				{maxTrys}
+				onScoreChange={(playerId, targetId, score) => {
+					const player = players.find(p => p.id === playerId);
+					if (player) player.scores[targetId] = score;
+				}}
+			/>
+		{/if}
 	</div>
 
 	<!-- Affichage de la carte de score -->

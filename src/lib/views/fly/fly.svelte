@@ -65,11 +65,12 @@
 		);
 
 		if (currentCompetition && userStore.current) {
+			const currentUser = userStore.current;
 			//liste les flys de la compétition
 			let Allflys = flysChampionshipStore.list.filter((fly) =>
 				currentCompetition?.flysId.includes(fly.id)
 			);
-			flys = Allflys.filter((fly) => fly.supervisorId === userStore.current.id);
+			flys = Allflys.filter((fly) => fly.supervisorId === currentUser.id);
 		}
 
 		if (flys.length === 1) currentFly = flys[0];

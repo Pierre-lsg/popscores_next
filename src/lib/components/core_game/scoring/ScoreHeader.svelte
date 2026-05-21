@@ -68,8 +68,8 @@
 				<Selector
 					id="targetSelection"
 					bind:value={selectedTarget}
-					options={targets.map((_, i) => String(i))}
-					optionsLabel={targets.map((t) => t.name)}
+					options={targets.map((_: Target, i: number) => String(i))}
+					optionsLabel={targets.map((t: Target) => t.name)}
 					onchange={changeTarget}
 				/>
 			{/if}

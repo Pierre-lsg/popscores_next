@@ -21,6 +21,7 @@ import { resultsCompetitionStore } from '$lib/stores/championship/resultsCompeti
 import { calculatePlayerScore } from '../session/golfScoringFunction.svelte';
 
 import { toastStore } from '$lib/stores/toastStore.svelte';
+import { confirmStore } from '$lib/stores/confirmStore.svelte';
 import { teamService } from '../pocketbase/teams2Cloud';
 import { playerService } from '../pocketbase/players2Cloud';
 import { courseService } from '../pocketbase/courses2Cloud';
@@ -35,7 +36,7 @@ import type { Target } from '$lib/types/targetType';
 import { scoreCardService } from '../pocketbase/scoreCards2Cloud';
 import type { ScoreCard } from '$lib/types/scoreCardType';
 
-export const isCompetitionTeam = async (competition: Competition) => {
+export const isCompetitionTeam = (competition: Competition): boolean => {
 	let rules: Regulations | undefined;
 	let isTeamGame: boolean = false;
 	if (competition) {

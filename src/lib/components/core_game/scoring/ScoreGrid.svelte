@@ -71,7 +71,7 @@
 			{:else}
 				<!-- AFFICHAGE PAR EQUIPE -->
 				{#each teams as team}
-					{@const player = players.find((p) => p.id === team.playersId[0])}
+					{@const player = players.find((p: Player) => p.id === team.playersId[0])}
 					{#if player}
 						<tr class="score">
 							<td class="player-name">{team.name}</td>
