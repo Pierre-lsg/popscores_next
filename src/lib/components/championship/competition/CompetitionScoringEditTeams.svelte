@@ -119,11 +119,11 @@
 
 	const saveProgressToCloud = async () => {
 		if (isOnline) {
-			flyService.saveFly(currentFly);
+			await flyService.saveFly(currentFly);
 			messageStore.remove('sendFly');
 		}
 		// Sauver les scores dans le ResultStore
-		players.forEach((player) => {
+		for (const player of players) {
 			let result = resultsCompetitionStore.find(currentCompetition.id, player.id);
 			if (result) {
 				result.scores = player.scores;
@@ -132,10 +132,10 @@
 			}
 			// Sauver le résultat dans le Cloud si c'est possible
 			if (isOnline) {
-				playerService.savePlayer(player);
-				resultService.saveResult(result);
+				await playerService.savePlayer(player);
+				await resultService.saveResult(result);
 			}
-		});
+		}
 	};
 
 	const initScoresPlayerOnTarget = async () => {
@@ -173,7 +173,7 @@
 		// Modifier le status du fly
 		if (isOnline) {
 			currentFly.status = 'validated';
-			flyService.saveFly(currentFly);
+			await flyService.saveFly(currentFly);
 			messageStore.remove('sendFly');
 		} else {
 			currentFly.status = 'finished';

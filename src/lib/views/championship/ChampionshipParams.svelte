@@ -28,7 +28,7 @@
 		let champToSave = $state.snapshot(championship);
 
 		try {
-			championshipService.save(champToSave);
+			await championshipService.save(champToSave);
 			toastStore.show('💾 Mise à jour effectuée ...', 'success');
 			messageStore.remove('modifChamp');
 		} catch (err) {

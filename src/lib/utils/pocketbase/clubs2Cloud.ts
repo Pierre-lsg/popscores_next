@@ -2,15 +2,15 @@ import type { Club } from '$lib/types/clubType';
 import { db, pb } from './pocketBase';
 
 export const clubService = {
-	getAll: () => db.getFullList('clubs', { sort: 'created' }),
+	getAll: () => db.getFullList<{ data: Club }>('clubs', { sort: 'created' }),
 
 	getAllClubs: async () => {
-		const clubs = await db.getFullList('clubs', { sort: 'created' });
+		const clubs = await db.getFullList<{ data: Club }>('clubs', { sort: 'created' });
 		return clubs.map((club) => club.data) as Club[];
 	},
 
 	getAllClubsOfChampionship: async (csId: string) => {
-		const clubs = await db.getFullList('clubs', { filter: `championship ~ "${csId}"` });
+		const clubs = await db.getFullList<{ data: Club }>('clubs', { filter: `championship ~ "${csId}"` });
 		return clubs.map((club) => club.data) as Club[];
 	},
 
@@ -29,11 +29,11 @@ export const clubService = {
 			owner: pb.authStore.record?.id,
 			data: aClub
 		};
-		db.save('clubs', clubToSave);
+		return await db.save('clubs', clubToSave);
 	},
 
-	saveClubs: (clubs: Club[]) => {
-		for (let aClub of clubs) {
+	saveClubs: async (clubs: Club[]) => {
+		const promises = clubs.map((aClub) => {
 			const clubToSave = {
 				id: aClub.id,
 				name: aClub.name,
@@ -41,11 +41,12 @@ export const clubService = {
 				owner: pb.authStore.record?.id,
 				data: aClub
 			};
-			db.save('clubs', clubToSave);
-		}
+			return db.save('clubs', clubToSave);
+		});
+		return await Promise.all(promises);
 	},
 
-	createClub: (aClub: Club) => {
+	createClub: async (aClub: Club) => {
 		const clubToSave = {
 			id: aClub.id,
 			name: aClub.name,
@@ -53,10 +54,10 @@ export const clubService = {
 			owner: pb.authStore.record?.id,
 			data: aClub
 		};
-		db.create('clubs', clubToSave);
+		return await db.create('clubs', clubToSave);
 	},
 
-	updateClub: (aClub: Club) => {
+	updateClub: async (aClub: Club) => {
 		const clubToSave = {
 			id: aClub.id,
 			name: aClub.name,
@@ -64,6 +65,6 @@ export const clubService = {
 			owner: pb.authStore.record?.id,
 			data: aClub
 		};
-		db.update('clubs', clubToSave);
+		return await db.update('clubs', clubToSave);
 	}
 };

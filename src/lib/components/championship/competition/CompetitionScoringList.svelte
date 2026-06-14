@@ -49,7 +49,7 @@
 		if (await confirmStore.prompt('Validez-vous les résultats ?')) {
 			currentCompetition.status = 'finished';
 			currentCompetition.step = 'welcome';
-			competitionService.saveCompetition(currentCompetition, championship.id);
+			await competitionService.saveCompetition(currentCompetition, championship.id);
 		}
 	};
 
@@ -119,7 +119,7 @@
 			// Compétition individuelle
 			else playersId = aFly.playersId;
 
-			playersId.forEach(async (aPlayerId) => {
+			for (const aPlayerId of playersId) {
 				console.log('rafraichissement player : ', aPlayerId);
 				const aPlayer: Player = await playerService.getPlayerById(aPlayerId);
 				if (aPlayer) {
@@ -136,7 +136,7 @@
 					resultsCompetitionStore.remove(currentCompetition.id, aPlayerId);
 					resultsCompetitionStore.load(aResult[0]);
 				}
-			});
+			}
 		}
 	};
 

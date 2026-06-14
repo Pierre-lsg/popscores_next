@@ -44,7 +44,7 @@
 
 	const saveSessionToCloud = async () => {
 		try {
-			const record = historyService.saveSession(session);
+			const record = await historyService.saveSession(session);
 			console.log(record);
 			toastStore.show('💾 Sauvegarde effectuée ...', 'success');
 		} catch (err) {

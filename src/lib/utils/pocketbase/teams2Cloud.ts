@@ -2,15 +2,15 @@ import type { Team } from '$lib/types/teamType';
 import { db, pb } from './pocketBase';
 
 export const teamService = {
-	getAll: () => db.getFullList('teams', { sort: 'created' }),
+	getAll: () => db.getFullList<{ data: Team }>('teams', { sort: 'created' }),
 
 	getAllTeams: async () => {
-		const teams = await db.getFullList('teams', { sort: 'created' });
+		const teams = await db.getFullList<{ data: Team }>('teams', { sort: 'created' });
 		return teams.map((team) => team.data) as Team[];
 	},
 
 	getTeamsByClub: async (clubId: string) => {
-		const teams = await db.getFullList('teams', { filter: `club ~ "${clubId}"` });
+		const teams = await db.getFullList<{ data: Team }>('teams', { filter: `club ~ "${clubId}"` });
 		return teams.map((team) => team.data) as Team[];
 	},
 
@@ -26,7 +26,7 @@ export const teamService = {
 		return team?.data as Team;
 	},
 
-	saveTeam: (aTeam: Team) => {
+	saveTeam: async (aTeam: Team) => {
 		const teamToSave = {
 			id: aTeam.id,
 			name: aTeam.name,
@@ -34,10 +34,10 @@ export const teamService = {
 			owner: pb.authStore.record?.id,
 			data: aTeam
 		};
-		db.save('teams', teamToSave);
+		return await db.save('teams', teamToSave);
 	},
 
-	saveCompetitionTeam: (aTeam: Team) => {
+	saveCompetitionTeam: async (aTeam: Team) => {
 		const teamToSave = {
 			id: aTeam.id,
 			name: aTeam.name,
@@ -45,11 +45,11 @@ export const teamService = {
 			owner: pb.authStore.record?.id,
 			data: aTeam
 		};
-		db.save('teams_in_competition', teamToSave);
+		return await db.save('teams_in_competition', teamToSave);
 	},
 
-	saveTeams: (teams: Team[]) => {
-		for (let aTeam of teams) {
+	saveTeams: async (teams: Team[]) => {
+		const promises = teams.map((aTeam) => {
 			const teamToSave = {
 				id: aTeam.id,
 				name: aTeam.name,
@@ -57,11 +57,12 @@ export const teamService = {
 				owner: pb.authStore.record?.id,
 				data: aTeam
 			};
-			db.save('teams', teamToSave);
-		}
+			return db.save('teams', teamToSave);
+		});
+		return await Promise.all(promises);
 	},
 
-	createTeam: (aTeam: Team) => {
+	createTeam: async (aTeam: Team) => {
 		const teamToSave = {
 			id: aTeam.id,
 			name: aTeam.name,
@@ -69,10 +70,10 @@ export const teamService = {
 			owner: pb.authStore.record?.id,
 			data: aTeam
 		};
-		db.create('teams', teamToSave);
+		return await db.create('teams', teamToSave);
 	},
 
-	updateTeam: (aTeam: Team) => {
+	updateTeam: async (aTeam: Team) => {
 		const teamToSave = {
 			id: aTeam.id,
 			name: aTeam.name,
@@ -80,6 +81,6 @@ export const teamService = {
 			owner: pb.authStore.record?.id,
 			data: aTeam
 		};
-		db.update('teams', teamToSave);
+		return await db.update('teams', teamToSave);
 	}
 };

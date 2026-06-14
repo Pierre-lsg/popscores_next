@@ -2,15 +2,15 @@ import type { Fly } from '$lib/types/flyType';
 import { db, pb } from './pocketBase';
 
 export const flyService = {
-	getAll: () => db.getFullList('flys', { sort: 'created' }),
+	getAll: () => db.getFullList<{ data: Fly }>('flys', { sort: 'created' }),
 
 	getAllflys: async () => {
-		const flys = await db.getFullList('flys', { sort: 'created' });
+		const flys = await db.getFullList<{ data: Fly }>('flys', { sort: 'created' });
 		return flys.map((fly) => fly.data) as Fly[];
 	},
 
 	getFlysByCompetition: async (competitionId: string) => {
-		const flys = await db.getFullList('flys', { filter: `competition ~ "${competitionId}"` });
+		const flys = await db.getFullList<{ data: Fly }>('flys', { filter: `competition ~ "${competitionId}"` });
 		return flys.map((fly) => fly.data) as Fly[];
 	},
 
@@ -23,25 +23,26 @@ export const flyService = {
 
 	deleteFly: (id: string) => db.delete('flys', id),
 
-	saveFly: (aFly: Fly) => {
+	saveFly: async (aFly: Fly) => {
 		const flyToSave = {
 			id: aFly.id,
 			competition: aFly.competitionId,
 			owner: pb.authStore.record?.id,
 			data: aFly
 		};
-		db.save('flys', flyToSave);
+		return await db.save('flys', flyToSave);
 	},
 
-	saveFlys: (flys: Fly[]) => {
-		for (let aFly of flys) {
+	saveFlys: async (flys: Fly[]) => {
+		const promises = flys.map((aFly) => {
 			const flyToSave = {
 				id: aFly.id,
 				competition: aFly.competitionId,
 				owner: pb.authStore.record?.id,
 				data: aFly
 			};
-			db.save('flys', flyToSave);
-		}
+			return db.save('flys', flyToSave);
+		});
+		return await Promise.all(promises);
 	}
 };

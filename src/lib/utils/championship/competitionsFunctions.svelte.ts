@@ -150,7 +150,7 @@ export const cloudSaveCompetition = async (
 
 	// sauver la compétition
 	try {
-		competitionService.saveCompetition(competition, csId);
+		await competitionService.saveCompetition(competition, csId);
 	} catch (e) {
 		console.log('error', e);
 		status = 'failure';
@@ -165,7 +165,7 @@ export const cloudSaveClubs = async (clubsId: string[]): Promise<string> => {
 		const aClub: Club | undefined = clubsStore.find(clubId);
 		if (aClub) {
 			try {
-				clubService.saveClub(aClub);
+				await clubService.saveClub(aClub);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -182,7 +182,7 @@ export const cloudSaveTeams = async (teamsId: string[]): Promise<string> => {
 		const aTeam: Team | undefined = teamsChampionshipStore.find(teamId);
 		if (aTeam) {
 			try {
-				teamService.saveTeam(aTeam);
+				await teamService.saveTeam(aTeam);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -202,7 +202,7 @@ export const cloudSaveCompetitionTeams = async (
 		const aTeam: Team | undefined = teamsCompetitionStore.findByIdAndSession(teamId, competitionId);
 		if (aTeam) {
 			try {
-				teamService.saveCompetitionTeam(aTeam);
+				await teamService.saveCompetitionTeam(aTeam);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -219,7 +219,7 @@ export const cloudSavePlayers = async (playersId: string[]): Promise<string> => 
 		const aPlayer: Player | undefined = playersChampionshipStore.find(playerId);
 		if (aPlayer) {
 			try {
-				playerService.savePlayer(aPlayer);
+				await playerService.savePlayer(aPlayer);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -236,7 +236,7 @@ export const cloudSaveFlys = async (flysId: string[]): Promise<string> => {
 		const aFly: Fly | undefined = flysChampionshipStore.find(flyId);
 		if (aFly) {
 			try {
-				flyService.saveFly(aFly);
+				await flyService.saveFly(aFly);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -253,7 +253,7 @@ export const cloudSaveRegulations = async (regulationsId: string): Promise<strin
 		const aRegulation: Regulations | undefined = regulationsStore.find(regulationsId);
 		if (aRegulation) {
 			try {
-				regulationService.saveRegulation(aRegulation);
+				await regulationService.saveRegulation(aRegulation);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -270,7 +270,7 @@ export const cloudSaveCourseAndTargets = async (courseId: string): Promise<strin
 		const aCourse: Course | undefined = coursesChampionshipStore.find(courseId);
 		if (aCourse) {
 			try {
-				courseService.saveCourse(aCourse);
+				await courseService.saveCourse(aCourse);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -278,7 +278,7 @@ export const cloudSaveCourseAndTargets = async (courseId: string): Promise<strin
 
 			// Et les cibles liées au parcours
 			try {
-				targetService.saveTargets(aCourse.targets);
+				await targetService.saveTargets(aCourse.targets);
 			} catch (e) {
 				console.log('error', e);
 				status = 'failure';
@@ -296,7 +296,7 @@ export const cloudSaveResults = async (competitionId: string): Promise<string> =
 	);
 	if (results) {
 		try {
-			resultService.saveResults(results);
+			await resultService.saveResults(results);
 		} catch (e) {
 			console.log('error', e);
 			status = 'failure';
@@ -534,7 +534,7 @@ export const cloudSaveScoreCard = async (
 
 	if (aScoreCard) {
 		try {
-			scoreCardService.saveScoreCard(aScoreCard);
+			await scoreCardService.saveScoreCard(aScoreCard);
 		} catch (e) {
 			console.log('error', e);
 			status = 'failure';

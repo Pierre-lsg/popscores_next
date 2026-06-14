@@ -84,7 +84,7 @@
 
 	const resolveTies = async (winner: Player) => {
 		if (await confirmStore.prompt(winner.name + ' a gagné le playoff ?')) {
-			players.forEach((player) => {
+			for (const player of players) {
 				player.scores[playoffTarget.id] = player.id === winner.id ? -1 : 0;
 
 				// Mettre à jour les résultats définitifs
@@ -94,19 +94,19 @@
 
 				// Sauver le résultat dans le Cloud si c'est possible
 				if (isOnline) {
-					playerService.savePlayer(player);
-					resultService.saveResult(result);
+					await playerService.savePlayer(player);
+					await resultService.saveResult(result);
 				}
 
 				// Supprimer l'affichage du playoff
 				isShowingPlayoff = false;
-			});
+			}
 		}
 	};
 
 	const publish = async () => {
 		currentCompetition.status = 'published';
-		competitionService.saveCompetition(currentCompetition, championship.id);
+		await competitionService.saveCompetition(currentCompetition, championship.id);
 	};
 
 	const linkToResults = async () => {

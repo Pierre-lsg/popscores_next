@@ -22,7 +22,7 @@ export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 			const aTeam: Team | undefined = teamsChampionshipStore.find(teamId);
 			if (aTeam) {
 				try {
-					teamService.saveTeam(aTeam);
+					await teamService.saveTeam(aTeam);
 				} catch (e) {
 					console.log('error', e);
 					status = 'failure';
@@ -36,7 +36,7 @@ export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 			console.log(aPlayer);
 			if (aPlayer) {
 				try {
-					playerService.savePlayer(aPlayer);
+					await playerService.savePlayer(aPlayer);
 				} catch (e) {
 					console.log('error', e);
 					status = 'failure';

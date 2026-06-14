@@ -34,8 +34,9 @@
 			allScoreCards.forEach((sc) => {
 				players = [...players, ...sc.players];
 				sc.rankedTeams.forEach((rt) => teams.push(rt.team));
+				rankedPlayers = [...rankedPlayers, ...sc.rankedPlayers];
 			});
-			rankedPlayers = getRankedPlayers(players, targets);
+			rankedPlayers = getRankedPlayers(rankedPlayers.map((rp) => rp.player), targets);
 			rankedTeams = getRankedTeams(teams, targets, players, settings);
 		}
 	});

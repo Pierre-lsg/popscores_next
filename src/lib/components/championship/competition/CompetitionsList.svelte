@@ -72,7 +72,7 @@
 			competitionManagersId
 		);
 		championship.competitionsId.push(tmpCompetition.id);
-		championshipService.save(championship);
+		await championshipService.save(championship);
 
 		competitionName = competitionLocation = '';
 		competitionDate = publicationDate = today;
@@ -85,7 +85,7 @@
 				(id: string) => id !== aCompetition.id
 			);
 			competitionsStore.remove(aCompetition.id);
-			championshipService.save(championship);
+			await championshipService.save(championship);
 		}
 	};
 

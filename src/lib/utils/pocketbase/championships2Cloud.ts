@@ -1,13 +1,18 @@
 import { db, pb } from './pocketBase';
-import type { Championship, CloudChampionship } from '$lib/types/championshipType';
+import type { Championship } from '$lib/types/championshipType';
 import type { MarkedPointScale } from '$lib/types/markedPointScaleType';
 import { mpsStore } from '$lib/stores/championship/markedPointScaleStore.svelte';
 
+type CloudChampionshipData = Omit<Championship, 'individualScale' | 'collectiveScale'> & {
+	individualScale: MarkedPointScale;
+	collectiveScale: MarkedPointScale;
+};
+
 export const championshipService = {
-	getAll: () => db.getFullList('championships', { sort: 'created' }),
+	getAll: () => db.getFullList<{ data: CloudChampionshipData }>('championships', { sort: 'created' }),
 
 	getAllChampionships: async () => {
-		const championships = await db.getFullList('championships', { sort: 'created' });
+		const championships = await db.getFullList<{ data: CloudChampionshipData }>('championships', { sort: 'created' });
 		return championships.map((aChampionship) => ({
 			id: aChampionship.data.id,
 			name: aChampionship.data.name,
@@ -28,8 +33,8 @@ export const championshipService = {
 	},
 
 	getAllChampionshipsScales: async () => {
-		const championships = await db.getFullList('championships', { sort: 'created' });
-		let scales: MarkedPointScale[] = [];
+		const championships = await db.getFullList<{ data: CloudChampionshipData }>('championships', { sort: 'created' });
+		const scales: MarkedPointScale[] = [];
 		if (Array.isArray(championships)) {
 			championships.forEach((aChampionship) => {
 				if (aChampionship.data.individualScale) scales.push(aChampionship.data.individualScale);
@@ -40,10 +45,10 @@ export const championshipService = {
 		return scales;
 	},
 
-	getByChampionshipId: (id: string) => db.getOne('championships', id, {}),
+	getByChampionshipId: (id: string) => db.getOne<{ data: CloudChampionshipData }>('championships', id, {}),
 
 	getChampionshipById: async (id: string) => {
-		const championship = await db.getOne('championships', id, {});
+		const championship = await db.getOne<{ data: CloudChampionshipData }>('championships', id, {});
 		let aChampionship;
 		if (championship)
 			aChampionship = {
@@ -66,7 +71,7 @@ export const championshipService = {
 		return aChampionship;
 	},
 
-	save: (aChampionShip: Championship) => {
+	save: async (aChampionShip: Championship) => {
 		mpsStore.getScaleById(aChampionShip.individualScale);
 		const data = {
 			id: aChampionShip.id,
@@ -92,6 +97,6 @@ export const championshipService = {
 			owner: pb.authStore.record?.id,
 			data: data
 		};
-		db.save('championships', championshipToSave);
+		return await db.save('championships', championshipToSave);
 	}
 };

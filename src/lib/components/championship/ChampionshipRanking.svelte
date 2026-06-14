@@ -44,7 +44,7 @@
 
 	const publishChampionship = async () => {
 		try {
-			if (championship) championshipService.save(championship);
+			if (championship) await championshipService.save(championship);
 			toastStore.show('💾 Résultats publiés ...', 'success');
 			messageStore.remove('modifChamp');
 		} catch (err) {
@@ -85,7 +85,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each championship.rankingPlayers as p, i}
+			{#each championship.rankingPlayers as p, i (p.id)}
 				{@const player = playersChampionshipStore.find(p.id)}
 				{#if player}
 					<tr>
@@ -114,7 +114,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each championship.rankingClubs as c, i}
+			{#each championship.rankingClubs as c, i (c.id)}
 				{@const club = clubsStore.find(c.id)}
 				{#if club}
 					<tr>

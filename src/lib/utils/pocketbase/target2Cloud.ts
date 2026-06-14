@@ -2,10 +2,10 @@ import type { Target } from '$lib/types/targetType';
 import { db, pb } from './pocketBase';
 
 export const targetService = {
-	getAll: () => db.getFullList('targets', { sort: 'created' }),
+	getAll: () => db.getFullList<{ data: Target }>('targets', { sort: 'created' }),
 
 	getAllTargets: async () => {
-		const targets = await db.getFullList('targets', { sort: 'created' });
+		const targets = await db.getFullList<{ data: Target }>('targets', { sort: 'created' });
 		return targets.map((target) => target.data) as Target[];
 	},
 
@@ -16,25 +16,26 @@ export const targetService = {
 		return target?.data;
 	},
 
-	saveTarget: (aTarget: Target) => {
+	saveTarget: async (aTarget: Target) => {
 		const targetToSave = {
 			id: aTarget.id,
 			name: aTarget.name,
 			owner: pb.authStore.record?.id,
 			data: aTarget
 		};
-		db.save('targets', targetToSave);
+		return await db.save('targets', targetToSave);
 	},
 
-	saveTargets: (targets: Target[]) => {
-		for (let aTarget of targets) {
+	saveTargets: async (targets: Target[]) => {
+		const promises = targets.map((aTarget) => {
 			const targetToSave = {
 				id: aTarget.id,
 				name: aTarget.name,
 				owner: pb.authStore.record?.id,
 				data: aTarget
 			};
-			db.save('targets', targetToSave);
-		}
+			return db.save('targets', targetToSave);
+		});
+		return await Promise.all(promises);
 	}
 };

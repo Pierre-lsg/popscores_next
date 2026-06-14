@@ -22,7 +22,7 @@
 	const saveCourseToCloud = async () => {
 		if (course) {
 			try {
-				const record = courseService.saveCourse(course);
+				const record = await courseService.saveCourse(course);
 				toastStore.show('💾 Sauvegarde effectuée ...', 'success');
 			} catch (err) {
 				toastStore.show("💾 Echec à l'enregistrement ...", 'failure');

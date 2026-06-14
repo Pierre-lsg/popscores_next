@@ -5,41 +5,42 @@ export const resultService = {
 	getAll: () => db.getFullList('results', { sort: 'created' }),
 
 	getAllResults: async () => {
-		const results = await db.getFullList('results', { sort: 'created' });
+		const results = await db.getFullList<{ data: Result }>('results', { sort: 'created' });
 		return results.map((result) => result.data) as Result[];
 	},
 
 	getResultsByCompetition: async (competitionId: string) => {
-		const results = await db.getFullList('results', { filter: `competition ~ "${competitionId}"` });
+		const results = await db.getFullList<{ data: Result }>('results', { filter: `competition ~ "${competitionId}"` });
 		return results.map((result) => result.data) as Result[];
 	},
 
 	getResultsByCompetitionAndPlayer: async (competitionId: string, playerId: string) => {
-		const results = await db.getFullList('results', {
+		const results = await db.getFullList<{ data: Result }>('results', {
 			filter: `competition="${competitionId}" && player="${playerId}"`
 		});
 		return results.map((result) => result.data) as Result[];
 	},
 
-	saveResult: (aResult: Result) => {
+	saveResult: async (aResult: Result) => {
 		const resultToSave = {
 			competition: aResult.competitionId,
 			player: aResult.playerId,
 			owner: pb.authStore.record?.id,
 			data: aResult
 		};
-		db.saveWithKey('results', resultToSave, 'competition, player');
+		return await db.saveWithKey('results', resultToSave, 'competition, player');
 	},
 
-	saveResults: (results: Result[]) => {
-		for (let aResult of results) {
+	saveResults: async (results: Result[]) => {
+		const promises = results.map((aResult) => {
 			const resultToSave = {
 				competition: aResult.competitionId,
 				player: aResult.playerId,
 				owner: pb.authStore.record?.id,
 				data: aResult
 			};
-			db.saveWithKey('results', resultToSave, 'competition, player');
-		}
+			return db.saveWithKey('results', resultToSave, 'competition, player');
+		});
+		return await Promise.all(promises);
 	}
 };

@@ -2,15 +2,15 @@ import type { Player } from '$lib/types/playerType';
 import { db, pb } from './pocketBase';
 
 export const playerService = {
-	getAll: () => db.getFullList('players', { sort: 'created' }),
+	getAll: () => db.getFullList<{ data: Player }>('players', { sort: 'created' }),
 
 	getAllPlayers: async () => {
-		const players = await db.getFullList('players', { sort: 'created' });
+		const players = await db.getFullList<{ data: Player }>('players', { sort: 'created' });
 		return players.map((player) => player.data) as Player[];
 	},
 
 	getPlayersByClub: async (clubId: string) => {
-		const players = await db.getFullList('players', { filter: `club ~ "${clubId}"` });
+		const players = await db.getFullList<{ data: Player }>('players', { filter: `club ~ "${clubId}"` });
 		return players.map((player) => player.data) as Player[];
 	},
 
@@ -21,7 +21,7 @@ export const playerService = {
 		return player?.data as Player;
 	},
 
-	savePlayer: (aPlayer: Player) => {
+	savePlayer: async (aPlayer: Player) => {
 		const playerToSave = {
 			id: aPlayer.id,
 			name: aPlayer.name,
@@ -29,10 +29,10 @@ export const playerService = {
 			owner: pb.authStore.record?.id,
 			data: aPlayer
 		};
-		db.save('players', playerToSave);
+		return await db.save('players', playerToSave);
 	},
 
-	createPlayer: (aPlayer: Player) => {
+	createPlayer: async (aPlayer: Player) => {
 		const playerToSave = {
 			id: aPlayer.id,
 			name: aPlayer.name,
@@ -40,10 +40,10 @@ export const playerService = {
 			owner: pb.authStore.record?.id,
 			data: aPlayer
 		};
-		db.create('players', playerToSave);
+		return await db.create('players', playerToSave);
 	},
 
-	updatePlayer: (aPlayer: Player) => {
+	updatePlayer: async (aPlayer: Player) => {
 		const playerToSave = {
 			id: aPlayer.id,
 			name: aPlayer.name,
@@ -51,6 +51,6 @@ export const playerService = {
 			owner: pb.authStore.record?.id,
 			data: aPlayer
 		};
-		db.update('players', playerToSave);
+		return await db.update('players', playerToSave);
 	}
 };

@@ -2,10 +2,10 @@ import type { Course } from '$lib/types/courseType';
 import { db, pb } from './pocketBase';
 
 export const courseService = {
-	getAll: () => db.getFullList('courses', { sort: 'created' }),
+	getAll: () => db.getFullList<{ data: Course }>('courses', { sort: 'created' }),
 
 	getAllCourses: async () => {
-		const courses = await db.getFullList('courses', { sort: 'created' });
+		const courses = await db.getFullList<{ data: Course }>('courses', { sort: 'created' });
 		return courses.map((course) => course.data) as Course[];
 	},
 
@@ -16,25 +16,26 @@ export const courseService = {
 		return course?.data;
 	},
 
-	saveCourse: (aCourse: Course) => {
+	saveCourse: async (aCourse: Course) => {
 		const courseToSave = {
 			id: aCourse.id,
 			name: aCourse.name,
 			owner: pb.authStore.record?.id,
 			data: aCourse
 		};
-		db.save('courses', courseToSave);
+		return await db.save('courses', courseToSave);
 	},
 
-	saveCourses: (courses: Course[]) => {
-		for (let aCourse of courses) {
+	saveCourses: async (courses: Course[]) => {
+		const promises = courses.map((aCourse) => {
 			const courseToSave = {
 				id: aCourse.id,
 				name: aCourse.name,
 				owner: pb.authStore.record?.id,
 				data: aCourse
 			};
-			db.save('courses', courseToSave);
-		}
+			return db.save('courses', courseToSave);
+		});
+		return await Promise.all(promises);
 	}
 };

@@ -2,16 +2,16 @@ import type { User } from '$lib/types/userType';
 import { db } from './pocketBase';
 
 export const userService = {
-	getAll: () => db.getFullList('users', { sort: 'created' }),
+	getAll: () => db.getFullList<{ data: User }>('users', { sort: 'created' }),
 
 	getByRole: (role: string) =>
-		db.getFullList('users', {
+		db.getFullList<{ data: User }>('users', {
 			filter: `roles ~ "${role}"`
 		}),
 
 	getUsersByRole: async (role: string) => {
 		let users: User[] = [];
-		const cloudUsers: any = await db.getFullList('users', {
+		const cloudUsers = await db.getFullList<{ data: User }>('users', {
 			filter: `roles ~ "${role}"`
 		});
 		if (Array.isArray(cloudUsers)) {
@@ -32,7 +32,7 @@ export const userService = {
 
 	getUsersByRoleAndChampionship: async (role: string, cs: string) => {
 		let users: User[] = [];
-		const cloudUsers: any = await db.getFullList('users', {
+		const cloudUsers = await db.getFullList<{ data: User }>('users', {
 			filter: `roles ~ "${role}" && championships ~ "${cs}"`
 		});
 		if (Array.isArray(cloudUsers)) {
@@ -53,7 +53,7 @@ export const userService = {
 
 	getUsersByChampionship: async (cs: string) => {
 		let users: User[] = [];
-		const cloudUsers: any = await db.getFullList('users', {
+		const cloudUsers = await db.getFullList<{ data: User }>('users', {
 			filter: `championships ~ "${cs}"`
 		});
 		if (Array.isArray(cloudUsers)) {
@@ -72,7 +72,7 @@ export const userService = {
 		return users;
 	},
 
-	saveUser: (aUser: User) => {
+	saveUser: async (aUser: User) => {
 		const userToSave = {
 			id: aUser.id,
 			email: aUser.email,
@@ -81,10 +81,10 @@ export const userService = {
 			name: aUser.name,
 			roles: aUser.roles
 		};
-		db.save('Users', userToSave);
+		return await db.save('Users', userToSave);
 	},
 
-	createUser: (aUser: User) => {
+	createUser: async (aUser: User) => {
 		const userToSave = {
 			id: aUser.id,
 			email: aUser.email,
@@ -93,10 +93,10 @@ export const userService = {
 			name: aUser.name,
 			roles: aUser.roles
 		};
-		db.create('Users', userToSave);
+		return await db.create('Users', userToSave);
 	},
 
-	updateUser: (aUser: User) => {
+	updateUser: async (aUser: User) => {
 		const userToSave = {
 			id: aUser.id,
 			email: aUser.email,
@@ -105,6 +105,6 @@ export const userService = {
 			name: aUser.name,
 			roles: aUser.roles
 		};
-		db.update('Users', userToSave);
+		return await db.update('Users', userToSave);
 	}
 };

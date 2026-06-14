@@ -2,19 +2,19 @@ import type { SessionArchive } from '$lib/types/sessionType';
 import { db, pb } from './pocketBase';
 
 export const historyService = {
-	getAll: () => db.getFullList('sessions', { sort: 'date' }),
+	getAll: () => db.getFullList<{ data: SessionArchive }>('sessions', { sort: 'date' }),
 
 	getAllSessionArchives: async () => {
-		const sessions = await db.getFullList('sessions', { sort: 'created' });
+		const sessions = await db.getFullList<{ data: SessionArchive }>('sessions', { sort: 'created' });
 		return sessions.map((session) => session.data) as SessionArchive[];
 	},
 
 	getByLocation: (location: string) =>
-		db.getFullList('sessions', {
+		db.getFullList<{ data: SessionArchive }>('sessions', {
 			filter: `location ~ "${location}"`
 		}),
 
-	saveSession: (session: any) => {
+	saveSession: async (session: any) => {
 		const sessionToSave = {
 			id: session.id,
 			location: session.settings.locationName,
@@ -23,6 +23,6 @@ export const historyService = {
 			data: session
 		};
 
-		db.save('sessions', sessionToSave);
+		return await db.save('sessions', sessionToSave);
 	}
 };
