@@ -35,7 +35,7 @@
 				tabindex="-1"
 			></div>
 
-			{#each themes.filter((t) => t.id !== themeStore.current) as t}
+			{#each themes.filter((t) => t.id !== themeStore.current) as t (t)}
 				<button class="theme-btn" onclick={() => selectTheme(t.id)} title={t.label}>
 					{t.icon}
 				</button>

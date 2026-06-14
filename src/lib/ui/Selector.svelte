@@ -45,7 +45,7 @@
 		{#if unselectedOption !== ''}
 			<option value="">{unselectedOption}</option>
 		{/if}
-		{#each opts as option}
+		{#each opts as option (option)}
 			<option value={option.id}>{option.label}</option>
 		{/each}
 	</select>

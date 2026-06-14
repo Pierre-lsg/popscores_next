@@ -94,7 +94,7 @@
 
 {#if !isEditingPlayer && !isCreatingNewPlayer}
 	<div class="item-list">
-		{#each players as player, i}
+		{#each players as player, i (i)}
 			<div role="none" class="item-details" onclick={async () => editPlayer(player, i)}>
 				<div style="background-image: url({photo});" class="item-card player-card">
 					<div class="details">
@@ -122,7 +122,7 @@
 		{/if}
 	{/if}
 {:else}
-	{#each players as player, i}
+	{#each players as player, i (i)}
 		{#if editingPlayer[i]}
 			<div class="item-form">
 				<h3>Modifier le joueur 👤</h3>
@@ -183,7 +183,7 @@
 {#if isFindingCloudPlayer}
 	<div class="item-form">
 		<h3>Autres joueurs du Cloud 👤</h3>
-		{#each cloudPlayers as player}
+		{#each cloudPlayers as player (player.id)}
 			<div class="action">
 				{player.name}
 				<button onclick={async () => downloadPlayer(player)} class="btn btn-primary">Rapatrier</button>

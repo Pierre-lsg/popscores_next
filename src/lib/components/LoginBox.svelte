@@ -20,7 +20,7 @@
 			username += '@obip.fr';
 		}
 		try {
-			const authData = await pb.collection('users').authWithPassword(username, password);
+			await pb.collection('users').authWithPassword(username, password);
 			console.log('Connecté en tant que : ', pb.authStore.record?.email);
 			isConnecting = false;
 		} catch (err) {

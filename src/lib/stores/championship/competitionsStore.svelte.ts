@@ -52,7 +52,7 @@ class CompetitionsStore {
 		location?: string,
 		managersId?: string[]
 	): Competition {
-		let aCompetition = {
+		const aCompetition = {
 			id: crypto.randomUUID(),
 			name,
 			status,

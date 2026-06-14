@@ -12,7 +12,7 @@ export const targetService = {
 	getById: (id: string) => db.getOne('targets', id, {}),
 
 	getTargetById: async (id: string) => {
-		const target = await db.getOne('targets', id, {});
+		const target = await db.getOne<{ data: Target }>('targets', id, {});
 		return target?.data;
 	},
 

@@ -28,7 +28,7 @@
 		isSelectingPlayers = false;
 	};
 
-	const handleRemoveDrop = (e: CustomEvent<{ items: any[] }>) => {
+	const handleRemoveDrop = (e: CustomEvent<{ items: Player[] }>) => {
 		const removedItem = e.detail.items[0];
 		if (removedItem) {
 			playersStore.list = playersStore.list.filter((h) => h.id !== removedItem.id);
@@ -40,7 +40,7 @@
 	const handleConsider = () => {
 		isDragging = true;
 	};
-	const handleFinalize = (e: CustomEvent<{ items: any[] }>) => {
+	const handleFinalize = (e: CustomEvent<{ items: Player[] }>) => {
 		playersStore.list = e.detail.items;
 		isDragging = false;
 	};

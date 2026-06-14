@@ -179,7 +179,7 @@ export const listTeamPlayer = (team: Team, players: Player[]) => {
 
 // Retourne la liste formattée des noms des joueurs de l'équipe
 export const formatPlayerList = (players: Player[], settings: Regulation) => {
-	let names = players.map((p) => p.name);
+	const names = players.map((p) => p.name);
 	if (names.length < settings.playersPerTeam) names.push('👻');
 
 	// On crée le formateur pour le français
@@ -253,7 +253,6 @@ export const exportTSCToCSV = (
 	rankedTeams: RankedTeam[],
 	targets: Target[],
 	players: Player[],
-	settings: Regulation
 ) => {
 	// 1. Définition des entêtes
 	const header1 = [
@@ -266,7 +265,7 @@ export const exportTSCToCSV = (
 	const header3 = ['', 'Rdj', ...targets.map((t) => t.rule).flat(), '...'];
 
 	// 2. Construction des lignes
-	let rows: string[] = [];
+	const rows: string[] = [];
 	rankedTeams.forEach((rt) => {
 		listTeamPlayer(rt.team, players).forEach((p) => {
 			const row = [
@@ -310,7 +309,7 @@ export const getScoreClass = (score: number, target: Target) => {
 
 // Partage des résultats des joueurs via l'API native de partage
 export const shareResultsPlayers =
-	(rankedPlayers: RankedPlayer[], targets: Target[], photo?: any) => async () => {
+	(rankedPlayers: RankedPlayer[], targets: Target[], photo?: File) => async () => {
 		// 1. On prépare le texte du message
 		let message = `🏆 Résultats avec PopScores\n\n`;
 		let shared: boolean = false;
@@ -366,7 +365,7 @@ export const shareResultsTeams =
 		targets: Target[],
 		players: Player[],
 		settings: Regulation,
-		photo?: any
+		photo?: File
 	) =>
 		async () => {
 			console.log('photo', photo);

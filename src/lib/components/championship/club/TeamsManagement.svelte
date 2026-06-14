@@ -70,7 +70,7 @@
 
 {#if !isEditingTeam && !creatingNewTeam}
 	<div class="item-list">
-		{#each teams as team, i}
+		{#each teams as team, i (i)}
 			<div role="none" class="item-details" onclick={async () => editTeam(i)}>
 				<div role="none" class="team-card item-card">
 					<div class="details">
@@ -78,7 +78,7 @@
 					</div>
 					<div class="details">
 						<ul>
-							{#each clubPlayers.filter((p) => p.teamId === team.id) as player}
+							{#each clubPlayers.filter((p) => p.teamId === team.id) as player (player.id)}
 								<li>{player.name}</li>
 							{/each}
 						</ul>
@@ -89,7 +89,7 @@
 	</div>
 {:else}
 	<!-- Form for team's editing -->
-	{#each teams as team, i}
+	{#each teams as team, i (i)}
 		{#if editingTeam[i]}
 			<div class="item-form">
 				<TeamEditing {currentClub} {team} {clubPlayers} />

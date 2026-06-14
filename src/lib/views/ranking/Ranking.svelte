@@ -43,7 +43,7 @@
 			<label for="championshipSelect">Liste des championnats</label>
 
 			<select id="championshipSelect" bind:value={aChampionship}>
-				{#each championships as championship}
+				{#each championships as championship (championship)}
 					{#if championship.status !== 'archived' && championship.status !== 'setup'}
 						<option value={championship}>{championship.name}</option>
 					{/if}
@@ -76,7 +76,7 @@
 				<label for="competitionSelect">Liste des compétitions</label>
 
 				<select id="competitionSelect" bind:value={aCompetition}>
-					{#each competitions as competition}
+					{#each competitions as competition (competition)}
 						{#if competition.status === 'published'}
 							<option value={competition}>{competition.name}</option>
 						{/if}

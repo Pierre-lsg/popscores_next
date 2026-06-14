@@ -4,7 +4,6 @@
 	import { playersStore } from '$lib/stores/quickSession/playersStore.svelte';
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
 	import PlayerScoreOrder from '$lib/components/core_game/PlayerScoreOrder.svelte';
 	import ScoreHeader from '$lib/components/core_game/scoring/ScoreHeader.svelte';
 	import ScoreGrid from '$lib/components/core_game/scoring/ScoreGrid.svelte';
@@ -16,9 +15,8 @@
 	import Param from '$lib/ui/Param.svelte';
 	import { toastStore } from '$lib/stores/toastStore.svelte';
 
-	import { swipe } from '$lib/utils/swipe';
 	import { onMount } from 'svelte';
-	import { getRankedPlayers, getPlayerStats } from '$lib/utils/session/golfScoringFunction.svelte';
+	import { getRankedPlayers } from '$lib/utils/session/golfScoringFunction.svelte';
 
 	const settings = sessionSettingsStore.settings;
 	const ruleOptions = individualRules;

@@ -39,7 +39,7 @@
 	{#if label}<div class="main-label">{label}</div>{/if}
 
 	<div class="options-grid">
-		{#each opts as option}
+		{#each opts as option (option)}
 			<button
 				type="button"
 				class="chip"

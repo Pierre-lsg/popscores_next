@@ -44,7 +44,7 @@
 		</div>
 
 		<div class="ranks-grid">
-			{#each scale.points as point, i}
+			{#each scale.points as i (i)}
 				<div class="rank-item">
 					<label for="rank-{i}">{i + 1}<sup>e</sup></label>
 					<input id="rank-{i}" type="number" min="0" bind:value={scale.points[i]} />

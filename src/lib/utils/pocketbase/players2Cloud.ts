@@ -17,7 +17,7 @@ export const playerService = {
 	getById: (id: string) => db.getOne('players', id, {}),
 
 	getPlayerById: async (id: string) => {
-		const player = await db.getOne('players', id, {});
+		const player = await db.getOne<{ data: Player }>('players', id, {});
 		return player?.data as Player;
 	},
 

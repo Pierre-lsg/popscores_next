@@ -12,7 +12,7 @@ export const regulationService = {
 	getById: (id: string) => db.getOne('regulations', id, {}),
 
 	getRegulationById: async (id: string) => {
-		const regulation = await db.getOne('regulations', id, {});
+		const regulation = await db.getOne<{ data: Regulations }>('regulations', id, {});
 		return regulation?.data;
 	},
 

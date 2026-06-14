@@ -23,7 +23,7 @@
 	} from '$lib/utils/championship/competitionsFunctions.svelte';
 	import { userStore } from '$lib/stores/userStore.svelte';
 	import { selection } from '$lib/stores/selection';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 
 	let championshipId = selection.currentId;
 
@@ -95,13 +95,13 @@
 	{:else}
 		<p>Liste des flys pour sélection</p>
 		<div class="fly-list">
-			{#each flys as fly, i}
+			{#each flys as fly, i (i)}
 				<div class="fly-item">
 					<div role="none" class="fly-card" onclick={async () => (currentFly = fly)}>
 						<span class="text-lg">Fly #{fly.order} </span>
 						{#if currentCompetition && isCompetitionTeam(currentCompetition)}
 							<ul>
-								{#each fly.teamsId as teamId}
+								{#each fly.teamsId as teamId (teamId)}
 									{@const competitionId = currentCompetition.id || ''}
 									{@const aTeam = teamsCompetitionStore.list.find(
 										(t) => t.id === teamId && t.sessionId === competitionId
@@ -128,7 +128,7 @@
 	<button onclick={async () => loadCompetition()} class="btn btn-primary">Récupérer la compétition</button
 	>
 {/if}
-<a class="btn btn-secondary retour" href={base + '/championship/' + selection.currentId + '/'}>
+<a class="btn btn-secondary retour" href={resolve(`/championship/${selection.currentId}/`)}>
 	👑 Accueil
 </a>
 

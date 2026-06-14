@@ -17,12 +17,12 @@ export const teamService = {
 	getById: (id: string) => db.getOne('teams', id, {}),
 
 	getTeamById: async (id: string) => {
-		const team = await db.getOne('teams', id, {});
+		const team = await db.getOne<{ data: Team }>('teams', id, {});
 		return team?.data as Team;
 	},
 
 	getTeamCompetitionById: async (id: string) => {
-		const team = await db.getOne('teams_in_competition', id, {});
+		const team = await db.getOne<{ data: Team }>('teams_in_competition', id, {});
 		return team?.data as Team;
 	},
 

@@ -6,7 +6,7 @@
 
 	import { onMount } from 'svelte';
 	import { navContext } from '$lib/utils/nav.svelte';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { selection } from '$lib/stores/selection';
 
 	let championship = $state(selection.currentChampionship || ({} as Championship));
@@ -22,7 +22,7 @@
 
 {#snippet returnButton()}
 	{#if !currentCompetition}
-		<a class="btn btn-back" href={base + '/championship/' + selection.currentId + '/'}>👑 Accueil</a
+		<a class="btn btn-back" href={resolve(`/championship/${selection.currentId}/`)}>👑 Accueil</a
 		>
 	{:else}
 		<span class="btn btn-back" role="none" onclick={() => (currentCompetition = undefined)}>

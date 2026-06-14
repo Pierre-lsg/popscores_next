@@ -14,7 +14,7 @@ export const historyService = {
 			filter: `location ~ "${location}"`
 		}),
 
-	saveSession: async (session: any) => {
+	saveSession: async (session: SessionArchive) => {
 		const sessionToSave = {
 			id: session.id,
 			location: session.settings.locationName,

@@ -46,7 +46,7 @@ class MarkedPointScaleStore {
 	 * @param points - Marked point scale
 	 */
 	add(id: string, name: string, isIndividual: boolean, points: number[]) {
-		let newScale: MarkedPointScale = {
+		const newScale: MarkedPointScale = {
 			id,
 			name,
 			points,
@@ -60,7 +60,7 @@ class MarkedPointScaleStore {
 	 * Create a new markedPointScale to the list.
 	 */
 	new(isIndividual: boolean): MarkedPointScale {
-		let newScale: MarkedPointScale = {
+		const newScale: MarkedPointScale = {
 			id: crypto.randomUUID(),
 			name: '',
 			points: [],

@@ -17,7 +17,7 @@
 </script>
 
 <div class="step-content" in:slide>
-	{#each coursesStore.list as course}
+	{#each coursesStore.list as course (course)}
 		<button onclick={() => loadCourse(course.targets)}>{course.name}</button>
 	{/each}
 </div>

@@ -27,7 +27,7 @@
 
 	let isListening = $state(false);
 	let isSupported = $state(false);
-	let recognition: any = null;
+	let recognition: unknown = null;
 
 	async function handleVoice() {
 		isListening = !isListening;
@@ -44,7 +44,7 @@
 	}
 
 	onMount(() => {
-		isSupported = !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+		isSupported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
 	});
 </script>
 

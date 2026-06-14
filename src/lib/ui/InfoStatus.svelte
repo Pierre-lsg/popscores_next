@@ -20,7 +20,7 @@
 				<p>Messages :</p>
 				<table>
 					<tbody>
-						{#each messageStore.list as message}
+						{#each messageStore.list as message (message)}
 							<tr>
 								<td>
 									<button

@@ -21,7 +21,7 @@
 
 	let contentAppearance = $derived(oneline ? 'param-inline-container' : 'param-container');
 
-	const init = (elt: any) => {
+	const init = (elt: HTMLInputElement) => {
 		if (focus) elt.focus();
 	};
 </script>

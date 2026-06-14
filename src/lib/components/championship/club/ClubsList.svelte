@@ -36,7 +36,9 @@
 
 	const createClub = async () => {
 		clubsStore.add(clubName, clubDescription, championship.id, [], [], isFederationMember);
-		((clubName = ''), (clubDescription = ''), (isFederationMember = false));
+		clubName = '';
+		clubDescription = '';
+		isFederationMember = false;
 		addNewClub = false;
 	};
 
@@ -118,7 +120,7 @@
 
 {#if !isEditingClub && !addNewClub}
 	<div class="item-list">
-		{#each clubs as club, i}
+		{#each clubs as club, i (i)}
 			<div class="item-details">
 				<div role="none" class="item-card" onclick={async () => (currentClub = club.id)}>
 					<div class="details">
@@ -161,7 +163,7 @@
 		<p>Chargement ...</p>
 	{:else}
 		<h3>Associations disponibles sur le Cloud</h3>
-		{#each filteredClubs as c, i}
+		{#each filteredClubs as c, i (i)}
 			<button onclick={async () => loadClubfromCloud(i)}>
 				<div>{c.name} - {c.description?.slice(0, 30)}</div>
 			</button>
@@ -170,7 +172,7 @@
 {/if}
 
 <!-- Interface édition de club -->
-{#each clubs as club, i}
+{#each clubs as club, i (i)}
 	{#if editClub[i]}
 		<div class="item-form">
 			<h3>Modifier le Club</h3>

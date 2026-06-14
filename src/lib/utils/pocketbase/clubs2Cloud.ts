@@ -17,7 +17,7 @@ export const clubService = {
 	getById: (id: string) => db.getOne('clubs', id, {}),
 
 	getClubById: async (id: string) => {
-		const club = await db.getOne('clubs', id, {});
+		const club = await db.getOne<{ data: Club }>('clubs', id, {});
 		return club?.data as Club;
 	},
 

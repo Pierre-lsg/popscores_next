@@ -71,7 +71,7 @@ class ClubsStore {
 	 */
 	addPlayer(aClubId: string, aPlayerId: string) {
 		console.log('club', aClubId, 'player', aPlayerId);
-		let aClub = this.list.find((c) => c.id === aClubId);
+		const aClub = this.list.find((c) => c.id === aClubId);
 		if (aClub) {
 			console.log('deeper');
 			if (!aClub.playersId.includes(aPlayerId)) aClub.playersId.push(aPlayerId);
@@ -85,7 +85,7 @@ class ClubsStore {
 	 * @param aTeamId - team's id
 	 */
 	addTeam(aClubId: string, aTeamId: string) {
-		let aClub = this.list.find((c) => c.id === aClubId);
+		const aClub = this.list.find((c) => c.id === aClubId);
 		if (aClub) {
 			if (!aClub.teamsId.includes(aTeamId)) aClub.teamsId.push(aTeamId);
 		}

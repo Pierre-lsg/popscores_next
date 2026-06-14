@@ -13,12 +13,12 @@ import { clubService } from '../pocketbase/clubs2Cloud';
 export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 	let status: string = 'success';
 
-	for (let club of clubs) {
+	for (const club of clubs) {
 		// sauver le club
 		await clubService.saveClub(club);
 
 		// Lister et sauver les équipes
-		for (let teamId of club.teamsId) {
+		for (const teamId of club.teamsId) {
 			const aTeam: Team | undefined = teamsChampionshipStore.find(teamId);
 			if (aTeam) {
 				try {
@@ -31,7 +31,7 @@ export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 		}
 
 		// Lister et sauver les joueurs
-		for (let playerId of club.playersId) {
+		for (const playerId of club.playersId) {
 			const aPlayer: Player | undefined = playersChampionshipStore.find(playerId);
 			console.log(aPlayer);
 			if (aPlayer) {
@@ -49,9 +49,9 @@ export const cloudSaveClubs = async (clubs: Club[]): Promise<string> => {
 };
 
 export const cloudLoadClubs = async (clubs: Club[]): Promise<string> => {
-	let status: string = 'success';
+	const status: string = 'success';
 
-	for (let club of clubs) {
+	for (const club of clubs) {
 		// Récupérer dans le cloud les équipes et les charger dans le modèle local
 		const teams: Team[] = await teamService.getTeamsByClub(club.id);
 		for (const team of teams) {
@@ -76,7 +76,7 @@ export const cloudLoadClubs = async (clubs: Club[]): Promise<string> => {
 export const cloudLoadChampionshipsClubs = async (csId: string): Promise<string> => {
 	const allClubs = await clubService.getAllClubsOfChampionship(csId);
 
-	for (let club of allClubs) {
+	for (const club of allClubs) {
 		// sauver le club
 		clubsStore.remove(club.id);
 		clubsStore.load(club);

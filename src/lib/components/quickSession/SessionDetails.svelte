@@ -4,16 +4,14 @@
 	import type { Target } from '$lib/types/targetType';
 	import type { Player } from '$lib/types/playerType';
 	import type { SessionSettings } from '$lib/types/gameSessionType';
-	import type { Team } from '$lib/types/teamType';
 
 	let {
 		players,
 		targets,
 		settings
-	}: { players: Player[]; targets: Target[]; teams: Team[]; settings: SessionSettings } = $props<{
+	} = $props<{
 		players: Player[];
 		targets: Target[];
-		teams: Team[];
 		settings: SessionSettings;
 	}>();
 
@@ -64,7 +62,7 @@
 			<strong>Parcours :</strong>
 			{settings.locationName}
 		</div>
-		{#each targets as target, index}
+		{#each targets as target, index (index)}
 			<ul>
 				<div class="sub-item-card">
 					<div>Cible #{index + 1} : {target.name}</div>
@@ -74,7 +72,7 @@
 		{/each}
 		<div class="item-card">
 			<strong>Joueurs :</strong>
-			{#each players as p, i}
+			{#each players as p, i (i)}
 				{p.name}{i < players.length - 1 ? ', ' : ''}
 			{/each}
 		</div>

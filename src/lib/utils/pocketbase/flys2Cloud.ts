@@ -17,7 +17,7 @@ export const flyService = {
 	getById: (id: string) => db.getOne('flys', id, {}),
 
 	getFlyById: async (id: string) => {
-		const fly = await db.getOne('flys', id, {});
+		const fly = await db.getOne<{ data: Fly }>('flys', id, {});
 		return fly?.data as Fly;
 	},
 

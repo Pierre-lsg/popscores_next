@@ -12,7 +12,7 @@ export const courseService = {
 	getById: (id: string) => db.getOne('courses', id, {}),
 
 	getCourseById: async (id: string) => {
-		const course = await db.getOne('courses', id, {});
+		const course = await db.getOne<{ data: Course }>('courses', id, {});
 		return course?.data;
 	},
 

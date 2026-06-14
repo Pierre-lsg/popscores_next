@@ -134,7 +134,7 @@
 						<TextField bind:value={team.name} />
 					</div>
 					<div class="team-item">
-						{#each team.playersId as playerId}
+						{#each team.playersId as playerId (playerId)}
 							{@const player = playersStore.list.find((p) => p.id === playerId)}
 							{#if player}
 								<div class="player-items">
@@ -173,7 +173,7 @@
 			<div>
 				<h4>Joueurs à placer :</h4>
 				<div class="players-list">
-					{#each playersStore.unassignedPlayers as player}
+					{#each playersStore.unassignedPlayers as player (player)}
 						<div class="player-items">
 							<span style="width: 45%"><TextField bind:value={player.name} /></span>
 

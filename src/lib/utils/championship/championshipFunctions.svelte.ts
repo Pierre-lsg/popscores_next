@@ -38,7 +38,7 @@ import { championshipService } from '../pocketbase/championships2Cloud';
  * @returns Promise<User[]> - Array of supervisor users.
  */
 export const getSupervisors = async (cs: Championship) => {
-	let supervisors: User[] = await userService.getUsersByRoleAndChampionship('marshall', cs.id);
+	const supervisors: User[] = await userService.getUsersByRoleAndChampionship('marshall', cs.id);
 
 	return supervisors;
 };
@@ -225,7 +225,7 @@ export const rankingForCollectiveCompetition = (
 
 	if (!teams || !players) return curClvRank;
 	let rankedTeams: RankedTeam[] = [];
-	let clubsRecord: Record<string, number> = {};
+	const clubsRecord: Record<string, number> = {};
 
 	if (targets && teams && players && regulation)
 		rankedTeams = getRankedTeams(teams, targets, players, regulation);

@@ -48,7 +48,7 @@
 			toastStore.show('💾 Résultats publiés ...', 'success');
 			messageStore.remove('modifChamp');
 		} catch (err) {
-			toastStore.show('💾 Echec à la publication ...', 'failure');
+			toastStore.show('💾 Echec à la publication ... ' + err, 'failure');
 		}
 	};
 
@@ -62,7 +62,7 @@
 				// On déclenche le toast !
 				toastStore.show('🔗 Lien de partage copié !');
 			} catch (err) {
-				toastStore.show('❌ Erreur lors de la copie');
+				toastStore.show('❌ Erreur lors de la copie : ' + err, 'failure');
 			}
 		}
 	};

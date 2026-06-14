@@ -17,7 +17,6 @@
 	}>();
 
 	let playersAvailable = $derived<Player[]>(clubPlayers.filter((p: Player) => p.teamId === ''));
-	let playerId: string = $state('');
 
 	// Initialize a variable to track whether the selection dropdown should be displayed
 	let isSelectVisible = $state(false);

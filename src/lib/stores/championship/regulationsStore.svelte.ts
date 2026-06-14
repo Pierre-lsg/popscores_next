@@ -39,7 +39,7 @@ class RegulationsStore {
 	 * @param aRegulation - Regulation
 	 */
 	new(): Regulations {
-		let regulation: Regulation = {
+		const regulation: Regulation = {
 			hasCrossAFixedPenalty: false,
 			malusValue: 10,
 			malusOverPar: 4,
@@ -48,7 +48,7 @@ class RegulationsStore {
 			playersPerTeam: 2
 		};
 
-		let aRegulation: Regulations = {
+		const aRegulation: Regulations = {
 			id: crypto.randomUUID(),
 			teamsPerFly: 3,
 			playersPerFly: 6,

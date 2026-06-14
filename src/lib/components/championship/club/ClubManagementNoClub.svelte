@@ -8,7 +8,7 @@
 	import Selector from '$lib/ui/Selector.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 
-	let { currentClub = $bindable(''), championship } = $props<{
+	let { currentClub = $bindable('') } = $props<{
 		currentClub: string;
 		championship: Championship;
 	}>();
@@ -74,7 +74,7 @@
 		</div>
 	{/if}
 
-	{#each players as player, i}
+	{#each players as player, i(i)}
 		<div class="player-list">
 			{#if isAttachingPlayer}
 				<input type="checkbox" value={player} id={player.id} bind:group={checkedPlayers} />
@@ -110,7 +110,7 @@
 		</div>
 	{/if}
 
-	{#each teams as team, i}
+	{#each teams as team, i (i)}
 		<div class="team-list">
 			{#if isAttachingTeam}
 				<input type="checkbox" value={team} id={team.id} bind:group={checkedTeams} />

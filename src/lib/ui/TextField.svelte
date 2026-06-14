@@ -6,11 +6,11 @@
 	}
 
 	let { value = $bindable(''), placeholder = '', focus = false }: Props = $props();
-	const seed: number = Math.round(Math.random() * 100000);
+	//const seed: number = Math.round(Math.random() * 100000);
 
 	let isEditing: boolean = $state(false);
 
-	const init = (elt: any) => {
+	const init = (elt: HTMLInputElement) => {
 		if (focus) elt.focus();
 	};
 
@@ -27,6 +27,8 @@
 		<input
 			class="input-field"
 			bind:value
+			{placeholder}
+			use:init
 			onblur={() => (isEditing = false)}
 			onkeydown={(e) => isFinished(e)}
 			onchange={() => (isEditing = false)}

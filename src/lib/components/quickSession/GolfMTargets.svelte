@@ -9,7 +9,7 @@
 	import { flip } from 'svelte/animate';
 	import { dndzone } from 'svelte-dnd-action';
 
-	import { individualRules, collectiveRules } from '$lib/types/targetType';
+	import { individualRules, collectiveRules, type Target } from '$lib/types/targetType';
 
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
@@ -45,7 +45,7 @@
 	};
 
 	// Function to handle the removal of a target from dndzone
-	const handleRemoveDrop = async (e: CustomEvent<{ items: any[] }>) => {
+	const handleRemoveDrop = async (e: CustomEvent<{ items: Target[] }>) => {
 		const removedItem = e.detail.items[0];
 		if (removedItem) {
 			targetsStore.list = targetsStore.list.filter((h) => h.id !== removedItem.id);
@@ -61,7 +61,7 @@
 	};
 
 	// Function to finalize the reordering of targets in dndzone
-	const handleFinalize = async (e: CustomEvent<{ items: any[] }>) => {
+	const handleFinalize = async (e: CustomEvent<{ items: Target[] }>) => {
 		targetsStore.list = e.detail.items;
 		isDragging = false;
 	};
@@ -165,7 +165,7 @@
 	{/if}
 </div>
 
-{#each targetsStore.list as target, i}
+{#each targetsStore.list as target, i (i)}
 	{#if isEditingTarget[i]}
 		<TargetProps
 			{target}

@@ -11,11 +11,11 @@
 	import TeamsManagement from './TeamsManagement.svelte';
 	import { navContext } from '$lib/utils/nav.svelte';
 	import { onMount } from 'svelte';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { selection } from '$lib/stores/selection';
 	import { playersChampionshipStore } from '$lib/stores/championship/playersChampionshipStore.svelte';
 
-	let { currentClub = $bindable(''), championship } = $props<{
+	let { currentClub = $bindable('') } = $props<{
 		currentClub: string;
 		championship: Championship;
 	}>();
@@ -56,7 +56,7 @@
 {/snippet}
 
 {#snippet prevReturnButton()}
-	<a class="btn btn-back" href={base + '/championship/' + selection.currentId + '/'}>👑 Accueil</a>
+	<a class="btn btn-back" href={resolve(`/championship/${selection.currentId}/`)}>👑 Accueil</a>
 {/snippet}
 
 <h2>Asso : {club.name}</h2>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { confirmStore } from '$lib/stores/confirmStore.svelte';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import SessionsList from '$lib/components/history/SessionsList.svelte';
 	import SessionDetails from '$lib/components/history/SessionDetails.svelte';
 	import CoursesList from '$lib/components/history/CoursesList.svelte';
@@ -49,7 +49,7 @@
 <!-- Navigation -->
 {#snippet returnButton()}
 	{#if option === ''}
-		<a class="btn btn-back" href={base + '/'}>🏠 Accueil</a>
+		<a class="btn btn-back" href={resolve('/')}>🏠 Accueil</a>
 	{:else if option === 'sessions' && currentSession !== ''}
 		<span class="btn btn-back" onclick={async () => (currentSession = '')} role="none">📄 Accueil</span>
 	{:else if option === 'courses' && currentCourse !== ''}
@@ -80,7 +80,7 @@
 				<h3>Joueurs</h3>
 				<p>Liste et partage des joueurs réguliers</p>
 			</div>
-			<a class="card" href={base + '/'}>
+			<a class="card" href={resolve('/')}>
 				<span class="icon">🏠</span>
 				<h3>Retour Accueil</h3>
 			</a>

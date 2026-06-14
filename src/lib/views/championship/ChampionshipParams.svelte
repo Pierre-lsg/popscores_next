@@ -15,7 +15,6 @@
 	import { getCsMgrs, getSupervisors } from '$lib/utils/championship/championshipFunctions.svelte';
 	import type { Championship } from '$lib/types/championshipType';
 	import { refereesStore } from '$lib/stores/championship/refereeChampionshipStore.svelte';
-	import TextField from '$lib/ui/TextField.svelte';
 	import Password from '$lib/ui/Password.svelte';
 	import Toggle from '$lib/ui/Toggle.svelte';
 
@@ -32,7 +31,7 @@
 			toastStore.show('💾 Mise à jour effectuée ...', 'success');
 			messageStore.remove('modifChamp');
 		} catch (err) {
-			toastStore.show("💾 Echec à l'enregistrement ...", 'failure');
+			toastStore.show("💾 Echec à l'enregistrement ... " + err, 'failure');
 		}
 	};
 
@@ -121,7 +120,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each championship.supervisorsId as supId}
+					{#each championship.supervisorsId as supId (supId)}
 						{@const ref = refereesStore.find(supId)}
 						{#if ref}
 							<tr>

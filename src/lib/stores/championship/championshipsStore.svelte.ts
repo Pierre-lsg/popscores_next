@@ -49,8 +49,8 @@ class ChampionsStore {
 			id: crypto.randomUUID(),
 			name,
 			description: '',
-			season: '',
-			location: '',
+			season: season || '',
+			location: location || '',
 			competitionsId: [],
 			collectiveScale: '',
 			individualScale: '',
@@ -68,7 +68,7 @@ class ChampionsStore {
 	 * Create a new championship and add it to the store.
 	 */
 	new(): Championship {
-		let newChampionship: Championship = {
+		const newChampionship: Championship = {
 			id: crypto.randomUUID(),
 			name: '',
 			description: '',

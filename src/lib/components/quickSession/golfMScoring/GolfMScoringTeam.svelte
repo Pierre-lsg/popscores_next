@@ -5,13 +5,10 @@
 	import { teamsStore } from '$lib/stores/quickSession/teamsStore.svelte';
 	import { targetsStore } from '$lib/stores/quickSession/targetsStore.svelte';
 	import { sessionSettingsStore } from '$lib/stores/gameSessionStore.svelte';
-	import { gameStatus } from '$lib/stores/gameStatusStore.svelte';
-	import type { Team } from '$lib/types/teamType';
 	import TeamScoreOrder from '$lib/components/core_game/TeamScoreOrder.svelte';
 	import ScoreHeader from '$lib/components/core_game/scoring/ScoreHeader.svelte';
 	import ScoreGrid from '$lib/components/core_game/scoring/ScoreGrid.svelte';
 
-	import { swipe } from '$lib/utils/swipe';
 	import Stepper from '$lib/ui/Stepper.svelte';
 	import Param from '$lib/ui/Param.svelte';
 	import Selector from '$lib/ui/Selector.svelte';
@@ -22,7 +19,6 @@
 	import { collectiveRules } from '$lib/types/targetType';
 
 	const settings = sessionSettingsStore.settings;
-	const scoringForAllPlayersRules = ['Bonus', 'Individuel'];
 	const ruleOptions = collectiveRules;
 
 	let targets = $derived(targetsStore.list);
@@ -95,12 +91,6 @@
 		if (await confirmStore.prompt('Voulez-vous annuler la cible ?')) {
 			targetsStore.remove(targetIndex);
 		}
-	};
-
-	const updateScoreTeam = async (team: Team, targetId: string, score: number) => {
-		team.playersId.forEach((playerId) => {
-			playersStore.updateScore(playerId, targetId, score);
-		});
 	};
 
 	const modifyUpdatingBools = async (updatedField: string) => {

@@ -1,4 +1,5 @@
 import type { Competition } from '$lib/types/competitionType';
+import { SvelteDate } from 'svelte/reactivity';
 import type { Course } from '$lib/types/courseType';
 import type { Player, RankedPlayer } from '$lib/types/playerType';
 import type { Regulations, Regulation } from '$lib/types/regulationsType';
@@ -68,7 +69,7 @@ export const getRules = (competition: Competition): Regulations => {
 export const getFilteredPlayers = (
 	allPlayers: Player[],
 	clubFilt: string,
-	playerFilt: String
+	playerFilt: string
 ): Player[] => {
 	let tempFilteredList: Player[] = allPlayers;
 
@@ -85,7 +86,7 @@ export const getFilteredPlayers = (
 	return tempFilteredList;
 };
 
-export const getFilteredTeams = (allTeams: Team[], clubFilt: string, teamFilt: String): Team[] => {
+export const getFilteredTeams = (allTeams: Team[], clubFilt: string, teamFilt: string): Team[] => {
 	let tempFilteredList: Team[] = allTeams;
 
 	if (clubFilt !== '') {
@@ -306,10 +307,10 @@ export const cloudSaveResults = async (competitionId: string): Promise<string> =
 };
 
 export const cloudLoadCompetitionsChampionship = async (csId: string): Promise<string> => {
-	let status: string = 'success';
+	const status: string = 'success';
 
 	// Charger l'ensemble des compétitions
-	let tmpCompetitions = await competitionService.getCompetitionsByChampionship(csId);
+	const tmpCompetitions = await competitionService.getCompetitionsByChampionship(csId);
 
 	for (const aCompetition of tmpCompetitions) {
 		competitionsStore.remove(aCompetition.id);
@@ -344,12 +345,12 @@ export const cloudLoadCurrentCompetitionForSupervisor = async (
 	csId: string,
 	userId: string
 ): Promise<string> => {
-	let status: string = 'success';
+	const status: string = 'success';
 
 	// Charger la compétition
 	// Todo : tests en amont pour savoir s'il est nécessaire de charger
 	let tmpCompetitions = await competitionService.getCompetitionsByChampionship(csId);
-	const today = new Date().toISOString().slice(0, 10);
+	const today = new SvelteDate().toISOString().slice(0, 10);
 	tmpCompetitions = tmpCompetitions.filter((t) => t.startDate === today);
 
 	for (const aCompetition of tmpCompetitions) {
@@ -367,8 +368,8 @@ export const cloudLoadCurrentCompetitionForSupervisor = async (
 		}
 
 		// Charger les flys du superviseur
-		for (let flyId of aCompetition.flysId) {
-			let aFly = await flyService.getFlyById(flyId);
+		for (const flyId of aCompetition.flysId) {
+			const aFly = await flyService.getFlyById(flyId);
 			if (aFly && aFly.supervisorId === userId) {
 				flysChampionshipStore.remove(aFly.id);
 				flysChampionshipStore.load(aFly);
@@ -390,10 +391,10 @@ export const cloudLoadCurrentCompetitionForSupervisor = async (
 };
 
 export const cloudLoadCompetition = async (cId: string): Promise<string> => {
-	let status: string = 'success';
+	const status: string = 'success';
 
 	// Charger la compétition
-	let aCompetition = await competitionService.getCompetitionById(cId);
+	const aCompetition = await competitionService.getCompetitionById(cId);
 
 	if (aCompetition) {
 		competitionsStore.remove(aCompetition.id);
@@ -410,8 +411,8 @@ export const cloudLoadCompetition = async (cId: string): Promise<string> => {
 		}
 
 		// Charger les flys du superviseur
-		for (let flyId of aCompetition.flysId) {
-			let aFly = await flyService.getFlyById(flyId);
+		for (const flyId of aCompetition.flysId) {
+			const aFly = await flyService.getFlyById(flyId);
 			if (aFly) {
 				flysChampionshipStore.remove(aFly.id);
 				flysChampionshipStore.load(aFly);
@@ -447,7 +448,7 @@ export const cloudLoadCourse = async (courseId: string) => {
 		coursesChampionshipStore.load(aCourse);
 
 		// Charger les cibles du parcours
-		for (let aTarget of aCourse.targets) {
+		for (const aTarget of aCourse.targets) {
 			targetsChampionshipStore.remove(aTarget.id);
 			targetsChampionshipStore.load(aTarget);
 		}
@@ -455,7 +456,7 @@ export const cloudLoadCourse = async (courseId: string) => {
 };
 
 export const cloudLoadClubs = async (clubsId: string[]) => {
-	for (let clubId of clubsId) {
+	for (const clubId of clubsId) {
 		const aClub = await clubService.getClubById(clubId);
 		if (aClub) {
 			clubsStore.remove(aClub.id);
@@ -465,7 +466,7 @@ export const cloudLoadClubs = async (clubsId: string[]) => {
 };
 
 export const cloudLoadPlayersCompetition = async (playersId: string[], competitionId: string) => {
-	for (let playerId of playersId) {
+	for (const playerId of playersId) {
 		const aPlayer = await playerService.getPlayerById(playerId);
 		if (aPlayer) {
 			playersChampionshipStore.remove(aPlayer.id);
@@ -482,7 +483,7 @@ export const cloudLoadResults = async (playerId: string, competitionId: string) 
 		competitionId,
 		playerId
 	);
-	for (let aResult of results) {
+	for (const aResult of results) {
 		resultsCompetitionStore.remove(aResult.competitionId, aResult.playerId);
 		resultsCompetitionStore.load(aResult);
 	}
@@ -490,7 +491,7 @@ export const cloudLoadResults = async (playerId: string, competitionId: string) 
 
 export const cloudLoadTeams = async (teamsId: string[], competitionId: string) => {
 	console.log('Chargement des équipes : ' + competitionId + ' - ' + teamsId);
-	for (let teamId of teamsId) {
+	for (const teamId of teamsId) {
 		const aTeam = await teamService.getTeamCompetitionById(teamId);
 		if (aTeam) {
 			teamsCompetitionStore.remove(aTeam.id);
@@ -502,8 +503,8 @@ export const cloudLoadTeams = async (teamsId: string[], competitionId: string) =
 };
 
 export const cloudLoadFlys = async (flysId: string[]) => {
-	for (let flyId of flysId) {
-		let aFly = await flyService.getFlyById(flyId);
+	for (const flyId of flysId) {
+		const aFly = await flyService.getFlyById(flyId);
 		if (aFly) {
 			flysChampionshipStore.remove(aFly.id);
 			flysChampionshipStore.load(aFly);
@@ -557,14 +558,14 @@ export const teamsForDoubleRanking = (
 	targets: Target[],
 	rules: Regulations
 ): Team[] => {
-	let teams: Team[] = [];
+	const teams: Team[] = [];
 
 	for (const clubId of competition.clubsId) {
 		let clubName: string = '';
 		if (clubId && clubId != '') {
 			clubName = clubsStore.find(clubId)?.name || 'vide';
 			// Retrouver l'ensemble des joueurs de ce club qui ont participé à la compétition
-			let playersClubCompetition = playersChampionshipStore.list
+			const playersClubCompetition = playersChampionshipStore.list
 				.filter((p) => p.clubId === clubId)
 				.filter((p) => competition.playersId.includes(p.id));
 			// Trier cette liste par résultat à la compétition
@@ -574,7 +575,7 @@ export const teamsForDoubleRanking = (
 			// Si suffisament de compétiteurs pour former une équipe
 			if (playersClubCompetition.length >= rules.nbPlayersForDoubleRankingTeam) {
 				// Créer une équipe avec les meilleurs compétiteurs
-				let team: Team = { id: '', name: clubName, playersId: [], clubId: clubId };
+				const team: Team = { id: '', name: clubName, playersId: [], clubId: clubId };
 				for (let i = 0; i < rules.nbPlayersForDoubleRankingTeam; i++) {
 					team.playersId.push(playersClubCompetition[i].id);
 				}
@@ -601,7 +602,7 @@ export const startCompetition = async (
 		});
 		//teamsCompetitionStore.find
 
-		let status = await cloudSaveAllCompetition(currentCompetition, championship.id);
+		const status = await cloudSaveAllCompetition(currentCompetition, championship.id);
 		currentCompetition.status = 'in_progress';
 		currentCompetition.step = 'welcome';
 

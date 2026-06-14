@@ -31,7 +31,7 @@
 		</thead>
 		<tbody>
 			{#if championship}
-				{#each championship.rankingPlayers as p, i}
+				{#each championship.rankingPlayers as p, i (i)}
 					{@const player = playerService.getPlayerById(p.id)}
 					{#await player}
 						<tr><td>...</td><td>...</td><td>...</td><td></td></tr>
@@ -64,7 +64,7 @@
 		</thead>
 		<tbody>
 			{#if championship}
-				{#each championship.rankingClubs as c, i}
+				{#each championship.rankingClubs as c, i (i)}
 					{@const club = clubService.getClubById(c.id)}
 					{#await club}
 						<tr><td>...</td><td>...</td><td>...</td><td></td></tr>
