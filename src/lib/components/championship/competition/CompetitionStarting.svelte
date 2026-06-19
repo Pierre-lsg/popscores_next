@@ -20,6 +20,7 @@
 	import { onMount } from 'svelte';
 	import CompetitionSummaryBox from './CompetitionSummaryBox.svelte';
 	import { flyService } from '$lib/utils/pocketbase/flys2Cloud';
+	import { competitionsStore } from '$lib/stores/championship/competitionsStore.svelte';
 
 	let { currentCompetition = $bindable(), championship = $bindable() } = $props<{
 		currentCompetition: Competition | undefined;
@@ -87,6 +88,17 @@
 			flysChampionshipStore.remove(f);
 		});
 		currentCompetition.flysId = [];
+	};
+
+	const suppressFly = (fly: Fly) => {
+		flyService.deleteFly(fly.id);
+		flysChampionshipStore.remove(fly.id);
+		currentCompetition.flysId = currentCompetition.flysId.filter((id: string) => id !== fly.id);
+	};
+
+	const addFly = () => {
+		const fly = flysChampionshipStore.add(flys.length + 1, currentCompetition.id);
+		currentCompetition.flysId.push(fly.id);
 	};
 
 	const updateTeamFly = (flyId: string, newflyId: string, teamId: string) => {
@@ -201,7 +213,13 @@
 							{/if}
 						</div>
 					{/each}
-					{@render addSupervisor(fly, i)}
+					{#if fly.playersId.length === 0}
+						<button onclick={() => suppressFly(fly)} class="btn btn-secondary"
+							>Supprimer le fly</button
+						>
+					{:else}
+						{@render addSupervisor(fly, i)}
+					{/if}
 				</div>
 			{/each}
 			<div class="action">
@@ -210,6 +228,7 @@
 				>
 				<button onclick={() => (showBox = true)} class="btn">Voir le résumé</button>
 			</div>
+			<button onclick={() => addFly()} class="btn btn-secondary">Ajouter un fly</button>
 		{:else}
 			<!-- Compétition individuelle -->
 			{#each flys as fly, i}
@@ -232,7 +251,13 @@
 							{/if}
 						</div>
 					{/each}
-					{@render addSupervisor(fly, i)}
+					{#if fly.playersId.length === 0}
+						<button onclick={() => suppressFly(fly)} class="btn btn-secondary"
+							>Supprimer le fly</button
+						>
+					{:else}
+						{@render addSupervisor(fly, i)}
+					{/if}
 				</div>
 			{/each}
 			<div class="action">
@@ -241,6 +266,7 @@
 				>
 				<button onclick={() => (showBox = true)} class="btn">Voir le résumé</button>
 			</div>
+			<button onclick={() => addFly()} class="btn btn-secondary">Ajouter un fly</button>
 		{/if}
 	{:else}
 		<p>Les flys ne sont pas définis</p>
